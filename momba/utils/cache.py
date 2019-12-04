@@ -1,0 +1,16 @@
+# -*- coding:utf-8 -*-
+#
+# Copyright (C) 2019, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+
+from __future__ import annotations
+
+import functools
+import typing
+
+
+T = typing.TypeVar('T')
+
+
+# XXX: this is here just to make `mypy` happy
+def lru_cache(func: T) -> T:
+    return functools.lru_cache()(func)  # type: ignore
