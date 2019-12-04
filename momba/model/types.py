@@ -25,10 +25,6 @@ class Type(abc.ABC):
     def is_assignable_from(self, typ: Type) -> bool:
         raise NotImplementedError()
 
-    @property
-    def array(self) -> ArrayType:
-        return ArrayType(self)
-
 
 @dataclasses.dataclass(frozen=True)
 class _BasicType(Type):
@@ -169,3 +165,7 @@ class ArrayType(Type):
     @utils.lru_cache
     def is_assignable_from(self, typ: Type) -> bool:
         return isinstance(typ, ArrayType) and self.base.is_assignable_from(typ.base)
+
+
+def array_of(typ: Type) -> ArrayType:
+    return ArrayType(typ)

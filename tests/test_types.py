@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 from momba.model import types
+from momba.model.types import array_of
 
 import pytest
 
@@ -61,11 +62,11 @@ def test_continuous_type():
 
 
 def test_array_type():
-    assert types.REAL.array.is_assignable_from(types.INT.array)
-    assert not types.REAL.array.is_assignable_from(types.INT)
-    assert not types.INT.array.is_assignable_from(types.BOOL.array)
-    assert types.INT[5:10].array.is_assignable_from(types.INT.array)
+    assert array_of(types.REAL).is_assignable_from(array_of(types.INT))
+    assert not array_of(types.REAL).is_assignable_from(types.INT)
+    assert not array_of(types.INT).is_assignable_from(array_of(types.BOOL))
+    assert array_of(types.INT[5:10]).is_assignable_from(array_of(types.INT))
 
     # arrays of arrays
-    assert types.REAL.array.array.is_assignable_from(types.INT.array.array)
-    assert not types.REAL.array.array.is_assignable_from(types.INT.array)
+    assert array_of(array_of(types.REAL)).is_assignable_from(array_of(array_of(types.INT)))
+    assert not array_of(array_of(types.REAL)).is_assignable_from(array_of(types.INT))
