@@ -1,0 +1,16 @@
+image: python:3.8
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+cache:
+  untracked: true
+  key: momba-pip-cache
+  paths:
+    - .cache/
+
+run:
+  stage: build
+  script:
+    - pip install tox
+    - tox
