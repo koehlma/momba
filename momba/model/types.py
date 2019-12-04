@@ -90,12 +90,12 @@ class BoundedType(Type):
         if self.lower_bound is not None:
             if not self.lower_bound.is_constant:
                 raise InvalidBoundError('`lower_bound` is not a constant expression')
-            if not self.base.is_assignable_from(self.lower_bound.typ):
+            if not self.base.is_assignable_from(expressions.infer_type_of(self.lower_bound)):
                 raise InvalidBoundError('type of `lower_bound` is not assignable to base-type')
         if self.upper_bound is not None:
             if not self.upper_bound.is_constant:
                 raise InvalidBoundError('`upper_bound` is not a constant expression')
-            if not self.base.is_assignable_from(self.upper_bound.typ):
+            if not self.base.is_assignable_from(expressions.infer_type_of(self.upper_bound)):
                 raise InvalidBoundError('type of `upper_bound` is not assignable to base-type')
 
     @staticmethod

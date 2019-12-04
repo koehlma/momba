@@ -12,15 +12,25 @@ import typing
 from . import types
 
 
+Identifier = str
+
+TypeEnv = typing.Mapping[Identifier, 'types.Type']
+
+EMPTY_ENV: TypeEnv = {}
+
+
+class UnboundVariableError(Exception):
+    pass
+
+
 class Expression(abc.ABC):
     @property
     @abc.abstractmethod
     def is_constant(self) -> bool:
         raise NotImplementedError()
 
-    @property
     @abc.abstractmethod
-    def typ(self) -> types.Type:
+    def infer_type(self, env: TypeEnv) -> types.Type:
         raise NotImplementedError()
 
 
@@ -34,8 +44,7 @@ class Constant(Expression, abc.ABC):
 class IntegerConstant(Constant):
     integer: int
 
-    @property
-    def typ(self) -> types.Type:
+    def infer_type(self, env: TypeEnv) -> types.Type:
         return types.INT
 
 
@@ -43,8 +52,7 @@ class IntegerConstant(Constant):
 class BoolConstant(Constant):
     boolean: bool
 
-    @property
-    def typ(self) -> types.Type:
+    def infer_type(self, env: TypeEnv) -> types.Type:
         return types.BOOL
 
 
@@ -53,6 +61,25 @@ class RealConstant(Constant):
     # TODO: this should not be just any string
     real: typing.Union[str, numbers.Number]
 
-    @property
-    def typ(self) -> types.Type:
+    def infer_type(self, env: TypeEnv) -> types.Type:
         return types.REAL
+
+
+class Variable(Expression):
+    identifier: Identifier
+
+    @property
+    def is_constant(self) -> bool:
+        return False
+
+    def infer_type(self, env: TypeEnv) -> types.Type:
+        try:
+            return env[self.identifier]
+        except KeyError:
+            raise UnboundVariableError(
+                f'variable {self.identifier} is not bound in type environment'
+            )
+
+
+def infer_type_of(expr: Expression, env: typing.Optional[TypeEnv] = None) -> types.Type:
+    return expr.infer_type(env or EMPTY_ENV)
