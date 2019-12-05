@@ -26,6 +26,17 @@ class Type(abc.ABC):
         raise NotImplementedError()
 
 
+if not typing.TYPE_CHECKING:
+    ellipsis = type(Ellipsis)
+
+
+Bound = typing.Optional[
+    typing.Union[int, str, numbers.Number, expressions.Expression, ellipsis]
+]
+
+Bounds = typing.Tuple[Bound, Bound]
+
+
 @dataclasses.dataclass(frozen=True)
 class _BasicType(Type):
     class Kind(enum.Enum):
@@ -38,9 +49,9 @@ class _BasicType(Type):
     def __str__(self) -> str:
         return f'types.{self.kind.value.upper()}'
 
-    def __getitem__(self, key: slice) -> BoundedType:
-        lower_bound = BoundedType.cast_bound(key.start)
-        upper_bound = BoundedType.cast_bound(key.stop)
+    def __getitem__(self, bounds: Bounds) -> BoundedType:
+        lower_bound = BoundedType.cast_bound(bounds[0])
+        upper_bound = BoundedType.cast_bound(bounds[1])
         return BoundedType(self, lower_bound, upper_bound)
 
     @property
@@ -60,11 +71,6 @@ class _BasicType(Type):
 BOOL = _BasicType(_BasicType.Kind.BOOL)
 INT = _BasicType(_BasicType.Kind.INT)
 REAL = _BasicType(_BasicType.Kind.REAL)
-
-
-Bound = typing.Optional[
-    typing.Union[int, str, numbers.Number, expressions.Expression]
-]
 
 
 class BaseTypeError(ValueError):
@@ -106,7 +112,7 @@ class BoundedType(Type):
             return bound
         elif isinstance(bound, (str, numbers.Number)):
             return expressions.RealConstant(bound)
-        elif bound is None:
+        elif bound is None or bound is Ellipsis:
             return None
         else:
             raise InvalidBoundError(f'unable to cast the given bound into an expression')

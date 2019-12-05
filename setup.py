@@ -15,11 +15,10 @@ setup(
     author_email='mkoehl@cs.uni-saarland.de',
     url='https://dgit.cs.uni-saarland.de/koehlma/momba',
 
-    setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-cov'],
-    
+
     packages=['momba'],
-    
+
     classifiers=[
         'Development Status :: 1 - Planning'
     ]
