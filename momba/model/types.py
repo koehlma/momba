@@ -34,24 +34,36 @@ class Numeric(Type, abc.ABC):
 
 @dataclasses.dataclass(frozen=True)
 class _Integer(Numeric):
+    def __str__(self) -> str:
+        return 'types.INT'
+
     def is_assignable_from(self, typ: Type) -> bool:
         return typ == INT or (isinstance(typ, BoundedType) and typ.base == INT)
 
 
 @dataclasses.dataclass(frozen=True)
 class _Real(Numeric):
+    def __str__(self) -> str:
+        return 'types.REAL'
+
     def is_assignable_from(self, typ: Type) -> bool:
         return typ.is_numeric
 
 
 @dataclasses.dataclass(frozen=True)
 class _Bool(Type):
+    def __str__(self) -> str:
+        return 'types.BOOL'
+
     def is_assignable_from(self, typ: Type) -> bool:
         return typ == BOOL
 
 
 @dataclasses.dataclass(frozen=True)
 class _Clock(Numeric):
+    def __str__(self) -> str:
+        return 'types.CLOCK'
+
     def is_assignable_from(self, typ: Type) -> bool:
         if isinstance(typ, BoundedType):
             return typ.base == INT
@@ -60,6 +72,9 @@ class _Clock(Numeric):
 
 @dataclasses.dataclass(frozen=True)
 class _Continuous(Numeric):
+    def __str__(self) -> str:
+        return 'types.CONTINUOUS'
+
     def is_assignable_from(self, typ: Type) -> bool:
         return typ.is_numeric
 
@@ -94,6 +109,9 @@ class BoundedType(Numeric):
     lower_bound: typing.Optional[values.NumericValue]
     upper_bound: typing.Optional[values.NumericValue]
 
+    def __str__(self) -> str:
+        return f'{self.base}[{self.lower_bound}, {self.upper_bound}]'
+
     def __post_init__(self) -> None:
         if not isinstance(self.base, Numeric):
             raise BaseTypeError('base-type of bounded type must be numeric')
@@ -108,7 +126,9 @@ class BoundedType(Numeric):
             if not isinstance(self.upper_bound, values.NumericValue):
                 raise InvalidBoundError('`upper_bound` is not a numeric constant')
             if not self.base.is_assignable_from(self.upper_bound.typ):
-                raise InvalidBoundError('type of `upper_bound` is not assignable to base-type')
+                raise InvalidBoundError(
+                    f'`{self.upper_bound.typ}` is not assignable to {self.base}'
+                )
 
     @staticmethod
     def cast_bound(bound: Bound) -> typing.Optional[values.NumericValue]:
@@ -123,6 +143,9 @@ class BoundedType(Numeric):
 @dataclasses.dataclass(frozen=True)
 class ArrayType(Type):
     base: Type
+
+    def __str__(self) -> str:
+        return f'Array({self.base})'
 
     def is_assignable_from(self, typ: Type) -> bool:
         return isinstance(typ, ArrayType) and self.base.is_assignable_from(typ.base)

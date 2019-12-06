@@ -5,11 +5,10 @@
 from __future__ import annotations
 
 import abc
-import enum
 import dataclasses
 import typing
 
-from . import operators, types, values
+from . import distribution, operators, types, values
 
 
 Identifier = str
@@ -46,6 +45,37 @@ class TypeContext:
 
 
 class Expression(abc.ABC):
+    @property
+    @abc.abstractmethod
+    def children(self) -> typing.Sequence[Expression]:
+        raise NotImplementedError()
+
+    @property
+    def is_constant(self) -> bool:
+        return False
+
+    @abc.abstractmethod
+    def infer_type(self, ctx: TypeContext) -> types.Type:
+        """ Infers the type of the expression.
+
+        If no type can be inferred, an exception is raised.
+        """
+        raise NotImplementedError()
+
+    @property
+    def traverse(self) -> typing.Iterable[Expression]:
+        yield self
+        for child in self.children:
+            yield from child.traverse
+
+    @property
+    def subexpressions(self) -> typing.AbstractSet[Expression]:
+        return frozenset(self.traverse)
+
+    @property
+    def is_sampling_free(self) -> bool:
+        return all(not isinstance(e, Sample) for e in self.traverse)
+
     def __and__(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
@@ -76,49 +106,18 @@ class Expression(abc.ABC):
             operators.ComparisonOperator.LE, self, other
         )
 
-    @property
-    def is_constant(self) -> bool:
-        return False
-
-    @abc.abstractmethod
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        """ Infers the type of the expression.
-
-        If no type can be inferred, an exception is raised.
-        """
-        raise NotImplementedError()
-
-    @property
-    @abc.abstractmethod
-    def children(self) -> typing.Sequence[Expression]:
-        raise NotImplementedError()
-
-    @property
-    def traverse(self) -> typing.Iterable[Expression]:
-        yield self
-        for child in self.children:
-            yield from child.traverse
-
-    @property
-    def subexpressions(self) -> typing.AbstractSet[Expression]:
-        return frozenset(self.traverse)
-
-    @property
-    def is_sampling_free(self) -> bool:
-        return all(not isinstance(e, Sample) for e in self.traverse)
-
 
 @dataclasses.dataclass(frozen=True)
 class Constant(Expression):
     value: values.Value
 
     @property
-    def is_constant(self) -> bool:
-        return True
-
-    @property
     def children(self) -> typing.Sequence[Expression]:
         return ()
+
+    @property
+    def is_constant(self) -> bool:
+        return True
 
     def infer_type(self, ctx: TypeContext) -> types.Type:
         return self.value.typ
@@ -128,19 +127,19 @@ class Constant(Expression):
 class Variable(Expression):
     identifier: Identifier
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        return ctx.lookup(self.identifier)
-
     @property
     def children(self) -> typing.Sequence[Expression]:
         return ()
+
+    def infer_type(self, ctx: TypeContext) -> types.Type:
+        return ctx.lookup(self.identifier)
 
 
 # XXX: this class should be abstract, however, then it does not type-check
 # https://github.com/python/mypy/issues/5374
 @dataclasses.dataclass(frozen=True)
 class BinaryExpression(Expression):
-    operator: enum.Enum
+    operator: operators.BinaryOperator
     left: Expression
     right: Expression
 
@@ -148,7 +147,7 @@ class BinaryExpression(Expression):
     def children(self) -> typing.Sequence[Expression]:
         return self.left, self.right
 
-    # XXX: this method shall not be implemented
+    # XXX: this method shall be implemented by all subclasses
     def infer_type(self, ctx: TypeContext) -> types.Type:
         raise NotImplementedError()
 
@@ -213,6 +212,10 @@ class Conditional(Expression):
     consequence: Expression
     alternative: Expression
 
+    @property
+    def children(self) -> typing.Sequence[Expression]:
+        return self.condition, self.consequence, self.alternative
+
     def infer_type(self, ctx: TypeContext) -> types.Type:
         condition_type = self.condition.infer_type(ctx)
         if condition_type != types.BOOL:
@@ -230,14 +233,14 @@ class Conditional(Expression):
                 'invalid combination of consequence and alternative types'
             )
 
-    @property
-    def children(self) -> typing.Sequence[Expression]:
-        return self.condition, self.consequence, self.alternative
-
 
 @dataclasses.dataclass(frozen=True)
 class Not(Expression):
     operand: Expression
+
+    @property
+    def children(self) -> typing.Sequence[Expression]:
+        return self.operand,
 
     def infer_type(self, ctx: TypeContext) -> types.Type:
         operand_type = self.operand.infer_type(ctx)
@@ -245,21 +248,30 @@ class Not(Expression):
             raise InvalidTypeError(f'expected `types.BOOL` but got {operand_type}')
         return types.BOOL
 
-    @property
-    def children(self) -> typing.Sequence[Expression]:
-        return self.operand,
-
 
 @dataclasses.dataclass(frozen=True)
 class Sample(Expression):
-    distribution: typing.Any  # distributions.Distribution
+    distribution: distribution.Distribution
+    arguments: typing.Sequence[Expression]
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        return types.REAL
+    def __post_init__(self) -> None:
+        if len(self.arguments) != len(self.distribution.parameter_types):
+            raise ValueError('arity of parameters and arity does not match')
 
     @property
     def children(self) -> typing.Sequence[Expression]:
-        return ()
+        return self.arguments
+
+    def infer_type(self, ctx: TypeContext) -> types.Type:
+        # we already know that the arity of the parameters and arguments match
+        for argument, parameter_type in zip(self.arguments, self.distribution.parameter_types):
+            argument_type = argument.infer_type(ctx)
+            if not parameter_type.is_assignable_from(argument_type):
+                raise InvalidTypeError(
+                    f'parameter type `{parameter_type}` is not assignable '
+                    f'from argument type `{argument_type}`'
+                )
+        return types.REAL
 
 
 @dataclasses.dataclass(frozen=True)

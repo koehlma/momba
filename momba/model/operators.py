@@ -7,7 +7,11 @@ from __future__ import annotations
 import enum
 
 
-class BooleanOperator(enum.Enum):
+class BinaryOperator:
+    pass
+
+
+class BooleanOperator(BinaryOperator, enum.Enum):
     AND = '∧'
     OR = '∨'
     XOR = '⊕'
@@ -15,19 +19,19 @@ class BooleanOperator(enum.Enum):
     EQUIV = '⇔'
 
 
-class ArithmeticOperator(enum.Enum):
+class ArithmeticOperator(BinaryOperator, enum.Enum):
     ADD = '+'
     SUB = '-'
     MUL = '*'
     MOD = '%'
 
 
-class EqualityOperator(enum.Enum):
+class EqualityOperator(BinaryOperator, enum.Enum):
     EQ = '='
     NEQ = '≠'
 
 
-class ComparisonOperator(enum.Enum):
+class ComparisonOperator(BinaryOperator, enum.Enum):
     LT = '<'
     LE = '≤'
     GE = '≥'
