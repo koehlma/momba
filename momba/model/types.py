@@ -8,7 +8,7 @@ import abc
 import dataclasses
 import typing
 
-from . import values
+from . import context, expressions
 
 
 class Type(abc.ABC):
@@ -19,6 +19,9 @@ class Type(abc.ABC):
     @abc.abstractmethod
     def is_assignable_from(self, typ: Type) -> bool:
         raise NotImplementedError()
+
+    def validate_in(self, scope: context.Scope) -> None:
+        pass
 
 
 class Numeric(Type, abc.ABC):
@@ -86,7 +89,7 @@ CLOCK = _Clock()
 CONTINUOUS = _Continuous()
 
 
-Bound = typing.Optional[typing.Union['values.PythonNumeric', 'ellipsis']]
+Bound = typing.Optional[typing.Union['expressions.MaybeExpression', 'ellipsis']]
 Bounds = typing.Tuple[Bound, Bound]
 
 
@@ -106,8 +109,8 @@ class InvalidBoundError(TypeConstructionError):
 class BoundedType(Numeric):
     base: Numeric
 
-    lower_bound: typing.Optional[values.NumericValue]
-    upper_bound: typing.Optional[values.NumericValue]
+    lower_bound: typing.Optional[expressions.Expression]
+    upper_bound: typing.Optional[expressions.Expression]
 
     def __str__(self) -> str:
         return f'{self.base}[{self.lower_bound}, {self.upper_bound}]'
@@ -117,24 +120,26 @@ class BoundedType(Numeric):
             raise BaseTypeError('base-type of bounded type must be numeric')
         if self.lower_bound is None and self.upper_bound is None:
             raise InvalidBoundError('neither `lower_bound` nor `upper_bound` is present')
+
+    def validate_in(self, scope: context.Scope) -> None:
         if self.lower_bound is not None:
-            if not isinstance(self.lower_bound, values.NumericValue):
-                raise InvalidBoundError('`lower_bound` is not a numeric constant')
-            if not self.base.is_assignable_from(self.lower_bound.typ):
+            if not scope.is_constant(self.lower_bound):
+                raise InvalidBoundError('`lower_bound` has to be a constant')
+            lower_bound_type = scope.get_type(self.lower_bound)
+            if not self.base.is_assignable_from(lower_bound_type):
                 raise InvalidBoundError('type of `lower_bound` is not assignable to base-type')
         if self.upper_bound is not None:
-            if not isinstance(self.upper_bound, values.NumericValue):
-                raise InvalidBoundError('`upper_bound` is not a numeric constant')
-            if not self.base.is_assignable_from(self.upper_bound.typ):
-                raise InvalidBoundError(
-                    f'`{self.upper_bound.typ}` is not assignable to {self.base}'
-                )
+            if not scope.is_constant(self.upper_bound):
+                raise InvalidBoundError('`upper_bound` has to be a constant')
+            upper_bound_type = scope.get_type(self.upper_bound)
+            if not self.base.is_assignable_from(upper_bound_type):
+                raise InvalidBoundError('type of `upper_bound` is not assignable to base-type')
 
     @staticmethod
-    def cast_bound(bound: Bound) -> typing.Optional[values.NumericValue]:
+    def cast_bound(bound: Bound) -> typing.Optional[expressions.Expression]:
         if bound is None or bound is Ellipsis:
             return None
-        return values.pack_numeric(typing.cast(values.PythonNumeric, bound))
+        return expressions.cast(typing.cast(expressions.MaybeExpression, bound))
 
     def is_assignable_from(self, typ: Type) -> bool:
         return self.base.is_assignable_from(typ)

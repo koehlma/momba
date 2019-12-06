@@ -83,7 +83,7 @@ def pack_numeric(value: PythonNumeric) -> NumericValue:
         return RealValue(value)
     elif isinstance(value, str):
         return RealValue(NamedReal(value))
-    raise ConversionError(f'unable to convert Python value {value!r} into Momba value')
+    raise ConversionError(f'unable to convert Python value {value!r} to Momba value')
 
 
 def unpack(value: Value) -> PythonValue:
@@ -97,4 +97,4 @@ def unpack_numeric(value: NumericValue) -> PythonNumeric:
         return value.integer
     elif isinstance(value, RealValue):
         return value.real
-    raise ConversionError(f'unable to convert Momba value {value!r} into Python value')
+    raise ConversionError(f'unable to convert Momba value {value!r} to Python value')

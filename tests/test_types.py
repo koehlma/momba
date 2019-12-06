@@ -4,8 +4,7 @@
 
 from __future__ import annotations
 
-from momba.model import types
-from momba.model.values import pack_numeric
+from momba.model import context, types
 from momba.model.types import array_of
 
 import pytest
@@ -38,12 +37,11 @@ def test_bounded_types() -> None:
     assert not types.INT[2, 10].is_assignable_from(types.REAL['π', ...])
 
     with pytest.raises(types.InvalidBoundError):
-        types.INT[..., 'π']
+        ctx = context.Context()
+        scope = ctx.new_scope()
+        types.INT[..., 'π'].validate_in(scope)
     with pytest.raises(types.InvalidBoundError):
         types.INT[..., ...]
-    with pytest.raises(types.BaseTypeError):
-        # True and False are integers in Python
-        types.BoundedType(types.BOOL, pack_numeric(3), pack_numeric(5))
 
 
 def test_clock_type() -> None:
@@ -52,6 +50,7 @@ def test_clock_type() -> None:
     assert not types.CLOCK.is_assignable_from(types.REAL)
     assert not types.CLOCK.is_assignable_from(types.REAL[..., 'π'])
     assert not types.CLOCK.is_assignable_from(types.BOOL)
+    assert types.CLOCK.is_numeric
 
 
 def test_continuous_type() -> None:
@@ -60,6 +59,7 @@ def test_continuous_type() -> None:
     assert types.CONTINUOUS.is_assignable_from(types.REAL)
     assert types.CONTINUOUS.is_assignable_from(types.REAL[..., 'π'])
     assert not types.CONTINUOUS.is_assignable_from(types.BOOL)
+    assert types.CONTINUOUS.is_numeric
 
 
 def test_array_type() -> None:

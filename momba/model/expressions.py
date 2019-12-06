@@ -8,40 +8,7 @@ import abc
 import dataclasses
 import typing
 
-from . import distribution, operators, types, values
-
-
-Identifier = str
-
-_Declarations = typing.Dict[Identifier, 'types.Type']
-
-
-class TypeSystemError(ValueError):
-    pass
-
-
-class InvalidTypeError(TypeSystemError):
-    pass
-
-
-class UndeclaredVariableError(TypeSystemError):
-    pass
-
-
-@dataclasses.dataclass(frozen=True)
-class TypeContext:
-    _declarations: _Declarations = dataclasses.field(default_factory=dict)
-
-    def declare(self, identifier: Identifier, typ: types.Type) -> None:
-        self._declarations[identifier] = typ
-
-    def lookup(self, identifier: Identifier) -> types.Type:
-        try:
-            return self._declarations[identifier]
-        except KeyError:
-            raise UndeclaredVariableError(
-                f'variable {identifier} has not been declared in type context'
-            )
+from . import context, distribution, errors, operators, types, values
 
 
 class Expression(abc.ABC):
@@ -50,16 +17,12 @@ class Expression(abc.ABC):
     def children(self) -> typing.Sequence[Expression]:
         raise NotImplementedError()
 
-    @property
-    def is_constant(self) -> bool:
-        return False
+    @abc.abstractmethod
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        raise NotImplementedError()
 
     @abc.abstractmethod
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        """ Infers the type of the expression.
-
-        If no type can be inferred, an exception is raised.
-        """
+    def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
 
     @property
@@ -106,6 +69,16 @@ class Expression(abc.ABC):
             operators.ComparisonOperator.LE, self, other
         )
 
+    def ge(self, other: Expression) -> Expression:
+        return NumericComparison(
+            operators.ComparisonOperator.GE, self, other
+        )
+
+    def gt(self, other: Expression) -> Expression:
+        return NumericComparison(
+            operators.ComparisonOperator.GT, self, other
+        )
+
 
 @dataclasses.dataclass(frozen=True)
 class Constant(Expression):
@@ -115,24 +88,31 @@ class Constant(Expression):
     def children(self) -> typing.Sequence[Expression]:
         return ()
 
-    @property
-    def is_constant(self) -> bool:
+    def is_constant_in(self, scope: context.Scope) -> bool:
         return True
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
+    def infer_type(self, scope: context.Scope) -> types.Type:
         return self.value.typ
 
 
 @dataclasses.dataclass(frozen=True)
-class Variable(Expression):
-    identifier: Identifier
+class Identifier(Expression):
+    identifier: context.Identifier
 
     @property
     def children(self) -> typing.Sequence[Expression]:
         return ()
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        return ctx.lookup(self.identifier)
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return scope.lookup(self.identifier).is_constant_in(scope)
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        declaration = scope.lookup(self.identifier)
+        if isinstance(declaration, context.VariableDeclaration):
+            return declaration.typ
+        elif isinstance(declaration, context.ParameterDeclaration):
+            return declaration.typ
+        assert False
 
 
 # XXX: this class should be abstract, however, then it does not type-check
@@ -147,32 +127,40 @@ class BinaryExpression(Expression):
     def children(self) -> typing.Sequence[Expression]:
         return self.left, self.right
 
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return (
+            self.left.is_constant_in(scope)
+            and self.right.is_constant_in(scope)
+        )
+
     # XXX: this method shall be implemented by all subclasses
-    def infer_type(self, ctx: TypeContext) -> types.Type:
+    def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
 
 
 class Boolean(BinaryExpression):
     operator: operators.BooleanOperator
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        left_type = self.left.infer_type(ctx)
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        left_type = scope.get_type(self.left)
         if left_type != types.BOOL:
-            raise InvalidTypeError(f'expected types.BOOL but got {left_type}')
-        right_type = self.right.infer_type(ctx)
+            raise errors.InvalidTypeError(f'expected types.BOOL but got {left_type}')
+        right_type = scope.get_type(self.right)
         if right_type != types.BOOL:
-            raise InvalidTypeError(f'expected types.BOOL but got {right_type}')
+            raise errors.InvalidTypeError(f'expected types.BOOL but got {right_type}')
         return types.BOOL
 
 
 class Arithmetic(BinaryExpression):
     operator: operators.ArithmeticOperator
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        left_type = self.left.infer_type(ctx)
-        right_type = self.right.infer_type(ctx)
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        left_type = scope.get_type(self.left)
+        right_type = scope.get_type(self.right)
         if not left_type.is_numeric or not right_type.is_numeric:
-            raise InvalidTypeError('operands of arithmetic expressions must have a numeric type')
+            raise errors.InvalidTypeError(
+                'operands of arithmetic expressions must have a numeric type'
+            )
         if types.INT.is_assignable_from(left_type) and types.INT.is_assignable_from(right_type):
             return types.INT
         return types.REAL
@@ -181,13 +169,13 @@ class Arithmetic(BinaryExpression):
 class Equality(BinaryExpression):
     operator: operators.EqualityOperator
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        left_type = self.left.infer_type(ctx)
-        right_type = self.right.infer_type(ctx)
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        left_type = scope.get_type(self.left)
+        right_type = scope.get_type(self.right)
         # XXX: JANI specifies that “left and right must be assignable to some common type”
         if (not left_type.is_assignable_from(right_type)
                 and not right_type.is_assignable_from(left_type)):
-            raise InvalidTypeError(
+            raise errors.InvalidTypeError(
                 'invalid combination of type for equality comparison'
             )
         return types.BOOL
@@ -196,13 +184,17 @@ class Equality(BinaryExpression):
 class NumericComparison(BinaryExpression):
     operator: operators.ComparisonOperator
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        left_type = self.left.infer_type(ctx)
-        if left_type.is_numeric:
-            raise InvalidTypeError(f'expected numeric type but got {left_type}')
-        right_type = self.right.infer_type(ctx)
-        if right_type.is_numeric:
-            raise InvalidTypeError(f'expected numeric type but got {right_type}')
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        left_type = scope.get_type(self.left)
+        if not left_type.is_numeric:
+            raise errors.InvalidTypeError(
+                f'expected numeric type but got {left_type}'
+            )
+        right_type = scope.get_type(self.right)
+        if not right_type.is_numeric:
+            raise errors.InvalidTypeError(
+                f'expected numeric type but got {right_type}'
+            )
         return types.BOOL
 
 
@@ -216,20 +208,27 @@ class Conditional(Expression):
     def children(self) -> typing.Sequence[Expression]:
         return self.condition, self.consequence, self.alternative
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        condition_type = self.condition.infer_type(ctx)
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return (
+            self.condition.is_constant_in(scope)
+            and self.consequence.is_constant_in(scope)
+            and self.alternative.is_constant_in(scope)
+        )
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        condition_type = scope.get_type(self.condition)
         if condition_type != types.BOOL:
-            raise InvalidTypeError(
+            raise errors.InvalidTypeError(
                 f'expected `types.BOOL` but got `{condition_type}`'
             )
-        consequence_type = self.consequence.infer_type(ctx)
-        alternative_type = self.alternative.infer_type(ctx)
+        consequence_type = scope.get_type(self.consequence)
+        alternative_type = scope.get_type(self.alternative)
         if consequence_type.is_assignable_from(alternative_type):
             return consequence_type
         elif alternative_type.is_assignable_from(consequence_type):
             return alternative_type
         else:
-            raise InvalidTypeError(
+            raise errors.InvalidTypeError(
                 'invalid combination of consequence and alternative types'
             )
 
@@ -242,10 +241,13 @@ class Not(Expression):
     def children(self) -> typing.Sequence[Expression]:
         return self.operand,
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        operand_type = self.operand.infer_type(ctx)
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return self.operand.is_constant_in(scope)
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        operand_type = scope.get_type(self.operand)
         if operand_type != types.BOOL:
-            raise InvalidTypeError(f'expected `types.BOOL` but got {operand_type}')
+            raise errors.InvalidTypeError(f'expected `types.BOOL` but got {operand_type}')
         return types.BOOL
 
 
@@ -256,18 +258,21 @@ class Sample(Expression):
 
     def __post_init__(self) -> None:
         if len(self.arguments) != len(self.distribution.parameter_types):
-            raise ValueError('arity of parameters and arity does not match')
+            raise ValueError('parameter and arguments arity mismatch')
 
     @property
     def children(self) -> typing.Sequence[Expression]:
         return self.arguments
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return False
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
         # we already know that the arity of the parameters and arguments match
         for argument, parameter_type in zip(self.arguments, self.distribution.parameter_types):
-            argument_type = argument.infer_type(ctx)
+            argument_type = scope.get_type(argument)
             if not parameter_type.is_assignable_from(argument_type):
-                raise InvalidTypeError(
+                raise errors.InvalidTypeError(
                     f'parameter type `{parameter_type}` is not assignable '
                     f'from argument type `{argument_type}`'
                 )
@@ -276,14 +281,19 @@ class Sample(Expression):
 
 @dataclasses.dataclass(frozen=True)
 class Selection(Expression):
-    identifier: Identifier
+    identifier: context.Identifier
     condition: Expression
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
-        condition_type = self.condition.infer_type(ctx)
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        condition_type = scope.get_type(self.condition)
         if condition_type != types.BOOL:
-            raise InvalidTypeError('condition must have type `types.BOOL`')
-        return ctx.lookup(self.identifier)
+            raise errors.InvalidTypeError('condition must have type `types.BOOL`')
+        declaration = scope.lookup(self.identifier)
+        assert isinstance(declaration, context.VariableDeclaration)
+        return declaration.typ
+
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return False
 
     @property
     def children(self) -> typing.Sequence[Expression]:
@@ -292,22 +302,21 @@ class Selection(Expression):
 
 @dataclasses.dataclass(frozen=True)
 class Derivative(Expression):
-    identifier: Identifier
+    identifier: context.Identifier
 
-    def infer_type(self, ctx: TypeContext) -> types.Type:
+    def infer_type(self, scope: context.Scope) -> types.Type:
         return types.REAL
+
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return False
 
     @property
     def children(self) -> typing.Sequence[Expression]:
         return ()
 
 
-def infer_type_of(expr: Expression, ctx: typing.Optional[TypeContext] = None) -> types.Type:
-    return expr.infer_type(ctx or TypeContext())
-
-
-def var(identifier: Identifier) -> Expression:
-    return Variable(identifier)
+def var(identifier: context.Identifier) -> Expression:
+    return Identifier(identifier)
 
 
 def ite(condition: Expression, consequence: Expression, alternative: Expression) -> Expression:
