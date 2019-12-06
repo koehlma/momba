@@ -128,22 +128,22 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
     action = jani_edge['action'] if 'action' in jani_edge else None
     rate = _expression(jani_edge['rate']['exp']) if 'rate' in jani_edge else None
     guard = _expression(jani_edge['guard']['exp']) if 'guard' in jani_edge else None
-    destinations = frozenset({
+    destinations = frozenset(
         automata.Destination(
             location=locations[jani_destination['location']],
             probability=(
                 _expression(jani_destination['probability']['exp'])
                 if 'probability' in jani_destination else None
             ),
-            assignments=frozenset({
+            assignments=frozenset(
                 assignments.Assignment(
                     target=_target(jani_assignment['ref']),
                     value=_expression(jani_assignment['value']),
                     index=jani_assignment.get('index', 0)
                 ) for jani_assignment in jani_destination['assignments']
-            })
+            )
         ) for jani_destination in jani_edge['destinations']
-    })
+    )
     return automata.Edge(
         location=location,
         destinations=destinations,
@@ -154,12 +154,12 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
 
 
 def loads(source: str) -> Model:
-    structure = json.loads(source)
+    jani_model = json.loads(source)
     model = Model()
-    if 'variables' in structure:
-        for jani_declaration in structure['variables']:
+    if 'variables' in jani_model:
+        for jani_declaration in jani_model['variables']:
             model.ctx.global_scope.declare(_variable_declaration(jani_declaration))
-    for jani_automaton in structure['automata']:
+    for jani_automaton in jani_model['automata']:
         automaton = model.new_automaton()
         if 'variables' in jani_automaton:
             for jani_declaration in jani_automaton['variables']:
