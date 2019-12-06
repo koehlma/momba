@@ -3,8 +3,3 @@
 # Copyright (C) 2019, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
 
 from __future__ import annotations
-
-from .model import Model
-
-
-__all__ = ['Model']

@@ -33,6 +33,18 @@ class Declaration:
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
     typ: types.Type
+    initial_value: typing.Optional[expressions.Expression] = None
+
+    def validate(self, scope: Scope) -> None:
+        if self.initial_value is not None:
+            if not self.typ.is_assignable_from(scope.get_type(self.initial_value)):
+                raise errors.InvalidTypeError(
+                    f'type of initial value is not assignable to variable type'
+                )
+            if not self.initial_value.is_constant_in(scope):
+                raise errors.NotAConstantError(
+                    f'initial value must be a constant'
+                )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -69,6 +81,10 @@ class Scope:
         self.parent = parent
         self._declarations = {}
         self._types = {}
+
+    @property
+    def declarations(self) -> typing.AbstractSet[Declaration]:
+        return frozenset(self._declarations.values())
 
     def get_type(self, typed: Typed) -> types.Type:
         if typed not in self._types:

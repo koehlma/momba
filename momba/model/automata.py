@@ -10,13 +10,20 @@ import typing
 from . import assignments, context, errors, expressions, types
 
 
+Action = typing.NewType('Action', str)
+
+
+def action(name: str) -> Action:
+    return Action(name)
+
+
 @dataclasses.dataclass(frozen=True)
 class Location:
     name: str
-    invariant: expressions.Expression = expressions.cast(True)
+    invariant: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: context.Scope) -> None:
-        if scope.get_type(self.invariant) != types.BOOL:
+        if self.invariant is not None and scope.get_type(self.invariant) != types.BOOL:
             raise errors.InvalidTypeError(
                 f'type of invariant in location {self} is not `types.BOOL`'
             )
@@ -25,6 +32,7 @@ class Location:
 @dataclasses.dataclass(frozen=True)
 class Destination:
     location: Location
+    probability: typing.Optional[expressions.Expression] = None
     assignments: typing.AbstractSet[assignments.Assignment] = dataclasses.field(
         default_factory=frozenset
     )
@@ -34,6 +42,11 @@ class Destination:
             raise errors.IncompatibleAssignmentsError(
                 f'assignments on edge {self} are not compatible'
             )
+        if self.probability is not None:
+            if not scope.get_type(self.probability).is_numeric:
+                raise errors.InvalidTypeError(
+                    f'probability value must be numeric'
+                )
         for assignment in self.assignments:
             assignment.validate(scope)
 
@@ -41,13 +54,19 @@ class Destination:
 @dataclasses.dataclass(frozen=True)
 class Edge:
     location: Location
-    guard: expressions.Expression
     destinations: typing.AbstractSet[Destination]
+    action: typing.Optional[Action] = None
+    guard: typing.Optional[expressions.Expression] = None
+    rate: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: context.Scope) -> None:
-        if scope.get_type(self.guard) != types.BOOL:
+        if self.guard is not None and scope.get_type(self.guard) != types.BOOL:
             raise errors.InvalidTypeError(
                 f'type of guard on edge {self} is not `types.BOOL`'
+            )
+        if self.rate is not None and not scope.get_type(self.rate).is_numeric:
+            raise errors.InvalidTypeError(
+                f'type of rate on edge {self} is not numeric'
             )
         for destination in self.destinations:
             destination.validate(scope)
@@ -57,15 +76,13 @@ class Automaton:
     ctx: context.Context
     scope: context.Scope
 
-    comment: typing.Optional[str]
-
     _locations: typing.Set[Location]
     _initial_locations: typing.Set[Location]
     _restrict_initial: typing.Optional[expressions.Expression]
     _edges: typing.Set[Edge]
 
-    def __init__(self, ctx: typing.Optional[context.Context] = None):
-        self.ctx = ctx or context.Context()
+    def __init__(self, ctx: context.Context):
+        self.ctx = ctx
         self.scope = self.ctx.new_scope()
         self.comment = None
         self._locations = set()

@@ -18,6 +18,7 @@ class Target(abc.ABC):
         raise NotImplementedError()
 
 
+@dataclasses.dataclass(frozen=True)
 class Identifier(Target):
     identifier: context.Identifier
 

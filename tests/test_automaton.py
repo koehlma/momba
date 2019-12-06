@@ -4,15 +4,15 @@
 
 from __future__ import annotations
 
-from momba.model.automaton import Automaton, Edge, Location, Destination
+from momba.model.automata import Automaton, Edge, Location, Destination
 from momba.model.expressions import var
-from momba.model import errors, types
+from momba.model import context, errors, types
 
 import pytest
 
 
 def test_basic_inferences():
-    automaton = Automaton()
+    automaton = Automaton(context.Context())
     automaton.scope.declare_parameter('T', types.INT)
     automaton.scope.declare_variable('x', types.CLOCK)
 

@@ -61,7 +61,7 @@ class RealValue(NumericValue):
 
 
 PythonRealString = typing.Literal['π', 'e']
-PythonReal = typing.Union[numbers.Number, PythonRealString, NamedReal]
+PythonReal = typing.Union[numbers.Number, float, PythonRealString, NamedReal]
 PythonNumeric = typing.Union[int, PythonReal]
 PythonValue = typing.Union[bool, PythonNumeric]
 

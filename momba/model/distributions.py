@@ -10,6 +10,9 @@ import typing
 from . import types
 
 
+_MAP: typing.Dict[str, Distribution] = {}
+
+
 class Distribution(enum.Enum):
     DISCRETE_UNIFORM = 'DiscreteUniform', [types.INT, types.INT]
     BERNOULLI = 'Bernoulli', [types.REAL]
@@ -43,6 +46,11 @@ class Distribution(enum.Enum):
     jani_name: str
     parameter_types: typing.Sequence[types.Type]
 
-    def __init__(self, name: str, parameter_types: typing.Sequence[types.Type]) -> None:
-        self.jani_name = name
+    def __init__(self, jani_name: str, parameter_types: typing.Sequence[types.Type]) -> None:
+        _MAP[jani_name] = self
+        self.jani_name = jani_name
         self.parameter_types = parameter_types
+
+
+def by_name(jani_name: str) -> Distribution:
+    return _MAP[jani_name]

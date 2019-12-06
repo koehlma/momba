@@ -8,7 +8,7 @@ import abc
 import dataclasses
 import typing
 
-from . import context, distribution, errors, operators, types, values
+from . import context, distributions, errors, operators, types, values
 
 
 class Expression(abc.ABC):
@@ -60,22 +60,22 @@ class Expression(abc.ABC):
         )
 
     def lt(self, other: Expression) -> Expression:
-        return NumericComparison(
+        return Comparison(
             operators.ComparisonOperator.LT, self, other
         )
 
     def le(self, other: Expression) -> Expression:
-        return NumericComparison(
+        return Comparison(
             operators.ComparisonOperator.LE, self, other
         )
 
     def ge(self, other: Expression) -> Expression:
-        return NumericComparison(
+        return Comparison(
             operators.ComparisonOperator.GE, self, other
         )
 
     def gt(self, other: Expression) -> Expression:
-        return NumericComparison(
+        return Comparison(
             operators.ComparisonOperator.GT, self, other
         )
 
@@ -181,7 +181,7 @@ class Equality(BinaryExpression):
         return types.BOOL
 
 
-class NumericComparison(BinaryExpression):
+class Comparison(BinaryExpression):
     operator: operators.ComparisonOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -253,7 +253,7 @@ class Not(Expression):
 
 @dataclasses.dataclass(frozen=True)
 class Sample(Expression):
-    distribution: distribution.Distribution
+    distribution: distributions.Distribution
     arguments: typing.Sequence[Expression]
 
     def __post_init__(self) -> None:
@@ -334,3 +334,81 @@ def cast(value: MaybeExpression) -> Expression:
     if isinstance(value, Expression):
         return value
     return const(value)
+
+
+BinaryConstructor = typing.Callable[[Expression, Expression], BinaryExpression]
+
+
+def lor(left: Expression, right: Expression) -> BinaryExpression:
+    return Boolean(operators.BooleanOperator.OR, left, right)
+
+
+def land(left: Expression, right: Expression) -> BinaryExpression:
+    return Boolean(operators.BooleanOperator.AND, left, right)
+
+
+def eq(left: Expression, right: Expression) -> BinaryExpression:
+    return Equality(operators.EqualityOperator.EQ, left, right)
+
+
+def neq(left: Expression, right: Expression) -> BinaryExpression:
+    return Equality(operators.EqualityOperator.NEQ, left, right)
+
+
+def lt(left: Expression, right: Expression) -> BinaryExpression:
+    return Comparison(operators.ComparisonOperator.LT, left, right)
+
+
+def le(left: Expression, right: Expression) -> BinaryExpression:
+    return Comparison(operators.ComparisonOperator.LE, left, right)
+
+
+def ge(left: Expression, right: Expression) -> BinaryExpression:
+    return Comparison(operators.ComparisonOperator.GE, left, right)
+
+
+def gt(left: Expression, right: Expression) -> BinaryExpression:
+    return Comparison(operators.ComparisonOperator.GT, left, right)
+
+
+def add(left: Expression, right: Expression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.ADD, left, right)
+
+
+def sub(left: Expression, right: Expression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.SUB, left, right)
+
+
+def mul(left: Expression, right: Expression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MUL, left, right)
+
+
+def mod(left: Expression, right: Expression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MOD, left, right)
+
+
+def div(left: Expression, right: Expression) -> BinaryExpression:
+    raise NotImplementedError()
+
+
+def power(left: Expression, right: Expression) -> BinaryExpression:
+    raise NotImplementedError()
+
+
+def log(left: Expression, right: Expression) -> BinaryExpression:
+    raise NotImplementedError()
+
+
+UnaryConstructor = typing.Callable[[Expression], Expression]
+
+
+def lnot(operand: Expression) -> Expression:
+    return Not(operand)
+
+
+def floor(operand: Expression) -> Expression:
+    raise NotImplementedError()
+
+
+def ceil(operand: Expression) -> Expression:
+    raise NotImplementedError()
