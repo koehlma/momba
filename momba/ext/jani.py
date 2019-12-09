@@ -6,9 +6,10 @@ from __future__ import annotations
 
 import json
 import typing
+import warnings
 
 from ..model import assignments, automata, context, distributions, expressions, types
-from ..model import Model
+from ..model import Network
 
 
 _TYPE_MAP = {
@@ -91,27 +92,118 @@ def _type(typ: typing.Any) -> types.Type:
     assert False, 'this should never happen'
 
 
+def _comment_warning(structure: typing.Any) -> None:
+    if 'comment' in structure:
+        warnings.warn(
+            f'comments are currently not supported, comment information will be lost'
+        )
+
+
+def _warn_fields(structure: typing.Any, expected: typing.Collection[str]) -> None:
+    if hasattr(structure, 'keys'):
+        fields = set(structure.keys())
+        for field in expected:
+            fields.remove(field)
+        if fields:
+            for unknown in fields:
+                warnings.warn(
+                    f'encountered unknown field {unknown} in {structure}'
+                )
+
+
+_Fields = typing.Collection[str]
+
+
+def _check_fields(
+    jani_structure: typing.Any,
+    required: _Fields = frozenset(),
+    optional: _Fields = frozenset(),
+    unsupported: _Fields = frozenset({'comment'})
+) -> None:
+    if not isinstance(jani_structure, dict):
+        raise ValueError(f'expected dictionary but found {jani_structure}')
+    fields = set(jani_structure.keys())
+    for field in unsupported:
+        if (field in optional or field in required) and field in fields:
+            warnings.warn(
+                f'field {field} is currently unsupported'
+            )
+    for field in required:
+        if field not in fields:
+            raise ValueError(f'field {field} is required but not found')
+        fields.discard(field)
+    for field in optional:
+        fields.discard(field)
+    if fields:
+        warnings.warn(
+            f'found unknown fields: {fields}'
+        )
+
+
 def _variable_declaration(jani_declaration: typing.Any) -> context.VariableDeclaration:
-    initial_value: typing.Optional[expressions.Expression]
-    if 'initial-value' in jani_declaration:
-        initial_value = _expression(jani_declaration['initial-value'])
-    else:
-        initial_value = None
+    _check_fields(
+        jani_declaration,
+        required={'name', 'type'},
+        optional={'initial-value', 'comment'}
+    )
+    transient: bool = jani_declaration.get('transient', False)
+    initial_value: typing.Optional[expressions.Expression] = (
+        _expression(jani_declaration['initial-value'])
+        if 'initial-value' in jani_declaration
+        else None
+    )
     return context.VariableDeclaration(
         identifier=jani_declaration['name'],
         typ=_type(jani_declaration['type']),
+        transient=transient,
         initial_value=initial_value
     )
 
 
+def _constant_declaration(jani_declaration: typing.Any) -> context.ConstantDeclaration:
+    _check_fields(
+        jani_declaration,
+        required={'name', 'type'},
+        optional={'value', 'comment'}
+    )
+    value: typing.Optional[expressions.Expression] = (
+        _expression(jani_declaration['value'])
+        if 'value' in jani_declaration
+        else None
+    )
+    return context.ConstantDeclaration(
+        identifier=jani_declaration['name'],
+        typ=_type(jani_declaration['type']),
+        value=value
+    )
+
+
 def _location(jani_location: typing.Any) -> automata.Location:
-    assert 'transient-values' not in jani_location, 'unsupported'
-    invariant: typing.Optional[expressions.Expression]
+    _check_fields(
+        jani_location,
+        required={'name'},
+        optional={'time-progress', 'transient-values'}
+    )
+    progress_invariant: typing.Optional[expressions.Expression]
     if 'time-progress' in jani_location:
-        invariant = _expression(jani_location['time-progress']['exp'])
+        _check_fields(jani_location['time-progress'], required={'exp'}, optional={'comment'})
+        progress_invariant = _expression(jani_location['time-progress']['exp'])
     else:
-        invariant = None
-    return automata.Location(name=jani_location['name'], invariant=invariant)
+        progress_invariant = None
+    transient_values: typing.Set[assignments.Assignment] = set()
+    if 'transient-values' in jani_location:
+        for jani_transient_value in jani_location['transient-values']:
+            _check_fields(jani_transient_value, required={'ref', 'value'}, optional={'comment'})
+            assignment = assignments.Assignment(
+                target=_target(jani_transient_value['ref']),
+                value=_expression(jani_transient_value['value'])
+            )
+            transient_values.add(assignment)
+    return automata.Location(
+        name=jani_location['name'],
+        progress_invariant=progress_invariant,
+        transient_values=frozenset(transient_values)
+    )
 
 
 _Locations = typing.Dict[str, automata.Location]
@@ -153,22 +245,61 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
     )
 
 
-def loads(source: str) -> Model:
-    jani_model = json.loads(source)
-    model = Model()
+JANIModel = typing.Union[bytes, str]
+
+
+def load(source: JANIModel) -> Network:
+    if isinstance(source, bytes):
+        jani_model = json.loads(source.decode('utf-8'))
+    else:
+        jani_model = json.loads(source)
+    _check_fields(
+        jani_model,
+        required={'jani-version', 'name', 'type', 'automata', 'system'},
+        optional={
+            'metadata', 'features', 'actions', 'constants', 'variables',
+            'restrict-initial', 'properties', 'comment'
+        },
+        unsupported={'properties', 'comment'}
+    )
+    network = Network()
     if 'variables' in jani_model:
         for jani_declaration in jani_model['variables']:
-            model.ctx.global_scope.declare(_variable_declaration(jani_declaration))
+            var_declaration = _variable_declaration(jani_declaration)
+            network.ctx.global_scope.declare(var_declaration)
+    if 'constants' in jani_model:
+        for jani_declaration in jani_model['constants']:
+            const_declaration = _constant_declaration(jani_declaration)
+            network.ctx.global_scope.declare(const_declaration)
+    if 'restrict-initial' in jani_model:
+        _check_fields(jani_model['restrict-initial'], required={'exp'}, optional={'comment'})
+        restrict_initial = _expression(jani_model['restrict-initial']['exp'])
+        network.restrict_initial = restrict_initial
     for jani_automaton in jani_model['automata']:
-        automaton = model.new_automaton()
+        _check_fields(
+            jani_automaton,
+            required={'name', 'locations', 'initial-locations', 'edges'},
+            optional={'variables', 'restrict-initial', 'comment'}
+        )
+        automaton = network.new_automaton()
         if 'variables' in jani_automaton:
             for jani_declaration in jani_automaton['variables']:
-                automaton.scope.declare(_variable_declaration(jani_declaration))
+                declaration = _variable_declaration(jani_declaration)
+                automaton.scope.declare(declaration)
         locations = {
-            location.name: location for location in map(_location, jani_automaton['locations'])
+            location.name: location
+            for location in map(_location, jani_automaton['locations'])
         }
+        if 'restrict-initial' in jani_automaton:
+            _check_fields(
+                jani_automaton['restrict-initial'],
+                required={'exp'},
+                optional={'comment'}
+            )
+            restrict_initial = _expression(jani_automaton['restrict-initial']['exp'])
+            automaton.restrict_initial = restrict_initial
         for jani_edge in jani_automaton['edges']:
             automaton.add_edge(_edge(locations, jani_edge))
         for jani_location in jani_automaton['initial-locations']:
             automaton.add_initial_location(locations[jani_location])
-    return model
+    return network

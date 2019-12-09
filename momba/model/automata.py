@@ -19,23 +19,53 @@ def action(name: str) -> Action:
 
 @dataclasses.dataclass(frozen=True)
 class Location:
+    """
+    Represents a location of a SHA.
+
+    Attributes:
+        name:
+            The unique name of the location.
+        invariant:
+            The *time-progression invariant* of the location. Has to be a boolean
+            expression in the scope the location is used.
+    """
+
     name: str
-    invariant: typing.Optional[expressions.Expression] = None
+    progress_invariant: typing.Optional[expressions.Expression] = None
+    transient_values: typing.AbstractSet[assignments.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
-        if self.invariant is not None and scope.get_type(self.invariant) != types.BOOL:
-            raise errors.InvalidTypeError(
-                f'type of invariant in location {self} is not `types.BOOL`'
-            )
+        if self.progress_invariant is not None:
+            if scope.ctx.model_type not in context.TA_MODEL_TYPES:
+                raise errors.ModelingError(
+                    f'location invariant is not allowed for model type {scope.ctx.model_type}'
+                )
+            if scope.get_type(self.progress_invariant) != types.BOOL:
+                raise errors.InvalidTypeError(
+                    f'type of invariant in location {self} is not `types.BOOL`'
+                )
+        if self.transient_values:
+            if scope.ctx.model_type not in context.TA_MODEL_TYPES:
+                raise errors.ModelingError(
+                    f'transient values are not allowed for model type {scope.ctx.model_type}'
+                )
+            if not assignments.are_compatible(self.transient_values):
+                raise errors.IncompatibleAssignmentsError(
+                    f'incompatible assignments for transient values'
+                )
+            for assignment in self.transient_values:
+                if assignment.index != 0:
+                    raise errors.ModelingError(
+                        f'index of assignments for transient values must be zero'
+                    )
+                assignment.validate(scope)
 
 
 @dataclasses.dataclass(frozen=True)
 class Destination:
     location: Location
     probability: typing.Optional[expressions.Expression] = None
-    assignments: typing.AbstractSet[assignments.Assignment] = dataclasses.field(
-        default_factory=frozenset
-    )
+    assignments: typing.AbstractSet[assignments.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if not assignments.are_compatible(self.assignments):
@@ -119,6 +149,11 @@ class Automaton:
         return self._edges
 
     def add_location(self, location: Location) -> None:
+        """
+        Adds a location to the automaton.
+
+        :param location: The :class:`Location` to add.
+        """
         location.validate(self.scope)
         self._locations.add(location)
 

@@ -4,7 +4,8 @@
 
 from __future__ import annotations
 
-from .model import Model
+from .automata import Automaton, Location, Edge
+from .network import Network
 
 
-__all__ = ['Model']
+__all__ = ['Automaton', 'Location', 'Edge', 'Network']

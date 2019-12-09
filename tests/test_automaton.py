@@ -13,10 +13,10 @@ import pytest
 
 def test_basic_inferences():
     automaton = Automaton(context.Context())
-    automaton.scope.declare_parameter('T', types.INT)
+    automaton.scope.declare_constant('T', types.INT)
     automaton.scope.declare_variable('x', types.CLOCK)
 
-    location_1 = Location('Location1', invariant=var('x').lt(var('T')))
+    location_1 = Location('Location1', progress_invariant=var('x').lt(var('T')))
     location_2 = Location('Location2')
 
     edge = Edge(
@@ -31,5 +31,5 @@ def test_basic_inferences():
 
     with pytest.raises(errors.ModelingError):
         automaton.add_location(
-            Location('InvalidInvariant', invariant=var('z'))
+            Location('InvalidInvariant', progress_invariant=var('z'))
         )

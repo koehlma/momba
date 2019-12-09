@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import dataclasses
+import enum
 import typing
 
 from . import errors, expressions, types
@@ -12,6 +13,27 @@ from . import errors, expressions, types
 if typing.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
     from . import assignments  # noqa: F401
+
+
+class ModelType(enum.Enum):
+    LTS = 'lts', 'Labeled Transition System'
+    DTMC = 'dtmc', 'Discrete-Time Markov Chain'
+    CTMC = 'ctmc', 'Continuous-Time Markov Chain'
+    MDP = 'mdp', 'Markov Decision Process'
+    CTMDP = 'ctmdp', 'Continuous-Time Markov Decision Process'
+    MA = 'ma', 'Markov Automaton'
+    TA = 'ta', 'Timed Automaton'
+    PTA = 'pta', 'Probabilistic Timed Automaton'
+    STA = 'sta', 'Stochastic Timed Automaton'
+    HA = 'ha', 'Hybrid Automaton'
+    PHA = 'pha', 'Probabilistic Timed Automaton'
+    SHA = 'sha', 'Stochastic Hybrid Automaton'
+
+
+TA_MODEL_TYPES = {
+    ModelType.TA, ModelType.PTA, ModelType.STA,
+    ModelType.HA, ModelType.PHA, ModelType.SHA
+}
 
 
 Identifier = str
@@ -33,6 +55,7 @@ class Declaration:
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
     typ: types.Type
+    transient: bool = False
     initial_value: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
@@ -49,35 +72,34 @@ class VariableDeclaration(Declaration):
 
 @dataclasses.dataclass(frozen=True)
 class ConstantDeclaration(Declaration):
-    value: expressions.Expression
+    """ Constants without values are parameters. """
+    typ: types.Type
+    value: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
-        if not self.value.is_constant_in(scope):
-            raise errors.NotAConstantError(
-                f'value {self.value} of constant declaration is not a constant'
-            )
-
-    def is_constant_in(self, scope: Scope) -> bool:
-        return True
-
-
-@dataclasses.dataclass(frozen=True)
-class ParameterDeclaration(Declaration):
-    typ: types.Type
+        if self.value is not None:
+            if not self.value.is_constant_in(scope):
+                raise errors.NotAConstantError(
+                    f'value {self.value} of constant declaration is not a constant'
+                )
+            if not self.typ.is_assignable_from(scope.get_type(self.value)):
+                raise errors.InvalidTypeError(
+                    f'constant expression is not assignable to constant type'
+                )
 
     def is_constant_in(self, scope: Scope) -> bool:
         return True
 
 
 class Scope:
-    context: Context
+    ctx: Context
     parent: typing.Optional[Scope]
 
     _declarations: typing.Dict[Identifier, Declaration]
     _types: typing.Dict[Typed, types.Type]
 
-    def __init__(self, context: Context, parent: typing.Optional[Scope] = None):
-        self.context = context
+    def __init__(self, ctx: Context, parent: typing.Optional[Scope] = None):
+        self.ctx = ctx
         self.parent = parent
         self._declarations = {}
         self._types = {}
@@ -85,6 +107,9 @@ class Scope:
     @property
     def declarations(self) -> typing.AbstractSet[Declaration]:
         return frozenset(self._declarations.values())
+
+    def new_child_scope(self) -> Scope:
+        return Scope(self.ctx, parent=self)
 
     def get_type(self, typed: Typed) -> types.Type:
         if typed not in self._types:
@@ -117,18 +142,22 @@ class Scope:
     def declare_variable(self, identifier: Identifier, typ: types.Type) -> None:
         self.declare(VariableDeclaration(identifier, typ))
 
-    def declare_constant(self, identifier: Identifier, value: expressions.Expression) -> None:
-        self.declare(ConstantDeclaration(identifier, value))
-
-    def declare_parameter(self, identifier: Identifier, typ: types.Type) -> None:
-        self.declare(ParameterDeclaration(identifier, typ))
+    def declare_constant(
+        self,
+        identifier: Identifier,
+        typ: types.Type,
+        value: typing.Optional[expressions.Expression] = None
+    ) -> None:
+        self.declare(ConstantDeclaration(identifier, typ, value))
 
 
 class Context:
+    model_type: ModelType
     global_scope: Scope
 
-    def __init__(self) -> None:
+    def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
+        self.model_type = model_type
         self.global_scope = Scope(self)
 
     def new_scope(self) -> Scope:
-        return Scope(self, parent=self.global_scope)
+        return self.global_scope.new_child_scope()

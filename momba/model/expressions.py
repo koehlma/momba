@@ -110,12 +110,12 @@ class Identifier(Expression):
         declaration = scope.lookup(self.identifier)
         if isinstance(declaration, context.VariableDeclaration):
             return declaration.typ
-        elif isinstance(declaration, context.ParameterDeclaration):
+        elif isinstance(declaration, context.ConstantDeclaration):
             return declaration.typ
         assert False
 
 
-# XXX: this class should be abstract, however, then it does not type-check
+# XXX: this class should be abstract, however, then it would not type-check
 # https://github.com/python/mypy/issues/5374
 @dataclasses.dataclass(frozen=True)
 class BinaryExpression(Expression):
