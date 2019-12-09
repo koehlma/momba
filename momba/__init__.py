@@ -10,6 +10,7 @@ It's core modeling formalism are *stochastic hybrid automata* (SHA).
 
 from __future__ import annotations
 
-from . import model
+from . import ext, model
 
-__all__ = ['model']
+
+__all__ = ['ext', 'model']

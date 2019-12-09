@@ -8,8 +8,8 @@ import json
 import typing
 import warnings
 
+from .. import model
 from ..model import assignments, automata, context, distributions, expressions, types
-from ..model import Network
 
 
 _TYPE_MAP = {
@@ -248,7 +248,15 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
 JANIModel = typing.Union[bytes, str]
 
 
-def load(source: JANIModel) -> Network:
+def load(source: JANIModel) -> model.Network:
+    """
+    Constructs a Momba automata network based on the provided JANI model.
+
+    :param source:
+        The source of the JANI model to load.
+    :return:
+        The resulting network of Momba automata network.
+    """
     if isinstance(source, bytes):
         jani_model = json.loads(source.decode('utf-8'))
     else:
@@ -262,7 +270,7 @@ def load(source: JANIModel) -> Network:
         },
         unsupported={'properties', 'comment'}
     )
-    network = Network()
+    network = model.Network()
     if 'variables' in jani_model:
         for jani_declaration in jani_model['variables']:
             var_declaration = _variable_declaration(jani_declaration)
@@ -303,3 +311,16 @@ def load(source: JANIModel) -> Network:
         for jani_location in jani_automaton['initial-locations']:
             automaton.add_initial_location(locations[jani_location])
     return network
+
+
+def dump(network: model.Network) -> bytes:
+    """
+    Takes a Momba automata network and exports it to the JANI format.
+
+    Arguments:
+        network: The Momba automata network to export to JANI.
+
+    Returns:
+        The model in UTF-8 encoded JANI format.
+    """
+    raise NotImplementedError()
