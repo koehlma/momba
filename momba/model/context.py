@@ -44,6 +44,7 @@ Typed = typing.Union['expressions.Expression', 'assignments.Target']
 @dataclasses.dataclass(frozen=True)
 class Declaration:
     identifier: Identifier
+    typ: types.Type
 
     def validate(self, scope: Scope) -> None:
         pass
@@ -54,7 +55,6 @@ class Declaration:
 
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
-    typ: types.Type
     transient: bool = False
     initial_value: typing.Optional[expressions.Expression] = None
 
@@ -73,7 +73,6 @@ class VariableDeclaration(Declaration):
 @dataclasses.dataclass(frozen=True)
 class ConstantDeclaration(Declaration):
     """ Constants without values are parameters. """
-    typ: types.Type
     value: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
