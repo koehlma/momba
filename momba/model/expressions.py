@@ -8,7 +8,10 @@ import abc
 import dataclasses
 import typing
 
-from . import context, distributions, errors, operators, types, values
+from . import context, errors, operators, types, values
+
+if typing.TYPE_CHECKING:
+    from . import distributions
 
 
 class Expression(abc.ABC):
@@ -315,7 +318,7 @@ class Derivative(Expression):
         return ()
 
 
-def var(identifier: context.Identifier) -> Expression:
+def var(identifier: context.Identifier) -> Identifier:
     return Identifier(identifier)
 
 

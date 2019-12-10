@@ -7,6 +7,7 @@ from __future__ import annotations
 import abc
 import enum
 import dataclasses
+import math
 import numbers
 import typing
 
@@ -46,22 +47,39 @@ class IntegerValue(NumericValue):
         return types.INT
 
 
+_NAMED_REAL_MAP: typing.Dict[str, NamedReal] = {}
+
+
 class NamedReal(enum.Enum):
-    PI = 'π'
-    E = 'e'
+    PI = 'π', math.pi
+    E = 'e', math.e
+
+    symbol: str
+    float_value: float
+
+    def __init__(self, symbol: str, float_value: float) -> None:
+        self.symbol = symbol
+        self.float_value = float_value
+        _NAMED_REAL_MAP[symbol] = self
 
 
 @dataclasses.dataclass(frozen=True)
 class RealValue(NumericValue):
-    real: typing.Union[NamedReal, numbers.Number]
+    real: typing.Union[NamedReal, numbers.Real]
 
     @property
     def typ(self) -> types.Type:
         return types.REAL
 
+    @property
+    def as_float(self) -> float:
+        if isinstance(self.real, NamedReal):
+            return self.real.float_value
+        return float(self.real)
+
 
 PythonRealString = typing.Literal['π', 'e']
-PythonReal = typing.Union[numbers.Number, float, PythonRealString, NamedReal]
+PythonReal = typing.Union[numbers.Real, float, PythonRealString, NamedReal]
 PythonNumeric = typing.Union[int, PythonReal]
 PythonValue = typing.Union[bool, PythonNumeric]
 
@@ -82,7 +100,7 @@ def pack_numeric(value: PythonNumeric) -> NumericValue:
     elif isinstance(value, (numbers.Number, NamedReal)):
         return RealValue(value)
     elif isinstance(value, str):
-        return RealValue(NamedReal(value))
+        return RealValue(_NAMED_REAL_MAP[value])
     raise ConversionError(f'unable to convert Python value {value!r} to Momba value')
 
 
