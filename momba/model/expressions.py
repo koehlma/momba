@@ -8,7 +8,10 @@ import abc
 import dataclasses
 import typing
 
-from . import context, distributions, errors, operators, types, values
+from . import context, errors, operators, types, values
+
+if typing.TYPE_CHECKING:
+    from . import distributions
 
 
 class Expression(abc.ABC):
@@ -169,6 +172,15 @@ class Arithmetic(BinaryExpression):
 class Equality(BinaryExpression):
     operator: operators.EqualityOperator
 
+    def get_common_type(self, scope: context.Scope) -> types.Type:
+        left_type = scope.get_type(self.left)
+        right_type = scope.get_type(self.right)
+        if left_type.is_assignable_from(right_type):
+            return left_type
+        elif right_type.is_assignable_from(left_type):
+            return right_type
+        assert False, 'type-inference should ensure that some of the above is true'
+
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
         right_type = scope.get_type(self.right)
@@ -315,7 +327,7 @@ class Derivative(Expression):
         return ()
 
 
-def var(identifier: context.Identifier) -> Expression:
+def var(identifier: context.Identifier) -> Identifier:
     return Identifier(identifier)
 
 
