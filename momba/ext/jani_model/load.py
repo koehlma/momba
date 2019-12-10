@@ -8,8 +8,8 @@ import json
 import typing
 import warnings
 
-from .. import model
-from ..model import assignments, automata, context, distributions, expressions, types
+from momba import model
+from momba.model import assignments, automata, context, distributions, expressions, types
 
 
 _TYPE_MAP = {
@@ -311,16 +311,3 @@ def load(source: JANIModel) -> model.Network:
         for jani_location in jani_automaton['initial-locations']:
             automaton.add_initial_location(locations[jani_location])
     return network
-
-
-def dump(network: model.Network) -> bytes:
-    """
-    Takes a Momba automata network and exports it to the JANI format.
-
-    Arguments:
-        network: The Momba automata network to export to JANI.
-
-    Returns:
-        The model in UTF-8 encoded JANI format.
-    """
-    raise NotImplementedError()
