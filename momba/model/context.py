@@ -29,6 +29,13 @@ class ModelType(enum.Enum):
     PHA = 'pha', 'Probabilistic Timed Automaton'
     SHA = 'sha', 'Stochastic Hybrid Automaton'
 
+    abbreviation: str
+    full_name: str
+
+    def __init__(self, abbreviation: str, full_name: str):
+        self.abbreviation = abbreviation
+        self.full_name = full_name
+
 
 TA_MODEL_TYPES = {
     ModelType.TA, ModelType.PTA, ModelType.STA,
@@ -47,6 +54,7 @@ class Declaration:
     typ: types.Type
 
     def validate(self, scope: Scope) -> None:
+        # TODO: check whether type is bounded or basic
         pass
 
     def is_constant_in(self, scope: Scope) -> bool:
@@ -55,7 +63,7 @@ class Declaration:
 
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
-    transient: bool = False
+    transient: typing.Optional[bool] = None
     initial_value: typing.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
@@ -106,6 +114,20 @@ class Scope:
     @property
     def declarations(self) -> typing.AbstractSet[Declaration]:
         return frozenset(self._declarations.values())
+
+    @property
+    def variable_declarations(self) -> typing.AbstractSet[VariableDeclaration]:
+        return frozenset(
+            decl for decl in self._declarations.values()
+            if isinstance(decl, VariableDeclaration)
+        )
+
+    @property
+    def constant_declarations(self) -> typing.AbstractSet[ConstantDeclaration]:
+        return frozenset(
+            decl for decl in self._declarations.values()
+            if isinstance(decl, ConstantDeclaration)
+        )
 
     def new_child_scope(self) -> Scope:
         return Scope(self.ctx, parent=self)

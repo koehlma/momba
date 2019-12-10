@@ -228,7 +228,7 @@ def _register_arithmetic_function(
 
 
 def _register_boolean_function(
-    operator: operators.BooleanOperator,
+    operator: operators.Boolean,
     function: _BooleanFunction
 ) -> None:
     def implementation(
@@ -246,7 +246,7 @@ def _register_boolean_function(
 
 
 def _register_comparison_function(
-    operator: operators.ComparisonOperator,
+    operator: operators.Comparison,
     function: _ComparisonFunction
 ) -> None:
     def implementation(
@@ -281,40 +281,40 @@ _register_arithmetic_function(
 )
 
 _register_boolean_function(
-    operators.BooleanOperator.AND,
+    operators.Boolean.AND,
     lambda left, right: left and right
 )
 _register_boolean_function(
-    operators.BooleanOperator.OR,
+    operators.Boolean.OR,
     lambda left, right: left or right
 )
 _register_boolean_function(
-    operators.BooleanOperator.XOR,
+    operators.Boolean.XOR,
     lambda left, right: (not left and right) or (left and not right)
 )
 _register_boolean_function(
-    operators.BooleanOperator.IMPLY,
+    operators.Boolean.IMPLY,
     lambda left, right: not left or right
 )
 _register_boolean_function(
-    operators.BooleanOperator.EQUIV,
+    operators.Boolean.EQUIV,
     lambda left, right: left is right
 )
 
 _register_comparison_function(
-    operators.ComparisonOperator.LT,
+    operators.Comparison.LT,
     lambda left, right: left < right
 )
 _register_comparison_function(
-    operators.ComparisonOperator.LE,
+    operators.Comparison.LE,
     lambda left, right: left <= right
 )
 _register_comparison_function(
-    operators.ComparisonOperator.GE,
+    operators.Comparison.GE,
     lambda left, right: left >= right
 )
 _register_comparison_function(
-    operators.ComparisonOperator.GT,
+    operators.Comparison.GT,
     lambda left, right: left > right
 )
 
@@ -326,11 +326,11 @@ assert all(
 )
 assert all(
     operator in _BINARY_OPERATOR_MAP
-    for operator in operators.BooleanOperator
+    for operator in operators.Boolean
 )
 assert all(
     operator in _BINARY_OPERATOR_MAP
-    for operator in operators.ComparisonOperator
+    for operator in operators.Comparison
 )
 
 

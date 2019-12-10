@@ -25,3 +25,17 @@ def test_basic_jani_import():
     automaton, = network.automata
 
     assert len(automaton.locations) == 1
+
+
+def test_basic_import_export():
+    with pytest.warns(UserWarning):
+        network = jani_model.load(DIE_MODEL.read_text(encoding='utf-8'))
+
+    network = jani_model.load(jani_model.dump(network))
+
+    assert len(network.automata) == 1
+    assert network.ctx.global_scope.lookup('s').typ == types.INT[0, 7]
+
+    automaton, = network.automata
+
+    assert len(automaton.locations) == 1

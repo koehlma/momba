@@ -23,12 +23,15 @@ _TYPE_MAP = {
 _BINARY_OP_MAP: typing.Mapping[str, expressions.BinaryConstructor] = {
     '∨': expressions.lor,
     '∧': expressions.land,
+    '⇒': expressions.implies,  # defined by the `derived-operators` extension
+    '⊕': expressions.xor,  # defined by the `x-momba-operators` extension
+    '⇔': expressions.equiv,  # defined by the `x-momba-operators` extension
     '=': expressions.eq,
     '≠': expressions.neq,
     '<': expressions.lt,
     '≤': expressions.ge,
-    '>': expressions.gt,
-    '≥': expressions.ge,
+    '>': expressions.gt,  # defined by the `derived-operators` extension
+    '≥': expressions.ge,  # defined by the `derived-operators` extension
     '+': expressions.add,
     '-': expressions.sub,
     '*': expressions.mul,
@@ -144,9 +147,9 @@ def _variable_declaration(jani_declaration: typing.Any) -> context.VariableDecla
     _check_fields(
         jani_declaration,
         required={'name', 'type'},
-        optional={'initial-value', 'comment'}
+        optional={'transient', 'initial-value', 'comment'}
     )
-    transient: bool = jani_declaration.get('transient', False)
+    transient: bool = jani_declaration.get('transient', None)
     initial_value: typing.Optional[expressions.Expression] = (
         _expression(jani_declaration['initial-value'])
         if 'initial-value' in jani_declaration

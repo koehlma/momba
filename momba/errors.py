@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-from .cache import lru_cache
-from .clstools import get_subclasses
 
-
-__all__ = ['lru_cache', 'get_subclasses']
+class MombaError(Exception):
+    pass

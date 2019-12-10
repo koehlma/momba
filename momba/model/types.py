@@ -36,7 +36,7 @@ class Numeric(Type, abc.ABC):
 
 
 @dataclasses.dataclass(frozen=True)
-class _Integer(Numeric):
+class IntegerType(Numeric):
     def __str__(self) -> str:
         return 'types.INT'
 
@@ -45,7 +45,7 @@ class _Integer(Numeric):
 
 
 @dataclasses.dataclass(frozen=True)
-class _Real(Numeric):
+class RealType(Numeric):
     def __str__(self) -> str:
         return 'types.REAL'
 
@@ -54,7 +54,7 @@ class _Real(Numeric):
 
 
 @dataclasses.dataclass(frozen=True)
-class _Bool(Type):
+class BoolType(Type):
     def __str__(self) -> str:
         return 'types.BOOL'
 
@@ -63,7 +63,7 @@ class _Bool(Type):
 
 
 @dataclasses.dataclass(frozen=True)
-class _Clock(Numeric):
+class ClockType(Numeric):
     def __str__(self) -> str:
         return 'types.CLOCK'
 
@@ -74,7 +74,7 @@ class _Clock(Numeric):
 
 
 @dataclasses.dataclass(frozen=True)
-class _Continuous(Numeric):
+class ContinuousType(Numeric):
     def __str__(self) -> str:
         return 'types.CONTINUOUS'
 
@@ -82,11 +82,11 @@ class _Continuous(Numeric):
         return typ.is_numeric
 
 
-INT = _Integer()
-REAL = _Real()
-BOOL = _Bool()
-CLOCK = _Clock()
-CONTINUOUS = _Continuous()
+INT = IntegerType()
+REAL = RealType()
+BOOL = BoolType()
+CLOCK = ClockType()
+CONTINUOUS = ContinuousType()
 
 
 Bound = typing.Optional[typing.Union['expressions.MaybeExpression', 'ellipsis']]

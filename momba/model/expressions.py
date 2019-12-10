@@ -45,12 +45,12 @@ class Expression(abc.ABC):
     def __and__(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
-        return Boolean(operators.BooleanOperator.AND, self, other)
+        return Boolean(operators.Boolean.AND, self, other)
 
     def __or__(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
-        return Boolean(operators.BooleanOperator.OR, self, other)
+        return Boolean(operators.Boolean.OR, self, other)
 
     def eq(self, other: Expression) -> Expression:
         return Equality(
@@ -64,22 +64,22 @@ class Expression(abc.ABC):
 
     def lt(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.LT, self, other
+            operators.Comparison.LT, self, other
         )
 
     def le(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.LE, self, other
+            operators.Comparison.LE, self, other
         )
 
     def ge(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.GE, self, other
+            operators.Comparison.GE, self, other
         )
 
     def gt(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.GT, self, other
+            operators.Comparison.GT, self, other
         )
 
 
@@ -142,7 +142,7 @@ class BinaryExpression(Expression):
 
 
 class Boolean(BinaryExpression):
-    operator: operators.BooleanOperator
+    operator: operators.Boolean
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
@@ -194,7 +194,7 @@ class Equality(BinaryExpression):
 
 
 class Comparison(BinaryExpression):
-    operator: operators.ComparisonOperator
+    operator: operators.Comparison
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
@@ -351,12 +351,24 @@ def cast(value: MaybeExpression) -> Expression:
 BinaryConstructor = typing.Callable[[Expression, Expression], BinaryExpression]
 
 
-def lor(left: Expression, right: Expression) -> BinaryExpression:
-    return Boolean(operators.BooleanOperator.OR, left, right)
+def lor(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.OR, left, right)
 
 
-def land(left: Expression, right: Expression) -> BinaryExpression:
-    return Boolean(operators.BooleanOperator.AND, left, right)
+def land(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.AND, left, right)
+
+
+def xor(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.XOR, left, right)
+
+
+def implies(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.IMPLY, left, right)
+
+
+def equiv(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.EQUIV, left, right)
 
 
 def eq(left: Expression, right: Expression) -> BinaryExpression:
@@ -368,19 +380,19 @@ def neq(left: Expression, right: Expression) -> BinaryExpression:
 
 
 def lt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LT, left, right)
+    return Comparison(operators.Comparison.LT, left, right)
 
 
 def le(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LE, left, right)
+    return Comparison(operators.Comparison.LE, left, right)
 
 
 def ge(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GE, left, right)
+    return Comparison(operators.Comparison.GE, left, right)
 
 
 def gt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GT, left, right)
+    return Comparison(operators.Comparison.GT, left, right)
 
 
 def add(left: Expression, right: Expression) -> BinaryExpression:
@@ -424,3 +436,13 @@ def floor(operand: Expression) -> Expression:
 
 def ceil(operand: Expression) -> Expression:
     raise NotImplementedError()
+
+
+def normalize_xor(expr: Boolean) -> Boolean:
+    assert expr.operator is operators.Boolean.XOR
+    return lor(land(lnot(expr.left), expr.right), land(expr.right, lnot(expr.left)))
+
+
+def normalize_equiv(expr: Boolean) -> Boolean:
+    assert expr.operator is operators.Boolean.EQUIV
+    return land(implies(expr.left, expr.right), implies(expr.right, expr.left))
