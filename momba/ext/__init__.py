@@ -8,7 +8,7 @@ Interfaces to external tools.
 
 from __future__ import annotations
 
-from . import jani_model
+from . import jani
 
 
-__all__ = ['jani_model']
+__all__ = ['jani']

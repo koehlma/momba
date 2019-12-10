@@ -17,7 +17,7 @@ def action(name: str) -> Action:
     return Action(name)
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, eq=False)
 class Location:
     """
     Represents a location of a SHA.
@@ -25,9 +25,11 @@ class Location:
     Attributes:
         name:
             The unique name of the location.
-        invariant:
+        progress_invariant:
             The *time-progression invariant* of the location. Has to be a boolean
             expression in the scope the location is used.
+        transient_values:
+            Assignments for transient variables.
     """
 
     name: str

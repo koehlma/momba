@@ -251,7 +251,7 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
 JANIModel = typing.Union[bytes, str]
 
 
-def load(source: JANIModel) -> model.Network:
+def load_model(source: JANIModel) -> model.Network:
     """
     Constructs a Momba automata network based on the provided JANI model.
 

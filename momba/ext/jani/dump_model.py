@@ -355,7 +355,7 @@ def dump_structure(network: model.Network) -> JSON:
     return jani_model
 
 
-def dump(network: model.Network, *, indent: t.Optional[int] = None) -> bytes:
+def dump_model(network: model.Network, *, indent: t.Optional[int] = None) -> bytes:
     """
     Takes a Momba automata network and exports it to the JANI format.
 
