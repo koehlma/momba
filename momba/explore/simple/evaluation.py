@@ -7,12 +7,15 @@ from __future__ import annotations
 import abc
 import dataclasses
 import functools
+import inspect
 import typing
 import warnings
 
 from ... import model
 from ...model import context, expressions, operators, types
 from ...model.expressions import BinaryExpression
+
+from .. import errors
 
 
 class Value(abc.ABC):
@@ -49,13 +52,24 @@ class ImprecisionWarning(UserWarning):
 
 
 class Valuation:
+    parent: typing.Optional[Valuation]
+
     _values: typing.Dict[model.Identifier, Value]
 
-    def __init__(self) -> None:
+    def __init__(self, parent: typing.Optional[Valuation] = None) -> None:
+        self.parent = parent
         self._values = {}
 
     def load(self, identifier: model.Identifier) -> Value:
-        return self._values[identifier]
+        try:
+            return self._values[identifier]
+        except KeyError:
+            if self.parent:
+                return self.parent.load(identifier)
+            else:
+                raise errors.UnboundIdentifierError(
+                    f'identifier {identifier} is not bound to a value'
+                )
 
     def store(self, identifier: model.Identifier, value: Value) -> None:
         self._values[identifier] = value
@@ -63,8 +77,13 @@ class Valuation:
 
 @dataclasses.dataclass(frozen=True)
 class EvaluationContext:
+    """ A context to evaluate an expression in. """
+
     valuation: Valuation
     scope: context.Scope
+
+    def load(self, identifier: context.Identifier) -> Value:
+        return self.valuation.load(identifier)
 
 
 @functools.singledispatch
@@ -108,7 +127,37 @@ def _model_value_real(value: model.values.RealValue, ctx: EvaluationContext) -> 
 
 @evaluate.register
 def _eval_identifier(expr: expressions.Identifier, ctx: EvaluationContext) -> Value:
-    return ctx.valuation.load(expr.identifier)
+    return ctx.load(expr.identifier)
+
+
+@evaluate.register
+def _eval_conditional(expr: expressions.Conditional, ctx: EvaluationContext) -> Value:
+    condition = evaluate(expr.condition, ctx)
+    assert isinstance(condition, Bool), (
+        f'type checking should guarantee that the value is a bool'
+    )
+    if condition.boolean:
+        return evaluate(expr.consequence, ctx)
+    else:
+        return evaluate(expr.alternative, ctx)
+
+
+@evaluate.register(expressions.Sample)
+@evaluate.register(expressions.Selection)
+@evaluate.register(expressions.Derivative)
+def _eval_unsupported(expr: expressions.Expression, ctx: EvaluationContext) -> Value:
+    raise errors.UnsupportedExpressionError(
+        f'expression {expr} cannot be evaluated with the simple state-space explorer'
+    )
+
+
+@evaluate.register
+def _eval_not(expr: expressions.Not, ctx: EvaluationContext) -> Value:
+    operand = evaluate(expr.operand, ctx)
+    assert isinstance(operand, Bool), (
+        f'type checking should guarantee that the value is a boolean'
+    )
+    return Bool(not operand.boolean)
 
 
 _BinaryOperator = typing.Callable[[BinaryExpression, Value, Value, EvaluationContext], Value]
@@ -121,23 +170,177 @@ def _eval_binary(expr: BinaryExpression, ctx: EvaluationContext) -> Value:
     return _BINARY_OPERATOR_MAP[expr.operator](expr, left, right, ctx)
 
 
-def _add(expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext) -> Value:
-    # type checking guarantees that `left` and `right` are either `Real` or `Integer`
-    assert isinstance(left, (Integer, Real))
-    assert isinstance(right, (Integer, Real))
-    if isinstance(left, Real) or isinstance(right, Real):
-        warnings.warn(
-            f'imprecise operation on reals, reals are approximated by IEEE 754 doubles',
-            category=ImprecisionWarning
-        )
-    result = left.number + right.number
-    if ctx.scope.get_type(expr) == types.INT:
-        assert isinstance(result, int)
-        return Integer(result)
+def _eval_equality(
+    expr: BinaryExpression,
+    left: Value,
+    right: Value,
+    ctx: EvaluationContext
+) -> Value:
+    assert expr.operator in {operators.EqualityOperator.EQ, operators.EqualityOperator.NEQ}, (
+        f'this function is meant to evaluate equalities and nothing else'
+    )
+    result: bool
+    if isinstance(left, Numeric) and isinstance(right, Numeric):
+        result = left.number == right.number
     else:
-        return Real(float(result))
+        result = left == right
+    if expr.operator is operators.EqualityOperator.EQ:
+        return Bool(result)
+    else:
+        return Bool(not result)
 
 
-_BINARY_OPERATOR_MAP: typing.Mapping[operators.BinaryOperator, _BinaryOperator] = {
-    operators.ArithmeticOperator.ADD: _add
+_BINARY_OPERATOR_MAP: typing.Dict[operators.BinaryOperator, _BinaryOperator] = {
+    operators.EqualityOperator.EQ: _eval_equality,
+    operators.EqualityOperator.NEQ: _eval_equality
 }
+
+
+_Number = typing.Union[float, int]
+_ArithmeticFunction = typing.Callable[[_Number, _Number], _Number]
+_BooleanFunction = typing.Callable[[bool, bool], bool]
+_ComparisonFunction = typing.Callable[[_Number, _Number], bool]
+
+
+def _register_arithmetic_function(
+    operator: operators.ArithmeticOperator,
+    function: _ArithmeticFunction
+) -> None:
+    def implementation(
+        expr: BinaryExpression,
+        left: Value,
+        right: Value,
+        ctx: EvaluationContext
+    ) -> Value:
+        assert isinstance(left, (Integer, Real)) and isinstance(right, (Integer, Real)), (
+            f'type checking should guarantee that the values are either integers or reals'
+        )
+        result = function(left.number, right.number)
+        if ctx.scope.get_type(expr) == types.INT:
+            assert isinstance(result, int), (
+                f'type checking should guarantee that the result is an integer'
+            )
+            return Integer(result)
+        else:
+            return Real(float(result))
+    implementation.__name__ = f'_eval_arithmetic_{operator.name.lower()}'
+    _BINARY_OPERATOR_MAP[operator] = implementation
+
+
+def _register_boolean_function(
+    operator: operators.BooleanOperator,
+    function: _BooleanFunction
+) -> None:
+    def implementation(
+        expr: BinaryExpression,
+        left: Value,
+        right: Value,
+        ctx: EvaluationContext
+    ) -> Value:
+        assert isinstance(left, Bool) and isinstance(right, Bool), (
+            f'type checking should guarantee that the values are boolean'
+        )
+        return Bool(function(left.boolean, right.boolean))
+    implementation.__name__ = f'_eval_boolean_{operator.name.lower()}'
+    _BINARY_OPERATOR_MAP[operator] = implementation
+
+
+def _register_comparison_function(
+    operator: operators.ComparisonOperator,
+    function: _ComparisonFunction
+) -> None:
+    def implementation(
+        expr: BinaryExpression,
+        left: Value,
+        right: Value,
+        ctx: EvaluationContext
+    ) -> Value:
+        assert isinstance(left, (Integer, Real)) and isinstance(right, (Integer, Real)), (
+            f'type checking should guarantee that the values are either integers or reals'
+        )
+        return Bool(function(left.number, right.number))
+    implementation.__name__ = f'_eval_comparison_{operator.name.lower()}'
+    _BINARY_OPERATOR_MAP[operator] = implementation
+
+
+_register_arithmetic_function(
+    operators.ArithmeticOperator.ADD,
+    lambda left, right: left + right
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.SUB,
+    lambda left, right: left - right
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.MUL,
+    lambda left, right: left * right
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.MOD,
+    lambda left, right: left % abs(right)
+)
+
+_register_boolean_function(
+    operators.BooleanOperator.AND,
+    lambda left, right: left and right
+)
+_register_boolean_function(
+    operators.BooleanOperator.OR,
+    lambda left, right: left or right
+)
+_register_boolean_function(
+    operators.BooleanOperator.XOR,
+    lambda left, right: (not left and right) or (left and not right)
+)
+_register_boolean_function(
+    operators.BooleanOperator.IMPLY,
+    lambda left, right: not left or right
+)
+_register_boolean_function(
+    operators.BooleanOperator.EQUIV,
+    lambda left, right: left is right
+)
+
+_register_comparison_function(
+    operators.ComparisonOperator.LT,
+    lambda left, right: left < right
+)
+_register_comparison_function(
+    operators.ComparisonOperator.LE,
+    lambda left, right: left <= right
+)
+_register_comparison_function(
+    operators.ComparisonOperator.GE,
+    lambda left, right: left >= right
+)
+_register_comparison_function(
+    operators.ComparisonOperator.GT,
+    lambda left, right: left > right
+)
+
+
+# ensure that all operators have been defined
+assert all(
+    operator in _BINARY_OPERATOR_MAP
+    for operator in operators.ArithmeticOperator
+)
+assert all(
+    operator in _BINARY_OPERATOR_MAP
+    for operator in operators.BooleanOperator
+)
+assert all(
+    operator in _BINARY_OPERATOR_MAP
+    for operator in operators.ComparisonOperator
+)
+
+
+def _check_evaluate() -> None:
+    for subclass in expressions.Expression.__subclasses__():
+        if not inspect.isabstract(subclass) and subclass not in evaluate.registry:
+            warnings.warn(
+                f'evaluation function for {subclass} has not been implemented'
+            )
+
+
+# warn if evaluate is not implemented for all concrete subclasses of Expression
+_check_evaluate()
