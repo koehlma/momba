@@ -4,10 +4,11 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import abc
 import collections
 import dataclasses
-import typing
 
 from . import context, errors, expressions, types
 
@@ -46,8 +47,8 @@ class Assignment:
             )
 
 
-def are_compatible(assignments: typing.Iterable[Assignment]) -> bool:
-    groups: typing.DefaultDict[int, typing.AbstractSet[Target]] = collections.defaultdict(set)
+def are_compatible(assignments: t.Iterable[Assignment]) -> bool:
+    groups: t.DefaultDict[int, t.AbstractSet[Target]] = collections.defaultdict(set)
     for assignment in assignments:
         target = assignment.target
         if target in groups[assignment.index]:

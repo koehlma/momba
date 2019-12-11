@@ -4,9 +4,10 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import abc
 import dataclasses
-import typing
 
 from . import context, expressions
 
@@ -89,8 +90,8 @@ CLOCK = ClockType()
 CONTINUOUS = ContinuousType()
 
 
-Bound = typing.Optional[typing.Union['expressions.MaybeExpression', 'ellipsis']]
-Bounds = typing.Tuple[Bound, Bound]
+Bound = t.Optional[t.Union['expressions.MaybeExpression', 'ellipsis']]
+Bounds = t.Tuple[Bound, Bound]
 
 
 class TypeConstructionError(ValueError):
@@ -109,8 +110,8 @@ class InvalidBoundError(TypeConstructionError):
 class BoundedType(Numeric):
     base: Numeric
 
-    lower_bound: typing.Optional[expressions.Expression]
-    upper_bound: typing.Optional[expressions.Expression]
+    lower_bound: t.Optional[expressions.Expression]
+    upper_bound: t.Optional[expressions.Expression]
 
     def __str__(self) -> str:
         return f'{self.base}[{self.lower_bound}, {self.upper_bound}]'
@@ -136,10 +137,10 @@ class BoundedType(Numeric):
                 raise InvalidBoundError('type of `upper_bound` is not assignable to base-type')
 
     @staticmethod
-    def cast_bound(bound: Bound) -> typing.Optional[expressions.Expression]:
+    def cast_bound(bound: Bound) -> t.Optional[expressions.Expression]:
         if bound is None or bound is Ellipsis:
             return None
-        return expressions.cast(typing.cast(expressions.MaybeExpression, bound))
+        return expressions.cast(t.cast(expressions.MaybeExpression, bound))
 
     def is_assignable_from(self, typ: Type) -> bool:
         return self.base.is_assignable_from(typ)

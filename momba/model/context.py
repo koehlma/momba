@@ -4,13 +4,14 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import dataclasses
 import enum
-import typing
 
 from . import errors, expressions, types
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
     from . import assignments  # noqa: F401
 
@@ -45,7 +46,7 @@ TA_MODEL_TYPES = {
 
 Identifier = str
 
-Typed = typing.Union['expressions.Expression', 'assignments.Target']
+Typed = t.Union['expressions.Expression', 'assignments.Target']
 
 
 @dataclasses.dataclass(frozen=True)
@@ -63,8 +64,8 @@ class Declaration:
 
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
-    transient: typing.Optional[bool] = None
-    initial_value: typing.Optional[expressions.Expression] = None
+    transient: t.Optional[bool] = None
+    initial_value: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
         if self.initial_value is not None:
@@ -81,7 +82,7 @@ class VariableDeclaration(Declaration):
 @dataclasses.dataclass(frozen=True)
 class ConstantDeclaration(Declaration):
     """ Constants without values are parameters. """
-    value: typing.Optional[expressions.Expression] = None
+    value: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
         if self.value is not None:
@@ -100,30 +101,30 @@ class ConstantDeclaration(Declaration):
 
 class Scope:
     ctx: Context
-    parent: typing.Optional[Scope]
+    parent: t.Optional[Scope]
 
-    _declarations: typing.Dict[Identifier, Declaration]
-    _types: typing.Dict[Typed, types.Type]
+    _declarations: t.Dict[Identifier, Declaration]
+    _types: t.Dict[Typed, types.Type]
 
-    def __init__(self, ctx: Context, parent: typing.Optional[Scope] = None):
+    def __init__(self, ctx: Context, parent: t.Optional[Scope] = None):
         self.ctx = ctx
         self.parent = parent
         self._declarations = {}
         self._types = {}
 
     @property
-    def declarations(self) -> typing.AbstractSet[Declaration]:
+    def declarations(self) -> t.AbstractSet[Declaration]:
         return frozenset(self._declarations.values())
 
     @property
-    def variable_declarations(self) -> typing.AbstractSet[VariableDeclaration]:
+    def variable_declarations(self) -> t.AbstractSet[VariableDeclaration]:
         return frozenset(
             decl for decl in self._declarations.values()
             if isinstance(decl, VariableDeclaration)
         )
 
     @property
-    def constant_declarations(self) -> typing.AbstractSet[ConstantDeclaration]:
+    def constant_declarations(self) -> t.AbstractSet[ConstantDeclaration]:
         return frozenset(
             decl for decl in self._declarations.values()
             if isinstance(decl, ConstantDeclaration)
@@ -167,7 +168,7 @@ class Scope:
         self,
         identifier: Identifier,
         typ: types.Type,
-        value: typing.Optional[expressions.Expression] = None
+        value: t.Optional[expressions.Expression] = None
     ) -> None:
         self.declare(ConstantDeclaration(identifier, typ, value))
 

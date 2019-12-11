@@ -4,11 +4,12 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import functools
-import typing
 
 
-T = typing.TypeVar('T')
+T = t.TypeVar('T')
 
 
 # XXX: this is here just to make `mypy` happy

@@ -4,11 +4,12 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import abc
 import dataclasses
 import functools
 import inspect
-import typing
 import warnings
 
 from ... import model
@@ -32,7 +33,7 @@ class Bool(Value):
 
 
 class Numeric(Value, abc.ABC):
-    number: typing.Union[int, float]
+    number: t.Union[int, float]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -52,11 +53,11 @@ class ImprecisionWarning(UserWarning):
 
 
 class Valuation:
-    parent: typing.Optional[Valuation]
+    parent: t.Optional[Valuation]
 
-    _values: typing.Dict[model.Identifier, Value]
+    _values: t.Dict[model.Identifier, Value]
 
-    def __init__(self, parent: typing.Optional[Valuation] = None) -> None:
+    def __init__(self, parent: t.Optional[Valuation] = None) -> None:
         self.parent = parent
         self._values = {}
 
@@ -160,7 +161,7 @@ def _eval_not(expr: expressions.Not, ctx: EvaluationContext) -> Value:
     return Bool(not operand.boolean)
 
 
-_BinaryOperator = typing.Callable[[BinaryExpression, Value, Value, EvaluationContext], Value]
+_BinaryOperator = t.Callable[[BinaryExpression, Value, Value, EvaluationContext], Value]
 
 
 @evaluate.register
@@ -190,16 +191,16 @@ def _eval_equality(
         return Bool(not result)
 
 
-_BINARY_OPERATOR_MAP: typing.Dict[operators.BinaryOperator, _BinaryOperator] = {
+_BINARY_OPERATOR_MAP: t.Dict[operators.BinaryOperator, _BinaryOperator] = {
     operators.EqualityOperator.EQ: _eval_equality,
     operators.EqualityOperator.NEQ: _eval_equality
 }
 
 
-_Number = typing.Union[float, int]
-_ArithmeticFunction = typing.Callable[[_Number, _Number], _Number]
-_BooleanFunction = typing.Callable[[bool, bool], bool]
-_ComparisonFunction = typing.Callable[[_Number, _Number], bool]
+_Number = t.Union[float, int]
+_ArithmeticFunction = t.Callable[[_Number, _Number], _Number]
+_BooleanFunction = t.Callable[[bool, bool], bool]
+_ComparisonFunction = t.Callable[[_Number, _Number], bool]
 
 
 def _register_arithmetic_function(

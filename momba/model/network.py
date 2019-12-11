@@ -4,12 +4,12 @@
 
 from __future__ import annotations
 
-import typing
+import typing as t
 
 from . import context, errors, types
 from .automata import Automaton
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from .expressions import Expression
 
 
@@ -19,8 +19,8 @@ class Network:
     """
     ctx: context.Context
 
-    _restrict_initial: typing.Optional[Expression]
-    _automata: typing.Set[Automaton]
+    _restrict_initial: t.Optional[Expression]
+    _automata: t.Set[Automaton]
 
     def __init__(self, model_type: context.ModelType = context.ModelType.SHA) -> None:
         self.ctx = context.Context(model_type)
@@ -28,7 +28,7 @@ class Network:
         self._automata = set()
 
     @property
-    def restrict_initial(self) -> typing.Optional[Expression]:
+    def restrict_initial(self) -> t.Optional[Expression]:
         return self._restrict_initial
 
     @restrict_initial.setter
@@ -44,7 +44,7 @@ class Network:
         self._restrict_initial = restrict_initial
 
     @property
-    def automata(self) -> typing.AbstractSet[Automaton]:
+    def automata(self) -> t.AbstractSet[Automaton]:
         """
         The set of :py_class:`momba.Automaton` making up the model.
         """
