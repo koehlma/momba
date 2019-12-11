@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 sys.path.insert(0, os.path.join(os.path.basename(__file__), '..', '..'))
 
@@ -7,10 +8,15 @@ import momba  # noqa
 
 
 project = 'Momba'
-copyright = '2019, Maximilian Köhl'
+copyright = '2019, Dependable Systems and Software Group, Saarland University'
 author = 'Maximilian Köhl'
 
-release = '0.0.1dev'
+try:
+    release = subprocess.check_output(['git', 'describe', '--dirty']).decode().strip()[1:]
+except subprocess.CalledProcessError:
+    release = 'unknown'
+
+version = release
 
 
 extensions = [
@@ -20,6 +26,9 @@ extensions = [
     'sphinx.ext.mathjax'
 ]
 
+html_theme_options = {
+    'display_version': True
+}
 
 templates_path = []  # type: ignore
 

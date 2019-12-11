@@ -53,4 +53,6 @@ Contents
    :maxdepth: 2
 
    model/index
+   explore/index
+   analysis/index
    external/index
