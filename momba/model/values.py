@@ -4,12 +4,13 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import abc
 import enum
 import dataclasses
 import math
 import numbers
-import typing
 
 from . import types
 
@@ -47,7 +48,7 @@ class IntegerValue(NumericValue):
         return types.INT
 
 
-_NAMED_REAL_MAP: typing.Dict[str, NamedReal] = {}
+_NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
 
 
 class NamedReal(enum.Enum):
@@ -65,7 +66,7 @@ class NamedReal(enum.Enum):
 
 @dataclasses.dataclass(frozen=True)
 class RealValue(NumericValue):
-    real: typing.Union[NamedReal, numbers.Real]
+    real: t.Union[NamedReal, numbers.Real]
 
     @property
     def typ(self) -> types.Type:
@@ -78,10 +79,10 @@ class RealValue(NumericValue):
         return float(self.real)
 
 
-PythonRealString = typing.Literal['π', 'e']
-PythonReal = typing.Union[numbers.Real, float, PythonRealString, NamedReal]
-PythonNumeric = typing.Union[int, PythonReal]
-PythonValue = typing.Union[bool, PythonNumeric]
+PythonRealString = t.Literal['π', 'e']
+PythonReal = t.Union[numbers.Real, float, PythonRealString, NamedReal]
+PythonNumeric = t.Union[int, PythonReal]
+PythonValue = t.Union[bool, PythonNumeric]
 
 
 class ConversionError(ValueError):
@@ -107,7 +108,7 @@ def pack_numeric(value: PythonNumeric) -> NumericValue:
 def unpack(value: Value) -> PythonValue:
     if isinstance(value, BooleanValue):
         return value.boolean
-    return unpack_numeric(typing.cast(NumericValue, value))
+    return unpack_numeric(t.cast(NumericValue, value))
 
 
 def unpack_numeric(value: NumericValue) -> PythonNumeric:

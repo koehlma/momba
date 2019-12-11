@@ -4,13 +4,14 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import enum
-import typing
 
 from . import types
 
 
-_MAP: typing.Dict[str, Distribution] = {}
+_MAP: t.Dict[str, Distribution] = {}
 
 
 class Distribution(enum.Enum):
@@ -44,9 +45,9 @@ class Distribution(enum.Enum):
     TRIANGULAR = 'Triangular', [types.REAL, types.REAL, types.REAL]
 
     jani_name: str
-    parameter_types: typing.Sequence[types.Type]
+    parameter_types: t.Sequence[types.Type]
 
-    def __init__(self, jani_name: str, parameter_types: typing.Sequence[types.Type]) -> None:
+    def __init__(self, jani_name: str, parameter_types: t.Sequence[types.Type]) -> None:
         _MAP[jani_name] = self
         self.jani_name = jani_name
         self.parameter_types = parameter_types

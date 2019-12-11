@@ -1,4 +1,4 @@
-.. currentmodule:: momba.ext.jani_model
+.. currentmodule:: momba.ext.jani
 
 
 JANI-Model
@@ -9,5 +9,5 @@ Momba supports loading and saving models in the JANI format.
 
 .. _`JANI specification`: http://www.jani-spec.org/
 
-.. automodule:: momba.ext.jani_model
-    :members: load, dump
+.. automodule:: momba.ext.jani
+    :members: load_model, dump_model

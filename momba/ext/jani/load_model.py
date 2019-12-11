@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import json
-import typing
 import warnings
 
 from momba import model
@@ -20,15 +21,18 @@ _TYPE_MAP = {
     'continuous': types.CONTINUOUS
 }
 
-_BINARY_OP_MAP: typing.Mapping[str, expressions.BinaryConstructor] = {
+_BINARY_OP_MAP: t.Mapping[str, expressions.BinaryConstructor] = {
     '∨': expressions.lor,
     '∧': expressions.land,
+    '⇒': expressions.implies,  # defined by the `derived-operators` extension
+    '⊕': expressions.xor,  # defined by the `x-momba-operators` extension
+    '⇔': expressions.equiv,  # defined by the `x-momba-operators` extension
     '=': expressions.eq,
     '≠': expressions.neq,
     '<': expressions.lt,
     '≤': expressions.ge,
-    '>': expressions.gt,
-    '≥': expressions.ge,
+    '>': expressions.gt,  # defined by the `derived-operators` extension
+    '≥': expressions.ge,  # defined by the `derived-operators` extension
     '+': expressions.add,
     '-': expressions.sub,
     '*': expressions.mul,
@@ -38,14 +42,14 @@ _BINARY_OP_MAP: typing.Mapping[str, expressions.BinaryConstructor] = {
     'log': expressions.log
 }
 
-_UNARY_OP_MAP: typing.Mapping[str, expressions.UnaryConstructor] = {
+_UNARY_OP_MAP: t.Mapping[str, expressions.UnaryConstructor] = {
     '¬': expressions.lnot,
     'floor': expressions.floor,
     'ceil': expressions.ceil
 }
 
 
-def _expression(jani_expression: typing.Any) -> expressions.Expression:
+def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
         return expressions.cast(jani_expression)
     elif isinstance(jani_expression, str):
@@ -79,7 +83,7 @@ def _expression(jani_expression: typing.Any) -> expressions.Expression:
     )
 
 
-def _type(typ: typing.Any) -> types.Type:
+def _type(typ: t.Any) -> types.Type:
     if isinstance(typ, str):
         return _TYPE_MAP[typ]
     assert isinstance(typ, dict)
@@ -92,14 +96,14 @@ def _type(typ: typing.Any) -> types.Type:
     assert False, 'this should never happen'
 
 
-def _comment_warning(structure: typing.Any) -> None:
+def _comment_warning(structure: t.Any) -> None:
     if 'comment' in structure:
         warnings.warn(
             f'comments are currently not supported, comment information will be lost'
         )
 
 
-def _warn_fields(structure: typing.Any, expected: typing.Collection[str]) -> None:
+def _warn_fields(structure: t.Any, expected: t.Collection[str]) -> None:
     if hasattr(structure, 'keys'):
         fields = set(structure.keys())
         for field in expected:
@@ -111,11 +115,11 @@ def _warn_fields(structure: typing.Any, expected: typing.Collection[str]) -> Non
                 )
 
 
-_Fields = typing.Collection[str]
+_Fields = t.Collection[str]
 
 
 def _check_fields(
-    jani_structure: typing.Any,
+    jani_structure: t.Any,
     required: _Fields = frozenset(),
     optional: _Fields = frozenset(),
     unsupported: _Fields = frozenset({'comment'})
@@ -140,14 +144,14 @@ def _check_fields(
         )
 
 
-def _variable_declaration(jani_declaration: typing.Any) -> context.VariableDeclaration:
+def _variable_declaration(jani_declaration: t.Any) -> context.VariableDeclaration:
     _check_fields(
         jani_declaration,
         required={'name', 'type'},
-        optional={'initial-value', 'comment'}
+        optional={'transient', 'initial-value', 'comment'}
     )
-    transient: bool = jani_declaration.get('transient', False)
-    initial_value: typing.Optional[expressions.Expression] = (
+    transient: bool = jani_declaration.get('transient', None)
+    initial_value: t.Optional[expressions.Expression] = (
         _expression(jani_declaration['initial-value'])
         if 'initial-value' in jani_declaration
         else None
@@ -160,13 +164,13 @@ def _variable_declaration(jani_declaration: typing.Any) -> context.VariableDecla
     )
 
 
-def _constant_declaration(jani_declaration: typing.Any) -> context.ConstantDeclaration:
+def _constant_declaration(jani_declaration: t.Any) -> context.ConstantDeclaration:
     _check_fields(
         jani_declaration,
         required={'name', 'type'},
         optional={'value', 'comment'}
     )
-    value: typing.Optional[expressions.Expression] = (
+    value: t.Optional[expressions.Expression] = (
         _expression(jani_declaration['value'])
         if 'value' in jani_declaration
         else None
@@ -178,19 +182,19 @@ def _constant_declaration(jani_declaration: typing.Any) -> context.ConstantDecla
     )
 
 
-def _location(jani_location: typing.Any) -> automata.Location:
+def _location(jani_location: t.Any) -> automata.Location:
     _check_fields(
         jani_location,
         required={'name'},
         optional={'time-progress', 'transient-values'}
     )
-    progress_invariant: typing.Optional[expressions.Expression]
+    progress_invariant: t.Optional[expressions.Expression]
     if 'time-progress' in jani_location:
         _check_fields(jani_location['time-progress'], required={'exp'}, optional={'comment'})
         progress_invariant = _expression(jani_location['time-progress']['exp'])
     else:
         progress_invariant = None
-    transient_values: typing.Set[assignments.Assignment] = set()
+    transient_values: t.Set[assignments.Assignment] = set()
     if 'transient-values' in jani_location:
         for jani_transient_value in jani_location['transient-values']:
             _check_fields(jani_transient_value, required={'ref', 'value'}, optional={'comment'})
@@ -206,16 +210,16 @@ def _location(jani_location: typing.Any) -> automata.Location:
     )
 
 
-_Locations = typing.Dict[str, automata.Location]
+_Locations = t.Dict[str, automata.Location]
 
 
-def _target(jani_target: typing.Any) -> assignments.Target:
+def _target(jani_target: t.Any) -> assignments.Target:
     if isinstance(jani_target, str):
         return assignments.Identifier(jani_target)
     assert False
 
 
-def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
+def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
     location = locations[jani_edge['location']]
     action = jani_edge['action'] if 'action' in jani_edge else None
     rate = _expression(jani_edge['rate']['exp']) if 'rate' in jani_edge else None
@@ -245,10 +249,10 @@ def _edge(locations: _Locations, jani_edge: typing.Any) -> automata.Edge:
     )
 
 
-JANIModel = typing.Union[bytes, str]
+JANIModel = t.Union[bytes, str]
 
 
-def load(source: JANIModel) -> model.Network:
+def load_model(source: JANIModel) -> model.Network:
     """
     Constructs a Momba automata network based on the provided JANI model.
 

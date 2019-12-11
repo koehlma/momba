@@ -4,7 +4,10 @@
 
 from __future__ import annotations
 
+from . import checks
+
 from .cache import lru_cache
+from .clstools import get_subclasses
 
 
-__all__ = ['lru_cache']
+__all__ = ['checks', 'lru_cache', 'get_subclasses']

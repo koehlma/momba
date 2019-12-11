@@ -4,20 +4,21 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import dataclasses
-import typing
 
 from . import assignments, context, errors, expressions, types
 
 
-Action = typing.NewType('Action', str)
+Action = t.NewType('Action', str)
 
 
 def action(name: str) -> Action:
     return Action(name)
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass(frozen=True, eq=False)
 class Location:
     """
     Represents a location of a SHA.
@@ -25,14 +26,16 @@ class Location:
     Attributes:
         name:
             The unique name of the location.
-        invariant:
+        progress_invariant:
             The *time-progression invariant* of the location. Has to be a boolean
             expression in the scope the location is used.
+        transient_values:
+            Assignments for transient variables.
     """
 
     name: str
-    progress_invariant: typing.Optional[expressions.Expression] = None
-    transient_values: typing.AbstractSet[assignments.Assignment] = frozenset()
+    progress_invariant: t.Optional[expressions.Expression] = None
+    transient_values: t.AbstractSet[assignments.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if self.progress_invariant is not None:
@@ -64,8 +67,8 @@ class Location:
 @dataclasses.dataclass(frozen=True)
 class Destination:
     location: Location
-    probability: typing.Optional[expressions.Expression] = None
-    assignments: typing.AbstractSet[assignments.Assignment] = frozenset()
+    probability: t.Optional[expressions.Expression] = None
+    assignments: t.AbstractSet[assignments.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if not assignments.are_compatible(self.assignments):
@@ -84,10 +87,10 @@ class Destination:
 @dataclasses.dataclass(frozen=True)
 class Edge:
     location: Location
-    destinations: typing.AbstractSet[Destination]
-    action: typing.Optional[Action] = None
-    guard: typing.Optional[expressions.Expression] = None
-    rate: typing.Optional[expressions.Expression] = None
+    destinations: t.AbstractSet[Destination]
+    action: t.Optional[Action] = None
+    guard: t.Optional[expressions.Expression] = None
+    rate: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: context.Scope) -> None:
         if self.guard is not None and scope.get_type(self.guard) != types.BOOL:
@@ -106,10 +109,10 @@ class Automaton:
     ctx: context.Context
     scope: context.Scope
 
-    _locations: typing.Set[Location]
-    _initial_locations: typing.Set[Location]
-    _restrict_initial: typing.Optional[expressions.Expression]
-    _edges: typing.Set[Edge]
+    _locations: t.Set[Location]
+    _initial_locations: t.Set[Location]
+    _restrict_initial: t.Optional[expressions.Expression]
+    _edges: t.Set[Edge]
 
     def __init__(self, ctx: context.Context):
         self.ctx = ctx
@@ -121,15 +124,15 @@ class Automaton:
         self._edges = set()
 
     @property
-    def locations(self) -> typing.AbstractSet[Location]:
+    def locations(self) -> t.AbstractSet[Location]:
         return self._locations
 
     @property
-    def initial_locations(self) -> typing.AbstractSet[Location]:
+    def initial_locations(self) -> t.AbstractSet[Location]:
         return self._initial_locations
 
     @property
-    def restrict_initial(self) -> typing.Optional[expressions.Expression]:
+    def restrict_initial(self) -> t.Optional[expressions.Expression]:
         return self._restrict_initial
 
     @restrict_initial.setter
@@ -145,7 +148,7 @@ class Automaton:
         self._restrict_initial = restrict_initial
 
     @property
-    def edges(self) -> typing.AbstractSet[Edge]:
+    def edges(self) -> t.AbstractSet[Edge]:
         return self._edges
 
     def add_location(self, location: Location) -> None:

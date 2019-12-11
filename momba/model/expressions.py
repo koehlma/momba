@@ -4,20 +4,21 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import abc
 import dataclasses
-import typing
 
 from . import context, errors, operators, types, values
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from . import distributions
 
 
 class Expression(abc.ABC):
     @property
     @abc.abstractmethod
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -29,13 +30,13 @@ class Expression(abc.ABC):
         raise NotImplementedError()
 
     @property
-    def traverse(self) -> typing.Iterable[Expression]:
+    def traverse(self) -> t.Iterable[Expression]:
         yield self
         for child in self.children:
             yield from child.traverse
 
     @property
-    def subexpressions(self) -> typing.AbstractSet[Expression]:
+    def subexpressions(self) -> t.AbstractSet[Expression]:
         return frozenset(self.traverse)
 
     @property
@@ -45,12 +46,12 @@ class Expression(abc.ABC):
     def __and__(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
-        return Boolean(operators.BooleanOperator.AND, self, other)
+        return Boolean(operators.Boolean.AND, self, other)
 
     def __or__(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
-        return Boolean(operators.BooleanOperator.OR, self, other)
+        return Boolean(operators.Boolean.OR, self, other)
 
     def eq(self, other: Expression) -> Expression:
         return Equality(
@@ -64,22 +65,22 @@ class Expression(abc.ABC):
 
     def lt(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.LT, self, other
+            operators.Comparison.LT, self, other
         )
 
     def le(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.LE, self, other
+            operators.Comparison.LE, self, other
         )
 
     def ge(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.GE, self, other
+            operators.Comparison.GE, self, other
         )
 
     def gt(self, other: Expression) -> Expression:
         return Comparison(
-            operators.ComparisonOperator.GT, self, other
+            operators.Comparison.GT, self, other
         )
 
 
@@ -88,7 +89,7 @@ class Constant(Expression):
     value: values.Value
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return ()
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -103,7 +104,7 @@ class Identifier(Expression):
     identifier: context.Identifier
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return ()
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -127,7 +128,7 @@ class BinaryExpression(Expression):
     right: Expression
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return self.left, self.right
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -142,7 +143,7 @@ class BinaryExpression(Expression):
 
 
 class Boolean(BinaryExpression):
-    operator: operators.BooleanOperator
+    operator: operators.Boolean
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
@@ -194,7 +195,7 @@ class Equality(BinaryExpression):
 
 
 class Comparison(BinaryExpression):
-    operator: operators.ComparisonOperator
+    operator: operators.Comparison
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
@@ -217,7 +218,7 @@ class Conditional(Expression):
     alternative: Expression
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return self.condition, self.consequence, self.alternative
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -250,7 +251,7 @@ class Not(Expression):
     operand: Expression
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return self.operand,
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -266,14 +267,14 @@ class Not(Expression):
 @dataclasses.dataclass(frozen=True)
 class Sample(Expression):
     distribution: distributions.Distribution
-    arguments: typing.Sequence[Expression]
+    arguments: t.Sequence[Expression]
 
     def __post_init__(self) -> None:
         if len(self.arguments) != len(self.distribution.parameter_types):
             raise ValueError('parameter and arguments arity mismatch')
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return self.arguments
 
     def is_constant_in(self, scope: context.Scope) -> bool:
@@ -308,7 +309,7 @@ class Selection(Expression):
         return False
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return self.condition,
 
 
@@ -323,7 +324,7 @@ class Derivative(Expression):
         return False
 
     @property
-    def children(self) -> typing.Sequence[Expression]:
+    def children(self) -> t.Sequence[Expression]:
         return ()
 
 
@@ -339,7 +340,7 @@ def const(value: values.PythonValue) -> Constant:
     return Constant(values.pack(value))
 
 
-MaybeExpression = typing.Union[values.PythonValue, Expression]
+MaybeExpression = t.Union[values.PythonValue, Expression]
 
 
 def cast(value: MaybeExpression) -> Expression:
@@ -348,15 +349,27 @@ def cast(value: MaybeExpression) -> Expression:
     return const(value)
 
 
-BinaryConstructor = typing.Callable[[Expression, Expression], BinaryExpression]
+BinaryConstructor = t.Callable[[Expression, Expression], BinaryExpression]
 
 
-def lor(left: Expression, right: Expression) -> BinaryExpression:
-    return Boolean(operators.BooleanOperator.OR, left, right)
+def lor(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.OR, left, right)
 
 
-def land(left: Expression, right: Expression) -> BinaryExpression:
-    return Boolean(operators.BooleanOperator.AND, left, right)
+def land(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.AND, left, right)
+
+
+def xor(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.XOR, left, right)
+
+
+def implies(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.IMPLY, left, right)
+
+
+def equiv(left: Expression, right: Expression) -> Boolean:
+    return Boolean(operators.Boolean.EQUIV, left, right)
 
 
 def eq(left: Expression, right: Expression) -> BinaryExpression:
@@ -368,19 +381,19 @@ def neq(left: Expression, right: Expression) -> BinaryExpression:
 
 
 def lt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LT, left, right)
+    return Comparison(operators.Comparison.LT, left, right)
 
 
 def le(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LE, left, right)
+    return Comparison(operators.Comparison.LE, left, right)
 
 
 def ge(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GE, left, right)
+    return Comparison(operators.Comparison.GE, left, right)
 
 
 def gt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GT, left, right)
+    return Comparison(operators.Comparison.GT, left, right)
 
 
 def add(left: Expression, right: Expression) -> BinaryExpression:
@@ -411,7 +424,7 @@ def log(left: Expression, right: Expression) -> BinaryExpression:
     raise NotImplementedError()
 
 
-UnaryConstructor = typing.Callable[[Expression], Expression]
+UnaryConstructor = t.Callable[[Expression], Expression]
 
 
 def lnot(operand: Expression) -> Expression:
@@ -424,3 +437,13 @@ def floor(operand: Expression) -> Expression:
 
 def ceil(operand: Expression) -> Expression:
     raise NotImplementedError()
+
+
+def normalize_xor(expr: Boolean) -> Boolean:
+    assert expr.operator is operators.Boolean.XOR
+    return lor(land(lnot(expr.left), expr.right), land(expr.right, lnot(expr.left)))
+
+
+def normalize_equiv(expr: Boolean) -> Boolean:
+    assert expr.operator is operators.Boolean.EQUIV
+    return land(implies(expr.left, expr.right), implies(expr.right, expr.left))

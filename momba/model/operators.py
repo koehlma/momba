@@ -8,10 +8,13 @@ import enum
 
 
 class BinaryOperator:
-    pass
+    symbol: str
+
+    def __init__(self, symbol: str):
+        self.symbol = symbol
 
 
-class BooleanOperator(BinaryOperator, enum.Enum):
+class Boolean(BinaryOperator, enum.Enum):
     AND = '∧'
     OR = '∨'
     XOR = '⊕'
@@ -31,7 +34,7 @@ class EqualityOperator(BinaryOperator, enum.Enum):
     NEQ = '≠'
 
 
-class ComparisonOperator(BinaryOperator, enum.Enum):
+class Comparison(BinaryOperator, enum.Enum):
     LT = '<'
     LE = '≤'
     GE = '≥'

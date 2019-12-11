@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from . import expressions, types, values
 
-from .automata import Automaton, Location, Edge
+from .automata import Automaton, Location, Edge, Destination
 from .context import Identifier
 from .expressions import Expression
 from .network import Network
@@ -16,7 +16,7 @@ from .values import Value
 
 __all__ = [
     'expressions', 'types', 'values',
-    'Automaton', 'Location', 'Edge',
+    'Automaton', 'Location', 'Edge', 'Destination',
     'Identifier',
     'Expression',
     'Network',
