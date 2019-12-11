@@ -33,7 +33,7 @@ class Location:
             Assignments for transient variables.
     """
 
-    name: str
+    name: t.Optional[str] = None
     progress_invariant: t.Optional[expressions.Expression] = None
     transient_values: t.AbstractSet[assignments.Assignment] = frozenset()
 
@@ -151,20 +151,81 @@ class Automaton:
     def edges(self) -> t.AbstractSet[Edge]:
         return self._edges
 
-    def add_location(self, location: Location) -> None:
+    @t.overload
+    def add_location(self, name_or_location: Location, *, initial: bool = False) -> None:
+        ...
+
+    @t.overload
+    def add_location(  # noqa: F811
+        self,
+        name_or_location: t.Optional[str] = None,
+        *,
+        progress_invariant: t.Optional[expressions.Expression] = None,
+        transient_values: t.AbstractSet[assignments.Assignment] = frozenset(),
+        initial: bool = False
+    ) -> None:
+        ...
+
+    def add_location(  # noqa: F811
+        self,
+        name_or_location: t.Union[None, Location, str] = None,
+        *,
+        progress_invariant: t.Optional[expressions.Expression] = None,
+        transient_values: t.Optional[t.AbstractSet[assignments.Assignment]] = None,
+        initial: bool = False
+    ) -> None:
         """
         Adds a location to the automaton.
 
         :param location: The :class:`Location` to add.
         """
+        if isinstance(name_or_location, Location):
+            if progress_invariant is not None or transient_values is not None:
+                raise ValueError(
+                    'if `location` is given `progress_invariant` and '
+                    '`transient_values` should be None'
+                )
+            location = name_or_location
+        else:
+            location = Location(
+                name_or_location, progress_invariant, transient_values or frozenset()
+            )
         location.validate(self.scope)
         self._locations.add(location)
+        if initial:
+            self._initial_locations.add(location)
 
     def add_initial_location(self, location: Location) -> None:
-        self.add_location(location)
-        self._initial_locations.add(location)
+        self.add_location(location, initial=True)
 
-    def add_edge(self, edge: Edge) -> None:
+    @t.overload
+    def add_edge(self, edge_or_location: Edge) -> None:
+        ...
+
+    @t.overload
+    def add_edge(  # noqa: F811
+        self,
+        edge_or_location: Location,
+        destinations: t.AbstractSet[Destination],
+        action: t.Optional[Action] = None,
+        guard: t.Optional[expressions.Expression] = None,
+        rate: t.Optional[expressions.Expression] = None
+    ) -> None:
+        ...
+
+    def add_edge(  # noqa: F811
+        self,
+        edge_or_location: t.Union[Edge, Location],
+        destinations: t.Optional[t.AbstractSet[Destination]] = None,
+        action: t.Optional[Action] = None,
+        guard: t.Optional[expressions.Expression] = None,
+        rate: t.Optional[expressions.Expression] = None
+    ) -> None:
+        if isinstance(edge_or_location, Location):
+            edge = Edge(edge_or_location, destinations or frozenset(), action, guard, rate)
+        else:
+            edge = edge_or_location
+        assert edge is not None
         edge.validate(self.scope)
         edge.location.validate(self.scope)
         for destination in edge.destinations:
@@ -173,3 +234,6 @@ class Automaton:
         self._locations.add(edge.location)
         for destination in edge.destinations:
             self._locations.add(destination.location)
+
+    def declare_variable(self, identifier: str, typ: types.Type) -> None:
+        self.scope.declare_variable(identifier, typ)

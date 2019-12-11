@@ -10,6 +10,7 @@ from . import context, errors, types
 from .automata import Automaton
 
 if t.TYPE_CHECKING:
+    from . import expressions
     from .expressions import Expression
 
 
@@ -50,7 +51,21 @@ class Network:
         """
         return self._automata
 
-    def new_automaton(self) -> Automaton:
+    def create_automaton(self) -> Automaton:
         automaton = Automaton(self.ctx)
         self._automata.add(automaton)
         return automaton
+
+    def declare_variable(self, identifier: str, typ: types.Type) -> None:
+        self.ctx.global_scope.declare_variable(identifier, typ)
+
+    def declare_constant(
+        self,
+        identifier: str,
+        typ: types.Type,
+        value: t.Optional[expressions.MaybeExpression] = None
+    ) -> None:
+        if value is None:
+            self.ctx.global_scope.declare_constant(identifier, typ, None)
+        else:
+            self.ctx.global_scope.declare_constant(identifier, typ, expressions.cast(value))

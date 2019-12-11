@@ -293,13 +293,13 @@ def load_model(source: JANIModel) -> model.Network:
             required={'name', 'locations', 'initial-locations', 'edges'},
             optional={'variables', 'restrict-initial', 'comment'}
         )
-        automaton = network.new_automaton()
+        automaton = network.create_automaton()
         if 'variables' in jani_automaton:
             for jani_declaration in jani_automaton['variables']:
                 declaration = _variable_declaration(jani_declaration)
                 automaton.scope.declare(declaration)
         locations = {
-            location.name: location
+            t.cast(str, location.name): location
             for location in map(_location, jani_automaton['locations'])
         }
         if 'restrict-initial' in jani_automaton:

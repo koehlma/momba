@@ -15,7 +15,7 @@ import pytest
 def test_basic_evaluation():
     network = model.Network()
 
-    automaton = network.new_automaton()
+    automaton = network.create_automaton()
     automaton.scope.declare_variable('x', model.types.INT)
 
     x = model.expressions.var('x')
