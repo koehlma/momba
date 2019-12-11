@@ -13,9 +13,15 @@ __ https://github.com/ISCAS-PMC/ePMC
 .. _JANI specification: http://www.jani-spec.org/
 
 
+.. warning::
+    **Momba is still in its early stages of development.
+    Please expect things to break.
+    The API is unstable and might change without further notice and deprecation period.**
+
+
 Getting Started
 ---------------
-To install Momba from `PyPi`__ simply run:
+Momba requires Python 3.8 or newer. To install Momba from `PyPi`__ simply run:
 
 .. code-block:: bash
 
