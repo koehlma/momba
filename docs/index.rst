@@ -5,7 +5,7 @@ Welcome to Momba's documentation!
 Momba's core modeling formalism are networks of interacting *stochastic hybrid automata* (SHA) as per the `JANI specification`_.
 Momba aims to be a platform for prototyping and the development of new techniques and algorithms for the analysis of quantitative models.
 For the time being, Momba does not aim to be a model checker itself.
-Instead, Momba relies on external tools for model checking via the JANI interaction protocol. In particular, Momba works well with the `MODEST toolset`__ and `EPMC`__.
+Instead, Momba relies on external tools for model checking via the JANI interaction protocol. In particular, Momba works well with `The Modest Toolset`__ and `EPMC`__.
 
 __ http://www.modestchecker.net/
 __ https://github.com/ISCAS-PMC/ePMC
