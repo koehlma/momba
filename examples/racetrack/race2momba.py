@@ -151,6 +151,21 @@ def build_model(track_path: pathlib.Path) -> model.Network:
         destinations={model.create_destination(location)}
     )
 
+    car_instance = car.create_instance()
+    controller_instance = controller.create_instance()
+    terminator_instance = terminator.create_instance()
+
+    composition = network.create_composition(
+        {car_instance, controller_instance, terminator_instance}
+    )
+    composition.create_synchronization(
+        {
+            car_instance: 'step',
+            controller_instance: 'step',
+            terminator_instance: 'step'
+        }, result='step'
+    )
+
     return network
 
 

@@ -6,11 +6,37 @@ from __future__ import annotations
 
 import typing as t
 
+import dataclasses
+
 from . import context, errors, expressions, types
-from .automata import Automaton
+from .automata import Automaton, Instance
 
 if t.TYPE_CHECKING:
     from .expressions import Expression
+
+
+@dataclasses.dataclass(frozen=True, eq=False)
+class Synchronization:
+    vector: t.Mapping[Instance, str]
+    result: t.Optional[str] = None
+
+
+@dataclasses.dataclass(frozen=True, eq=False)
+class Composition:
+    instances: t.FrozenSet[Instance]
+    synchronizations: t.Set[Synchronization] = dataclasses.field(default_factory=set)
+
+    def create_synchronization(
+        self,
+        vector: t.Mapping[Instance, str],
+        result: t.Optional[str] = None
+    ) -> None:
+        for instance in vector.keys():
+            if instance not in self.instances:
+                raise errors.ModelingError(
+                    f'instance {instance} is not part of composition'
+                )
+        self.synchronizations.add(Synchronization(vector, result))
 
 
 class Network:
@@ -21,11 +47,17 @@ class Network:
 
     _restrict_initial: t.Optional[Expression]
     _automata: t.Set[Automaton]
+    _system: t.Set[Composition]
 
     def __init__(self, model_type: context.ModelType = context.ModelType.SHA) -> None:
         self.ctx = context.Context(model_type)
         self._restrict_initial = None
         self._automata = set()
+        self._system = set()
+
+    @property
+    def system(self) -> t.AbstractSet[Composition]:
+        return self._system
 
     @property
     def restrict_initial(self) -> t.Optional[Expression]:
@@ -68,3 +100,13 @@ class Network:
             self.ctx.global_scope.declare_constant(identifier, typ, None)
         else:
             self.ctx.global_scope.declare_constant(identifier, typ, expressions.convert(value))
+
+    def create_composition(self, instances: t.AbstractSet[Instance]) -> Composition:
+        for instance in instances:
+            if instance.automaton not in self.automata:
+                raise errors.ModelingError(
+                    f'automaton {instance.automaton} is not part of the network'
+                )
+        composition = Composition(frozenset(instances))
+        self._system.add(composition)
+        return composition

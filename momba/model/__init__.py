@@ -6,20 +6,20 @@ from __future__ import annotations
 
 from . import expressions, types, values
 
-from .automata import Automaton, Location, Edge, Destination, create_destination
+from .automata import Automaton, Location, Edge, Destination, create_destination, Instance
 from .context import Identifier, ModelType
 from .expressions import Expression
-from .network import Network
+from .network import Network, Synchronization, Composition
 from .types import Type
 from .values import Value
 
 
 __all__ = [
     'expressions', 'types', 'values',
-    'Automaton', 'Location', 'Edge', 'Destination', 'create_destination',
+    'Automaton', 'Location', 'Edge', 'Destination', 'create_destination', 'Instance',
     'Identifier', 'ModelType',
     'Expression',
-    'Network',
+    'Network', 'Synchronization', 'Composition',
     'Value',
     'Type'
 ]

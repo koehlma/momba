@@ -19,6 +19,13 @@ def action(name: str) -> Action:
 
 
 @dataclasses.dataclass(frozen=True, eq=False)
+class Instance:
+    automaton: Automaton
+
+    input_enable: t.FrozenSet[str] = frozenset()
+
+
+@dataclasses.dataclass(frozen=True, eq=False)
 class Location:
     """
     Represents a location of a SHA.
@@ -203,6 +210,9 @@ class Automaton:
 
     def declare_variable(self, identifier: str, typ: types.Type) -> None:
         self.scope.declare_variable(identifier, typ)
+
+    def create_instance(self, *, input_enable: t.AbstractSet[str] = frozenset()) -> Instance:
+        return Instance(self, input_enable=frozenset(input_enable))
 
 
 Assignments = t.Union[

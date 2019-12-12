@@ -39,13 +39,16 @@ class ModelFeature(enum.Enum):
     X_MOMBA_OPERATORS = 'x-momba-operators'
 
 
+_NamedObject = t.Union[model.Location, model.Automaton]
+
+
 @dataclasses.dataclass
 class JANIContext:
     allow_momba_operators: bool = False
 
     _name_counter: int = 0
 
-    _location_names: t.Dict[model.Location, str] = dataclasses.field(default_factory=dict)
+    _names: t.Dict[_NamedObject, str] = dataclasses.field(default_factory=dict)
 
     _features: t.Set[ModelFeature] = dataclasses.field(default_factory=set)
 
@@ -58,14 +61,14 @@ class JANIContext:
         self._name_counter += 1
         return name
 
-    def get_location_name(self, location: model.Location) -> str:
-        if location.name is None:
+    def get_name(self, obj: _NamedObject) -> str:
+        if obj.name is None:
             try:
-                return self._location_names[location]
+                return self._names[obj]
             except KeyError:
-                name = self._location_names[location] = self.get_unique_name()
+                name = self._names[obj] = self.get_unique_name()
                 return name
-        return location.name
+        return obj.name
 
     def require(self, feature: ModelFeature) -> None:
         self._features.add(feature)
@@ -294,7 +297,7 @@ def _dump_assignment(assignment: effects.Assignment, ctx: JANIContext) -> JSON:
 
 def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
     jani_location: _JANIMap = {
-        'name': ctx.get_location_name(loc),
+        'name': ctx.get_name(loc),
         'x-momba-anonymous': loc.name is None
     }
     if loc.progress_invariant is not None:
@@ -307,7 +310,7 @@ def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
 
 
 def _dump_destination(dst: model.Destination, ctx: JANIContext) -> JSON:
-    jani_destination: _JANIMap = {'location': ctx.get_location_name(dst.location)}
+    jani_destination: _JANIMap = {'location': ctx.get_name(dst.location)}
     if dst.probability is not None:
         jani_destination['probability'] = {'exp': _dump_expr(dst.probability, ctx)}
     if dst.assignments:
@@ -319,7 +322,7 @@ def _dump_destination(dst: model.Destination, ctx: JANIContext) -> JSON:
 
 def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
     jani_edge: _JANIMap = {
-        'location': ctx.get_location_name(edge.location),
+        'location': ctx.get_name(edge.location),
         'destinations': [
             _dump_destination(dst, ctx) for dst in edge.destinations
         ]
@@ -335,7 +338,8 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
 
 def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
     return {
-        'name': automaton.name,
+        'name': ctx.get_name(automaton),
+        'x-momba-anonymous': automaton.name is None,
         'variables': [
             _dump_var_decl(var_decl, ctx)
             for var_decl in automaton.scope.variable_declarations
@@ -347,9 +351,47 @@ def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
             _dump_edge(edge, ctx) for edge in automaton.edges
         ],
         'initial-locations': [
-            ctx.get_location_name(loc) for loc in automaton.initial_locations
+            ctx.get_name(loc) for loc in automaton.initial_locations
         ]
 
+    }
+
+
+def _dump_sync(
+    instance_vector: t.Sequence[model.Instance],
+    sync: model.Synchronization,
+    ctx: JANIContext
+) -> JSON:
+    jani_sync: _JANIMap = {
+        'synchronise': [
+            sync.vector.get(instance, None)
+            for instance in instance_vector
+        ],
+    }
+    if sync.result is not None:
+        jani_sync['result'] = sync.result
+    return jani_sync
+
+
+def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
+    instances: t.Set[model.Instance] = set()
+    for composition in network.system:
+        instances |= composition.instances
+    instance_vector = list(instances)
+    synchronizations: t.Set[model.Synchronization] = set()
+    for composition in network.system:
+        synchronizations |= composition.synchronizations
+    return {
+        'elements': [
+            {
+                'automaton': ctx.get_name(instance.automaton),
+                'input-enabled': list(instance.input_enable)
+            } for instance in instance_vector
+        ],
+        'syncs': [
+            _dump_sync(instance_vector, synchronization, ctx)
+            for synchronization in synchronizations
+        ]
     }
 
 
@@ -370,7 +412,7 @@ def dump_structure(network: model.Network, *, allow_momba_operators: bool = Fals
         'automata': [
             _dump_automaton(automaton, ctx) for automaton in network.automata
         ],
-        'system': 'TODO',
+        'system': _dump_system(network, ctx),
         # important: has to be at the end, because we collect the features while building
         'features': [
             feature.value for feature in ctx.features
