@@ -28,6 +28,11 @@ class ArithmeticOperator(BinaryOperator, enum.Enum):
     MUL = '*'
     MOD = '%'
 
+    MIN = 'min'
+    MAX = 'max'
+
+    FLOOR_DIV = '//'
+
 
 class EqualityOperator(BinaryOperator, enum.Enum):
     EQ = '='

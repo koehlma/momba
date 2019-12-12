@@ -53,6 +53,51 @@ class Expression(abc.ABC):
             return NotImplemented
         return Boolean(operators.Boolean.OR, self, other)
 
+    def __ior__(self, other: Expression) -> Expression:
+        return self | other
+
+    def __invert__(self) -> Expression:
+        return Not(self)
+
+    def __add__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.ADD, self, convert(other))
+
+    def __radd__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.ADD, convert(other), self)
+
+    def __sub__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.SUB, self, convert(other))
+
+    def __rsub__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.SUB, convert(other), self)
+
+    def __mul__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.MUL, self, convert(other))
+
+    def __rmul__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.MUL, convert(other), self)
+
+    def __mod__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.MOD, self, convert(other))
+
+    def __rmod__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.MOD, convert(other), self)
+
+    def __floordiv__(self, other: MaybeExpression) -> Expression:
+        return Arithmetic(operators.ArithmeticOperator.FLOOR_DIV, convert(other), self)
+
+    def __lt__(self, other: MaybeExpression) -> Expression:
+        return lt(self, convert(other))
+
+    def __le__(self, other: MaybeExpression) -> Expression:
+        return le(self, convert(other))
+
+    def __gt__(self, other: MaybeExpression) -> Expression:
+        return gt(self, convert(other))
+
+    def __ge__(self, other: MaybeExpression) -> Expression:
+        return ge(self, convert(other))
+
     def eq(self, other: Expression) -> Expression:
         return Equality(
             operators.EqualityOperator.EQ, self, other
@@ -343,17 +388,26 @@ def const(value: values.PythonValue) -> Constant:
 MaybeExpression = t.Union[values.PythonValue, Expression]
 
 
-def cast(value: MaybeExpression) -> Expression:
+def convert(value: MaybeExpression) -> Expression:
     if isinstance(value, Expression):
         return value
     return const(value)
 
 
-BinaryConstructor = t.Callable[[Expression, Expression], BinaryExpression]
+def identifier(name: str) -> Identifier:
+    return Identifier(name)
 
 
-def lor(left: Expression, right: Expression) -> Boolean:
-    return Boolean(operators.Boolean.OR, left, right)
+BinaryConstructor = t.Callable[[Expression, Expression], Expression]
+
+
+def lor(*expressions: Expression) -> Expression:
+    if len(expressions) == 2:
+        return Boolean(operators.Boolean.OR, expressions[0], expressions[1])
+    result = convert(False)
+    for disjunct in expressions:
+        result |= disjunct
+    return result
 
 
 def land(left: Expression, right: Expression) -> Boolean:
@@ -412,6 +466,14 @@ def mod(left: Expression, right: Expression) -> BinaryExpression:
     return Arithmetic(operators.ArithmeticOperator.MOD, left, right)
 
 
+def minimum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MIN, convert(left), convert(right))
+
+
+def maximum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MAX, convert(left), convert(right))
+
+
 def div(left: Expression, right: Expression) -> BinaryExpression:
     raise NotImplementedError()
 
@@ -439,11 +501,16 @@ def ceil(operand: Expression) -> Expression:
     raise NotImplementedError()
 
 
-def normalize_xor(expr: Boolean) -> Boolean:
-    assert expr.operator is operators.Boolean.XOR
+def normalize_xor(expr: Expression) -> Expression:
+    assert isinstance(expr, Boolean) and expr.operator is operators.Boolean.XOR
     return lor(land(lnot(expr.left), expr.right), land(expr.right, lnot(expr.left)))
 
 
-def normalize_equiv(expr: Boolean) -> Boolean:
-    assert expr.operator is operators.Boolean.EQUIV
+def normalize_equiv(expr: Expression) -> Expression:
+    assert isinstance(expr, Boolean) and expr.operator is operators.Boolean.EQUIV
     return land(implies(expr.left, expr.right), implies(expr.right, expr.left))
+
+
+def normalize_floor_div(expr: Expression) -> Expression:
+    assert isinstance(expr, Arithmetic) and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
+    return floor(div(expr.left, expr.right))

@@ -13,7 +13,7 @@ from . import errors, expressions, types
 
 if t.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
-    from . import assignments  # noqa: F401
+    from . import effects  # noqa: F401
 
 
 class ModelType(enum.Enum):
@@ -46,7 +46,7 @@ TA_MODEL_TYPES = {
 
 Identifier = str
 
-Typed = t.Union['expressions.Expression', 'assignments.Target']
+Typed = t.Union['expressions.Expression', 'effects.Target']
 
 
 @dataclasses.dataclass(frozen=True)

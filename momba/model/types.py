@@ -140,7 +140,7 @@ class BoundedType(Numeric):
     def cast_bound(bound: Bound) -> t.Optional[expressions.Expression]:
         if bound is None or bound is Ellipsis:
             return None
-        return expressions.cast(t.cast(expressions.MaybeExpression, bound))
+        return expressions.convert(t.cast(expressions.MaybeExpression, bound))
 
     def is_assignable_from(self, typ: Type) -> bool:
         return self.base.is_assignable_from(typ)

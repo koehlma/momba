@@ -6,11 +6,10 @@ from __future__ import annotations
 
 import typing as t
 
-from . import context, errors, types
+from . import context, errors, expressions, types
 from .automata import Automaton
 
 if t.TYPE_CHECKING:
-    from . import expressions
     from .expressions import Expression
 
 
@@ -51,8 +50,8 @@ class Network:
         """
         return self._automata
 
-    def create_automaton(self) -> Automaton:
-        automaton = Automaton(self.ctx)
+    def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
+        automaton = Automaton(self.ctx, name=name)
         self._automata.add(automaton)
         return automaton
 
@@ -68,4 +67,4 @@ class Network:
         if value is None:
             self.ctx.global_scope.declare_constant(identifier, typ, None)
         else:
-            self.ctx.global_scope.declare_constant(identifier, typ, expressions.cast(value))
+            self.ctx.global_scope.declare_constant(identifier, typ, expressions.convert(value))

@@ -10,7 +10,7 @@ import json
 import warnings
 
 from momba import model
-from momba.model import assignments, automata, context, distributions, expressions, types
+from momba.model import effects, automata, context, distributions, expressions, types
 
 
 _TYPE_MAP = {
@@ -51,12 +51,12 @@ _UNARY_OP_MAP: t.Mapping[str, expressions.UnaryConstructor] = {
 
 def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
-        return expressions.cast(jani_expression)
+        return expressions.convert(jani_expression)
     elif isinstance(jani_expression, str):
         return expressions.var(jani_expression)
     elif isinstance(jani_expression, dict):
         if 'constant' in jani_expression:
-            return expressions.cast(jani_expression['constant'])
+            return expressions.convert(jani_expression['constant'])
         elif 'op' in jani_expression:
             op = jani_expression['op']
             if op in _BINARY_OP_MAP:
@@ -194,11 +194,11 @@ def _location(jani_location: t.Any) -> automata.Location:
         progress_invariant = _expression(jani_location['time-progress']['exp'])
     else:
         progress_invariant = None
-    transient_values: t.Set[assignments.Assignment] = set()
+    transient_values: t.Set[effects.Assignment] = set()
     if 'transient-values' in jani_location:
         for jani_transient_value in jani_location['transient-values']:
             _check_fields(jani_transient_value, required={'ref', 'value'}, optional={'comment'})
-            assignment = assignments.Assignment(
+            assignment = effects.Assignment(
                 target=_target(jani_transient_value['ref']),
                 value=_expression(jani_transient_value['value'])
             )
@@ -213,9 +213,9 @@ def _location(jani_location: t.Any) -> automata.Location:
 _Locations = t.Dict[str, automata.Location]
 
 
-def _target(jani_target: t.Any) -> assignments.Target:
+def _target(jani_target: t.Any) -> effects.Target:
     if isinstance(jani_target, str):
-        return assignments.Identifier(jani_target)
+        return effects.Identifier(jani_target)
     assert False
 
 
@@ -232,7 +232,7 @@ def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
                 if 'probability' in jani_destination else None
             ),
             assignments=frozenset(
-                assignments.Assignment(
+                effects.Assignment(
                     target=_target(jani_assignment['ref']),
                     value=_expression(jani_assignment['value']),
                     index=jani_assignment.get('index', 0)

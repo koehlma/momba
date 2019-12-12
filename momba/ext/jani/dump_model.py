@@ -13,7 +13,7 @@ import json
 import warnings
 
 from ... import model
-from ...model import assignments, context, expressions, operators, types, values
+from ...model import effects, context, expressions, operators, types, values
 from ...utils import checks
 
 
@@ -171,13 +171,18 @@ def _dump_conditional(expr: expressions.Conditional, ctx: JANIContext) -> JSON:
 _DERIVED_OPERATORS = {
     operators.Boolean.IMPLY,
     operators.Comparison.GT,
-    operators.Comparison.GE
+    operators.Comparison.GE,
+    operators.ArithmeticOperator.MIN,
+    operators.ArithmeticOperator.MAX
 }
 
 
-_MOMBA_OPERATORS = {
+_Transform = t.Callable[[expressions.Expression], expressions.Expression]
+
+_MOMBA_OPERATORS: t.Mapping[operators.BinaryOperator, _Transform] = {
     operators.Boolean.XOR: expressions.normalize_xor,
-    operators.Boolean.EQUIV: expressions.normalize_equiv
+    operators.Boolean.EQUIV: expressions.normalize_equiv,
+    operators.ArithmeticOperator.FLOOR_DIV: expressions.normalize_floor_div
 }
 
 
@@ -189,8 +194,6 @@ def _dump_binary_expression(expr: expressions.BinaryExpression, ctx: JANIContext
         if ctx.allow_momba_operators:
             ctx.require(ModelFeature.X_MOMBA_OPERATORS)
         else:
-            assert isinstance(expr.operator, operators.Boolean)
-            assert isinstance(expr, expressions.Boolean)
             return _dump_expr(_MOMBA_OPERATORS[expr.operator](expr), ctx)
     return {
         'op': expr.operator.symbol,
@@ -231,18 +234,18 @@ checks.check_singledispatch(_dump_expr, model.Expression)
 
 
 @functools.singledispatch
-def _dump_target(target: assignments.Target, ctx: JANIContext) -> JSON:
+def _dump_target(target: effects.Target, ctx: JANIContext) -> JSON:
     raise NotImplementedError(
         f'_dump_target has not been implemented for {target}'
     )
 
 
 @_dump_target.register
-def _dump_target_identifier(target: assignments.Identifier, ctx: JANIContext) -> JSON:
+def _dump_target_identifier(target: effects.Identifier, ctx: JANIContext) -> JSON:
     return target.identifier
 
 
-checks.check_singledispatch(_dump_target, assignments.Target)
+checks.check_singledispatch(_dump_target, effects.Target)
 
 
 def _dump_var_decl(decl: context.VariableDeclaration, ctx: JANIContext) -> JSON:
@@ -261,7 +264,7 @@ def _dump_const_decl(decl: context.ConstantDeclaration, ctx: JANIContext) -> JSO
     return jani_declaration
 
 
-def _dump_assignment(assignment: assignments.Assignment, ctx: JANIContext) -> JSON:
+def _dump_assignment(assignment: effects.Assignment, ctx: JANIContext) -> JSON:
     jani_assignment: _JANIMap = {
         'ref': _dump_target(assignment.target, ctx),
         'value': _dump_expr(assignment.value, ctx)
@@ -311,7 +314,7 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
 
 def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
     return {
-        'name': 'XXX-momba',
+        'name': automaton.name,
         'variables': [
             _dump_var_decl(var_decl, ctx)
             for var_decl in automaton.scope.variable_declarations
@@ -329,8 +332,8 @@ def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
     }
 
 
-def dump_structure(network: model.Network) -> JSON:
-    ctx = JANIContext()
+def dump_structure(network: model.Network, *, allow_momba_operators: bool = False) -> JSON:
+    ctx = JANIContext(allow_momba_operators=allow_momba_operators)
     jani_model: _JANIMap = {
         'jani-version': 1,
         'name': 'XXX-momba',  # names are not supported yet
@@ -355,7 +358,12 @@ def dump_structure(network: model.Network) -> JSON:
     return jani_model
 
 
-def dump_model(network: model.Network, *, indent: t.Optional[int] = None) -> bytes:
+def dump_model(
+    network: model.Network,
+    *,
+    indent: t.Optional[int] = None,
+    allow_momba_operators: bool = False
+) -> bytes:
     """
     Takes a Momba automata network and exports it to the JANI format.
 
@@ -366,4 +374,8 @@ def dump_model(network: model.Network, *, indent: t.Optional[int] = None) -> byt
     Returns:
         The model in UTF-8 encoded JANI format.
     """
-    return json.dumps(dump_structure(network), indent=indent).encode('utf-8')
+    return json.dumps(
+        dump_structure(network, allow_momba_operators=allow_momba_operators),
+        indent=indent,
+        ensure_ascii=False
+    ).encode('utf-8')

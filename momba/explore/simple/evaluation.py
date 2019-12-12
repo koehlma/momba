@@ -280,6 +280,18 @@ _register_arithmetic_function(
     operators.ArithmeticOperator.MOD,
     lambda left, right: left % abs(right)
 )
+_register_arithmetic_function(
+    operators.ArithmeticOperator.MIN,
+    lambda left, right: min(left, right)
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.MAX,
+    lambda left, right: max(left, right)
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.FLOOR_DIV,
+    lambda left, right: left // right
+)
 
 _register_boolean_function(
     operators.Boolean.AND,

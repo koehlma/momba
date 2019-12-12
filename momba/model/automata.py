@@ -8,10 +8,10 @@ import typing as t
 
 import dataclasses
 
-from . import assignments, context, errors, expressions, types
+from . import effects, context, errors, expressions, types
 
 
-Action = t.NewType('Action', str)
+Action = str
 
 
 def action(name: str) -> Action:
@@ -35,7 +35,7 @@ class Location:
 
     name: t.Optional[str] = None
     progress_invariant: t.Optional[expressions.Expression] = None
-    transient_values: t.AbstractSet[assignments.Assignment] = frozenset()
+    transient_values: t.AbstractSet[effects.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if self.progress_invariant is not None:
@@ -52,7 +52,7 @@ class Location:
                 raise errors.ModelingError(
                     f'transient values are not allowed for model type {scope.ctx.model_type}'
                 )
-            if not assignments.are_compatible(self.transient_values):
+            if not effects.are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
                     f'incompatible assignments for transient values'
                 )
@@ -68,10 +68,10 @@ class Location:
 class Destination:
     location: Location
     probability: t.Optional[expressions.Expression] = None
-    assignments: t.AbstractSet[assignments.Assignment] = frozenset()
+    assignments: t.AbstractSet[effects.Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
-        if not assignments.are_compatible(self.assignments):
+        if not effects.are_compatible(self.assignments):
             raise errors.IncompatibleAssignmentsError(
                 f'assignments on edge {self} are not compatible'
             )
@@ -109,15 +109,17 @@ class Automaton:
     ctx: context.Context
     scope: context.Scope
 
+    name: t.Optional[str]
+
     _locations: t.Set[Location]
     _initial_locations: t.Set[Location]
     _restrict_initial: t.Optional[expressions.Expression]
     _edges: t.Set[Edge]
 
-    def __init__(self, ctx: context.Context):
+    def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
         self.scope = self.ctx.new_scope()
-        self.comment = None
+        self.name = name
         self._locations = set()
         self._initial_locations = set()
         self._restrict_initial = None
@@ -151,81 +153,33 @@ class Automaton:
     def edges(self) -> t.AbstractSet[Edge]:
         return self._edges
 
-    @t.overload
-    def add_location(self, name_or_location: Location, *, initial: bool = False) -> None:
-        ...
-
-    @t.overload
-    def add_location(  # noqa: F811
-        self,
-        name_or_location: t.Optional[str] = None,
-        *,
-        progress_invariant: t.Optional[expressions.Expression] = None,
-        transient_values: t.AbstractSet[assignments.Assignment] = frozenset(),
-        initial: bool = False
-    ) -> None:
-        ...
-
-    def add_location(  # noqa: F811
-        self,
-        name_or_location: t.Union[None, Location, str] = None,
-        *,
-        progress_invariant: t.Optional[expressions.Expression] = None,
-        transient_values: t.Optional[t.AbstractSet[assignments.Assignment]] = None,
-        initial: bool = False
-    ) -> None:
-        """
-        Adds a location to the automaton.
-
-        :param location: The :class:`Location` to add.
-        """
-        if isinstance(name_or_location, Location):
-            if progress_invariant is not None or transient_values is not None:
-                raise ValueError(
-                    'if `location` is given `progress_invariant` and '
-                    '`transient_values` should be None'
-                )
-            location = name_or_location
-        else:
-            location = Location(
-                name_or_location, progress_invariant, transient_values or frozenset()
-            )
+    def add_location(self, location: Location, *, initial: bool = False) -> None:
         location.validate(self.scope)
         self._locations.add(location)
         if initial:
             self._initial_locations.add(location)
 
+    def create_location(
+        self,
+        name: t.Optional[str] = None,
+        *,
+        progress_invariant: t.Optional[expressions.Expression] = None,
+        transient_values: t.AbstractSet[effects.Assignment] = frozenset(),
+        initial: bool = False
+    ) -> Location:
+        """
+        Adds a location to the automaton.
+
+        :param location: The :class:`Location` to add.
+        """
+        location = Location(name, progress_invariant, transient_values)
+        self.add_location(location, initial=initial)
+        return location
+
     def add_initial_location(self, location: Location) -> None:
         self.add_location(location, initial=True)
 
-    @t.overload
-    def add_edge(self, edge_or_location: Edge) -> None:
-        ...
-
-    @t.overload
-    def add_edge(  # noqa: F811
-        self,
-        edge_or_location: Location,
-        destinations: t.AbstractSet[Destination],
-        action: t.Optional[Action] = None,
-        guard: t.Optional[expressions.Expression] = None,
-        rate: t.Optional[expressions.Expression] = None
-    ) -> None:
-        ...
-
-    def add_edge(  # noqa: F811
-        self,
-        edge_or_location: t.Union[Edge, Location],
-        destinations: t.Optional[t.AbstractSet[Destination]] = None,
-        action: t.Optional[Action] = None,
-        guard: t.Optional[expressions.Expression] = None,
-        rate: t.Optional[expressions.Expression] = None
-    ) -> None:
-        if isinstance(edge_or_location, Location):
-            edge = Edge(edge_or_location, destinations or frozenset(), action, guard, rate)
-        else:
-            edge = edge_or_location
-        assert edge is not None
+    def add_edge(self, edge: Edge) -> None:
         edge.validate(self.scope)
         edge.location.validate(self.scope)
         for destination in edge.destinations:
@@ -235,5 +189,41 @@ class Automaton:
         for destination in edge.destinations:
             self._locations.add(destination.location)
 
+    def create_edge(
+        self,
+        location: Location,
+        destinations: t.AbstractSet[Destination],
+        *,
+        action: t.Optional[Action] = None,
+        guard: t.Optional[expressions.Expression] = None,
+        rate: t.Optional[expressions.Expression] = None
+    ) -> None:
+        edge = Edge(location, frozenset(destinations), action, guard, rate)
+        self.add_edge(edge)
+
     def declare_variable(self, identifier: str, typ: types.Type) -> None:
         self.scope.declare_variable(identifier, typ)
+
+
+Assignments = t.Union[
+    t.AbstractSet[effects.Assignment], t.Mapping[str, expressions.Expression]
+]
+
+
+def create_destination(
+    location: Location,
+    *,
+    probability: t.Optional[expressions.Expression] = None,
+    assignments: Assignments = frozenset()
+) -> Destination:
+    if isinstance(assignments, t.Mapping):
+        return Destination(
+            location,
+            probability,
+            assignments=frozenset(
+                effects.Assignment(effects.Identifier(name), value)
+                for name, value in assignments.items()
+            )
+        )
+    else:
+        return Destination(location, probability, assignments)
