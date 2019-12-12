@@ -43,11 +43,29 @@ class ModelFeature(enum.Enum):
 class JANIContext:
     allow_momba_operators: bool = False
 
+    _name_counter: int = 0
+
+    _location_names: t.Dict[model.Location, str] = dataclasses.field(default_factory=dict)
+
     _features: t.Set[ModelFeature] = dataclasses.field(default_factory=set)
 
     @property
     def features(self) -> t.AbstractSet[ModelFeature]:
         return self._features
+
+    def get_unique_name(self) -> str:
+        name = f'__momba_{self._name_counter}'
+        self._name_counter += 1
+        return name
+
+    def get_location_name(self, location: model.Location) -> str:
+        if location.name is None:
+            try:
+                return self._location_names[location]
+            except KeyError:
+                name = self._location_names[location] = self.get_unique_name()
+                return name
+        return location.name
 
     def require(self, feature: ModelFeature) -> None:
         self._features.add(feature)
@@ -275,7 +293,10 @@ def _dump_assignment(assignment: effects.Assignment, ctx: JANIContext) -> JSON:
 
 
 def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
-    jani_location: _JANIMap = {'name': loc.name}
+    jani_location: _JANIMap = {
+        'name': ctx.get_location_name(loc),
+        'x-momba-anonymous': loc.name is None
+    }
     if loc.progress_invariant is not None:
         jani_location['time-progress'] = _dump_expr(loc.progress_invariant, ctx)
     if loc.transient_values is not None:
@@ -286,7 +307,7 @@ def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
 
 
 def _dump_destination(dst: model.Destination, ctx: JANIContext) -> JSON:
-    jani_destination: _JANIMap = {'location': dst.location.name}
+    jani_destination: _JANIMap = {'location': ctx.get_location_name(dst.location)}
     if dst.probability is not None:
         jani_destination['probability'] = {'exp': _dump_expr(dst.probability, ctx)}
     if dst.assignments:
@@ -298,7 +319,7 @@ def _dump_destination(dst: model.Destination, ctx: JANIContext) -> JSON:
 
 def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
     jani_edge: _JANIMap = {
-        'location': edge.location.name,
+        'location': ctx.get_location_name(edge.location),
         'destinations': [
             _dump_destination(dst, ctx) for dst in edge.destinations
         ]
@@ -326,7 +347,7 @@ def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
             _dump_edge(edge, ctx) for edge in automaton.edges
         ],
         'initial-locations': [
-            loc.name for loc in automaton.initial_locations
+            ctx.get_location_name(loc) for loc in automaton.initial_locations
         ]
 
     }

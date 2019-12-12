@@ -204,7 +204,7 @@ def _location(jani_location: t.Any) -> automata.Location:
             )
             transient_values.add(assignment)
     return automata.Location(
-        name=jani_location['name'],
+        name=None if jani_location.get('x-momba-anonymous', False) else jani_location['name'],
         progress_invariant=progress_invariant,
         transient_values=frozenset(transient_values)
     )
@@ -299,8 +299,8 @@ def load_model(source: JANIModel) -> model.Network:
                 declaration = _variable_declaration(jani_declaration)
                 automaton.scope.declare(declaration)
         locations = {
-            t.cast(str, location.name): location
-            for location in map(_location, jani_automaton['locations'])
+            jani_location['name']: _location(jani_location)
+            for jani_location in jani_automaton['locations']
         }
         if 'restrict-initial' in jani_automaton:
             _check_fields(
