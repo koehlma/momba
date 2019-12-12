@@ -48,6 +48,8 @@ class JANIContext:
 
     _name_counter: int = 0
 
+    _actions: t.Set[str] = dataclasses.field(default_factory=set)
+
     _names: t.Dict[_NamedObject, str] = dataclasses.field(default_factory=dict)
 
     _features: t.Set[ModelFeature] = dataclasses.field(default_factory=set)
@@ -55,6 +57,10 @@ class JANIContext:
     @property
     def features(self) -> t.AbstractSet[ModelFeature]:
         return self._features
+
+    @property
+    def actions(self) -> t.AbstractSet[str]:
+        return self._actions
 
     def get_unique_name(self) -> str:
         name = f'__momba_{self._name_counter}'
@@ -69,6 +75,10 @@ class JANIContext:
                 name = self._names[obj] = self.get_unique_name()
                 return name
         return obj.name
+
+    def require_action(self, action: str) -> str:
+        self._actions.add(action)
+        return action
 
     def require(self, feature: ModelFeature) -> None:
         self._features.add(feature)
@@ -328,7 +338,7 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
         ]
     }
     if edge.action is not None:
-        jani_edge['action'] = str(edge.action)
+        jani_edge['action'] = ctx.require_action(str(edge.action))
     if edge.rate is not None:
         jani_edge['rate'] = {'exp': _dump_expr(edge.rate, ctx)}
     if edge.guard is not None:
@@ -413,7 +423,9 @@ def dump_structure(network: model.Network, *, allow_momba_operators: bool = Fals
             _dump_automaton(automaton, ctx) for automaton in network.automata
         ],
         'system': _dump_system(network, ctx),
-        # important: has to be at the end, because we collect the features while building
+        # important: has to be at the end, because we collect
+        # the features and actions while building
+        'actions': [action for action in ctx.actions],
         'features': [
             feature.value for feature in ctx.features
         ]
