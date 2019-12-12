@@ -186,7 +186,7 @@ def _location(jani_location: t.Any) -> automata.Location:
     _check_fields(
         jani_location,
         required={'name'},
-        optional={'time-progress', 'transient-values'}
+        optional={'time-progress', 'transient-values', 'x-momba-anonymous'}
     )
     progress_invariant: t.Optional[expressions.Expression]
     if 'time-progress' in jani_location:
