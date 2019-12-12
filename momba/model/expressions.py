@@ -57,7 +57,7 @@ class Expression(abc.ABC):
         return self | other
 
     def __invert__(self) -> Expression:
-        return Not(self)
+        return lnot(self)
 
     def __add__(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.ADD, self, convert(other))
@@ -200,6 +200,13 @@ class Boolean(BinaryExpression):
         return types.BOOL
 
 
+_REAL_OPERATORS = {
+    operators.ArithmeticOperator.REAL_DIV,
+    operators.ArithmeticOperator.LOG,
+    operators.ArithmeticOperator.POW
+}
+
+
 class Arithmetic(BinaryExpression):
     operator: operators.ArithmeticOperator
 
@@ -210,9 +217,15 @@ class Arithmetic(BinaryExpression):
             raise errors.InvalidTypeError(
                 'operands of arithmetic expressions must have a numeric type'
             )
-        if types.INT.is_assignable_from(left_type) and types.INT.is_assignable_from(right_type):
+        is_int = (
+            types.INT.is_assignable_from(left_type)
+            and types.INT.is_assignable_from(right_type)
+            and self.operator not in _REAL_OPERATORS
+        )
+        if is_int:
             return types.INT
-        return types.REAL
+        else:
+            return types.REAL
 
 
 class Equality(BinaryExpression):
@@ -291,8 +304,11 @@ class Conditional(Expression):
             )
 
 
+# XXX: this class should be abstract, however, then it would not type-check
+# https://github.com/python/mypy/issues/5374
 @dataclasses.dataclass(frozen=True)
-class Not(Expression):
+class UnaryExpression(Expression):
+    operator: operators.UnaryOperator
     operand: Expression
 
     @property
@@ -301,6 +317,24 @@ class Not(Expression):
 
     def is_constant_in(self, scope: context.Scope) -> bool:
         return self.operand.is_constant_in(scope)
+
+    # XXX: this method shall be implemented by all subclasses
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        raise NotImplementedError()
+
+
+class Round(UnaryExpression):
+    operator: operators.Round
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        operand_type = scope.get_type(self.operand)
+        if not operand_type.is_numeric:
+            raise errors.InvalidTypeError(f'expected a numeric type but got {operand_type}')
+        return types.INT
+
+
+class Not(UnaryExpression):
+    operator: operators.Not
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
@@ -474,31 +508,31 @@ def maximum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
     return Arithmetic(operators.ArithmeticOperator.MAX, convert(left), convert(right))
 
 
-def div(left: Expression, right: Expression) -> BinaryExpression:
-    raise NotImplementedError()
+def div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.REAL_DIV, convert(left), convert(right))
 
 
-def power(left: Expression, right: Expression) -> BinaryExpression:
-    raise NotImplementedError()
+def power(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.POW, convert(left), convert(right))
 
 
-def log(left: Expression, right: Expression) -> BinaryExpression:
-    raise NotImplementedError()
+def log(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.LOG, convert(left), convert(right))
 
 
 UnaryConstructor = t.Callable[[Expression], Expression]
 
 
 def lnot(operand: Expression) -> Expression:
-    return Not(operand)
+    return Not(operators.Not.NOT, operand)
 
 
-def floor(operand: Expression) -> Expression:
-    raise NotImplementedError()
+def floor(operand: MaybeExpression) -> Expression:
+    return Round(operators.Round.FLOOR, convert(operand))
 
 
 def ceil(operand: Expression) -> Expression:
-    raise NotImplementedError()
+    return Round(operators.Round.CEIL, convert(operand))
 
 
 def normalize_xor(expr: Expression) -> Expression:

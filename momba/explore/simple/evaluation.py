@@ -9,12 +9,13 @@ import typing as t
 import abc
 import dataclasses
 import functools
-import inspect
+import math
 import warnings
 
 from ... import model
 from ...model import context, expressions, operators, types
 from ...model.expressions import BinaryExpression
+from ...utils import checks
 
 from .. import errors
 
@@ -161,6 +162,19 @@ def _eval_not(expr: expressions.Not, ctx: EvaluationContext) -> Value:
     return Bool(not operand.boolean)
 
 
+@evaluate.register
+def _eval_round(expr: expressions.Round, ctx: EvaluationContext) -> Value:
+    operand = evaluate(expr.operand, ctx)
+    assert isinstance(operand, Numeric), (
+        f'type checking should guarantee that the value is a boolean'
+    )
+    if expr.operator is operators.Round.FLOOR:
+        return Integer(math.floor(operand.number))
+    else:
+        assert expr.operator is operators.Round.CEIL
+        return Integer(math.ceil(operand.number))
+
+
 _BinaryOperator = t.Callable[[BinaryExpression, Value, Value, EvaluationContext], Value]
 
 
@@ -292,6 +306,18 @@ _register_arithmetic_function(
     operators.ArithmeticOperator.FLOOR_DIV,
     lambda left, right: left // right
 )
+_register_arithmetic_function(
+    operators.ArithmeticOperator.REAL_DIV,
+    lambda left, right: left / right
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.POW,
+    lambda left, right: left ** right
+)
+_register_arithmetic_function(
+    operators.ArithmeticOperator.LOG,
+    lambda left, right: math.log(left, right)
+)
 
 _register_boolean_function(
     operators.Boolean.AND,
@@ -347,13 +373,7 @@ assert all(
 )
 
 
-def _check_evaluate() -> None:
-    for subclass in expressions.Expression.__subclasses__():
-        if not inspect.isabstract(subclass) and subclass not in evaluate.registry:
-            warnings.warn(
-                f'evaluation function for {subclass} has not been implemented'
-            )
-
-
-# warn if evaluate is not implemented for all concrete subclasses of Expression
-_check_evaluate()
+checks.check_singledispatch(
+    evaluate, expressions.Expression,
+    ignore={expressions.BinaryExpression, expressions.UnaryExpression}
+)

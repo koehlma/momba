@@ -221,8 +221,8 @@ def _dump_binary_expression(expr: expressions.BinaryExpression, ctx: JANIContext
 
 
 @_dump_expr.register
-def _dump_not(expr: expressions.Not, ctx: JANIContext) -> JSON:
-    return {'op': '¬', 'exp': _dump_expr(expr.operand, ctx)}
+def _dump_unary_expression(expr: expressions.UnaryExpression, ctx: JANIContext) -> JSON:
+    return {'op': expr.operator.symbol, 'exp': _dump_expr(expr.operand, ctx)}
 
 
 @_dump_expr.register

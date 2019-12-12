@@ -32,6 +32,10 @@ class ArithmeticOperator(BinaryOperator, enum.Enum):
     MAX = 'max'
 
     FLOOR_DIV = '//'
+    REAL_DIV = '/'
+
+    LOG = 'log'
+    POW = 'pow'
 
 
 class EqualityOperator(BinaryOperator, enum.Enum):
@@ -44,3 +48,19 @@ class Comparison(BinaryOperator, enum.Enum):
     LE = '≤'
     GE = '≥'
     GT = '>'
+
+
+class UnaryOperator:
+    symbol: str
+
+    def __init__(self, symbol: str):
+        self.symbol = symbol
+
+
+class Not(UnaryOperator, enum.Enum):
+    NOT = '¬'
+
+
+class Round(UnaryOperator, enum.Enum):
+    CEIL = 'ceil'
+    FLOOR = 'floor'
