@@ -4,22 +4,31 @@
 
 from __future__ import annotations
 
+import pathlib
+
 from distutils.core import setup
+
+
+README: pathlib.Path = pathlib.Path(__file__).parent / 'README.rst'
 
 
 setup(
     name='momba',
-    version='0.1.0dev',
+    version='0.1.2dev',
     description='A Python library for quantitative models.',
+    long_description=README.read_text(encoding='utf-8'),
     author='Maximilian Köhl',
     author_email='mkoehl@cs.uni-saarland.de',
-    url='https://dgit.cs.uni-saarland.de/koehlma/momba',
-
+    url='https://depend.cs.uni-saarland.de/~koehlma/momba/',
     tests_require=['pytest', 'pytest-cov'],
 
     packages=['momba'],
 
     classifiers=[
-        'Development Status :: 1 - Planning'
-    ]
+        'License :: OSI Approved :: MIT License',
+        'Development Status :: 2 - Pre-Alpha',
+        'Operating System :: OS Independent'
+    ],
+
+    python_requires='>=3.8'
 )
