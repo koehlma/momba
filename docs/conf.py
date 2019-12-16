@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-sys.path.insert(0, os.path.join(os.path.basename(__file__), '..', '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import momba  # noqa
 
