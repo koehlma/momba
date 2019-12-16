@@ -1,4 +1,4 @@
-MOMBA
+Momba
 =====
 
 |pypi| |build| |coverage|
