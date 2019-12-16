@@ -30,8 +30,7 @@ html_theme_options = {
     'display_version': True
 }
 
-templates_path = []  # type: ignore
-
+templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 

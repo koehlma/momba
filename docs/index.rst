@@ -50,9 +50,9 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   model/index
-   explore/index
-   analysis/index
-   external/index
+    model/index
+    explore/index
+    analysis/index
+    external/index
