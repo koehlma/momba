@@ -15,7 +15,7 @@ checks:
     - pip install tox
     - tox
 
-docs:
+docs-build:
   stage: build
   artifacts:
     paths:
@@ -24,3 +24,18 @@ docs:
   script:
     - pip install tox
     - tox -e docs
+
+.docs-deploy: &docs-deploy
+  stage: deploy
+  image: udsdepend/gitlab-ssh-deploy
+  tags:
+    - secret
+  dependencies:
+    - docs-build
+
+docs-deploy-master:
+  <<: *docs-deploy
+  only:
+    - master@koehlma/momba
+  script:
+    - /ssh-deploy.sh './deploy.sh master' '~/deploy-cache/docs/master' ./deploy.sh ./build/docs
