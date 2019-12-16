@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import typing as t
 
+import collections
 import dataclasses
 
 from . import effects, context, errors, expressions, types
@@ -122,6 +123,8 @@ class Automaton:
     _initial_locations: t.Set[Location]
     _restrict_initial: t.Optional[expressions.Expression]
     _edges: t.Set[Edge]
+    _incoming: t.DefaultDict[Location, t.Set[Edge]]
+    _outgoing: t.DefaultDict[Location, t.Set[Edge]]
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
@@ -131,6 +134,8 @@ class Automaton:
         self._initial_locations = set()
         self._restrict_initial = None
         self._edges = set()
+        self._incoming = collections.defaultdict(set)
+        self._outgoing = collections.defaultdict(set)
 
     @property
     def locations(self) -> t.AbstractSet[Location]:
@@ -187,31 +192,59 @@ class Automaton:
         self.add_location(location, initial=True)
 
     def add_edge(self, edge: Edge) -> None:
+        """
+        Adds an edge to the automaton.
+        """
         edge.validate(self.scope)
         edge.location.validate(self.scope)
         for destination in edge.destinations:
             destination.location.validate(self.scope)
         self._edges.add(edge)
         self._locations.add(edge.location)
+        self._outgoing[edge.location].add(edge)
         for destination in edge.destinations:
             self._locations.add(destination.location)
+            self._incoming[destination.location].add(edge)
 
     def create_edge(
         self,
-        location: Location,
+        source: Location,
         destinations: t.AbstractSet[Destination],
         *,
         action: t.Optional[Action] = None,
         guard: t.Optional[expressions.Expression] = None,
         rate: t.Optional[expressions.Expression] = None
     ) -> None:
-        edge = Edge(location, frozenset(destinations), action, guard, rate)
+        """
+        Creates a new edge with the given parameters.
+
+        See :class:`Edge` for more details.
+        """
+        edge = Edge(source, frozenset(destinations), action, guard, rate)
         self.add_edge(edge)
 
-    def declare_variable(self, identifier: str, typ: types.Type) -> None:
-        self.scope.declare_variable(identifier, typ)
+    def incoming(self, location: Location) -> t.AbstractSet[Edge]:
+        """
+        Returns the set of outgoing edges from the given location.
+        """
+        return self._incoming[location]
+
+    def outgoing(self, location: Location) -> t.AbstractSet[Edge]:
+        """
+        Returns the set of incoming edges to the given location.
+        """
+        return self._outgoing[location]
+
+    def declare_variable(self, name: str, typ: types.Type) -> None:
+        """
+        Declares a variable in the local scope of the automaton.
+        """
+        self.scope.declare_variable(name, typ)
 
     def create_instance(self, *, input_enable: t.AbstractSet[str] = frozenset()) -> Instance:
+        """
+        Creates an instance of the automaton for composition.
+        """
         return Instance(self, input_enable=frozenset(input_enable))
 
 
