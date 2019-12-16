@@ -23,7 +23,7 @@ How to use Momba?
 -----------------
 Please read `the documentation`_.
 
-.. _the documentation: https://depend.cs.uni-saarland.de/~koehlma/momba/
+.. _the documentation: https://depend.cs.uni-saarland.de/~koehl/momba/
 
 
 .. |pypi| image:: https://img.shields.io/pypi/v/momba.svg?label=latest%20version

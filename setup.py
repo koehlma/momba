@@ -14,12 +14,12 @@ README: pathlib.Path = pathlib.Path(__file__).parent / 'README.rst'
 
 setup(
     name='momba',
-    version='0.1.2dev',
+    version='0.1.3dev',
     description='A Python library for quantitative models.',
     long_description=README.read_text(encoding='utf-8'),
     author='Maximilian Köhl',
     author_email='mkoehl@cs.uni-saarland.de',
-    url='https://depend.cs.uni-saarland.de/~koehlma/momba/',
+    url='https://depend.cs.uni-saarland.de/~koehl/momba/',
     tests_require=['pytest', 'pytest-cov'],
 
     packages=['momba'],
