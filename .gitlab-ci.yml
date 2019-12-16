@@ -9,7 +9,7 @@ cache:
   paths:
     - .cache/
 
-run:
+check:
   stage: build
   script:
     - pip install tox
@@ -17,6 +17,10 @@ run:
 
 docs:
   stage: build
+  artifacts:
+    paths:
+      - build/docs
+    expire_in: 1 week
   script:
     - pip install tox
     - tox -e docs
