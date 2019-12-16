@@ -9,7 +9,7 @@ from distutils.core import setup
 
 setup(
     name='momba',
-    version='0.0.1dev',
+    version='0.1.0dev',
     description='A Python library for quantitative models.',
     author='Maximilian Köhl',
     author_email='mkoehl@cs.uni-saarland.de',
