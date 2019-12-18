@@ -299,7 +299,7 @@ class DBM:
             self._set(ZERO_CLOCK, clock, Bound.less_or_equal(0))
         self._canonicalize()
 
-    def intersect(self, other: DBM):
+    def intersect(self, other: DBM) -> None:
         assert other._clocks <= self._clocks
         for constraint in other.constraints:
             self._constrain(constraint)
