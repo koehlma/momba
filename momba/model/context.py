@@ -130,6 +130,16 @@ class Scope:
             if isinstance(decl, ConstantDeclaration)
         )
 
+    @property
+    def clock_declarations(self) -> t.AbstractSet[VariableDeclaration]:
+        """
+        Returns the set of declarations for clock variables.
+        """
+        return frozenset(
+            decl for decl in self._declarations.values()
+            if isinstance(decl, VariableDeclaration) and decl.typ == types.CLOCK
+        )
+
     def new_child_scope(self) -> Scope:
         return Scope(self.ctx, parent=self)
 
