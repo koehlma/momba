@@ -100,6 +100,9 @@ class Difference:
     def __str__(self) -> str:
         return f'{self.left} - {self.right}'
 
+    def bound(self, bound: Bound) -> Constraint:
+        return Constraint(self, bound=bound)
+
     def less_than(self, constant: NumberType) -> Constraint:
         return Constraint(self, bound=Bound.less_than(constant))
 
@@ -202,7 +205,9 @@ class DBM:
         matrix = _create_matrix(frozen_clocks)
         for clock in frozen_clocks:
             matrix[difference(clock, ZERO_CLOCK)] = _ZERO_BOUND
-        return DBM(frozen_clocks, matrix)
+        dbm = DBM(frozen_clocks, matrix)
+        dbm._canonicalize()
+        return dbm
 
     @property
     def clocks(self) -> t.AbstractSet[Clock]:
@@ -239,6 +244,9 @@ class DBM:
         if constraint.bound < self._matrix.get(constraint.difference, _INFINITY_BOUND):
             self._matrix[constraint.difference] = constraint.bound
 
+    def copy(self) -> DBM:
+        return DBM(_clocks=self._clocks, _matrix=self._matrix.copy())
+
     def reset(self, clock: Clock, value: NumberType = 0) -> None:
         assert not self.is_empty
         upper_bound = Bound.less_or_equal(value)
@@ -270,6 +278,7 @@ class DBM:
                     clock, ZERO_CLOCK,
                     self.get_bound(clock, ZERO_CLOCK).add(Bound.less_or_equal(time_delta))
                 )
+        self._canonicalize()
 
     def advance_lower_bounds(self, delta: NumberType) -> None:
         """
@@ -282,6 +291,7 @@ class DBM:
                 ZERO_CLOCK, clock,
                 self.get_bound(ZERO_CLOCK, clock).add(Bound.less_or_equal(-delta))
             )
+        self._canonicalize()
 
     def future(self) -> None:
         """
@@ -317,3 +327,24 @@ class DBM:
 def print_constraints(dbm: DBM) -> None:
     for constraint in dbm.constraints:
         print(constraint)
+
+
+@dataclasses.dataclass
+class DBMContext:
+    clocks: t.AbstractSet[Clock]
+
+    _clock_map: t.Dict[str, Clock] = dataclasses.field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        for clock in self.clocks:
+            assert clock.name not in self._clock_map
+            self._clock_map[clock.name] = clock
+
+    def get_clock_by_name(self, name: str) -> Clock:
+        return self._clock_map[name]
+
+    def create_unconstrained(self) -> DBM:
+        return DBM.create_unconstrained(self.clocks)
+
+    def create_zero(self) -> DBM:
+        return DBM.create_zero(self.clocks)

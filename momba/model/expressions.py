@@ -128,6 +128,9 @@ class Expression(abc.ABC):
             operators.Comparison.GT, self, other
         )
 
+    def land(self, other: Expression) -> Expression:
+        return land(self, other)
+
 
 @dataclasses.dataclass(frozen=True)
 class Constant(Expression):

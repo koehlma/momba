@@ -7,7 +7,7 @@ from __future__ import annotations
 from . import expressions, types, values
 
 from .automata import Automaton, Location, Edge, Destination, create_destination, Instance
-from .context import Identifier, ModelType
+from .context import Identifier, ModelType, Scope
 from .expressions import Expression
 from .network import Network, Synchronization, Composition
 from .types import Type
@@ -17,7 +17,7 @@ from .values import Value
 __all__ = [
     'expressions', 'types', 'values',
     'Automaton', 'Location', 'Edge', 'Destination', 'create_destination', 'Instance',
-    'Identifier', 'ModelType',
+    'Identifier', 'ModelType', 'Scope',
     'Expression',
     'Network', 'Synchronization', 'Composition',
     'Value',

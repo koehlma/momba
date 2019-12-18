@@ -116,8 +116,8 @@ def test_intersection():
 
     assert valuations.get_interval(y).infimum == 2
     assert valuations.get_interval(y).infimum_included is True
-    assert valuations.get_interval(y).supremum == 5
-    assert valuations.get_interval(y).supremum_included is True
+    assert valuations.get_interval(y).supremum == 3
+    assert valuations.get_interval(y).supremum_included is False
 
     valuations.reset(z, 42)
 
@@ -133,5 +133,5 @@ def test_intersection():
 
     assert valuations.get_interval(y).infimum == 2
     assert valuations.get_interval(y).infimum_included is True
-    assert valuations.get_interval(y).supremum == 5
-    assert valuations.get_interval(y).supremum_included is True
+    assert valuations.get_interval(y).supremum == 3
+    assert valuations.get_interval(y).supremum_included is False
