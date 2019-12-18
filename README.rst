@@ -1,7 +1,7 @@
 Momba
 =====
 
-|pypi| |build| |coverage|
+|pypi| |build| |coverage| |docs|
 
 **Momba is still in its early stages of development.
 Please expect things to break.
@@ -34,3 +34,6 @@ Please read `the documentation`_.
 
 .. |coverage| image:: https://dgit.cs.uni-saarland.de/koehlma/momba/badges/master/coverage.svg
     :target: https://dgit.cs.uni-saarland.de/koehlma/momba/pipelines
+
+.. |docs| image:: https://img.shields.io/static/v1?label=docs&message=master&color=blue
+    :target: https://depend.cs.uni-saarland.de/~koehl/momba/
