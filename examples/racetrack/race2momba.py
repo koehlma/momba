@@ -20,6 +20,8 @@ from momba.model.expressions import minimum, maximum
 parser = argparse.ArgumentParser(description='Reads a track file.')
 parser.add_argument('track', type=pathlib.Path, help='the map description in ASCII track format')
 parser.add_argument('output', type=pathlib.Path, help='JANI output file')
+parser.add_argument('max_speed', type=int, default=3, help='maximal speed of the car')
+parser.add_argument('max_acc', type=int, default=3, help='maximal acceleration in one step')
 parser.add_argument('--indent', type=int, default=2, help='indentation for JANI file')
 parser.add_argument(
     '--allow-momba-operators',
@@ -31,19 +33,31 @@ parser.add_argument(
 
 def main(arguments: t.Optional[t.Sequence[str]] = None) -> None:
     namespace = parser.parse_args(arguments)
+    undergrounds = ['tarmac', 'ice', 'sand']
 
-    network = build_model(namespace.track)
+    for car_max_speed in range(namespace.max_speed):
+        for car_max_acc in range(namespace.max_acc):
+            for underground in undergrounds:
+                network = build_model(namespace.track, car_max_speed, car_max_acc, underground)
 
-    namespace.output.write_bytes(
-        jani.dump_model(
-            network,
-            indent=namespace.indent,
-            allow_momba_operators=namespace.allow_momba_operators
-        )
-    )
+                out = namespace.output+'_'+car_max_speed+'_'+'_'+car_max_acc+'_'+underground
+
+                out.write_bytes(
+                    jani.dump_model(
+                        network,
+                        indent=namespace.indent,
+                        allow_momba_operators=namespace.allow_momba_operators
+                    )
+                )
+    print("done")
 
 
-def build_model(track_path: pathlib.Path) -> model.Network:
+def build_model(
+    track_path: pathlib.Path,
+    max_speed: int,
+    max_acc: int,
+    underground: str
+    ) -> model.Network:
     with track_path.open('r', encoding='utf-8') as track_file:
         firstline = track_file.readline()
         track = track_file.read().replace('\n', '').strip()
@@ -52,14 +66,35 @@ def build_model(track_path: pathlib.Path) -> model.Network:
     assert dimension is not None, 'invalid format: dimension missing'
 
     width, height = int(dimension['width']), int(dimension['height'])
+    assert len(track) == width * height, 'given track dimensions do not match actual track size'
 
     track_blank = [match.start() for match in re.finditer(r'\.', track)]
     track_blocked = [match.start() for match in re.finditer(r'x', track)]
     track_start = [match.start() for match in re.finditer(r's', track)]
     track_goal = [match.start() for match in re.finditer(r'g', track)]
+    assert len(track_start) > 0, 'no start field specified'
+    assert len(track_goal) > 0, 'no goal field specified'
 
-    track_available = (track_start + track_goal + track_blank)
-    track_available.sort()
+    def acc_prob(ground: str) -> model.Expression:
+        if(ground == 'tarmac'):
+            return expressions.div(7, 8)
+        elif(ground == 'sand'):
+            return expressions.div(1, 3)
+        elif(ground == 'ice'):
+            return expressions.div(1, 6)
+        else:
+            raise NotImplementedError('This underground is not specified')
+
+    def acc_underground(ground: str, x: model.Expression) -> model.Expression:
+        if(ground == 'tarmac'):
+            return x
+        if(ground == 'sand'):
+            if x > 0:
+                return x-1
+            else:
+                return x+1
+        if(ground == 'ice'):
+            return expressions.convert(0)
 
     network = model.Network(model.ModelType.MDP)
 
@@ -86,14 +121,21 @@ def build_model(track_path: pathlib.Path) -> model.Network:
     car = network.create_automaton(name='car')
     location = car.create_location(initial=True)
 
-    for dx, dy in itertools.product((-1, 0, 1), repeat=2):
+    def new_speed(current: model.Expression, change: model.Expression) -> model.Expression:
+        return expressions.maximum(expressions.minimum(current + change, max_speed), -max_speed)
+
+    for ax, ay in itertools.product(range(-max_acc, max_acc), repeat=2):
         car.create_edge(
             location,
             destinations={
                 model.create_destination(location, assignments={
-                    'car_dx': maximum(minimum(car_dx + dx, 1), -1),
-                    'car_dy': maximum(minimum(car_dy + dy, 1), -1)
-                })
+                    'car_dx': new_speed(car_dx, ax),
+                    'car_dy': new_speed(car_dy, ay)
+                }, probability=acc_prob(underground)),
+                model.create_destination(location, assignments={
+                    'car_dx': new_speed(car_dx, acc_underground(underground, ax)),
+                    'car_dy': new_speed(car_dy, acc_underground(underground, ay))
+                }, probability=1-acc_prob(underground))
             },
             action='step'
         )
@@ -103,6 +145,55 @@ def build_model(track_path: pathlib.Path) -> model.Network:
 
     x_coord = car_pos % DIM_X
     y_coord = car_pos // DIM_X
+
+    def out_of_bounds_x(x: model.Expression) -> model.Expression:
+        return (x >= DIM_X) | (x < 0)
+
+    def out_of_bounds_y(y: model.Expression) -> model.Expression:
+        return (y >= DIM_Y) | (y < 0)
+
+    def out_of_bounds(x: model.Expression, y: model.Expression) -> model.Expression:
+        return out_of_bounds_x(x) | out_of_bounds_y(y)
+
+    offtrack = out_of_bounds(x_coord + car_dx, y_coord + car_dy)
+
+    goal = expressions.lor(
+        *(expressions.eq(car_pos, expressions.convert(pos)) for pos in track_goal)
+    )
+
+    blocked = expressions.lor(
+        *(expressions.eq(car_pos, expressions.convert(pos)) for pos in track_blocked)
+    )
+
+    # disjuncts = []
+
+    # for x in range(0, DIM_X):
+    #     for y in range(0, DIM_Y):
+    #         for dx in range(-max_speed, max_speed+1):
+    #             for dy in range(-max_speed, max_speed+1):
+    #                 if ((x+dx >= 0) & (x+dx < DIM_X) & (y+dy >= 0) & (y+dy < DIM_Y)):
+    #                     if(checkcollision(x, y, dx, dy, track, DIM_Y)):
+    #                         disj = expressions.land(
+    #                             expressions.eq(car_pos, expressions.convert(x+DIM_Y*y)),
+    #                             expressions.eq(car_dx, expressions.convert(dx)),
+    #                             expressions.eq(car_dy, expressions.convert(dy)))
+    #                         disjuncts.append(disj)
+    # crashed = expressions.lor(disjuncts)
+
+    def is_blocked_at(pos: model.Expression) -> model.Expression:
+        raise NotImplementedError()
+
+    # used floor instead of round sometimes because JANI only knows floor and ceil
+    car_will_crash = expressions.lor(
+        *(is_blocked_at(
+            expressions.floor(
+                expressions.mod(car_pos, DIM_Y)
+                +(expressions.convert(i)/expressions.convert(max_speed))*car_dx)
+            + DIM_Y*expressions.floor(expressions.floor(car_pos/DIM_Y)+(i/max_speed)*car_dy))
+            for i in range(max_speed))
+    )
+
+    not_terminated = ~goal & ~offtrack & ~car_will_crash
 
     controller.create_edge(
             location,
@@ -117,52 +208,20 @@ def build_model(track_path: pathlib.Path) -> model.Network:
                     )
                 })
             },
-            action='step'
-        )
-
-    terminator = network.create_automaton(name='terminator')
-    location = terminator.create_location(initial=True)
-
-    def out_of_bounds_x(x: model.Expression) -> model.Expression:
-        return (x >= DIM_X) | (x < 0)
-
-    def out_of_bounds_y(y: model.Expression) -> model.Expression:
-        return (y >= DIM_Y) | (y < 0)
-
-    def out_of_bounds(x: model.Expression, y: model.Expression) -> model.Expression:
-        return out_of_bounds_x(x) | out_of_bounds_y(y)
-
-    offtrack = out_of_bounds(x_coord + car_dx, y_coord + car_dy)
-
-    crashed = expressions.lor(
-        *(expressions.eq(car_pos, expressions.convert(pos)) for pos in track_blocked)
-    )
-
-    goal = expressions.lor(
-        *(expressions.eq(car_pos, expressions.convert(pos)) for pos in track_goal)
-    )
-
-    has_terminated = ~goal & ~crashed & ~offtrack
-
-    terminator.create_edge(
-        location,
-        guard=has_terminated,
-        action='step',
-        destinations={model.create_destination(location)}
+            action='step',
+            guard=not_terminated
     )
 
     car_instance = car.create_instance()
     controller_instance = controller.create_instance()
-    terminator_instance = terminator.create_instance()
 
     composition = network.create_composition(
-        {car_instance, controller_instance, terminator_instance}
+        {car_instance, controller_instance}
     )
     composition.create_synchronization(
         {
             car_instance: 'step',
-            controller_instance: 'step',
-            terminator_instance: 'step'
+            controller_instance: 'step'
         }, result='step'
     )
 
