@@ -425,7 +425,7 @@ def dump_structure(network: model.Network, *, allow_momba_operators: bool = Fals
         'system': _dump_system(network, ctx),
         # important: has to be at the end, because we collect
         # the features and actions while building
-        'actions': [action for action in ctx.actions],
+        'actions': [{'name': action} for action in ctx.actions],
         'features': [
             feature.value for feature in ctx.features
         ]

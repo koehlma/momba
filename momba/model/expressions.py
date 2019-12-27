@@ -447,19 +447,24 @@ def lor(*expressions: Expression) -> Expression:
     return result
 
 
-def land(left: Expression, right: Expression) -> Boolean:
-    return Boolean(operators.Boolean.AND, left, right)
+def land(*expressions: Expression) -> Expression:
+    if len(expressions) == 2:
+        return Boolean(operators.Boolean.AND, expressions[0], expressions[1])
+    result = convert(True)
+    for conjunct in expressions:
+        result &= conjunct
+    return result
 
 
-def xor(left: Expression, right: Expression) -> Boolean:
+def xor(left: Expression, right: Expression) -> Expression:
     return Boolean(operators.Boolean.XOR, left, right)
 
 
-def implies(left: Expression, right: Expression) -> Boolean:
+def implies(left: Expression, right: Expression) -> Expression:
     return Boolean(operators.Boolean.IMPLY, left, right)
 
 
-def equiv(left: Expression, right: Expression) -> Boolean:
+def equiv(left: Expression, right: Expression) -> Expression:
     return Boolean(operators.Boolean.EQUIV, left, right)
 
 
