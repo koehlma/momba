@@ -1,7 +1,7 @@
 Momba
 =====
 
-|pypi| |build| |coverage| |docs|
+|pypi| |build| |coverage| |docs| |black|
 
 **Momba is still in its early stages of development.
 Please expect things to break.
@@ -17,7 +17,7 @@ __ http://www.modestchecker.net/
 __ https://github.com/ISCAS-PMC/ePMC
 
 .. _JANI specification: http://www.jani-spec.org/
- 
+
 
 How to use Momba?
 -----------------
@@ -37,3 +37,6 @@ Please read `the documentation`_.
 
 .. |docs| image:: https://img.shields.io/static/v1?label=docs&message=master&color=blue
     :target: https://depend.cs.uni-saarland.de/~koehl/momba/
+
+.. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
