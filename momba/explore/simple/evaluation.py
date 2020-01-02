@@ -70,7 +70,7 @@ class Valuation:
                 return self.parent.load(identifier)
             else:
                 raise errors.UnboundIdentifierError(
-                    f'identifier {identifier} is not bound to a value'
+                    f"identifier {identifier} is not bound to a value"
                 )
 
     def store(self, identifier: model.Identifier, value: Value) -> None:
@@ -91,7 +91,7 @@ class EvaluationContext:
 @functools.singledispatch
 def evaluate(expr: model.Expression, ctx: EvaluationContext) -> Value:
     raise NotImplementedError(
-        f'no evaluation function has been implemented for expression {expr}'
+        f"no evaluation function has been implemented for expression {expr}"
     )
 
 
@@ -103,17 +103,21 @@ def _eval_constant(expr: expressions.Constant, ctx: EvaluationContext) -> Value:
 @functools.singledispatch
 def _eval_model_value(value: model.Value, ctx: EvaluationContext) -> Value:
     raise NotImplementedError(
-        f'no evaluation function has been implemented for model value {value}'
+        f"no evaluation function has been implemented for model value {value}"
     )
 
 
 @_eval_model_value.register
-def _model_value_bool(value: model.values.BooleanValue, ctx: EvaluationContext) -> Value:
+def _model_value_bool(
+    value: model.values.BooleanValue, ctx: EvaluationContext
+) -> Value:
     return Bool(value.boolean)
 
 
 @_eval_model_value.register
-def _model_value_integer(value: model.values.IntegerValue, ctx: EvaluationContext) -> Value:
+def _model_value_integer(
+    value: model.values.IntegerValue, ctx: EvaluationContext
+) -> Value:
     return Integer(value.integer)
 
 
@@ -121,8 +125,8 @@ def _model_value_integer(value: model.values.IntegerValue, ctx: EvaluationContex
 def _model_value_real(value: model.values.RealValue, ctx: EvaluationContext) -> Value:
     if not isinstance(value.real, float):
         warnings.warn(
-            f'imprecise conversion of real, reals are approximated by IEEE 754 doubles',
-            category=ImprecisionWarning
+            f"imprecise conversion of real, reals are approximated by IEEE 754 doubles",
+            category=ImprecisionWarning,
         )
     return Real(value.as_float)
 
@@ -135,9 +139,9 @@ def _eval_identifier(expr: expressions.Identifier, ctx: EvaluationContext) -> Va
 @evaluate.register
 def _eval_conditional(expr: expressions.Conditional, ctx: EvaluationContext) -> Value:
     condition = evaluate(expr.condition, ctx)
-    assert isinstance(condition, Bool), (
-        f'type checking should guarantee that the value is a bool'
-    )
+    assert isinstance(
+        condition, Bool
+    ), f"type checking should guarantee that the value is a bool"
     if condition.boolean:
         return evaluate(expr.consequence, ctx)
     else:
@@ -149,25 +153,25 @@ def _eval_conditional(expr: expressions.Conditional, ctx: EvaluationContext) -> 
 @evaluate.register(expressions.Derivative)
 def _eval_unsupported(expr: expressions.Expression, ctx: EvaluationContext) -> Value:
     raise errors.UnsupportedExpressionError(
-        f'expression {expr} cannot be evaluated with the simple state-space explorer'
+        f"expression {expr} cannot be evaluated with the simple state-space explorer"
     )
 
 
 @evaluate.register
 def _eval_not(expr: expressions.Not, ctx: EvaluationContext) -> Value:
     operand = evaluate(expr.operand, ctx)
-    assert isinstance(operand, Bool), (
-        f'type checking should guarantee that the value is a boolean'
-    )
+    assert isinstance(
+        operand, Bool
+    ), f"type checking should guarantee that the value is a boolean"
     return Bool(not operand.boolean)
 
 
 @evaluate.register
 def _eval_round(expr: expressions.Round, ctx: EvaluationContext) -> Value:
     operand = evaluate(expr.operand, ctx)
-    assert isinstance(operand, Numeric), (
-        f'type checking should guarantee that the value is a boolean'
-    )
+    assert isinstance(
+        operand, Numeric
+    ), f"type checking should guarantee that the value is a boolean"
     if expr.operator is operators.Round.FLOOR:
         return Integer(math.floor(operand.number))
     else:
@@ -186,14 +190,12 @@ def _eval_binary(expr: BinaryExpression, ctx: EvaluationContext) -> Value:
 
 
 def _eval_equality(
-    expr: BinaryExpression,
-    left: Value,
-    right: Value,
-    ctx: EvaluationContext
+    expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
 ) -> Value:
-    assert expr.operator in {operators.EqualityOperator.EQ, operators.EqualityOperator.NEQ}, (
-        f'this function is meant to evaluate equalities and nothing else'
-    )
+    assert expr.operator in {
+        operators.EqualityOperator.EQ,
+        operators.EqualityOperator.NEQ,
+    }, f"this function is meant to evaluate equalities and nothing else"
     result: bool
     if isinstance(left, Numeric) and isinstance(right, Numeric):
         result = left.number == right.number
@@ -207,7 +209,7 @@ def _eval_equality(
 
 _BINARY_OPERATOR_MAP: t.Dict[operators.BinaryOperator, _BinaryOperator] = {
     operators.EqualityOperator.EQ: _eval_equality,
-    operators.EqualityOperator.NEQ: _eval_equality
+    operators.EqualityOperator.NEQ: _eval_equality,
 }
 
 
@@ -218,162 +220,119 @@ _ComparisonFunction = t.Callable[[_Number, _Number], bool]
 
 
 def _register_arithmetic_function(
-    operator: operators.ArithmeticOperator,
-    function: _ArithmeticFunction
+    operator: operators.ArithmeticOperator, function: _ArithmeticFunction
 ) -> None:
     def implementation(
-        expr: BinaryExpression,
-        left: Value,
-        right: Value,
-        ctx: EvaluationContext
+        expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
     ) -> Value:
-        assert isinstance(left, (Integer, Real)) and isinstance(right, (Integer, Real)), (
-            f'type checking should guarantee that the values are either integers or reals'
-        )
+        assert isinstance(left, (Integer, Real)) and isinstance(
+            right, (Integer, Real)
+        ), f"type checking should guarantee that the values are either integers or reals"
         result = function(left.number, right.number)
         if ctx.scope.get_type(expr) == types.INT:
-            assert isinstance(result, int), (
-                f'type checking should guarantee that the result is an integer'
-            )
+            assert isinstance(
+                result, int
+            ), f"type checking should guarantee that the result is an integer"
             return Integer(result)
         else:
             return Real(float(result))
-    implementation.__name__ = f'_eval_arithmetic_{operator.name.lower()}'
+
+    implementation.__name__ = f"_eval_arithmetic_{operator.name.lower()}"
     _BINARY_OPERATOR_MAP[operator] = implementation
 
 
 def _register_boolean_function(
-    operator: operators.Boolean,
-    function: _BooleanFunction
+    operator: operators.Boolean, function: _BooleanFunction
 ) -> None:
     def implementation(
-        expr: BinaryExpression,
-        left: Value,
-        right: Value,
-        ctx: EvaluationContext
+        expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
     ) -> Value:
-        assert isinstance(left, Bool) and isinstance(right, Bool), (
-            f'type checking should guarantee that the values are boolean'
-        )
+        assert isinstance(left, Bool) and isinstance(
+            right, Bool
+        ), f"type checking should guarantee that the values are boolean"
         return Bool(function(left.boolean, right.boolean))
-    implementation.__name__ = f'_eval_boolean_{operator.name.lower()}'
+
+    implementation.__name__ = f"_eval_boolean_{operator.name.lower()}"
     _BINARY_OPERATOR_MAP[operator] = implementation
 
 
 def _register_comparison_function(
-    operator: operators.Comparison,
-    function: _ComparisonFunction
+    operator: operators.Comparison, function: _ComparisonFunction
 ) -> None:
     def implementation(
-        expr: BinaryExpression,
-        left: Value,
-        right: Value,
-        ctx: EvaluationContext
+        expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
     ) -> Value:
-        assert isinstance(left, (Integer, Real)) and isinstance(right, (Integer, Real)), (
-            f'type checking should guarantee that the values are either integers or reals'
-        )
+        assert isinstance(left, (Integer, Real)) and isinstance(
+            right, (Integer, Real)
+        ), f"type checking should guarantee that the values are either integers or reals"
         return Bool(function(left.number, right.number))
-    implementation.__name__ = f'_eval_comparison_{operator.name.lower()}'
+
+    implementation.__name__ = f"_eval_comparison_{operator.name.lower()}"
     _BINARY_OPERATOR_MAP[operator] = implementation
 
 
 _register_arithmetic_function(
-    operators.ArithmeticOperator.ADD,
-    lambda left, right: left + right
+    operators.ArithmeticOperator.ADD, lambda left, right: left + right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.SUB,
-    lambda left, right: left - right
+    operators.ArithmeticOperator.SUB, lambda left, right: left - right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.MUL,
-    lambda left, right: left * right
+    operators.ArithmeticOperator.MUL, lambda left, right: left * right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.MOD,
-    lambda left, right: left % abs(right)
+    operators.ArithmeticOperator.MOD, lambda left, right: left % abs(right)
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.MIN,
-    lambda left, right: min(left, right)
+    operators.ArithmeticOperator.MIN, lambda left, right: min(left, right)
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.MAX,
-    lambda left, right: max(left, right)
+    operators.ArithmeticOperator.MAX, lambda left, right: max(left, right)
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.FLOOR_DIV,
-    lambda left, right: left // right
+    operators.ArithmeticOperator.FLOOR_DIV, lambda left, right: left // right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.REAL_DIV,
-    lambda left, right: left / right
+    operators.ArithmeticOperator.REAL_DIV, lambda left, right: left / right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.POW,
-    lambda left, right: left ** right
+    operators.ArithmeticOperator.POW, lambda left, right: left ** right
 )
 _register_arithmetic_function(
-    operators.ArithmeticOperator.LOG,
-    lambda left, right: math.log(left, right)
+    operators.ArithmeticOperator.LOG, lambda left, right: math.log(left, right)
 )
 
-_register_boolean_function(
-    operators.Boolean.AND,
-    lambda left, right: left and right
-)
-_register_boolean_function(
-    operators.Boolean.OR,
-    lambda left, right: left or right
-)
+_register_boolean_function(operators.Boolean.AND, lambda left, right: left and right)
+_register_boolean_function(operators.Boolean.OR, lambda left, right: left or right)
 _register_boolean_function(
     operators.Boolean.XOR,
-    lambda left, right: (not left and right) or (left and not right)
+    lambda left, right: (not left and right) or (left and not right),
 )
 _register_boolean_function(
-    operators.Boolean.IMPLY,
-    lambda left, right: not left or right
+    operators.Boolean.IMPLY, lambda left, right: not left or right
 )
-_register_boolean_function(
-    operators.Boolean.EQUIV,
-    lambda left, right: left is right
-)
+_register_boolean_function(operators.Boolean.EQUIV, lambda left, right: left is right)
 
+_register_comparison_function(operators.Comparison.LT, lambda left, right: left < right)
 _register_comparison_function(
-    operators.Comparison.LT,
-    lambda left, right: left < right
+    operators.Comparison.LE, lambda left, right: left <= right
 )
 _register_comparison_function(
-    operators.Comparison.LE,
-    lambda left, right: left <= right
+    operators.Comparison.GE, lambda left, right: left >= right
 )
-_register_comparison_function(
-    operators.Comparison.GE,
-    lambda left, right: left >= right
-)
-_register_comparison_function(
-    operators.Comparison.GT,
-    lambda left, right: left > right
-)
+_register_comparison_function(operators.Comparison.GT, lambda left, right: left > right)
 
 
 # ensure that all operators have been defined
 assert all(
-    operator in _BINARY_OPERATOR_MAP
-    for operator in operators.ArithmeticOperator
+    operator in _BINARY_OPERATOR_MAP for operator in operators.ArithmeticOperator
 )
-assert all(
-    operator in _BINARY_OPERATOR_MAP
-    for operator in operators.Boolean
-)
-assert all(
-    operator in _BINARY_OPERATOR_MAP
-    for operator in operators.Comparison
-)
+assert all(operator in _BINARY_OPERATOR_MAP for operator in operators.Boolean)
+assert all(operator in _BINARY_OPERATOR_MAP for operator in operators.Comparison)
 
 
 checks.check_singledispatch(
-    evaluate, expressions.Expression,
-    ignore={expressions.BinaryExpression, expressions.UnaryExpression}
+    evaluate,
+    expressions.Expression,
+    ignore={expressions.BinaryExpression, expressions.UnaryExpression},
 )

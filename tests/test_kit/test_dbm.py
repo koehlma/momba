@@ -10,18 +10,18 @@ import pytest
 
 
 def test_basic_operations():
-    x, y, z = dbm.create_clocks('x', 'y', 'z')
+    x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y, z})
 
     assert valuations.get_interval(x).infimum == 0
     assert valuations.get_interval(x).infimum_included is True
-    assert valuations.get_interval(x).supremum == float('inf')
+    assert valuations.get_interval(x).supremum == float("inf")
     assert valuations.get_interval(x).supremum_included is False
     assert not valuations.is_empty
 
     valuations.constrain(
         dbm.difference(x, dbm.ZERO_CLOCK).less_or_equal(5),
-        dbm.difference(dbm.ZERO_CLOCK, x).less_than(-2)
+        dbm.difference(dbm.ZERO_CLOCK, x).less_than(-2),
     )
 
     assert valuations.get_interval(x).infimum == 2
@@ -30,25 +30,21 @@ def test_basic_operations():
     assert valuations.get_interval(x).supremum_included is True
     assert not valuations.is_empty
 
-    valuations.constrain(
-        dbm.difference(dbm.ZERO_CLOCK, x).less_than(-5)
-    )
+    valuations.constrain(dbm.difference(dbm.ZERO_CLOCK, x).less_than(-5))
 
     assert valuations.is_empty
 
 
 def test_unknown_clocks():
-    x, y, z = dbm.create_clocks('x', 'y', 'z')
+    x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y})
 
     with pytest.raises(dbm.UnknownClockError):
-        valuations.constrain(
-            dbm.difference(x, z).less_or_equal(3)
-        )
+        valuations.constrain(dbm.difference(x, z).less_or_equal(3))
 
 
 def test_clock_reset():
-    x, y, z = dbm.create_clocks('x', 'y', 'z')
+    x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y, z})
 
     valuations.reset(x, 5)
@@ -58,13 +54,11 @@ def test_clock_reset():
     assert valuations.get_interval(x).supremum == 5
     assert valuations.get_interval(x).supremum_included is True
 
-    valuations.constrain(
-        dbm.difference(x, y).less_or_equal(2)
-    )
+    valuations.constrain(dbm.difference(x, y).less_or_equal(2))
 
     assert valuations.get_interval(y).infimum == 3
     assert valuations.get_interval(y).infimum_included is True
-    assert valuations.get_interval(y).supremum == float('inf')
+    assert valuations.get_interval(y).supremum == float("inf")
     assert valuations.get_interval(y).supremum_included is False
 
     valuations.reset(y, 10)
@@ -85,7 +79,7 @@ def test_clock_reset():
 
 
 def test_intersection():
-    x, y, z = dbm.create_clocks('x', 'y', 'z')
+    x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_zero({x, y, z})
 
     valuations.advance_upper_bounds(5)
@@ -93,14 +87,11 @@ def test_intersection():
 
     # constrain x and z to have the same value
     valuations.constrain(
-        dbm.difference(x, z).less_or_equal(0),
-        dbm.difference(z, x).less_or_equal(0)
+        dbm.difference(x, z).less_or_equal(0), dbm.difference(z, x).less_or_equal(0)
     )
 
     invariant = dbm.DBM.create_unconstrained({x, y})
-    invariant.constrain(
-        dbm.difference(x, dbm.ZERO_CLOCK).less_than(3)  # x < 3
-    )
+    invariant.constrain(dbm.difference(x, dbm.ZERO_CLOCK).less_than(3))  # x < 3
 
     valuations.intersect(invariant)
 

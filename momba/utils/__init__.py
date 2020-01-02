@@ -10,4 +10,4 @@ from .cache import lru_cache
 from .clstools import get_subclasses
 
 
-__all__ = ['checks', 'lru_cache', 'get_subclasses']
+__all__ = ["checks", "lru_cache", "get_subclasses"]

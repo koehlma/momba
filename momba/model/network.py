@@ -27,14 +27,12 @@ class Composition:
     synchronizations: t.Set[Synchronization] = dataclasses.field(default_factory=set)
 
     def create_synchronization(
-        self,
-        vector: t.Mapping[Instance, str],
-        result: t.Optional[str] = None
+        self, vector: t.Mapping[Instance, str], result: t.Optional[str] = None
     ) -> None:
         for instance in vector.keys():
             if instance not in self.instances:
                 raise errors.ModelingError(
-                    f'instance {instance} is not part of composition'
+                    f"instance {instance} is not part of composition"
                 )
         self.synchronizations.add(Synchronization(vector, result))
 
@@ -43,6 +41,7 @@ class Network:
     """
     The core class representing a network of interacting SHAs.
     """
+
     ctx: context.Context
 
     _restrict_initial: t.Optional[Expression]
@@ -67,11 +66,11 @@ class Network:
     def restrict_initial(self, restrict_initial: Expression) -> None:
         if self._restrict_initial is not None:
             raise errors.InvalidOperationError(
-                f'restriction of initial valuations has already been set'
+                f"restriction of initial valuations has already been set"
             )
         if self.ctx.global_scope.get_type(restrict_initial) != types.BOOL:
             raise errors.InvalidTypeError(
-                f'restriction of initial valuations must have type `types.BOOL`'
+                f"restriction of initial valuations must have type `types.BOOL`"
             )
         self._restrict_initial = restrict_initial
 
@@ -94,18 +93,20 @@ class Network:
         self,
         identifier: str,
         typ: types.Type,
-        value: t.Optional[expressions.MaybeExpression] = None
+        value: t.Optional[expressions.MaybeExpression] = None,
     ) -> None:
         if value is None:
             self.ctx.global_scope.declare_constant(identifier, typ, None)
         else:
-            self.ctx.global_scope.declare_constant(identifier, typ, expressions.convert(value))
+            self.ctx.global_scope.declare_constant(
+                identifier, typ, expressions.convert(value)
+            )
 
     def create_composition(self, instances: t.AbstractSet[Instance]) -> Composition:
         for instance in instances:
             if instance.automaton not in self.automata:
                 raise errors.ModelingError(
-                    f'automaton {instance.automaton} is not part of the network'
+                    f"automaton {instance.automaton} is not part of the network"
                 )
         composition = Composition(frozenset(instances))
         self._system.add(composition)

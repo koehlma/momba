@@ -49,25 +49,25 @@ class Location:
         if self.progress_invariant is not None:
             if scope.ctx.model_type not in context.TA_MODEL_TYPES:
                 raise errors.ModelingError(
-                    f'location invariant is not allowed for model type {scope.ctx.model_type}'
+                    f"location invariant is not allowed for model type {scope.ctx.model_type}"
                 )
             if scope.get_type(self.progress_invariant) != types.BOOL:
                 raise errors.InvalidTypeError(
-                    f'type of invariant in location {self} is not `types.BOOL`'
+                    f"type of invariant in location {self} is not `types.BOOL`"
                 )
         if self.transient_values:
             if scope.ctx.model_type not in context.TA_MODEL_TYPES:
                 raise errors.ModelingError(
-                    f'transient values are not allowed for model type {scope.ctx.model_type}'
+                    f"transient values are not allowed for model type {scope.ctx.model_type}"
                 )
             if not effects.are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
-                    f'incompatible assignments for transient values'
+                    f"incompatible assignments for transient values"
                 )
             for assignment in self.transient_values:
                 if assignment.index != 0:
                     raise errors.ModelingError(
-                        f'index of assignments for transient values must be zero'
+                        f"index of assignments for transient values must be zero"
                     )
                 assignment.validate(scope)
 
@@ -81,13 +81,11 @@ class Destination:
     def validate(self, scope: context.Scope) -> None:
         if not effects.are_compatible(self.assignments):
             raise errors.IncompatibleAssignmentsError(
-                f'assignments on edge {self} are not compatible'
+                f"assignments on edge {self} are not compatible"
             )
         if self.probability is not None:
             if not scope.get_type(self.probability).is_numeric:
-                raise errors.InvalidTypeError(
-                    f'probability value must be numeric'
-                )
+                raise errors.InvalidTypeError(f"probability value must be numeric")
         for assignment in self.assignments:
             assignment.validate(scope)
 
@@ -103,12 +101,10 @@ class Edge:
     def validate(self, scope: context.Scope) -> None:
         if self.guard is not None and scope.get_type(self.guard) != types.BOOL:
             raise errors.InvalidTypeError(
-                f'type of guard on edge {self} is not `types.BOOL`'
+                f"type of guard on edge {self} is not `types.BOOL`"
             )
         if self.rate is not None and not scope.get_type(self.rate).is_numeric:
-            raise errors.InvalidTypeError(
-                f'type of rate on edge {self} is not numeric'
-            )
+            raise errors.InvalidTypeError(f"type of rate on edge {self} is not numeric")
         for destination in self.destinations:
             destination.validate(scope)
 
@@ -153,11 +149,11 @@ class Automaton:
     def restrict_initial(self, restrict_initial: expressions.Expression) -> None:
         if self._restrict_initial is not None:
             raise errors.InvalidOperationError(
-                f'restriction of initial valuations has already been set'
+                f"restriction of initial valuations has already been set"
             )
         if self.scope.get_type(restrict_initial) != types.BOOL:
             raise errors.InvalidTypeError(
-                f'restriction of initial valuations must have type `types.BOOL`'
+                f"restriction of initial valuations must have type `types.BOOL`"
             )
         self._restrict_initial = restrict_initial
 
@@ -177,7 +173,7 @@ class Automaton:
         *,
         progress_invariant: t.Optional[expressions.Expression] = None,
         transient_values: t.AbstractSet[effects.Assignment] = frozenset(),
-        initial: bool = False
+        initial: bool = False,
     ) -> Location:
         """
         Adds a location to the automaton.
@@ -213,7 +209,7 @@ class Automaton:
         *,
         action: t.Optional[Action] = None,
         guard: t.Optional[expressions.Expression] = None,
-        rate: t.Optional[expressions.Expression] = None
+        rate: t.Optional[expressions.Expression] = None,
     ) -> None:
         """
         Creates a new edge with the given parameters.
@@ -241,7 +237,9 @@ class Automaton:
         """
         self.scope.declare_variable(name, typ)
 
-    def create_instance(self, *, input_enable: t.AbstractSet[str] = frozenset()) -> Instance:
+    def create_instance(
+        self, *, input_enable: t.AbstractSet[str] = frozenset()
+    ) -> Instance:
         """
         Creates an instance of the automaton for composition.
         """
@@ -257,7 +255,7 @@ def create_destination(
     location: Location,
     *,
     probability: t.Optional[expressions.Expression] = None,
-    assignments: Assignments = frozenset()
+    assignments: Assignments = frozenset(),
 ) -> Destination:
     if isinstance(assignments, t.Mapping):
         return Destination(
@@ -266,7 +264,7 @@ def create_destination(
             assignments=frozenset(
                 effects.Assignment(effects.Identifier(name), value)
                 for name, value in assignments.items()
-            )
+            ),
         )
     else:
         return Destination(location, probability, assignments)

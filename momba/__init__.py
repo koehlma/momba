@@ -13,4 +13,4 @@ from __future__ import annotations
 from . import ext, model
 
 
-__all__ = ['ext', 'model']
+__all__ = ["ext", "model"]

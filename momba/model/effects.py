@@ -27,7 +27,7 @@ class Identifier(Target):
         declaration = scope.lookup(self.identifier)
         if not isinstance(declaration, context.VariableDeclaration):
             raise errors.NotAVariableError(
-                f'invalid assignment to non-variable identifier {self.identifier}'
+                f"invalid assignment to non-variable identifier {self.identifier}"
             )
         return declaration.typ
 
@@ -43,7 +43,7 @@ class Assignment:
         value_type = scope.get_type(self.value)
         if not target_type.is_assignable_from(value_type):
             raise errors.InvalidTypeError(
-                f'cannot assign {value_type} to {target_type}'
+                f"cannot assign {value_type} to {target_type}"
             )
 
 

@@ -39,7 +39,7 @@ class Numeric(Type, abc.ABC):
 @dataclasses.dataclass(frozen=True)
 class IntegerType(Numeric):
     def __str__(self) -> str:
-        return 'types.INT'
+        return "types.INT"
 
     def is_assignable_from(self, typ: Type) -> bool:
         return typ == INT or (isinstance(typ, BoundedType) and typ.base == INT)
@@ -48,7 +48,7 @@ class IntegerType(Numeric):
 @dataclasses.dataclass(frozen=True)
 class RealType(Numeric):
     def __str__(self) -> str:
-        return 'types.REAL'
+        return "types.REAL"
 
     def is_assignable_from(self, typ: Type) -> bool:
         return typ.is_numeric
@@ -57,7 +57,7 @@ class RealType(Numeric):
 @dataclasses.dataclass(frozen=True)
 class BoolType(Type):
     def __str__(self) -> str:
-        return 'types.BOOL'
+        return "types.BOOL"
 
     def is_assignable_from(self, typ: Type) -> bool:
         return typ == BOOL
@@ -66,7 +66,7 @@ class BoolType(Type):
 @dataclasses.dataclass(frozen=True)
 class ClockType(Numeric):
     def __str__(self) -> str:
-        return 'types.CLOCK'
+        return "types.CLOCK"
 
     def is_assignable_from(self, typ: Type) -> bool:
         if isinstance(typ, BoundedType):
@@ -77,7 +77,7 @@ class ClockType(Numeric):
 @dataclasses.dataclass(frozen=True)
 class ContinuousType(Numeric):
     def __str__(self) -> str:
-        return 'types.CONTINUOUS'
+        return "types.CONTINUOUS"
 
     def is_assignable_from(self, typ: Type) -> bool:
         return typ.is_numeric
@@ -90,7 +90,7 @@ CLOCK = ClockType()
 CONTINUOUS = ContinuousType()
 
 
-Bound = t.Optional[t.Union['expressions.MaybeExpression', 'ellipsis']]
+Bound = t.Optional[t.Union["expressions.MaybeExpression", "ellipsis"]]
 Bounds = t.Tuple[Bound, Bound]
 
 
@@ -114,27 +114,33 @@ class BoundedType(Numeric):
     upper_bound: t.Optional[expressions.Expression]
 
     def __str__(self) -> str:
-        return f'{self.base}[{self.lower_bound}, {self.upper_bound}]'
+        return f"{self.base}[{self.lower_bound}, {self.upper_bound}]"
 
     def __post_init__(self) -> None:
         if not isinstance(self.base, Numeric):
-            raise BaseTypeError('base-type of bounded type must be numeric')
+            raise BaseTypeError("base-type of bounded type must be numeric")
         if self.lower_bound is None and self.upper_bound is None:
-            raise InvalidBoundError('neither `lower_bound` nor `upper_bound` is present')
+            raise InvalidBoundError(
+                "neither `lower_bound` nor `upper_bound` is present"
+            )
 
     def validate_in(self, scope: context.Scope) -> None:
         if self.lower_bound is not None:
             if not scope.is_constant(self.lower_bound):
-                raise InvalidBoundError('`lower_bound` has to be a constant')
+                raise InvalidBoundError("`lower_bound` has to be a constant")
             lower_bound_type = scope.get_type(self.lower_bound)
             if not self.base.is_assignable_from(lower_bound_type):
-                raise InvalidBoundError('type of `lower_bound` is not assignable to base-type')
+                raise InvalidBoundError(
+                    "type of `lower_bound` is not assignable to base-type"
+                )
         if self.upper_bound is not None:
             if not scope.is_constant(self.upper_bound):
-                raise InvalidBoundError('`upper_bound` has to be a constant')
+                raise InvalidBoundError("`upper_bound` has to be a constant")
             upper_bound_type = scope.get_type(self.upper_bound)
             if not self.base.is_assignable_from(upper_bound_type):
-                raise InvalidBoundError('type of `upper_bound` is not assignable to base-type')
+                raise InvalidBoundError(
+                    "type of `upper_bound` is not assignable to base-type"
+                )
 
     @staticmethod
     def cast_bound(bound: Bound) -> t.Optional[expressions.Expression]:
@@ -151,7 +157,7 @@ class ArrayType(Type):
     base: Type
 
     def __str__(self) -> str:
-        return f'Array({self.base})'
+        return f"Array({self.base})"
 
     def is_assignable_from(self, typ: Type) -> bool:
         return isinstance(typ, ArrayType) and self.base.is_assignable_from(typ.base)

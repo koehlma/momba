@@ -17,18 +17,18 @@ if t.TYPE_CHECKING:
 
 
 class ModelType(enum.Enum):
-    LTS = 'lts', 'Labeled Transition System'
-    DTMC = 'dtmc', 'Discrete-Time Markov Chain'
-    CTMC = 'ctmc', 'Continuous-Time Markov Chain'
-    MDP = 'mdp', 'Markov Decision Process'
-    CTMDP = 'ctmdp', 'Continuous-Time Markov Decision Process'
-    MA = 'ma', 'Markov Automaton'
-    TA = 'ta', 'Timed Automaton'
-    PTA = 'pta', 'Probabilistic Timed Automaton'
-    STA = 'sta', 'Stochastic Timed Automaton'
-    HA = 'ha', 'Hybrid Automaton'
-    PHA = 'pha', 'Probabilistic Timed Automaton'
-    SHA = 'sha', 'Stochastic Hybrid Automaton'
+    LTS = "lts", "Labeled Transition System"
+    DTMC = "dtmc", "Discrete-Time Markov Chain"
+    CTMC = "ctmc", "Continuous-Time Markov Chain"
+    MDP = "mdp", "Markov Decision Process"
+    CTMDP = "ctmdp", "Continuous-Time Markov Decision Process"
+    MA = "ma", "Markov Automaton"
+    TA = "ta", "Timed Automaton"
+    PTA = "pta", "Probabilistic Timed Automaton"
+    STA = "sta", "Stochastic Timed Automaton"
+    HA = "ha", "Hybrid Automaton"
+    PHA = "pha", "Probabilistic Timed Automaton"
+    SHA = "sha", "Stochastic Hybrid Automaton"
 
     abbreviation: str
     full_name: str
@@ -39,14 +39,18 @@ class ModelType(enum.Enum):
 
 
 TA_MODEL_TYPES = {
-    ModelType.TA, ModelType.PTA, ModelType.STA,
-    ModelType.HA, ModelType.PHA, ModelType.SHA
+    ModelType.TA,
+    ModelType.PTA,
+    ModelType.STA,
+    ModelType.HA,
+    ModelType.PHA,
+    ModelType.SHA,
 }
 
 
 Identifier = str
 
-Typed = t.Union['expressions.Expression', 'effects.Target']
+Typed = t.Union["expressions.Expression", "effects.Target"]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -71,28 +75,27 @@ class VariableDeclaration(Declaration):
         if self.initial_value is not None:
             if not self.typ.is_assignable_from(scope.get_type(self.initial_value)):
                 raise errors.InvalidTypeError(
-                    f'type of initial value is not assignable to variable type'
+                    f"type of initial value is not assignable to variable type"
                 )
             if not self.initial_value.is_constant_in(scope):
-                raise errors.NotAConstantError(
-                    f'initial value must be a constant'
-                )
+                raise errors.NotAConstantError(f"initial value must be a constant")
 
 
 @dataclasses.dataclass(frozen=True)
 class ConstantDeclaration(Declaration):
     """ Constants without values are parameters. """
+
     value: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
         if self.value is not None:
             if not self.value.is_constant_in(scope):
                 raise errors.NotAConstantError(
-                    f'value {self.value} of constant declaration is not a constant'
+                    f"value {self.value} of constant declaration is not a constant"
                 )
             if not self.typ.is_assignable_from(scope.get_type(self.value)):
                 raise errors.InvalidTypeError(
-                    f'constant expression is not assignable to constant type'
+                    f"constant expression is not assignable to constant type"
                 )
 
     def is_constant_in(self, scope: Scope) -> bool:
@@ -119,14 +122,16 @@ class Scope:
     @property
     def variable_declarations(self) -> t.AbstractSet[VariableDeclaration]:
         return frozenset(
-            decl for decl in self._declarations.values()
+            decl
+            for decl in self._declarations.values()
             if isinstance(decl, VariableDeclaration)
         )
 
     @property
     def constant_declarations(self) -> t.AbstractSet[ConstantDeclaration]:
         return frozenset(
-            decl for decl in self._declarations.values()
+            decl
+            for decl in self._declarations.values()
             if isinstance(decl, ConstantDeclaration)
         )
 
@@ -136,7 +141,8 @@ class Scope:
         Returns the set of declarations for clock variables.
         """
         return frozenset(
-            decl for decl in self._declarations.values()
+            decl
+            for decl in self._declarations.values()
             if isinstance(decl, VariableDeclaration) and decl.typ == types.CLOCK
         )
 
@@ -159,14 +165,14 @@ class Scope:
         except KeyError:
             if self.parent is None:
                 raise errors.UnboundIdentifierError(
-                    f'identifier {identifier} is unbound in scope {self}'
+                    f"identifier {identifier} is unbound in scope {self}"
                 )
             return self.parent.lookup(identifier)
 
     def declare(self, declaration: Declaration) -> None:
         if declaration.identifier in self._declarations:
             raise errors.InvalidDeclarationError(
-                f'identifier `{declaration.identifier} has already been declared'
+                f"identifier `{declaration.identifier} has already been declared"
             )
         declaration.validate(self)
         self._declarations[declaration.identifier] = declaration
@@ -178,7 +184,7 @@ class Scope:
         self,
         identifier: Identifier,
         typ: types.Type,
-        value: t.Optional[expressions.Expression] = None
+        value: t.Optional[expressions.Expression] = None,
     ) -> None:
         self.declare(ConstantDeclaration(identifier, typ, value))
 

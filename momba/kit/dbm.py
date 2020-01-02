@@ -86,7 +86,7 @@ class _Clock(Clock):
 
 
 class _ZeroClock(Clock):
-    name: str = '0'
+    name: str = "0"
 
 
 ZERO_CLOCK = _ZeroClock()
@@ -98,7 +98,7 @@ class Difference:
     right: Clock
 
     def __str__(self) -> str:
-        return f'{self.left} - {self.right}'
+        return f"{self.left} - {self.right}"
 
     def bound(self, bound: Bound) -> Constraint:
         return Constraint(self, bound=bound)
@@ -116,7 +116,7 @@ class Constraint:
     bound: Bound
 
     def __str__(self) -> str:
-        return f'{self.difference} {self.bound}'
+        return f"{self.difference} {self.bound}"
 
     @property
     def clocks(self) -> t.AbstractSet[Clock]:
@@ -151,7 +151,7 @@ def difference(clock: Clock, other: Clock) -> Difference:
     return Difference(clock, other)
 
 
-_INFINITY_BOUND = Bound.less_than(float('inf'))
+_INFINITY_BOUND = Bound.less_than(float("inf"))
 _ZERO_BOUND = Bound.less_or_equal(0)
 
 _Matrix = t.Dict[Difference, Bound]
@@ -183,6 +183,7 @@ class DBM:
     """
     Do not create instances directly but only with the helper functions.
     """
+
     _clocks: t.FrozenSet[Clock]
     _matrix: _Matrix
 
@@ -215,10 +216,7 @@ class DBM:
 
     @property
     def constraints(self) -> t.AbstractSet[Constraint]:
-        return {
-            Constraint(diff, bound)
-            for diff, bound in self._matrix.items()
-        }
+        return {Constraint(diff, bound) for diff, bound in self._matrix.items()}
 
     @property
     def is_empty(self) -> bool:
@@ -231,15 +229,16 @@ class DBM:
         lower_bound = self.get_bound(ZERO_CLOCK, clock)
         upper_bound = self.get_bound(clock, ZERO_CLOCK)
         return Interval(
-            -lower_bound.constant, upper_bound.constant,
+            -lower_bound.constant,
+            upper_bound.constant,
             infimum_included=not lower_bound.is_strict,
-            supremum_included=not upper_bound.is_strict
+            supremum_included=not upper_bound.is_strict,
         )
 
     def _constrain(self, constraint: Constraint) -> None:
         if constraint.left not in self._clocks or constraint.right not in self._clocks:
             raise UnknownClockError(
-                f'cannot constrain {self} with {constraint}: unknown clocks'
+                f"cannot constrain {self} with {constraint}: unknown clocks"
             )
         if constraint.bound < self._matrix.get(constraint.difference, _INFINITY_BOUND):
             self._matrix[constraint.difference] = constraint.bound
@@ -275,8 +274,11 @@ class DBM:
             else:
                 # advance the upper bound by the given time
                 self._set(
-                    clock, ZERO_CLOCK,
-                    self.get_bound(clock, ZERO_CLOCK).add(Bound.less_or_equal(time_delta))
+                    clock,
+                    ZERO_CLOCK,
+                    self.get_bound(clock, ZERO_CLOCK).add(
+                        Bound.less_or_equal(time_delta)
+                    ),
                 )
         self._canonicalize()
 
@@ -288,8 +290,9 @@ class DBM:
             if clock == ZERO_CLOCK:
                 continue
             self._set(
-                ZERO_CLOCK, clock,
-                self.get_bound(ZERO_CLOCK, clock).add(Bound.less_or_equal(-delta))
+                ZERO_CLOCK,
+                clock,
+                self.get_bound(ZERO_CLOCK, clock).add(Bound.less_or_equal(-delta)),
             )
         self._canonicalize()
 

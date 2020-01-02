@@ -14,26 +14,26 @@ def test_basic_inferences():
     ctx = context.Context()
 
     scope = ctx.new_scope()
-    scope.declare_variable('x', types.BOOL)
+    scope.declare_variable("x", types.BOOL)
 
-    expr = var('x') & var('y')
+    expr = var("x") & var("y")
 
     with pytest.raises(errors.UnboundIdentifierError):
         scope.get_type(expr)
 
-    scope.declare_variable('y', types.BOOL)
+    scope.declare_variable("y", types.BOOL)
 
     assert scope.get_type(expr) == types.BOOL
 
-    scope.declare_variable('z', types.INT)
+    scope.declare_variable("z", types.INT)
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(var('x') & var('z'))
+        scope.get_type(var("x") & var("z"))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(var('z'), var('x'), var('y')))
+        scope.get_type(ite(var("z"), var("x"), var("y")))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(var('x'), var('z'), var('y')))
+        scope.get_type(ite(var("x"), var("z"), var("y")))
 
-    assert scope.get_type(ite(var('x'), var('z'), const(3))) == types.INT
+    assert scope.get_type(ite(var("x"), var("z"), const(3))) == types.INT

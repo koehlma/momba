@@ -13,4 +13,4 @@ from . import dbm
 from .interval import Interval
 
 
-__all__ = ['dbm', 'Interval']
+__all__ = ["dbm", "Interval"]

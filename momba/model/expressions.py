@@ -99,34 +99,22 @@ class Expression(abc.ABC):
         return ge(self, convert(other))
 
     def eq(self, other: Expression) -> Expression:
-        return Equality(
-            operators.EqualityOperator.EQ, self, other
-        )
+        return Equality(operators.EqualityOperator.EQ, self, other)
 
     def neq(self, other: Expression) -> Expression:
-        return Equality(
-            operators.EqualityOperator.NEQ, self, other
-        )
+        return Equality(operators.EqualityOperator.NEQ, self, other)
 
     def lt(self, other: Expression) -> Expression:
-        return Comparison(
-            operators.Comparison.LT, self, other
-        )
+        return Comparison(operators.Comparison.LT, self, other)
 
     def le(self, other: Expression) -> Expression:
-        return Comparison(
-            operators.Comparison.LE, self, other
-        )
+        return Comparison(operators.Comparison.LE, self, other)
 
     def ge(self, other: Expression) -> Expression:
-        return Comparison(
-            operators.Comparison.GE, self, other
-        )
+        return Comparison(operators.Comparison.GE, self, other)
 
     def gt(self, other: Expression) -> Expression:
-        return Comparison(
-            operators.Comparison.GT, self, other
-        )
+        return Comparison(operators.Comparison.GT, self, other)
 
     def land(self, other: Expression) -> Expression:
         return land(self, other)
@@ -180,10 +168,7 @@ class BinaryExpression(Expression):
         return self.left, self.right
 
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return (
-            self.left.is_constant_in(scope)
-            and self.right.is_constant_in(scope)
-        )
+        return self.left.is_constant_in(scope) and self.right.is_constant_in(scope)
 
     # XXX: this method shall be implemented by all subclasses
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -196,17 +181,17 @@ class Boolean(BinaryExpression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
         if left_type != types.BOOL:
-            raise errors.InvalidTypeError(f'expected types.BOOL but got {left_type}')
+            raise errors.InvalidTypeError(f"expected types.BOOL but got {left_type}")
         right_type = scope.get_type(self.right)
         if right_type != types.BOOL:
-            raise errors.InvalidTypeError(f'expected types.BOOL but got {right_type}')
+            raise errors.InvalidTypeError(f"expected types.BOOL but got {right_type}")
         return types.BOOL
 
 
 _REAL_OPERATORS = {
     operators.ArithmeticOperator.REAL_DIV,
     operators.ArithmeticOperator.LOG,
-    operators.ArithmeticOperator.POW
+    operators.ArithmeticOperator.POW,
 }
 
 
@@ -218,7 +203,7 @@ class Arithmetic(BinaryExpression):
         right_type = scope.get_type(self.right)
         if not left_type.is_numeric or not right_type.is_numeric:
             raise errors.InvalidTypeError(
-                'operands of arithmetic expressions must have a numeric type'
+                "operands of arithmetic expressions must have a numeric type"
             )
         is_int = (
             types.INT.is_assignable_from(left_type)
@@ -241,16 +226,17 @@ class Equality(BinaryExpression):
             return left_type
         elif right_type.is_assignable_from(left_type):
             return right_type
-        assert False, 'type-inference should ensure that some of the above is true'
+        assert False, "type-inference should ensure that some of the above is true"
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
         right_type = scope.get_type(self.right)
         # XXX: JANI specifies that “left and right must be assignable to some common type”
-        if (not left_type.is_assignable_from(right_type)
-                and not right_type.is_assignable_from(left_type)):
+        if not left_type.is_assignable_from(
+            right_type
+        ) and not right_type.is_assignable_from(left_type):
             raise errors.InvalidTypeError(
-                'invalid combination of type for equality comparison'
+                "invalid combination of type for equality comparison"
             )
         return types.BOOL
 
@@ -261,14 +247,10 @@ class Comparison(BinaryExpression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
         if not left_type.is_numeric:
-            raise errors.InvalidTypeError(
-                f'expected numeric type but got {left_type}'
-            )
+            raise errors.InvalidTypeError(f"expected numeric type but got {left_type}")
         right_type = scope.get_type(self.right)
         if not right_type.is_numeric:
-            raise errors.InvalidTypeError(
-                f'expected numeric type but got {right_type}'
-            )
+            raise errors.InvalidTypeError(f"expected numeric type but got {right_type}")
         return types.BOOL
 
 
@@ -293,7 +275,7 @@ class Conditional(Expression):
         condition_type = scope.get_type(self.condition)
         if condition_type != types.BOOL:
             raise errors.InvalidTypeError(
-                f'expected `types.BOOL` but got `{condition_type}`'
+                f"expected `types.BOOL` but got `{condition_type}`"
             )
         consequence_type = scope.get_type(self.consequence)
         alternative_type = scope.get_type(self.alternative)
@@ -303,7 +285,7 @@ class Conditional(Expression):
             return alternative_type
         else:
             raise errors.InvalidTypeError(
-                'invalid combination of consequence and alternative types'
+                "invalid combination of consequence and alternative types"
             )
 
 
@@ -316,7 +298,7 @@ class UnaryExpression(Expression):
 
     @property
     def children(self) -> t.Sequence[Expression]:
-        return self.operand,
+        return (self.operand,)
 
     def is_constant_in(self, scope: context.Scope) -> bool:
         return self.operand.is_constant_in(scope)
@@ -332,7 +314,9 @@ class Round(UnaryExpression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
         if not operand_type.is_numeric:
-            raise errors.InvalidTypeError(f'expected a numeric type but got {operand_type}')
+            raise errors.InvalidTypeError(
+                f"expected a numeric type but got {operand_type}"
+            )
         return types.INT
 
 
@@ -342,7 +326,9 @@ class Not(UnaryExpression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
         if operand_type != types.BOOL:
-            raise errors.InvalidTypeError(f'expected `types.BOOL` but got {operand_type}')
+            raise errors.InvalidTypeError(
+                f"expected `types.BOOL` but got {operand_type}"
+            )
         return types.BOOL
 
 
@@ -353,7 +339,7 @@ class Sample(Expression):
 
     def __post_init__(self) -> None:
         if len(self.arguments) != len(self.distribution.parameter_types):
-            raise ValueError('parameter and arguments arity mismatch')
+            raise ValueError("parameter and arguments arity mismatch")
 
     @property
     def children(self) -> t.Sequence[Expression]:
@@ -364,12 +350,14 @@ class Sample(Expression):
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         # we already know that the arity of the parameters and arguments match
-        for argument, parameter_type in zip(self.arguments, self.distribution.parameter_types):
+        for argument, parameter_type in zip(
+            self.arguments, self.distribution.parameter_types
+        ):
             argument_type = scope.get_type(argument)
             if not parameter_type.is_assignable_from(argument_type):
                 raise errors.InvalidTypeError(
-                    f'parameter type `{parameter_type}` is not assignable '
-                    f'from argument type `{argument_type}`'
+                    f"parameter type `{parameter_type}` is not assignable "
+                    f"from argument type `{argument_type}`"
                 )
         return types.REAL
 
@@ -382,7 +370,7 @@ class Selection(Expression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         condition_type = scope.get_type(self.condition)
         if condition_type != types.BOOL:
-            raise errors.InvalidTypeError('condition must have type `types.BOOL`')
+            raise errors.InvalidTypeError("condition must have type `types.BOOL`")
         declaration = scope.lookup(self.identifier)
         assert isinstance(declaration, context.VariableDeclaration)
         return declaration.typ
@@ -392,7 +380,7 @@ class Selection(Expression):
 
     @property
     def children(self) -> t.Sequence[Expression]:
-        return self.condition,
+        return (self.condition,)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -414,7 +402,9 @@ def var(identifier: context.Identifier) -> Identifier:
     return Identifier(identifier)
 
 
-def ite(condition: Expression, consequence: Expression, alternative: Expression) -> Expression:
+def ite(
+    condition: Expression, consequence: Expression, alternative: Expression
+) -> Expression:
     return Conditional(condition, consequence, alternative)
 
 
@@ -517,7 +507,9 @@ def maximum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
 
 
 def div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.REAL_DIV, convert(left), convert(right))
+    return Arithmetic(
+        operators.ArithmeticOperator.REAL_DIV, convert(left), convert(right)
+    )
 
 
 def power(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
@@ -554,5 +546,8 @@ def normalize_equiv(expr: Expression) -> Expression:
 
 
 def normalize_floor_div(expr: Expression) -> Expression:
-    assert isinstance(expr, Arithmetic) and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
+    assert (
+        isinstance(expr, Arithmetic)
+        and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
+    )
     return floor(div(expr.left, expr.right))

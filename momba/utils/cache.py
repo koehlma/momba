@@ -9,7 +9,7 @@ import typing as t
 import functools
 
 
-T = t.TypeVar('T')
+T = t.TypeVar("T")
 
 
 # XXX: this is here just to make `mypy` happy

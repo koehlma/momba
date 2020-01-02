@@ -15,39 +15,39 @@ class BinaryOperator:
 
 
 class Boolean(BinaryOperator, enum.Enum):
-    AND = '∧'
-    OR = '∨'
-    XOR = '⊕'
-    IMPLY = '⇒'
-    EQUIV = '⇔'
+    AND = "∧"
+    OR = "∨"
+    XOR = "⊕"
+    IMPLY = "⇒"
+    EQUIV = "⇔"
 
 
 class ArithmeticOperator(BinaryOperator, enum.Enum):
-    ADD = '+'
-    SUB = '-'
-    MUL = '*'
-    MOD = '%'
+    ADD = "+"
+    SUB = "-"
+    MUL = "*"
+    MOD = "%"
 
-    MIN = 'min'
-    MAX = 'max'
+    MIN = "min"
+    MAX = "max"
 
-    FLOOR_DIV = '//'
-    REAL_DIV = '/'
+    FLOOR_DIV = "//"
+    REAL_DIV = "/"
 
-    LOG = 'log'
-    POW = 'pow'
+    LOG = "log"
+    POW = "pow"
 
 
 class EqualityOperator(BinaryOperator, enum.Enum):
-    EQ = '='
-    NEQ = '≠'
+    EQ = "="
+    NEQ = "≠"
 
 
 class Comparison(BinaryOperator, enum.Enum):
-    LT = '<'
-    LE = '≤'
-    GE = '≥'
-    GT = '>'
+    LT = "<"
+    LE = "≤"
+    GE = "≥"
+    GT = ">"
 
 
 class UnaryOperator:
@@ -58,9 +58,9 @@ class UnaryOperator:
 
 
 class Not(UnaryOperator, enum.Enum):
-    NOT = '¬'
+    NOT = "¬"
 
 
 class Round(UnaryOperator, enum.Enum):
-    CEIL = 'ceil'
-    FLOOR = 'floor'
+    CEIL = "ceil"
+    FLOOR = "floor"

@@ -52,8 +52,8 @@ _NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
 
 
 class NamedReal(enum.Enum):
-    PI = 'π', math.pi
-    E = 'e', math.e
+    PI = "π", math.pi
+    E = "e", math.e
 
     symbol: str
     float_value: float
@@ -79,7 +79,7 @@ class RealValue(NumericValue):
         return float(self.real)
 
 
-PythonRealString = t.Literal['π', 'e']
+PythonRealString = t.Literal["π", "e"]
 PythonReal = t.Union[numbers.Real, float, PythonRealString, NamedReal]
 PythonNumeric = t.Union[int, PythonReal]
 PythonValue = t.Union[bool, PythonNumeric]
@@ -102,7 +102,7 @@ def pack_numeric(value: PythonNumeric) -> NumericValue:
         return RealValue(value)
     elif isinstance(value, str):
         return RealValue(_NAMED_REAL_MAP[value])
-    raise ConversionError(f'unable to convert Python value {value!r} to Momba value')
+    raise ConversionError(f"unable to convert Python value {value!r} to Momba value")
 
 
 def unpack(value: Value) -> PythonValue:
@@ -116,4 +116,4 @@ def unpack_numeric(value: NumericValue) -> PythonNumeric:
         return value.integer
     elif isinstance(value, RealValue):
         return value.real
-    raise ConversionError(f'unable to convert Momba value {value!r} to Python value')
+    raise ConversionError(f"unable to convert Momba value {value!r} to Python value")

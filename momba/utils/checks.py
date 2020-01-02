@@ -27,10 +27,12 @@ def check_singledispatch(
     *,
     error: bool = False,
     recursive: bool = True,
-    ignore: t.AbstractSet[type] = frozenset()
+    ignore: t.AbstractSet[type] = frozenset(),
 ) -> None:
-    if not hasattr(function, 'registry') or not hasattr(getattr(function, 'registry'), 'keys'):
-        raise ValueError(f'{function} is not a singledispatch function')
+    if not hasattr(function, "registry") or not hasattr(
+        getattr(function, "registry"), "keys"
+    ):
+        raise ValueError(f"{function} is not a singledispatch function")
     subclasses = set(get_subclasses(superclass, recursive=recursive))
     subclasses -= ignore
     for cls in function.registry.keys():  # type: ignore
@@ -42,7 +44,9 @@ def check_singledispatch(
     for subclass in subclasses:
         if inspect.isabstract(subclass):
             continue
-        msg = f'implementation of {function.__name__} for subclass {subclass} is missing'
+        msg = (
+            f"implementation of {function.__name__} for subclass {subclass} is missing"
+        )
         if error:
             raise NoImplementationError(msg)
         else:
@@ -57,19 +61,19 @@ class NoEntryWarning(UserWarning):
     pass
 
 
-EnumType = t.TypeVar('EnumType', bound=enum.Enum)
+EnumType = t.TypeVar("EnumType", bound=enum.Enum)
 
 
 def check_enum_map(
     enum_typ: t.Type[EnumType],
     mapping: t.Mapping[EnumType, t.Any],
     *,
-    error: bool = False
+    error: bool = False,
 ) -> None:
     for entry in enum_typ:
         if entry in mapping:
             continue
-        msg = f'entry for {entry} is missing'
+        msg = f"entry for {entry} is missing"
         if error:
             raise NoEntryError(msg)
         else:

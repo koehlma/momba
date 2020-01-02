@@ -11,4 +11,4 @@ from __future__ import annotations
 from . import jani
 
 
-__all__ = ['jani']
+__all__ = ["jani"]
