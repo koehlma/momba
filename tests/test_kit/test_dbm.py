@@ -9,7 +9,7 @@ from momba.kit import dbm
 import pytest
 
 
-def test_basic_operations():
+def test_basic_operations() -> None:
     x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y, z})
 
@@ -39,7 +39,7 @@ def test_unknown_clocks():
     x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y})
 
-    with pytest.raises(dbm.UnknownClockError):
+    with pytest.raises(dbm.InvalidClockError):
         valuations.constrain(dbm.difference(x, z).less_or_equal(3))
 
 

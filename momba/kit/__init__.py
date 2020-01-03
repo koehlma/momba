@@ -10,7 +10,8 @@ from __future__ import annotations
 
 from . import dbm
 
+from .dbm import DBM
 from .interval import Interval
 
 
-__all__ = ["dbm", "Interval"]
+__all__ = ["dbm", "DBM", "Interval"]

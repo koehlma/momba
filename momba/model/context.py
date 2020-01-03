@@ -11,6 +11,8 @@ import enum
 
 from . import errors, expressions, types
 
+from .. import kit
+
 if t.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
     from . import effects  # noqa: F401
@@ -187,6 +189,14 @@ class Scope:
         value: t.Optional[expressions.Expression] = None,
     ) -> None:
         self.declare(ConstantDeclaration(identifier, typ, value))
+
+    def get_dbm(self, expression: expressions.Expression) -> kit.DBM:
+        """
+        Returns a DBM for the given expression.
+
+        The expression musst be a conjunction of clock constraints.
+        """
+        raise NotImplementedError()
 
 
 class Context:
