@@ -179,8 +179,14 @@ class Scope:
         declaration.validate(self)
         self._declarations[declaration.identifier] = declaration
 
-    def declare_variable(self, identifier: Identifier, typ: types.Type) -> None:
-        self.declare(VariableDeclaration(identifier, typ))
+    def declare_variable(
+        self,
+        identifier: Identifier,
+        typ: types.Type,
+        *,
+        initial_value: t.Optional[expressions.Expression] = None,
+    ) -> None:
+        self.declare(VariableDeclaration(identifier, typ, initial_value=initial_value))
 
     def declare_constant(
         self,

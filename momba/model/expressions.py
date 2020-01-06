@@ -43,60 +43,40 @@ class Expression(abc.ABC):
     def is_sampling_free(self) -> bool:
         return all(not isinstance(e, Sample) for e in self.traverse)
 
-    def __and__(self, other: Expression) -> Expression:
-        if not isinstance(other, Expression):
-            return NotImplemented
-        return Boolean(operators.Boolean.AND, self, other)
-
-    def __or__(self, other: Expression) -> Expression:
+    def lor(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
             return NotImplemented
         return Boolean(operators.Boolean.OR, self, other)
 
-    def __ior__(self, other: Expression) -> Expression:
-        return self | other
-
-    def __invert__(self) -> Expression:
+    def lnot(self) -> Expression:
         return lnot(self)
 
-    def __add__(self, other: MaybeExpression) -> Expression:
+    def add(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.ADD, self, convert(other))
 
-    def __radd__(self, other: MaybeExpression) -> Expression:
+    def radd(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.ADD, convert(other), self)
 
-    def __sub__(self, other: MaybeExpression) -> Expression:
+    def sub(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.SUB, self, convert(other))
 
-    def __rsub__(self, other: MaybeExpression) -> Expression:
+    def rsub(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.SUB, convert(other), self)
 
-    def __mul__(self, other: MaybeExpression) -> Expression:
+    def mul(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.MUL, self, convert(other))
 
-    def __rmul__(self, other: MaybeExpression) -> Expression:
+    def rmul(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.MUL, convert(other), self)
 
-    def __mod__(self, other: MaybeExpression) -> Expression:
+    def mod(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.MOD, self, convert(other))
 
-    def __rmod__(self, other: MaybeExpression) -> Expression:
+    def rmod(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.MOD, convert(other), self)
 
-    def __floordiv__(self, other: MaybeExpression) -> Expression:
+    def floordiv(self, other: MaybeExpression) -> Expression:
         return Arithmetic(operators.ArithmeticOperator.FLOOR_DIV, convert(other), self)
-
-    def __lt__(self, other: MaybeExpression) -> Expression:
-        return lt(self, convert(other))
-
-    def __le__(self, other: MaybeExpression) -> Expression:
-        return le(self, convert(other))
-
-    def __gt__(self, other: MaybeExpression) -> Expression:
-        return gt(self, convert(other))
-
-    def __ge__(self, other: MaybeExpression) -> Expression:
-        return ge(self, convert(other))
 
     def eq(self, other: Expression) -> Expression:
         return Equality(operators.EqualityOperator.EQ, self, other)
@@ -433,7 +413,7 @@ def lor(*expressions: Expression) -> Expression:
         return Boolean(operators.Boolean.OR, expressions[0], expressions[1])
     result = convert(False)
     for disjunct in expressions:
-        result |= disjunct
+        result = Boolean(operators.Boolean.OR, result, disjunct)
     return result
 
 
@@ -442,7 +422,7 @@ def land(*expressions: Expression) -> Expression:
         return Boolean(operators.Boolean.AND, expressions[0], expressions[1])
     result = convert(True)
     for conjunct in expressions:
-        result &= conjunct
+        result = Boolean(operators.Boolean.AND, result, conjunct)
     return result
 
 
