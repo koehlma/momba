@@ -492,6 +492,12 @@ def real_div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
     )
 
 
+def floor_div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(
+        operators.ArithmeticOperator.FLOOR_DIV, convert(left), convert(right)
+    )
+
+
 def power(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
     return Arithmetic(operators.ArithmeticOperator.POW, convert(left), convert(right))
 
@@ -530,4 +536,4 @@ def normalize_floor_div(expr: Expression) -> Expression:
         isinstance(expr, Arithmetic)
         and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
     )
-    return floor(div(expr.left, expr.right))
+    return floor(real_div(expr.left, expr.right))

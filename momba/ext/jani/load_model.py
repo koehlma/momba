@@ -37,7 +37,8 @@ _BINARY_OP_MAP: t.Mapping[str, expressions.BinaryConstructor] = {
     "-": expressions.sub,
     "*": expressions.mul,
     "%": expressions.mod,
-    "/": expressions.div,
+    "/": expressions.real_div,
+    "//": expressions.floor_div,  # defined by the `x-momba-operators`extension
     "pow": expressions.power,
     "log": expressions.log,
 }
