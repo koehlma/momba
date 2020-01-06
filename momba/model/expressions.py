@@ -446,36 +446,36 @@ def neq(left: Expression, right: Expression) -> BinaryExpression:
     return Equality(operators.EqualityOperator.NEQ, left, right)
 
 
-def lt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.Comparison.LT, left, right)
+def lt(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Comparison(operators.Comparison.LT, convert(left), convert(right))
 
 
-def le(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.Comparison.LE, left, right)
+def le(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Comparison(operators.Comparison.LE, convert(left), convert(right))
 
 
-def ge(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.Comparison.GE, left, right)
+def ge(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Comparison(operators.Comparison.GE, convert(left), convert(right))
 
 
-def gt(left: Expression, right: Expression) -> BinaryExpression:
-    return Comparison(operators.Comparison.GT, left, right)
+def gt(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Comparison(operators.Comparison.GT, convert(left), convert(right))
 
 
-def add(left: Expression, right: Expression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.ADD, left, right)
+def add(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.ADD, convert(left), convert(right))
 
 
-def sub(left: Expression, right: Expression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.SUB, left, right)
+def sub(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.SUB, convert(left), convert(right))
 
 
-def mul(left: Expression, right: Expression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MUL, left, right)
+def mul(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MUL, convert(left), convert(right))
 
 
-def mod(left: Expression, right: Expression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MOD, left, right)
+def mod(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Arithmetic(operators.ArithmeticOperator.MOD, convert(left), convert(right))
 
 
 def minimum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
@@ -486,7 +486,7 @@ def maximum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
     return Arithmetic(operators.ArithmeticOperator.MAX, convert(left), convert(right))
 
 
-def div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+def real_div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
     return Arithmetic(
         operators.ArithmeticOperator.REAL_DIV, convert(left), convert(right)
     )
