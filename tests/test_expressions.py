@@ -10,13 +10,13 @@ from momba.model.expressions import const, ite, var
 import pytest
 
 
-def test_basic_inferences():
+def test_basic_inferences() -> None:
     ctx = context.Context()
 
     scope = ctx.new_scope()
     scope.declare_variable("x", types.BOOL)
 
-    expr = var("x") & var("y")
+    expr = var("x").land(var("y"))
 
     with pytest.raises(errors.UnboundIdentifierError):
         scope.get_type(expr)
@@ -28,7 +28,7 @@ def test_basic_inferences():
     scope.declare_variable("z", types.INT)
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(var("x") & var("z"))
+        scope.get_type(var("x").land(var("z")))
 
     with pytest.raises(errors.InvalidTypeError):
         scope.get_type(ite(var("z"), var("x"), var("y")))
