@@ -64,3 +64,35 @@ class Not(UnaryOperator, enum.Enum):
 class Round(UnaryOperator, enum.Enum):
     CEIL = "ceil"
     FLOOR = "floor"
+
+
+class PropertyOperator(enum.Enum):
+    EMAX = "Emax"
+    EMIN = "Emin"
+    PMIN = "Pmin"
+    PMAX = "Pmax"
+    SMIN = "Smin"
+    SMAX = "Smax"
+
+
+class PathOperator(enum.Enum):
+    FORALL = "∀"
+    EXISTS = "∃"
+
+
+class TimeOperator(enum.Enum):
+    UNTIL = "U"
+    WEAKU = "W"
+
+
+class FilterFunction(enum.Enum):
+    MIN = "min"
+    MAX = "max"
+    SUM = "sum"
+    AVG = "avg"
+    COUNT = "count"
+    ARGMIN = "argmin"
+    ARGMAX = "argmax"
+    EXISTS = "∃"
+    FORALL = "∀"
+    VALUES = "values"
