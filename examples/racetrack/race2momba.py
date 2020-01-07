@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding:utf-8 -*-
 #
 # Copyright (C) 2019, Michaela Klauck <klauck@cs.uni-saarland.de>
@@ -29,9 +30,9 @@ parser.add_argument(
     "track", type=pathlib.Path, help="the map description in ASCII track format"
 )
 parser.add_argument("output", type=pathlib.Path, help="JANI output directory")
-parser.add_argument("max_speed", type=int, default=3, help="maximal speed of the car")
+parser.add_argument("--max_speed", type=int, default=3, help="maximal speed of the car")
 parser.add_argument(
-    "max_acc", type=int, default=3, help="maximal acceleration in one step"
+    "--max_acc", type=int, default=3, help="maximal acceleration in one step"
 )
 parser.add_argument("--indent", type=int, default=2, help="indentation for JANI file")
 parser.add_argument(
@@ -43,12 +44,14 @@ parser.add_argument(
 
 
 def main(arguments: t.Optional[t.Sequence[str]] = None) -> None:
+    print("Main")
+
     namespace = parser.parse_args(arguments)
 
     namespace.output.mkdir(parents=True, exist_ok=True)
 
-    for car_max_speed in range(namespace.max_speed):
-        for car_max_acc in range(namespace.max_acc):
+    for car_max_speed in range(1, namespace.max_speed):
+        for car_max_acc in range(1, namespace.max_acc):
             for underground in Underground:
                 network = build_model(
                     namespace.track, car_max_speed, car_max_acc, underground
@@ -56,7 +59,7 @@ def main(arguments: t.Optional[t.Sequence[str]] = None) -> None:
 
                 out = (
                     namespace.output
-                    / f"car_{car_max_speed}_{car_max_acc}_{underground.value}"
+                    / f"car_{car_max_speed}_{car_max_acc}_{underground.value}.jani"
                 )
 
                 out.write_bytes(
@@ -144,6 +147,7 @@ def build_model(
         )
 
     for ax, ay in itertools.product(range(-max_acc, max_acc), repeat=2):
+        print("create edge")
         car.create_edge(
             location,
             destinations={
@@ -171,7 +175,7 @@ def build_model(
     location = controller.create_location(initial=True)
 
     x_coord = expressions.mod(car_pos, DIM_X)
-    y_coord = expressions.real_div(car_pos, DIM_X)
+    y_coord = expressions.floor_div(car_pos, DIM_X)
 
     def out_of_bounds_x(x: model.Expression) -> model.Expression:
         return expressions.lor(expressions.ge(x, DIM_X), (expressions.lt(x, 0)))
@@ -210,7 +214,12 @@ def build_model(
     # crashed = expressions.lor(disjuncts)
 
     def is_blocked_at(pos: model.Expression) -> model.Expression:
-        raise NotImplementedError()
+        return expressions.lor(
+            *(
+                expressions.eq(pos, expressions.convert(val))
+                for i, val in enumerate(track_blocked)
+            )
+        )
 
     # used floor instead of round sometimes because JANI only knows floor and ceil
     car_will_crash = expressions.lor(
