@@ -272,8 +272,8 @@ def _dump_var_decl(decl: context.VariableDeclaration, ctx: JANIContext) -> JSON:
         "name": decl.identifier,
         "type": _dump_type(decl.typ, ctx),
     }
-    if decl.transient is not None:
-        jani_declaration["transient"] = decl.transient
+    if decl.is_transient is not None:
+        jani_declaration["transient"] = decl.is_transient
     if decl.initial_value is not None:
         jani_declaration["initial-value"] = _dump_expr(decl.initial_value, ctx)
     return jani_declaration
@@ -406,7 +406,9 @@ def dump_structure(
             _dump_const_decl(const_decl, ctx)
             for const_decl in network.ctx.global_scope.constant_declarations
         ],
-        "automata": [_dump_automaton(automaton, ctx) for automaton in network.automata],
+        "automata": [
+            _dump_automaton(automaton, ctx) for automaton in network.ctx.automata
+        ],
         "system": _dump_system(network, ctx),
         # important: has to be at the end, because we collect
         # the features and actions while building

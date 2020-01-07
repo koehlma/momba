@@ -537,3 +537,15 @@ def normalize_floor_div(expr: Expression) -> Expression:
         and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
     )
     return floor(real_div(expr.left, expr.right))
+
+
+logic_not = lnot
+logic_or = lor
+logic_and = land
+logic_xor = xor
+logic_implies = implies
+logic_equiv = equiv
+
+
+def logic_rimplies(left: Expression, right: Expression) -> Expression:
+    return Boolean(operators.Boolean.IMPLY, right, left)

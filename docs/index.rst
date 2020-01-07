@@ -1,6 +1,11 @@
 Welcome to Momba's documentation!
 =================================
 
+.. warning::
+    **Momba is still in its early stages of development.
+    Please expect things to break.
+    The API is unstable and might change without further notice and deprecation period.**
+
 *Momba* is a Python library for working with quantitative models.
 Momba's core modeling formalism are networks of interacting *stochastic hybrid automata* (SHA) as per the `JANI specification`_.
 Momba aims to be a platform for prototyping and the development of new techniques and algorithms for the analysis of quantitative models.
@@ -12,12 +17,6 @@ __ http://www.modestchecker.net/
 __ https://github.com/ISCAS-PMC/ePMC
 
 .. _JANI specification: http://www.jani-spec.org/
-
-
-.. warning::
-    **Momba is still in its early stages of development.
-    Please expect things to break.
-    The API is unstable and might change without further notice and deprecation period.**
 
 
 Getting Started
@@ -55,6 +54,7 @@ Contents
     :maxdepth: 2
 
     model/index
+    moml/index
     explore/index
     analysis/index
     external/index

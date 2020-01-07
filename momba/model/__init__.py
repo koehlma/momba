@@ -14,8 +14,23 @@ from .automata import (
     create_destination,
     Instance,
 )
-from .context import Identifier, ModelType, Scope
-from .expressions import Expression
+from .effects import Assignment
+from .context import (
+    Context,
+    ConstantDeclaration,
+    VariableDeclaration,
+    Identifier,
+    ModelType,
+    Scope,
+)
+from .expressions import (
+    Expression,
+    logic_not,
+    ite,
+    convert,
+    var as identifier,
+    BinaryConstructor,
+)
 from .network import Network, Synchronization, Composition
 from .types import Type
 from .values import Value
@@ -23,6 +38,15 @@ from .values import Value
 
 __all__ = [
     "expressions",
+    "Assignment",
+    "Context",
+    "ConstantDeclaration",
+    "VariableDeclaration",
+    "logic_not",
+    "ite",
+    "convert",
+    "identifier",
+    "BinaryConstructor",
     "types",
     "values",
     "Automaton",

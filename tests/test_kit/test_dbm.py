@@ -35,7 +35,7 @@ def test_basic_operations() -> None:
     assert valuations.is_empty
 
 
-def test_unknown_clocks():
+def test_unknown_clocks() -> None:
     x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y})
 
@@ -43,7 +43,7 @@ def test_unknown_clocks():
         valuations.constrain(dbm.difference(x, z).less_or_equal(3))
 
 
-def test_clock_reset():
+def test_clock_reset() -> None:
     x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_unconstrained({x, y, z})
 
@@ -78,7 +78,7 @@ def test_clock_reset():
     assert not valuations.is_empty
 
 
-def test_intersection():
+def test_intersection() -> None:
     x, y, z = dbm.create_clocks("x", "y", "z")
     valuations = dbm.DBM.create_zero({x, y, z})
 
