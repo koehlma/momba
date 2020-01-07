@@ -44,14 +44,12 @@ parser.add_argument(
 
 
 def main(arguments: t.Optional[t.Sequence[str]] = None) -> None:
-    print("Main")
-
     namespace = parser.parse_args(arguments)
 
     namespace.output.mkdir(parents=True, exist_ok=True)
 
-    for car_max_speed in range(1, namespace.max_speed):
-        for car_max_acc in range(1, namespace.max_acc):
+    for car_max_speed in range(1, namespace.max_speed + 1):
+        for car_max_acc in range(1, namespace.max_acc + 1):
             for underground in Underground:
                 network = build_model(
                     namespace.track, car_max_speed, car_max_acc, underground
@@ -146,8 +144,7 @@ def build_model(
             expressions.minimum(expressions.add(current, change), max_speed), -max_speed
         )
 
-    for ax, ay in itertools.product(range(-max_acc, max_acc), repeat=2):
-        print("create edge")
+    for ax, ay in itertools.product(range(-max_acc, max_acc + 1), repeat=2):
         car.create_edge(
             location,
             destinations={
@@ -253,7 +250,7 @@ def build_model(
                     ),
                 )
             )
-            for i in range(max_speed)
+            for i in range(max_speed + 1)
         )
     )
 
