@@ -9,13 +9,13 @@ import typing as t
 import abc
 import dataclasses
 
-from . import context, errors, operators, types, values
+from . import context, errors, operators, properties, types, values
 
 if t.TYPE_CHECKING:
     from . import distributions
 
 
-class Expression(abc.ABC):
+class Expression(properties.Property):
     @property
     @abc.abstractmethod
     def children(self) -> t.Sequence[Expression]:
