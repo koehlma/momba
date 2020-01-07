@@ -8,10 +8,11 @@ import typing as t
 
 import dataclasses
 
-from . import context, errors, expressions, types
+from . import errors, expressions, types
 from .automata import Automaton, Instance
 
 if t.TYPE_CHECKING:
+    from . import context
     from .expressions import Expression
 
 
@@ -42,16 +43,17 @@ class Network:
     The core class representing a network of interacting SHAs.
     """
 
+    name: t.Optional[str]
+
     ctx: context.Context
 
     _restrict_initial: t.Optional[Expression]
-    _automata: t.Set[Automaton]
     _system: t.Set[Composition]
 
-    def __init__(self, model_type: context.ModelType = context.ModelType.SHA) -> None:
-        self.ctx = context.Context(model_type)
+    def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None,) -> None:
+        self.ctx = ctx
+        self.name = name
         self._restrict_initial = None
-        self._automata = set()
         self._system = set()
 
     @property
@@ -79,12 +81,10 @@ class Network:
         """
         The set of :py_class:`momba.Automaton` making up the model.
         """
-        return self._automata
+        return self.ctx.automata
 
     def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
-        automaton = Automaton(self.ctx, name=name)
-        self._automata.add(automaton)
-        return automaton
+        return self.ctx.create_automaton(name=name)
 
     def declare_variable(self, identifier: str, typ: types.Type) -> None:
         self.ctx.global_scope.declare_variable(identifier, typ)
@@ -104,10 +104,11 @@ class Network:
 
     def create_composition(self, instances: t.AbstractSet[Instance]) -> Composition:
         for instance in instances:
-            if instance.automaton not in self.automata:
-                raise errors.ModelingError(
-                    f"automaton {instance.automaton} is not part of the network"
-                )
+            if instance.automaton not in self.ctx.automata:
+                if instance.automaton not in self.automata:
+                    raise errors.ModelingError(
+                        f"automaton {instance.automaton} is not part of the network"
+                    )
         composition = Composition(frozenset(instances))
         self._system.add(composition)
         return composition

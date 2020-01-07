@@ -9,7 +9,11 @@ import typing as t
 import collections
 import dataclasses
 
-from . import effects, context, errors, expressions, types
+from . import effects, context, errors, types
+
+if t.TYPE_CHECKING:
+    # XXX: stupid stuff to make mypy and the linter happy
+    from . import expressions  # noqa: F401
 
 
 Action = str
@@ -24,6 +28,10 @@ class Instance:
     automaton: Automaton
 
     input_enable: t.FrozenSet[str] = frozenset()
+
+
+ProgressInvariant = t.Optional["expressions.Expression"]
+TransientValues = t.AbstractSet[effects.Assignment]
 
 
 @dataclasses.dataclass(frozen=True, eq=False)
@@ -42,8 +50,8 @@ class Location:
     """
 
     name: t.Optional[str] = None
-    progress_invariant: t.Optional[expressions.Expression] = None
-    transient_values: t.AbstractSet[effects.Assignment] = frozenset()
+    progress_invariant: ProgressInvariant = None
+    transient_values: TransientValues = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if self.progress_invariant is not None:
@@ -247,7 +255,7 @@ class Automaton:
 
 
 Assignments = t.Union[
-    t.AbstractSet[effects.Assignment], t.Mapping[str, expressions.Expression]
+    t.AbstractSet[effects.Assignment], t.Mapping[str, "expressions.Expression"]
 ]
 
 

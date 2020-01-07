@@ -10,6 +10,9 @@ import dataclasses
 import enum
 
 from . import errors, expressions, types
+from .action import Action
+from .automata import Automaton
+from .network import Network
 
 from .. import kit
 
@@ -70,7 +73,7 @@ class Declaration:
 
 @dataclasses.dataclass(frozen=True)
 class VariableDeclaration(Declaration):
-    transient: t.Optional[bool] = None
+    is_transient: t.Optional[bool] = None
     initial_value: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: Scope) -> None:
@@ -184,9 +187,14 @@ class Scope:
         identifier: Identifier,
         typ: types.Type,
         *,
+        is_transient: t.Optional[bool] = None,
         initial_value: t.Optional[expressions.Expression] = None,
     ) -> None:
-        self.declare(VariableDeclaration(identifier, typ, initial_value=initial_value))
+        self.declare(
+            VariableDeclaration(
+                identifier, typ, is_transient=is_transient, initial_value=initial_value
+            )
+        )
 
     def declare_constant(
         self,
@@ -209,9 +217,44 @@ class Context:
     model_type: ModelType
     global_scope: Scope
 
+    _actions: t.Set[Action]
+    _automata: t.Set[Automaton]
+    _networks: t.Set[Network]
+
     def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
+        self._automata = set()
+        self._networks = set()
+
+    @property
+    def automata(self) -> t.AbstractSet[Automaton]:
+        return self._automata
+
+    @property
+    def networks(self) -> t.AbstractSet[Network]:
+        return self._networks
 
     def new_scope(self) -> Scope:
         return self.global_scope.new_child_scope()
+
+    def get_automaton_by_name(self, name: str) -> Automaton:
+        for automaton in self._automata:
+            if automaton.name == name:
+                return automaton
+        raise Exception(f"there is no automaton with name {name}")
+
+    def create_action(self, name: str) -> Action:
+        action = Action(self, name)
+        self._actions.add(action)
+        return action
+
+    def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
+        automaton = Automaton(self, name=name)
+        self._automata.add(automaton)
+        return automaton
+
+    def create_network(self, *, name: t.Optional[str] = None) -> Network:
+        network = Network(self, name=name)
+        self._networks.add(network)
+        return network

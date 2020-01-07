@@ -10,5 +10,5 @@ from momba.ext import jani
 
 
 network = jani.load_model(
-    (pathlib.Path(__file__).parent / 'die.jani').read_text(encoding='utf-8')
+    (pathlib.Path(__file__).parent / "die.jani").read_text(encoding="utf-8")
 )

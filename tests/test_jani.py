@@ -15,7 +15,7 @@ import pytest
 DIE_MODEL = pathlib.Path(__file__).parent / "resources" / "die.jani"
 
 
-def test_basic_jani_import():
+def test_basic_jani_import() -> None:
     with pytest.warns(UserWarning):
         network = jani.load_model(DIE_MODEL.read_text(encoding="utf-8"))
 
@@ -27,7 +27,7 @@ def test_basic_jani_import():
     assert len(automaton.locations) == 1
 
 
-def test_basic_import_export():
+def test_basic_import_export() -> None:
     with pytest.warns(UserWarning):
         network = jani.load_model(DIE_MODEL.read_text(encoding="utf-8"))
 

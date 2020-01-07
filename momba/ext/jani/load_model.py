@@ -152,7 +152,7 @@ def _variable_declaration(jani_declaration: t.Any) -> context.VariableDeclaratio
     return context.VariableDeclaration(
         identifier=jani_declaration["name"],
         typ=_type(jani_declaration["type"]),
-        transient=transient,
+        is_transient=transient,
         initial_value=initial_value,
     )
 
@@ -278,7 +278,7 @@ def load_model(source: JANIModel) -> model.Network:
         },
         unsupported={"properties", "comment"},
     )
-    network = model.Network()
+    network = model.Network(model.Context())
     if "variables" in jani_model:
         for jani_declaration in jani_model["variables"]:
             var_declaration = _variable_declaration(jani_declaration)

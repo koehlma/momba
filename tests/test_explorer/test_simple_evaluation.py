@@ -12,8 +12,8 @@ from momba.explore.simple import evaluation
 import pytest
 
 
-def test_basic_evaluation():
-    network = model.Network()
+def test_basic_evaluation() -> None:
+    network = model.Network(model.Context())
 
     automaton = network.create_automaton()
     automaton.scope.declare_variable("x", model.types.INT)
