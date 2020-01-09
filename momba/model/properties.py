@@ -8,7 +8,6 @@ import enum
 import dataclasses
 import typing as t
 
-from typing import List
 from . import operators
 
 if t.TYPE_CHECKING:
@@ -19,54 +18,37 @@ class Property:
     ...
 
 
-class NamedProperty:
-    _name: str
-    _prop: Property
-
-    def __init__(self, prop: Property, name: str) -> None:
-        self._name = name
-        self._prop = prop
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def prop(self) -> Property:
-        return self._prop
-
-
 @dataclasses.dataclass(frozen=True)
 class PropertyInterval:
-    lower: Expression
-    lower_exclusive: Expression
-    upper: Expression
-    upper_exclusive: Expression
+    lower: t.Optional[Expression] = None
+    lower_exclusive: t.Optional[Expression] = None
+    upper: t.Optional[Expression] = None
+    upper_exclusive: t.Optional[Expression] = None
 
 
-class RewardAccumulation(enum.Enum):
+class RewardAccumulationInstant(enum.Enum):
     STEPS = "steps"
     TIME = "time"
     EXIT = "exit"
 
 
-class StatePredicates(enum.Enum):
+class StatePredicates(Property, enum.Enum):
     INITIAL = "initial"
     DEADLOCK = "deadlock"
     TIMELOCK = "timelock"
 
 
 @dataclasses.dataclass(frozen=True)
-class RewardInstant:
+class RewardBound:
     expression: Expression
-    accumulate: RewardAccumulation
+    accumulate: t.Sequence[RewardAccumulationInstant]
     bounds: PropertyInterval
 
 
 @dataclasses.dataclass(frozen=True)
-class RewardBound:
+class RewardInstant:
     expression: Expression
-    accumulate: RewardAccumulation
+    accumulate: t.Sequence[RewardAccumulationInstant]
     instant: Expression
 
 
@@ -78,43 +60,43 @@ class Filter(Property):
 
 
 @dataclasses.dataclass(frozen=True)
-class Prob(Property):
-    operator: operators.PropertyOperator
-    expression: Expression
+class ProbabilityProp(Property):
+    operator: operators.Probability
+    expression: Property
 
 
 @dataclasses.dataclass(frozen=True)
 class PathFormula(Property):
     operator: operators.PathOperator
-    expression: Expression
+    expression: Property
 
 
 @dataclasses.dataclass(frozen=True)
 class Expected(Property):
-    operator: operators.PropertyOperator
-    expression: Expression
-    acc: RewardAccumulation
-    reach: Property
-    step_instant: Expression
-    time_instant: Expression
-    reward_instants: t.Sequence[RewardInstant]
+    operator: operators.Expected
+    expression: Property
+    accumulate: t.Optional[t.Sequence[RewardAccumulationInstant]] = None
+    reach: t.Optional[Property] = None
+    step_instant: t.Optional[Expression] = None
+    time_instant: t.Optional[Expression] = None
+    reward_instants: t.Optional[t.Sequence[RewardInstant]] = None
 
 
 @dataclasses.dataclass(frozen=True)
 class Steady(Property):
-    operator: operators.PropertyOperator
-    expression: Expression
-    acc: RewardAccumulation
+    operator: operators.Steady
+    expression: Property
+    accumulate: t.Optional[t.Sequence[RewardAccumulationInstant]] = None
 
 
 @dataclasses.dataclass(frozen=True)
-class TimedProp(Property):
+class Timed(Property):
     operator: operators.TimeOperator
     left: Property
     right: Property
-    step_bounds: t.Optional[PropertyInterval]
-    time_bounds: PropertyInterval
-    reward_bounds: List[RewardBound]
+    step_bounds: t.Optional[PropertyInterval] = None
+    time_bounds: t.Optional[PropertyInterval] = None
+    reward_bounds: t.Optional[t.Sequence[RewardBound]] = None
 
 
 def filter(
@@ -123,35 +105,35 @@ def filter(
     return Filter(func, values, states)
 
 
-def minProb(expression: Expression) -> Property:
-    return Prob(operators.PropertyOperator.PMIN, expression)
+def min_prob(expression: Property) -> Property:
+    return ProbabilityProp(operators.Probability.PMIN, expression)
 
 
-def maxProb(expression: Expression) -> Property:
-    return Prob(operators.PropertyOperator.PMAX, expression)
+def max_prob(expression: Property) -> Property:
+    return ProbabilityProp(operators.Probability.PMAX, expression)
 
 
-def forall(expression: Expression) -> Property:
+def forall(expression: Property) -> Property:
     return PathFormula(operators.PathOperator.FORALL, expression)
 
 
-def exists(expression: Expression) -> Property:
+def exists(expression: Property) -> Property:
     return PathFormula(operators.PathOperator.EXISTS, expression)
 
 
-def minExp(
+def min_expected(
     expression: Expression,
     *,
-    acc: RewardAccumulation,
-    reach: Property,
-    step_instant: Expression,
-    time_instant: Expression,
-    reward_instants: List[RewardInstant]
+    accumulate: t.Optional[t.Sequence[RewardAccumulationInstant]] = None,
+    reach: t.Optional[Property] = None,
+    step_instant: t.Optional[Expression] = None,
+    time_instant: t.Optional[Expression] = None,
+    reward_instants: t.Optional[t.Sequence[RewardInstant]] = None
 ) -> Property:
     return Expected(
-        operators.PropertyOperator.EMIN,
+        operators.Expected.EMIN,
         expression,
-        acc,
+        accumulate,
         reach,
         step_instant,
         time_instant,
@@ -159,19 +141,19 @@ def minExp(
     )
 
 
-def maxExp(
+def max_expected(
     expression: Expression,
     *,
-    acc: RewardAccumulation,
-    reach: Property,
-    step_instant: Expression,
-    time_instant: Expression,
-    reward_instants: List[RewardInstant]
+    accumulate: t.Optional[t.Sequence[RewardAccumulationInstant]] = None,
+    reach: t.Optional[Property] = None,
+    step_instant: t.Optional[Expression] = None,
+    time_instant: t.Optional[Expression] = None,
+    reward_instants: t.Optional[t.Sequence[RewardInstant]] = None
 ) -> Property:
     return Expected(
-        operators.PropertyOperator.EMAX,
+        operators.Expected.EMAX,
         expression,
-        acc,
+        accumulate,
         reach,
         step_instant,
         time_instant,
@@ -179,12 +161,16 @@ def maxExp(
     )
 
 
-def sMin(expression: Expression, acc: RewardAccumulation) -> Property:
-    return Steady(operators.PropertyOperator.SMIN, expression, acc)
+def s_min(
+    expression: Property, accumulate: t.Sequence[RewardAccumulationInstant]
+) -> Property:
+    return Steady(operators.Steady.SMIN, expression, accumulate)
 
 
-def sMax(expression: Expression, acc: RewardAccumulation) -> Property:
-    return Steady(operators.PropertyOperator.SMAX, expression, acc)
+def s_max(
+    expression: Property, accumulate: t.Sequence[RewardAccumulationInstant]
+) -> Property:
+    return Steady(operators.Steady.SMAX, expression, accumulate)
 
 
 def until(
@@ -192,10 +178,10 @@ def until(
     right: Property,
     *,
     step_bounds: t.Optional[PropertyInterval] = None,
-    time_bounds: PropertyInterval,
-    reward_bounds: List[RewardBound]
+    time_bounds: t.Optional[PropertyInterval] = None,
+    reward_bounds: t.Optional[t.Sequence[RewardBound]] = None
 ) -> Property:
-    return TimedProp(
+    return Timed(
         operators.TimeOperator.UNTIL,
         left,
         right,
@@ -209,11 +195,11 @@ def weak_until(
     left: Property,
     right: Property,
     *,
-    step_bounds: PropertyInterval,
-    time_bounds: PropertyInterval,
-    reward_bounds: List[RewardBound]
+    step_bounds: t.Optional[PropertyInterval] = None,
+    time_bounds: t.Optional[PropertyInterval] = None,
+    reward_bounds: t.Optional[t.Sequence[RewardBound]] = None
 ) -> Property:
-    return TimedProp(
+    return Timed(
         operators.TimeOperator.WEAKU,
         left,
         right,
