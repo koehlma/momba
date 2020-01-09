@@ -9,10 +9,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import momba  # noqa
 
-from momba import moml
+from momba import moml  # noqa
 
 
-class MomlLexero(RegexLexer):
+class MomlLexer(RegexLexer):  # type:ignore
     name = "Moml"
     aliases = ["moml"]
     filenames = ["*.moml"]
@@ -22,8 +22,34 @@ class MomlLexero(RegexLexer):
             (r"\s+", token.Whitespace),
             (r"|".join(moml.lexer.KEYWORDS), token.Keyword),
             (r"|".join(moml.lexer.PRIMITIVE_TYPES), token.Keyword),
+            (r"\"[^\"]*\"", token.String),
+            (r"\\d+\\.\\d+", token.Number),
+            (r"\\d+", token.Number),
+            (r":|\[|\]|\(|\)|,", token.Punctuation),
+            (
+                r":=|→|->|≤|<=|≥|>=|<|>|∧|and|∨|or|⊕|xor|⇒|==>|⇐|<==|⇔|<=>|¬|not|=|≠|!=",
+                token.Operator,
+            ),
+            (r"\+|-|\*|/|//|%", token.Operator),
             (r"\w+", token.Name),
-            (moml.lexer.TokenType.INTEGER.regex, token.Number),
+        ]
+    }
+
+
+class BNFLexer(RegexLexer):  # type:ignore
+    name = "BNF"
+    aliases = ["bnf"]
+
+    tokens = {
+        "root": [
+            (r"\s+", token.Whitespace),
+            (r"<[^>]*>", token.Keyword),
+            (r"‘[^’]*’", token.String),
+            (r"\[|\]|\(|\)", token.Punctuation),
+            (r"\||::=|\*|\+", token.Operator),
+            (r"/([^/]|\\/)*/", token.Literal),
+            (r"…[^…]*…", token.Comment),
+            (r"[\w\-]+", token.Name),
         ]
     }
 
@@ -58,7 +84,8 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = []  # type: ignore
 
 
-def setup(app):
+def setup(app):  # type:ignore
     from sphinx.highlighting import lexers
 
-    lexers["moml"] = MomlLexero()
+    lexers["moml"] = MomlLexer()
+    lexers["bnf"] = BNFLexer()

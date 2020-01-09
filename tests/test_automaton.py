@@ -11,7 +11,7 @@ from momba.model import context, errors, types
 import pytest
 
 
-def test_basic_inferences():
+def test_basic_inferences() -> None:
     automaton = Automaton(context.Context())
     automaton.scope.declare_constant("T", types.INT)
     automaton.scope.declare_variable("x", types.CLOCK)

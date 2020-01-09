@@ -3,7 +3,8 @@ MOML Grammar
 
 This is the full abstract grammar of MOML:
 
-.. code-block::
+
+.. code-block:: bnf
 
     <model> ::=
         | [<model-type>] <specification>*

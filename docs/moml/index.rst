@@ -15,9 +15,37 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
 
     model_type DTMC
 
-    variable side : int[0,7] := 0
+    metadata:
+        "name": "Simple Die"
 
+    variable side : int[1,6] := 1 "side of a die"
 
+    automaton Die:
+        initial location l
+
+        edge from l:
+            to l:
+                probability 1 / 6
+                side := 1
+            to l:
+                probability 1 / 6
+                side := 2
+            to l:
+                probability 1 / 6
+                side := 3
+            to l:
+                probability 1 / 6
+                side := 4
+            to l:
+                probability 1 / 6
+                side := 5
+            to l:
+                probability 1 / 6
+                side := 6
+
+    network:
+        instance die Die
+        composition die
 
 
 
