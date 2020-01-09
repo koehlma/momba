@@ -17,3 +17,6 @@ This package contains a MOML parser, exporter, and converter to convert between 
 from __future__ import annotations
 
 from . import lexer
+
+
+__all__ = ["lexer"]
