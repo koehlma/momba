@@ -6,56 +6,77 @@ This is the full abstract grammar of MOML:
 .. code-block::
 
     <model> ::=
-        | [<model-type>] <definition>*
+        | [<model-type>] <specification>*
 
 
     <model-type> ::=
         | ‘model_type’ MODEL-TYPE
 
 
-    <definition> ::=
-        | <variable-definition>
-        | <constant-definition>
-        | <action-definition>
+    <specification> ::=
+        | <metadata-definition>
+        | <variable-declaration>
+        | <constant-declaration>
+        | <action-declaration>
         | <automaton-definition>
-        | <system-definition>
+        | <network-definition>
         | <property-definition>
 
-    <variable-definition> ::=
+    <metadata-definition> ::=
+        | ‘metadata’ ‘:’ INDENT <metadata-field>* DEDENT
+
+    <variable-declaration> ::=
         | [‘transient’] ‘variable’ IDENTIFIER ‘:’ <type> [‘:=’ <expression>] [<comment>]
 
-    <constant-definition> ::=
+    <constant-declaration> ::=
         | ‘constant’ IDENTIFIER ‘:’ <type> [‘:=’ <expression>] [<comment>]
 
-    <action-definition> ::=
+    <action-declaration> ::=
         | ‘action’ IDENTIFIER [<comment>]
 
     <automaton-definition> ::=
-        | ‘automaton’ IDENTIFIER ‘:’ INDENT <automaton-specification> DEDENT
+        | ‘automaton’ IDENTIFIER ‘:’ INDENT <automaton-specification>* DEDENT
 
-    <system-definition> ::=
-        | ‘system’ [IDENTIFIER] ‘:’ INDENT <system-specification> DEDENT
+    <network-definition> ::=
+        | ‘network’ [IDENTIFIER] ‘:’ INDENT <network-specification>* DEDENT
 
     <property-definition> ::=
-        | ‘property’ IDENTIFIER ‘:=’ <property-expression> [<comment>]
+        | ‘property’ IDENTIFIER ‘:=’ <property> [<comment>]
+
+
+    <metadata-field> ::=
+        | <string> ‘:’ <string>
+
+
+    <automaton-specification> ::=
+        | <variable-declaration>
+        | <location-definition>
+        | <edge-definition>
+
+    <network-specification> ::=
+        | <instance-definition>
+        | <restrict-initial>
+        | <composition>
 
 
     <location-definition> ::=
-        | [‘initial’] ‘location’ IDENTIFIER [‘:’ INDENT <location-body> DEDENT]
+        | [‘initial’] ‘location’ IDENTIFIER [‘:’ INDENT <location-specification>* DEDENT]
 
-    <location-body> ::=
+    <location-specification> ::=
         | ‘invariant’ <expression>
+        | <assignment>
+
 
     <edge-definition> ::=
-        | ‘edge’ ‘from’ IDENTIFIER ‘:’ INDENT <edge-body> DEDENT
+        | ‘edge’ ‘from’ IDENTIFIER ‘:’ INDENT <edge-specification>* DEDENT
 
-    <edge-body> ::=
+    <edge-specification> ::=
         | ‘action’ IDENTIFIER
         | ‘guard’ <expression> [<comment>]
         | ‘rate’ <expression> [<comment>]
-        | ‘to’ IDENTIFIER [‘:’ INDENT <destination-body> DEDENT]
+        | ‘to’ IDENTIFIER [‘:’ INDENT <destination-specification>* DEDENT]
 
-    <destination-body> ::=
+    <destination-specification> ::=
         | ‘probability’ <expression> [<comment>]
         | <assignment>
 
@@ -63,12 +84,34 @@ This is the full abstract grammar of MOML:
         | IDENTIFIER ‘:=’ <expression>
 
 
+    <instance-definition> ::=
+        | ‘instance’ IDENTIFIER IDENTIFIER [‘:’ INDENT <instance-specification>* DEDENT]
+
+    <instance-specification> ::=
+        | ‘input’ ‘enable’ IDENTIFIER [‘,’ IDENTIFIER]
+
+
+    <restrict-initial> ::=
+        | ‘restrict’ ‘initial’ <expression>
+
+
+    <composition> ::=
+        | ‘composition’ IDENTIFIER [‘|’ IDENTIFIER] [‘:’ INDENT <composition-specification>* DEDENT]
+
+    <composition-specification> ::=
+        | ‘synchronize’ <action> [‘|’ <action>] (‘->’ | ‘→’) <action>
+
+    <action> ::=
+        | IDENTIFIER
+        | ‘-’ | ‘τ’
+
+
     <expression> ::=
         | <constant>
+        | IDENTIFIER ‘(’ [<expression> [‘,’ <expression>]] ‘)’
         | IDENTIFIER
-        | IDENTIFIER ‘(’ (<expression> [,])* ‘)’
-        | <UNARY-OPERATOR> <expression>
-        | <expression> <BINARY-OPERATOR> <expression>
+        | <unary-operator> <expression>
+        | <expression> <binary-operator> <expression>
         | <expression> ? <expression> : <expression>
 
     <constant> ::=
@@ -76,24 +119,31 @@ This is the full abstract grammar of MOML:
         | /[0-9]+/ ‘.’ /[0-9]+/ | ‘real[’ <NAMED-REAL> ‘]’
         | /[0-9]+/
 
-    <UNARY-OPERATOR> ::=
+    <unary-operator> ::=
         | ‘¬’ | ‘not’
 
-    <BINARY-OPERATOR> ::=
+    <binary-operator> ::=
         | ‘∨’ | ‘or’
         | ‘∧’ | ‘and’
         | ‘⊕’ | ‘xor’
-        | ‘⇒’ | ‘==>’ | ‘implies’
-        | ‘⇔’ | ‘<=>’ | ‘equiv’
-        | ‘==’ | ‘!=’ | ‘=’ | ‘≠’
+        | ‘⇒’ | ‘==>’
+        | ‘⇔’ | ‘<=>’
+        | ‘=’ | ‘!=’ | ‘≠’
         | ‘<’ | ‘≤’ | ‘≥’ | ‘>’
         | ‘+’ | ‘-’ | ‘*’ | ‘%’
         | ‘/’ | ‘//’
 
-    <property-expression> ::=
+
+    <property> ::=
         | <expression>
+        | … TODO …
+
 
     <comment> ::=
+        | ‘"’ /([^"]|\")/ ‘"’
+
+
+    <string> ::=
         | ‘"’ /([^"]|\")/ ‘"’
 
 
@@ -113,7 +163,7 @@ This is the full abstract grammar of MOML:
         | ‘continuous’
 
     <bounded-type> ::=
-        | <numeric-type> ‘[’ <integer> ‘,’ <integer> ‘]’
+        | <numeric-type> ‘[’ <expression> ‘,’ <expression> ‘]’
 
     <array-type> ::=
         | <type> ‘[]’

@@ -39,6 +39,8 @@ KEYWORDS = {
     "metadata",
 }
 
+PRIMITIVE_TYPES = {"bool", "int", "real", "clock", "continuous"}
+
 
 class TokenType(enum.Enum):
     regex: str
@@ -49,6 +51,10 @@ class TokenType(enum.Enum):
     ASSIGN = r":="
 
     SLASH_SLASH = r"//"
+
+    NAMED_REAL = r"real\[\w+\]"
+
+    TAU = r"τ"
 
     ARROW = r"→|->"
 

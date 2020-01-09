@@ -397,7 +397,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
 
 
 def _parse_action(stream: TokenStream) -> t.Optional[str]:
-    if stream.accept("-"):
+    if stream.accept({"-", "τ"}):
         return None
     return stream.expect(lexer.TokenType.IDENTIFIER).text
 
