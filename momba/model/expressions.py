@@ -132,7 +132,7 @@ class Identifier(Expression):
             return declaration.typ
         elif isinstance(declaration, context.ConstantDeclaration):
             return declaration.typ
-        assert False
+        raise AssertionError()
 
 
 # XXX: this class should be abstract, however, then it would not type-check
@@ -206,7 +206,9 @@ class Equality(BinaryExpression):
             return left_type
         elif right_type.is_assignable_from(left_type):
             return right_type
-        assert False, "type-inference should ensure that some of the above is true"
+        raise AssertionError(
+            "type-inference should ensure that some of the above is true"
+        )
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)

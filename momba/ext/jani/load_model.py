@@ -306,7 +306,7 @@ def _type(typ: t.Any) -> types.Type:
         lower_bound = _expression(typ["lower-bound"]) if "lower-bound" in typ else None
         upper_bound = _expression(typ["upper-bound"]) if "upper-bound" in typ else None
         return base[lower_bound, upper_bound]
-    assert False, "this should never happen"
+    raise InvalidJANIError(f"{typ!r} is not a valid JANI type")
 
 
 def _comment_warning(structure: t.Any) -> None:
@@ -429,7 +429,7 @@ _Locations = t.Dict[str, automata.Location]
 def _target(jani_target: t.Any) -> effects.Target:
     if isinstance(jani_target, str):
         return effects.Identifier(jani_target)
-    assert False
+    raise InvalidJANIError(f"{jani_target!r} is not a valid lvalue")
 
 
 def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
