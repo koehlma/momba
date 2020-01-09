@@ -1,0 +1,17 @@
+model_type DTMC
+
+variable s : int[0,7] := 0
+variable d : int[0,6] := 0
+
+automaton Die:
+    initial location l
+
+    edge from l:
+        guard s = 0
+        to l:
+            probability 0.5
+            s := 1
+        to l:
+            probability 0.5
+            s := 2
+

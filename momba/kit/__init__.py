@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
 
 """
 A collection of data-structures and algorithms useful in the context of quantitative models.
