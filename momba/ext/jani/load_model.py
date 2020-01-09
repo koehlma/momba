@@ -131,64 +131,74 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
         elif "op" in jani_expression:
             op = jani_expression["op"]
             if op in _BINARY_OP_MAP:
+                _check_fields(jani_expression, required={"left", "right"})
                 left = _expression(jani_expression["left"])
                 right = _expression(jani_expression["right"])
                 return _BINARY_OP_MAP[op](left, right)
             elif op in _UNARY_OP_MAP:
+                _check_fields(jani_expression, required={"exp"})
                 operand = _expression(jani_expression["exp"])
                 return _UNARY_OP_MAP[op](operand)
             elif op == "ite":
+                _check_fields(jani_expression, required={"if", "then", "else"})
                 condition = _expression(jani_expression["if"])
                 consequence = _expression(jani_expression["then"])
                 alternative = _expression(jani_expression["else"])
                 return expressions.ite(condition, consequence, alternative)
             elif op == "der":
+                _check_fields(jani_expression, required={"var"})
                 variable = jani_expression["var"]
                 return expressions.Derivative(variable)
         elif "distribution" in jani_expression:
+            _check_fields(jani_expression, required={"args", "distribution"})
             arguments = list(map(_expression, jani_expression["args"]))
             distribution = distributions.by_name(jani_expression["distribution"])
             return expressions.Sample(distribution, arguments)
     raise InvalidJANIError(f"{jani_expression!r} is not a valid JANI expression")
 
 
-def _property_interval(jani_expression: t.Any) -> properties.PropertyInterval:
+def _property_interval(jani_property: t.Any) -> properties.PropertyInterval:
+    _check_fields(
+        jani_property, optional={"lower", "lower-exclusive", "upper", "upper-exclusive"}
+    )
     lower: t.Optional[expressions.Expression]
     lower_exclusive: t.Optional[expressions.Expression]
     upper: t.Optional[expressions.Expression]
     upper_exclusive: t.Optional[expressions.Expression]
-    if "lower" in jani_expression:
-        lower = _expression(jani_expression["lower"])
+    if "lower" in jani_property:
+        lower = _expression(jani_property["lower"])
     else:
         lower = None
-    if "lower_exclusive" in jani_expression:
-        lower_exclusive = _expression(jani_expression["lower_exclusive"])
+    if "lower-exclusive" in jani_property:
+        lower_exclusive = _expression(jani_property["lower-exclusive"])
     else:
         lower_exclusive = None
-    if "upper" in jani_expression:
-        upper = _expression(jani_expression["upper"])
+    if "upper" in jani_property:
+        upper = _expression(jani_property["upper"])
     else:
         upper = None
-    if "upper_exclusive" in jani_expression:
-        upper_exclusive = _expression(jani_expression["upper_exclusive"])
+    if "upper-exclusive" in jani_property:
+        upper_exclusive = _expression(jani_property["upper-exclusive"])
     else:
         upper_exclusive = None
     return properties.PropertyInterval(lower, lower_exclusive, upper, upper_exclusive)
 
 
-def _reward_instant(jani_expression: t.Any) -> properties.RewardInstant:
+def _reward_instant(jani_property: t.Any) -> properties.RewardInstant:
+    _check_fields(jani_property, required={"exp", "accumulate", "instant"})
     return properties.RewardInstant(
-        _expression(jani_expression["exp"]),
-        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_expression["accumulate"]],
-        _expression(jani_expression["instant"]),
+        _expression(jani_property["exp"]),
+        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_property["accumulate"]],
+        _expression(jani_property["instant"]),
     )
 
 
-def _reward_bound(jani_expression: t.Any) -> properties.RewardBound:
+def _reward_bound(jani_property: t.Any) -> properties.RewardBound:
+    _check_fields(jani_property, required={"exp", "accumulate", "bounds"})
     return properties.RewardBound(
-        _expression(jani_expression["exp"]),
-        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_expression["accumulate"]],
-        _property_interval(jani_expression["bounds"]),
+        _expression(jani_property["exp"]),
+        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_property["accumulate"]],
+        _property_interval(jani_property["bounds"]),
     )
 
 
@@ -207,16 +217,29 @@ def _property(jani_property: t.Any) -> properties.Property:
             _property(jani_property["states"]),
         )
     if jani_property["op"] in _PROBABILITY_OPERATOR_MAP:
+        _check_fields(jani_property, required={"exp"})
         probability_operator = _PROBABILITY_OPERATOR_MAP[jani_property["op"]]
         return properties.ProbabilityProp(
             operator=probability_operator, expression=_property(jani_property["exp"])
         )
     if jani_property["op"] in _PATH_OPERATOR_MAP:
+        _check_fields(jani_property, required={"exp"})
         path_operator = _PATH_OPERATOR_MAP[jani_property["op"]]
         return properties.PathFormula(
             operator=path_operator, expression=_property(jani_property["exp"])
         )
     if jani_property["op"] in _EXPECTED_OPERATOR_MAP:
+        _check_fields(
+            jani_property,
+            required={"exp"},
+            optional={
+                "accumulate",
+                "reach",
+                "step-instant",
+                "time-instant",
+                "reward-instants",
+            },
+        )
         accumulate: t.Optional[t.Sequence[properties.RewardAccumulationInstant]]
         reach: t.Optional[properties.Property]
         step_instant: t.Optional[expressions.Expression]
@@ -257,6 +280,7 @@ def _property(jani_property: t.Any) -> properties.Property:
             reward_instants=reward_instants,
         )
     if jani_property["op"] in _STEADY_OPERATOR_MAP:
+        _check_fields(jani_property, required={"exp"}, optional={"accumulate"})
         steady_operator = _STEADY_OPERATOR_MAP[jani_property["op"]]
         if "accumulate" in jani_property:
             return properties.Steady(
@@ -269,6 +293,11 @@ def _property(jani_property: t.Any) -> properties.Property:
                 operator=steady_operator, expression=_property(jani_property["exp"])
             )
     if jani_property["op"] in _TIME_OPERATOR_MAP:
+        _check_fields(
+            jani_property,
+            required={"op", "left", "right"},
+            optional={"step-bounds", "time-bounds", "reward-bounds"},
+        )
         step_bounds: t.Optional[properties.PropertyInterval]
         time_bounds: t.Optional[properties.PropertyInterval]
         reward_bounds: t.Optional[t.Sequence[properties.RewardBound]]
@@ -303,6 +332,9 @@ def _type(typ: t.Any) -> types.Type:
         return _TYPE_MAP[typ]
     assert isinstance(typ, dict)
     if typ["kind"] == "bounded":
+        _check_fields(
+            typ, required={"kind", "base"}, optional={"lower-bound", "upper-bound"},
+        )
         base = _type(typ["base"])
         assert isinstance(base, types.Numeric)
         lower_bound = _expression(typ["lower-bound"]) if "lower-bound" in typ else None
@@ -436,6 +468,11 @@ def _target(jani_target: t.Any) -> effects.Target:
 
 
 def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
+    _check_fields(
+        jani_edge,
+        required={"location", "destinations"},
+        optional={"action", "rate", "guard", "comment"},
+    )
     location = locations[jani_edge["location"]]
     action = jani_edge["action"] if "action" in jani_edge else None
     rate = _expression(jani_edge["rate"]["exp"]) if "rate" in jani_edge else None
