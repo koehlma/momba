@@ -113,7 +113,7 @@ This is the full abstract grammar of MOML:
         | IDENTIFIER
         | <unary-operator> <expression>
         | <expression> <binary-operator> <expression>
-        | <expression> ? <expression> : <expression>
+        | <expression> ‘?’ <expression> ‘:’ <expression>
 
     <constant> ::=
         | ‘true’ | ‘false’

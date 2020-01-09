@@ -47,7 +47,7 @@ class BNFLexer(RegexLexer):  # type:ignore
             (r"‘[^’]*’", token.String),
             (r"\[|\]|\(|\)", token.Punctuation),
             (r"\||::=|\*|\+", token.Operator),
-            (r"/([^/]|\\/)*/", token.Literal),
+            (r"/([^/]|\\/)*/", token.Text),
             (r"…[^…]*…", token.Comment),
             (r"[\w\-]+", token.Name),
         ]
