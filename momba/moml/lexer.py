@@ -117,7 +117,7 @@ class Token:
     token_type: TokenType
 
     text: str
-    match: re.Match[str]
+    match: t.Match[str]
 
     start_row: int
     start_column: int

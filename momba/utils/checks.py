@@ -30,7 +30,7 @@ def check_singledispatch(
     ignore: t.AbstractSet[type] = frozenset(),
 ) -> None:
     if not hasattr(function, "registry") or not hasattr(
-        getattr(function, "registry"), "keys"
+        function.registry, "keys"  # type:ignore
     ):
         raise ValueError(f"{function} is not a singledispatch function")
     subclasses = set(get_subclasses(superclass, recursive=recursive))
