@@ -281,8 +281,12 @@ def _parse_identifier_declaration(stream: TokenStream) -> _DeclarationInfo:
 def _parse_constant_declaration(stream: TokenStream) -> model.ConstantDeclaration:
     stream.expect("constant")
     info = _parse_identifier_declaration(stream)
-    stream.accept(lexer.TokenType.STRING)  # TODO: comment
-    return model.ConstantDeclaration(info.name, info.typ, info.value)
+    comment = stream.accept(lexer.TokenType.STRING)
+    if comment is not None:
+        return model.ConstantDeclaration(
+            info.name, info.typ, value=info.value, comment=comment.match["string"]
+        )
+    return model.ConstantDeclaration(info.name, info.typ, value=info.value)
 
 
 def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaration:

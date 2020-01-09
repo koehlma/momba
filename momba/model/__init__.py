@@ -8,34 +8,27 @@ from . import expressions, types, values
 
 from .automata import (
     Automaton,
-    Location,
-    Edge,
     Destination,
-    create_destination,
+    Edge,
     Instance,
+    Location,
+    create_destination,
 )
-from .effects import Assignment
 from .context import (
-    Context,
     ConstantDeclaration,
-    VariableDeclaration,
+    Context,
     Identifier,
     ModelType,
     Scope,
+    VariableDeclaration,
 )
-from .expressions import (
-    Expression,
-    logic_not,
-    ite,
-    convert,
-    var as identifier,
-    BinaryConstructor,
-)
-from .network import Network, Synchronization, Composition
+from .effects import Assignment
+from .expressions import BinaryConstructor, Expression, convert, ite, logic_not
+from .expressions import var as identifier
+from .network import Composition, Network, Synchronization
 from .properties import Property
 from .types import Type
 from .values import Value
-
 
 __all__ = [
     "expressions",

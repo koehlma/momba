@@ -188,9 +188,9 @@ def _dump_conditional(expr: expressions.Conditional, ctx: JANIContext) -> JSON:
 
 
 _DERIVED_OPERATORS = {
-    operators.Boolean.IMPLY,
-    operators.Comparison.GT,
-    operators.Comparison.GE,
+    operators.BooleanOperator.IMPLY,
+    operators.ComparisonOperator.GT,
+    operators.ComparisonOperator.GE,
     operators.ArithmeticOperator.MIN,
     operators.ArithmeticOperator.MAX,
 }
@@ -199,8 +199,8 @@ _DERIVED_OPERATORS = {
 _Transform = t.Callable[[expressions.Expression], expressions.Expression]
 
 _MOMBA_OPERATORS: t.Mapping[operators.BinaryOperator, _Transform] = {
-    operators.Boolean.XOR: expressions.normalize_xor,
-    operators.Boolean.EQUIV: expressions.normalize_equiv,
+    operators.BooleanOperator.XOR: expressions.normalize_xor,
+    operators.BooleanOperator.EQUIV: expressions.normalize_equiv,
     operators.ArithmeticOperator.FLOOR_DIV: expressions.normalize_floor_div,
 }
 

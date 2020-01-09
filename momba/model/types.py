@@ -30,10 +30,10 @@ class Numeric(Type, abc.ABC):
     def is_numeric(self) -> bool:
         return True
 
-    def __getitem__(self, bounds: Bounds) -> BoundedType:
-        lower_bound = BoundedType.cast_bound(bounds[0])
-        upper_bound = BoundedType.cast_bound(bounds[1])
-        return BoundedType(self, lower_bound, upper_bound)
+    def bound(self, lower: Bound, upper: Bound) -> BoundedType:
+        return BoundedType(
+            self, BoundedType.convert_bound(lower), BoundedType.convert_bound(upper)
+        )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -42,7 +42,9 @@ class IntegerType(Numeric):
         return "types.INT"
 
     def is_assignable_from(self, typ: Type) -> bool:
-        return typ == INT or (isinstance(typ, BoundedType) and typ.base == INT)
+        if isinstance(typ, BoundedType):
+            return typ.base == INT
+        return typ == INT
 
 
 @dataclasses.dataclass(frozen=True)
@@ -91,7 +93,6 @@ CONTINUOUS = ContinuousType()
 
 
 Bound = t.Optional[t.Union["expressions.MaybeExpression", "ellipsis"]]
-Bounds = t.Tuple[Bound, Bound]
 
 
 class TypeConstructionError(ValueError):
@@ -143,7 +144,7 @@ class BoundedType(Numeric):
                 )
 
     @staticmethod
-    def cast_bound(bound: Bound) -> t.Optional[expressions.Expression]:
+    def convert_bound(bound: Bound) -> t.Optional[expressions.Expression]:
         if bound is None or bound is Ellipsis:
             return None
         return expressions.convert(t.cast(expressions.MaybeExpression, bound))

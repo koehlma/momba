@@ -197,8 +197,10 @@ def _property(jani_property: t.Any) -> properties.Property:
         return _expression(jani_property)
     except InvalidJANIError:
         pass
-    _check_fields(jani_property, required={"op"})
+    if "op" not in jani_property:
+        raise InvalidJANIError(f"{jani_property!r} is not a valid JANI property")
     if jani_property["op"] == "filter":
+        _check_fields(jani_property, required={"op", "fun", "values", "states"})
         return properties.Filter(
             _FILTER_FUNCTIONS_MAP[jani_property["fun"]],
             _property(jani_property["values"]),
@@ -305,7 +307,7 @@ def _type(typ: t.Any) -> types.Type:
         assert isinstance(base, types.Numeric)
         lower_bound = _expression(typ["lower-bound"]) if "lower-bound" in typ else None
         upper_bound = _expression(typ["upper-bound"]) if "upper-bound" in typ else None
-        return base[lower_bound, upper_bound]
+        return base.bound(lower_bound, upper_bound)
     raise InvalidJANIError(f"{typ!r} is not a valid JANI type")
 
 
@@ -341,7 +343,8 @@ def _check_fields(
     for field in unsupported:
         if (field in optional or field in required) and field in fields:
             warnings.warn(
-                f"field {field!r} in {jani_structure!r} is currently unsupported"
+                f"field {field!r} in {jani_structure!r} is currently unsupported",
+                stacklevel=2,
             )
     for field in required:
         if field not in fields:
@@ -352,7 +355,7 @@ def _check_fields(
     for field in optional:
         fields.discard(field)
     if fields:
-        warnings.warn(f"unknown fields {fields!r} in {jani_structure!r}")
+        warnings.warn(f"unknown fields {fields!r} in {jani_structure!r}", stacklevel=2)
 
 
 def _variable_declaration(jani_declaration: t.Any) -> context.VariableDeclaration:
@@ -515,9 +518,14 @@ def load_model(source: JANIModel) -> model.Network:
         _check_fields(
             jani_automaton,
             required={"name", "locations", "initial-locations", "edges"},
-            optional={"variables", "restrict-initial", "comment"},
+            optional={"variables", "restrict-initial", "comment", "x-momba-anonymous"},
         )
-        automaton = network.create_automaton()
+        name: t.Optional[str]
+        if jani_automaton.get("x-momba-anonymous", False):
+            name = None
+        else:
+            name = jani_automaton["name"]
+        automaton = network.create_automaton(name=name)
         if "variables" in jani_automaton:
             for jani_declaration in jani_automaton["variables"]:
                 declaration = _variable_declaration(jani_declaration)
@@ -540,7 +548,7 @@ def load_model(source: JANIModel) -> model.Network:
             automaton.add_initial_location(locations[jani_location])
     for jani_prop in jani_model["properties"]:
         _check_fields(
-            jani_prop["expression"], required={"op"},
+            jani_prop, required={"expression", "name"},
         )
         network.ctx.define_property(
             _property(jani_prop["expression"]), name=jani_prop["name"]

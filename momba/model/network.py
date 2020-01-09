@@ -93,13 +93,15 @@ class Network:
         self,
         identifier: str,
         typ: types.Type,
+        *,
         value: t.Optional[expressions.MaybeExpression] = None,
+        comment: t.Optional[str] = None,
     ) -> None:
         if value is None:
-            self.ctx.global_scope.declare_constant(identifier, typ, None)
+            self.ctx.global_scope.declare_constant(identifier, typ, comment=comment)
         else:
             self.ctx.global_scope.declare_constant(
-                identifier, typ, expressions.convert(value)
+                identifier, typ, value=expressions.convert(value), comment=comment
             )
 
     def create_composition(self, instances: t.AbstractSet[Instance]) -> Composition:

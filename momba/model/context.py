@@ -23,6 +23,8 @@ if t.TYPE_CHECKING:
 
 
 class ModelType(enum.Enum):
+    """ Type of the model. """
+
     LTS = "lts", "Labeled Transition System"
     DTMC = "dtmc", "Discrete-Time Markov Chain"
     CTMC = "ctmc", "Continuous-Time Markov Chain"
@@ -63,6 +65,8 @@ Typed = t.Union["expressions.Expression", "effects.Target"]
 class Declaration:
     identifier: Identifier
     typ: types.Type
+
+    comment: t.Optional[str] = None
 
     def validate(self, scope: Scope) -> None:
         # TODO: check whether type is bounded or basic
@@ -218,13 +222,19 @@ class Scope:
         self,
         identifier: Identifier,
         typ: types.Type,
+        *,
         value: t.Optional[expressions.MaybeExpression] = None,
+        comment: t.Optional[str] = None,
     ) -> None:
         if value is None:
-            self.declare(ConstantDeclaration(identifier, typ, value))
+            self.declare(
+                ConstantDeclaration(identifier, typ, comment=comment, value=value)
+            )
         else:
             self.declare(
-                ConstantDeclaration(identifier, typ, expressions.convert(value))
+                ConstantDeclaration(
+                    identifier, typ, comment=comment, value=expressions.convert(value)
+                )
             )
 
     def get_dbm(self, expression: expressions.Expression) -> kit.DBM:
@@ -237,6 +247,25 @@ class Scope:
 
 
 class Context:
+    """
+    Represents a modeling context.
+
+    Attributes
+    ----------
+    model_type (ModelType):
+        The type of the model, e.g., SHA, PTA or MDP.
+    global_scope (Scope):
+        The scope for global variables and constants.
+    actions (AbstractSet[Action]):
+        A set of actions usable in the context.
+    automata (AbstractSet[Automata]):
+        Automata defined in the modeling context.
+    networks (AbstractSet[Network]):
+        Automata networks defined in the modeling context.
+    properties (AbstractSet[PropertyDefinition]):
+        Properties defined in the modeling context.
+    """
+
     model_type: ModelType
     global_scope: Scope
 
@@ -245,12 +274,15 @@ class Context:
     _networks: t.Set[Network]
     _properties: t.Set[PropertyDefinition]
 
+    _metadata: t.Dict[str, str]
+
     def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
         self._automata = set()
         self._networks = set()
         self._properties = set()
+        self._metadata = {}
 
     @property
     def automata(self) -> t.AbstractSet[Automaton]:
@@ -263,6 +295,13 @@ class Context:
     @property
     def properties(self) -> t.AbstractSet[PropertyDefinition]:
         return self._properties
+
+    @property
+    def metadata(self) -> t.Mapping[str, str]:
+        return self._metadata
+
+    def update_metadata(self, metadata: t.Mapping[str, str]) -> None:
+        self._metadata.update(metadata)
 
     def new_scope(self) -> Scope:
         return self.global_scope.new_child_scope()

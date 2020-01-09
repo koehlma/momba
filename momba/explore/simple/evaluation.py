@@ -242,7 +242,7 @@ def _register_arithmetic_function(
 
 
 def _register_boolean_function(
-    operator: operators.Boolean, function: _BooleanFunction
+    operator: operators.BooleanOperator, function: _BooleanFunction
 ) -> None:
     def implementation(
         expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
@@ -257,7 +257,7 @@ def _register_boolean_function(
 
 
 def _register_comparison_function(
-    operator: operators.Comparison, function: _ComparisonFunction
+    operator: operators.ComparisonOperator, function: _ComparisonFunction
 ) -> None:
     def implementation(
         expr: BinaryExpression, left: Value, right: Value, ctx: EvaluationContext
@@ -302,33 +302,45 @@ _register_arithmetic_function(
     operators.ArithmeticOperator.LOG, lambda left, right: math.log(left, right)
 )
 
-_register_boolean_function(operators.Boolean.AND, lambda left, right: left and right)
-_register_boolean_function(operators.Boolean.OR, lambda left, right: left or right)
 _register_boolean_function(
-    operators.Boolean.XOR,
+    operators.BooleanOperator.AND, lambda left, right: left and right
+)
+_register_boolean_function(
+    operators.BooleanOperator.OR, lambda left, right: left or right
+)
+_register_boolean_function(
+    operators.BooleanOperator.XOR,
     lambda left, right: (not left and right) or (left and not right),
 )
 _register_boolean_function(
-    operators.Boolean.IMPLY, lambda left, right: not left or right
+    operators.BooleanOperator.IMPLY, lambda left, right: not left or right
 )
-_register_boolean_function(operators.Boolean.EQUIV, lambda left, right: left is right)
+_register_boolean_function(
+    operators.BooleanOperator.EQUIV, lambda left, right: left is right
+)
 
-_register_comparison_function(operators.Comparison.LT, lambda left, right: left < right)
 _register_comparison_function(
-    operators.Comparison.LE, lambda left, right: left <= right
+    operators.ComparisonOperator.LT, lambda left, right: left < right
 )
 _register_comparison_function(
-    operators.Comparison.GE, lambda left, right: left >= right
+    operators.ComparisonOperator.LE, lambda left, right: left <= right
 )
-_register_comparison_function(operators.Comparison.GT, lambda left, right: left > right)
+_register_comparison_function(
+    operators.ComparisonOperator.GE, lambda left, right: left >= right
+)
+_register_comparison_function(
+    operators.ComparisonOperator.GT, lambda left, right: left > right
+)
 
 
 # ensure that all operators have been defined
 assert all(
     operator in _BINARY_OPERATOR_MAP for operator in operators.ArithmeticOperator
 )
-assert all(operator in _BINARY_OPERATOR_MAP for operator in operators.Boolean)
-assert all(operator in _BINARY_OPERATOR_MAP for operator in operators.Comparison)
+assert all(operator in _BINARY_OPERATOR_MAP for operator in operators.BooleanOperator)
+assert all(
+    operator in _BINARY_OPERATOR_MAP for operator in operators.ComparisonOperator
+)
 
 
 checks.check_singledispatch(

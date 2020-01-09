@@ -18,10 +18,22 @@ Individual SHAs are implemented by :class:`momba.model.Automaton`.
 .. _JANI specification: http://www.jani-spec.org/
 
 
+.. autoclass:: momba.model.Context
+    :members:
+    :member-order: bysource
+
+
+.. autoclass:: momba.model.ModelType
+    :members:
+    :undoc-members:
+    :member-order: bysource
+
+
+
 .. autoclass:: momba.model.Location
     :members:
     :member-order: bysource
-    
+
 
 .. autoclass:: momba.model.Automaton
     :members:

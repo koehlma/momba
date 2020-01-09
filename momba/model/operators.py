@@ -14,7 +14,7 @@ class BinaryOperator:
         self.symbol = symbol
 
 
-class Boolean(BinaryOperator, enum.Enum):
+class BooleanOperator(BinaryOperator, enum.Enum):
     AND = "∧"
     OR = "∨"
     XOR = "⊕"
@@ -43,7 +43,7 @@ class EqualityOperator(BinaryOperator, enum.Enum):
     NEQ = "≠"
 
 
-class Comparison(BinaryOperator, enum.Enum):
+class ComparisonOperator(BinaryOperator, enum.Enum):
     LT = "<"
     LE = "≤"
     GE = "≥"
