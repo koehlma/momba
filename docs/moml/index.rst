@@ -8,7 +8,7 @@ Depending on your use-case such fine grained control over the constructed model 
 If you, however, want explicit control over every aspect of your model, give MOML a try.
 
 Momba comes with a converter to convert between MOML and JANI.
-Hence, you can use your MOML model with any tool supporting the JANI specification.
+Hence, you can use your MOML model with any tool supporting the JANI specification such as `The Modest Toolset <http://www.modestchecker.net/>`_ and `EPMC <https://github.com/ISCAS-PMC/ePMC>`_.
 
 
 .. code-block:: moml

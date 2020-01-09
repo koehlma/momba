@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
 
 """
 The *Momba-Model Language* (MOML) is a model description language similar to JANI.
