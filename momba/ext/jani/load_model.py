@@ -131,26 +131,26 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
         elif "op" in jani_expression:
             op = jani_expression["op"]
             if op in _BINARY_OP_MAP:
-                _check_fields(jani_expression, required={"left", "right"})
+                _check_fields(jani_expression, required={"op", "left", "right"})
                 left = _expression(jani_expression["left"])
                 right = _expression(jani_expression["right"])
                 return _BINARY_OP_MAP[op](left, right)
             elif op in _UNARY_OP_MAP:
-                _check_fields(jani_expression, required={"exp"})
+                _check_fields(jani_expression, required={"op", "exp"})
                 operand = _expression(jani_expression["exp"])
                 return _UNARY_OP_MAP[op](operand)
             elif op == "ite":
-                _check_fields(jani_expression, required={"if", "then", "else"})
+                _check_fields(jani_expression, required={"op", "if", "then", "else"})
                 condition = _expression(jani_expression["if"])
                 consequence = _expression(jani_expression["then"])
                 alternative = _expression(jani_expression["else"])
                 return expressions.ite(condition, consequence, alternative)
             elif op == "der":
-                _check_fields(jani_expression, required={"var"})
+                _check_fields(jani_expression, required={"op", "var"})
                 variable = jani_expression["var"]
                 return expressions.Derivative(variable)
         elif "distribution" in jani_expression:
-            _check_fields(jani_expression, required={"args", "distribution"})
+            _check_fields(jani_expression, required={"op", "args", "distribution"})
             arguments = list(map(_expression, jani_expression["args"]))
             distribution = distributions.by_name(jani_expression["distribution"])
             return expressions.Sample(distribution, arguments)
@@ -217,13 +217,13 @@ def _property(jani_property: t.Any) -> properties.Property:
             _property(jani_property["states"]),
         )
     if jani_property["op"] in _PROBABILITY_OPERATOR_MAP:
-        _check_fields(jani_property, required={"exp"})
+        _check_fields(jani_property, required={"op", "exp"})
         probability_operator = _PROBABILITY_OPERATOR_MAP[jani_property["op"]]
         return properties.ProbabilityProp(
             operator=probability_operator, expression=_property(jani_property["exp"])
         )
     if jani_property["op"] in _PATH_OPERATOR_MAP:
-        _check_fields(jani_property, required={"exp"})
+        _check_fields(jani_property, required={"op", "exp"})
         path_operator = _PATH_OPERATOR_MAP[jani_property["op"]]
         return properties.PathFormula(
             operator=path_operator, expression=_property(jani_property["exp"])
@@ -231,7 +231,7 @@ def _property(jani_property: t.Any) -> properties.Property:
     if jani_property["op"] in _EXPECTED_OPERATOR_MAP:
         _check_fields(
             jani_property,
-            required={"exp"},
+            required={"op", "exp"},
             optional={
                 "accumulate",
                 "reach",
@@ -280,7 +280,7 @@ def _property(jani_property: t.Any) -> properties.Property:
             reward_instants=reward_instants,
         )
     if jani_property["op"] in _STEADY_OPERATOR_MAP:
-        _check_fields(jani_property, required={"exp"}, optional={"accumulate"})
+        _check_fields(jani_property, required={"op", "exp"}, optional={"accumulate"})
         steady_operator = _STEADY_OPERATOR_MAP[jani_property["op"]]
         if "accumulate" in jani_property:
             return properties.Steady(
