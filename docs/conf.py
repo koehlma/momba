@@ -29,7 +29,7 @@ class MomlLexero(RegexLexer):
 
 
 project = "Momba"
-copyright = "2019, Dependable Systems and Software Group, Saarland University"
+copyright = "2020, Dependable Systems and Software Group, Saarland University"
 author = "Maximilian Köhl"
 
 try:
