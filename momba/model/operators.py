@@ -66,11 +66,17 @@ class Round(UnaryOperator, enum.Enum):
     FLOOR = "floor"
 
 
-class PropertyOperator(enum.Enum):
+class Expected(enum.Enum):
     EMAX = "Emax"
     EMIN = "Emin"
+
+
+class Probability(enum.Enum):
     PMIN = "Pmin"
     PMAX = "Pmax"
+
+
+class Steady(enum.Enum):
     SMIN = "Smin"
     SMAX = "Smax"
 

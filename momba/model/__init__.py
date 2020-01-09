@@ -32,12 +32,14 @@ from .expressions import (
     BinaryConstructor,
 )
 from .network import Network, Synchronization, Composition
+from .properties import Property
 from .types import Type
 from .values import Value
 
 
 __all__ = [
     "expressions",
+    "Property",
     "Assignment",
     "Context",
     "ConstantDeclaration",

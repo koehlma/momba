@@ -10,7 +10,20 @@ import json
 import warnings
 
 from momba import model
-from momba.model import effects, automata, context, distributions, expressions, types
+from momba.model import (
+    effects,
+    automata,
+    context,
+    distributions,
+    expressions,
+    operators,
+    properties,
+    types,
+)
+
+
+class InvalidJANIError(Exception):
+    pass
 
 
 _TYPE_MAP = {
@@ -50,6 +63,63 @@ _UNARY_OP_MAP: t.Mapping[str, expressions.UnaryConstructor] = {
 }
 
 
+_EXPECTED_OPERATOR_MAP: t.Mapping[str, operators.Expected] = {
+    "Emax": operators.Expected.EMAX,
+    "Emin": operators.Expected.EMIN,
+}
+
+
+_PROBABILITY_OPERATOR_MAP: t.Mapping[str, operators.Probability] = {
+    "Pmax": operators.Probability.PMAX,
+    "Pmin": operators.Probability.PMIN,
+}
+
+_STEADY_OPERATOR_MAP: t.Mapping[str, operators.Steady] = {
+    "Smax": operators.Steady.SMAX,
+    "Smin": operators.Steady.SMIN,
+}
+
+
+_PATH_OPERATOR_MAP: t.Mapping[str, operators.PathOperator] = {
+    "∀": operators.PathOperator.FORALL,
+    "∃": operators.PathOperator.EXISTS,
+}
+
+
+_TIME_OPERATOR_MAP: t.Mapping[str, operators.TimeOperator] = {
+    "U": operators.TimeOperator.UNTIL,
+    "W": operators.TimeOperator.WEAKU,
+}
+
+
+_FILTER_FUNCTIONS_MAP: t.Mapping[str, operators.FilterFunction] = {
+    "min": operators.FilterFunction.MIN,
+    "max": operators.FilterFunction.MAX,
+    "sum": operators.FilterFunction.SUM,
+    "avg": operators.FilterFunction.AVG,
+    "count": operators.FilterFunction.COUNT,
+    "argmin": operators.FilterFunction.ARGMIN,
+    "argmax": operators.FilterFunction.ARGMAX,
+    "values": operators.FilterFunction.VALUES,
+    "∀": operators.FilterFunction.FORALL,
+    "∃": operators.FilterFunction.EXISTS,
+}
+
+
+_REWARD_ACCUMULATION_MAP: t.Mapping[str, properties.RewardAccumulationInstant] = {
+    "steps": properties.RewardAccumulationInstant.STEPS,
+    "time": properties.RewardAccumulationInstant.TIME,
+    "exit": properties.RewardAccumulationInstant.EXIT,
+}
+
+
+_STATE_PREDICATES_MAP: t.Mapping[str, properties.StatePredicates] = {
+    "initial": properties.StatePredicates.INITIAL,
+    "deadlock": properties.StatePredicates.DEADLOCK,
+    "timelock": properties.StatePredicates.TIMELOCK,
+}
+
+
 def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
         return expressions.convert(jani_expression)
@@ -79,7 +149,151 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
             arguments = list(map(_expression, jani_expression["args"]))
             distribution = distributions.by_name(jani_expression["distribution"])
             return expressions.Sample(distribution, arguments)
-    raise ValueError(f"{jani_expression} does not seem to be a valid JANI expression")
+    raise InvalidJANIError(f"{jani_expression!r} is not a valid JANI expression")
+
+
+def _property_interval(jani_expression: t.Any) -> properties.PropertyInterval:
+    lower: t.Optional[expressions.Expression]
+    lower_exclusive: t.Optional[expressions.Expression]
+    upper: t.Optional[expressions.Expression]
+    upper_exclusive: t.Optional[expressions.Expression]
+    if "lower" in jani_expression:
+        lower = _expression(jani_expression["lower"])
+    else:
+        lower = None
+    if "lower_exclusive" in jani_expression:
+        lower_exclusive = _expression(jani_expression["lower_exclusive"])
+    else:
+        lower_exclusive = None
+    if "upper" in jani_expression:
+        upper = _expression(jani_expression["upper"])
+    else:
+        upper = None
+    if "upper_exclusive" in jani_expression:
+        upper_exclusive = _expression(jani_expression["upper_exclusive"])
+    else:
+        upper_exclusive = None
+    return properties.PropertyInterval(lower, lower_exclusive, upper, upper_exclusive)
+
+
+def _reward_instant(jani_expression: t.Any) -> properties.RewardInstant:
+    return properties.RewardInstant(
+        _expression(jani_expression["exp"]),
+        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_expression["accumulate"]],
+        _expression(jani_expression["instant"]),
+    )
+
+
+def _reward_bound(jani_expression: t.Any) -> properties.RewardBound:
+    return properties.RewardBound(
+        _expression(jani_expression["exp"]),
+        [_REWARD_ACCUMULATION_MAP[elem] for elem in jani_expression["accumulate"]],
+        _property_interval(jani_expression["bounds"]),
+    )
+
+
+def _property(jani_property: t.Any) -> properties.Property:
+    try:
+        return _expression(jani_property)
+    except InvalidJANIError:
+        pass
+    _check_fields(jani_property, required={"op"})
+    if jani_property["op"] == "filter":
+        return properties.Filter(
+            _FILTER_FUNCTIONS_MAP[jani_property["fun"]],
+            _property(jani_property["values"]),
+            _property(jani_property["states"]),
+        )
+    if jani_property["op"] in _PROBABILITY_OPERATOR_MAP:
+        probability_operator = _PROBABILITY_OPERATOR_MAP[jani_property["op"]]
+        return properties.ProbabilityProp(
+            operator=probability_operator, expression=_property(jani_property["exp"])
+        )
+    if jani_property["op"] in _PATH_OPERATOR_MAP:
+        path_operator = _PATH_OPERATOR_MAP[jani_property["op"]]
+        return properties.PathFormula(
+            operator=path_operator, expression=_property(jani_property["exp"])
+        )
+    if jani_property["op"] in _EXPECTED_OPERATOR_MAP:
+        accumulate: t.Optional[t.Sequence[properties.RewardAccumulationInstant]]
+        reach: t.Optional[properties.Property]
+        step_instant: t.Optional[expressions.Expression]
+        time_instant: t.Optional[expressions.Expression]
+        reward_instants: t.Optional[t.Sequence[properties.RewardInstant]]
+        expected_operator = _EXPECTED_OPERATOR_MAP[jani_property["op"]]
+        if "accumulate" in jani_property:
+            accumulate = [
+                _REWARD_ACCUMULATION_MAP[elem] for elem in jani_property["accumulate"]
+            ]
+        else:
+            accumulate = None
+        if "reach" in jani_property:
+            reach = _property(jani_property["reach"])
+        else:
+            reach = None
+        if "step-instant" in jani_property:
+            step_instant = _expression(jani_property["step-instant"])
+        else:
+            step_instant = None
+        if "time-instant" in jani_property:
+            time_instant = _expression(jani_property["time-instant"])
+        else:
+            time_instant = None
+        if "reward-instants" in jani_property:
+            reward_instants = [
+                _reward_instant(elem) for elem in jani_property["reward-instants"]
+            ]
+        else:
+            reward_instants = None
+        return properties.Expected(
+            operator=expected_operator,
+            expression=_property(jani_property["exp"]),
+            accumulate=accumulate,
+            reach=reach,
+            step_instant=step_instant,
+            time_instant=time_instant,
+            reward_instants=reward_instants,
+        )
+    if jani_property["op"] in _STEADY_OPERATOR_MAP:
+        steady_operator = _STEADY_OPERATOR_MAP[jani_property["op"]]
+        if "accumulate" in jani_property:
+            return properties.Steady(
+                operator=steady_operator,
+                expression=_property(jani_property["exp"]),
+                accumulate=jani_property["accumulate"],
+            )
+        else:
+            return properties.Steady(
+                operator=steady_operator, expression=_property(jani_property["exp"])
+            )
+    if jani_property["op"] in _TIME_OPERATOR_MAP:
+        step_bounds: t.Optional[properties.PropertyInterval]
+        time_bounds: t.Optional[properties.PropertyInterval]
+        reward_bounds: t.Optional[t.Sequence[properties.RewardBound]]
+        time_operator = _TIME_OPERATOR_MAP[jani_property["op"]]
+        if "step-bounds" in jani_property:
+            step_bounds = _property_interval(jani_property["step-bounds"])
+        else:
+            step_bounds = None
+        if "time-bounds" in jani_property:
+            time_bounds = _property_interval(jani_property["time-bounds"])
+        else:
+            time_bounds = None
+        if "reward-bounds" in jani_property:
+            reward_bounds = list(map(_reward_bound, jani_property["reward-bounds"]))
+        else:
+            reward_bounds = None
+        return properties.Timed(
+            time_operator,
+            _property(jani_property["left"]),
+            _property(jani_property["right"]),
+            step_bounds,
+            time_bounds,
+            reward_bounds,
+        )
+    if jani_property["op"] in _STATE_PREDICATES_MAP:
+        return _STATE_PREDICATES_MAP[jani_property["op"]]
+    raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
 
 
 def _type(typ: t.Any) -> types.Type:
@@ -122,19 +336,23 @@ def _check_fields(
     unsupported: _Fields = frozenset({"comment"}),
 ) -> None:
     if not isinstance(jani_structure, dict):
-        raise ValueError(f"expected dictionary but found {jani_structure}")
+        raise InvalidJANIError(f"expected map but found {jani_structure!r}")
     fields = set(jani_structure.keys())
     for field in unsupported:
         if (field in optional or field in required) and field in fields:
-            warnings.warn(f"field {field} is currently unsupported")
+            warnings.warn(
+                f"field {field!r} in {jani_structure!r} is currently unsupported"
+            )
     for field in required:
         if field not in fields:
-            raise ValueError(f"field {field} is required but not found")
+            raise InvalidJANIError(
+                f"field {field!r} is required but not found in {jani_structure!r}"
+            )
         fields.discard(field)
     for field in optional:
         fields.discard(field)
     if fields:
-        warnings.warn(f"found unknown fields: {fields}")
+        warnings.warn(f"unknown fields {fields!r} in {jani_structure!r}")
 
 
 def _variable_declaration(jani_declaration: t.Any) -> context.VariableDeclaration:
@@ -276,7 +494,7 @@ def load_model(source: JANIModel) -> model.Network:
             "properties",
             "comment",
         },
-        unsupported={"properties", "comment"},
+        unsupported={"comment"},
     )
     network = model.Network(model.Context())
     if "variables" in jani_model:
@@ -320,4 +538,11 @@ def load_model(source: JANIModel) -> model.Network:
             automaton.add_edge(_edge(locations, jani_edge))
         for jani_location in jani_automaton["initial-locations"]:
             automaton.add_initial_location(locations[jani_location])
+    for jani_prop in jani_model["properties"]:
+        _check_fields(
+            jani_prop["expression"], required={"op"},
+        )
+        network.ctx.define_property(
+            _property(jani_prop["expression"]), name=jani_prop["name"]
+        )
     return network

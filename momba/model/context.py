@@ -13,6 +13,7 @@ from . import errors, expressions, types
 from .action import Action
 from .automata import Automaton
 from .network import Network
+from .properties import Property
 
 from .. import kit
 
@@ -105,6 +106,23 @@ class ConstantDeclaration(Declaration):
 
     def is_constant_in(self, scope: Scope) -> bool:
         return True
+
+
+class PropertyDefinition:
+    _name: t.Optional[str]
+    _prop: Property
+
+    def __init__(self, prop: Property, *, name: t.Optional[str] = None) -> None:
+        self._name = name
+        self._prop = prop
+
+    @property
+    def name(self) -> t.Optional[str]:
+        return self._name
+
+    @property
+    def prop(self) -> Property:
+        return self._prop
 
 
 class Scope:
@@ -200,9 +218,14 @@ class Scope:
         self,
         identifier: Identifier,
         typ: types.Type,
-        value: t.Optional[expressions.Expression] = None,
+        value: t.Optional[expressions.MaybeExpression] = None,
     ) -> None:
-        self.declare(ConstantDeclaration(identifier, typ, value))
+        if value is None:
+            self.declare(ConstantDeclaration(identifier, typ, value))
+        else:
+            self.declare(
+                ConstantDeclaration(identifier, typ, expressions.convert(value))
+            )
 
     def get_dbm(self, expression: expressions.Expression) -> kit.DBM:
         """
@@ -220,12 +243,14 @@ class Context:
     _actions: t.Set[Action]
     _automata: t.Set[Automaton]
     _networks: t.Set[Network]
+    _properties: t.Set[PropertyDefinition]
 
     def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
         self._automata = set()
         self._networks = set()
+        self._properties = set()
 
     @property
     def automata(self) -> t.AbstractSet[Automaton]:
@@ -234,6 +259,10 @@ class Context:
     @property
     def networks(self) -> t.AbstractSet[Network]:
         return self._networks
+
+    @property
+    def properties(self) -> t.AbstractSet[PropertyDefinition]:
+        return self._properties
 
     def new_scope(self) -> Scope:
         return self.global_scope.new_child_scope()
@@ -258,3 +287,10 @@ class Context:
         network = Network(self, name=name)
         self._networks.add(network)
         return network
+
+    def define_property(
+        self, prop: Property, *, name: t.Optional[str] = None
+    ) -> PropertyDefinition:
+        property_definition = PropertyDefinition(name=name, prop=prop)
+        self._properties.add(property_definition)
+        return property_definition

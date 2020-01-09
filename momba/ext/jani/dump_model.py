@@ -13,7 +13,7 @@ import json
 import warnings
 
 from ... import model
-from ...model import effects, context, expressions, operators, types, values
+from ...model import effects, context, expressions, operators, properties, types, values
 from ...utils import checks
 
 
@@ -118,9 +118,9 @@ def _dump_type_continuous(typ: types.ContinuousType, ctx: JANIContext) -> JSON:
 def _dump_bounded_type(typ: types.BoundedType, ctx: JANIContext) -> JSON:
     jani_type: _JANIMap = {"kind": "bounded", "base": _dump_type(typ.base, ctx)}
     if typ.upper_bound:
-        jani_type["upper-bound"] = _dump_expr(typ.upper_bound, ctx)
+        jani_type["upper-bound"] = _dump_prop(typ.upper_bound, ctx)
     if typ.lower_bound:
-        jani_type["lower-bound"] = _dump_expr(typ.lower_bound, ctx)
+        jani_type["lower-bound"] = _dump_prop(typ.lower_bound, ctx)
     return jani_type
 
 
@@ -163,27 +163,27 @@ checks.check_singledispatch(_dump_model_value, model.Value)
 
 
 @functools.singledispatch
-def _dump_expr(expr: model.Expression, ctx: JANIContext) -> JSON:
-    raise NotImplementedError(f"dump has not been implemented for expression {expr}")
+def _dump_prop(prop: model.Property, ctx: JANIContext) -> JSON:
+    raise NotImplementedError(f"dump has not been implemented for property {prop}")
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_identifier(expr: expressions.Identifier, ctx: JANIContext) -> JSON:
     return expr.identifier
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_constant(expr: expressions.Constant, ctx: JANIContext) -> JSON:
     return _dump_model_value(expr.value, ctx)
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_conditional(expr: expressions.Conditional, ctx: JANIContext) -> JSON:
     return {
         "op": "ite",
-        "if": _dump_expr(expr.condition, ctx),
-        "then": _dump_expr(expr.consequence, ctx),
-        "else": _dump_expr(expr.alternative, ctx),
+        "if": _dump_prop(expr.condition, ctx),
+        "then": _dump_prop(expr.consequence, ctx),
+        "else": _dump_prop(expr.alternative, ctx),
     }
 
 
@@ -205,7 +205,7 @@ _MOMBA_OPERATORS: t.Mapping[operators.BinaryOperator, _Transform] = {
 }
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_binary_expression(
     expr: expressions.BinaryExpression, ctx: JANIContext
 ) -> JSON:
@@ -215,43 +215,153 @@ def _dump_binary_expression(
         if ctx.allow_momba_operators:
             ctx.require(ModelFeature.X_MOMBA_OPERATORS)
         else:
-            return _dump_expr(_MOMBA_OPERATORS[expr.operator](expr), ctx)
+            return _dump_prop(_MOMBA_OPERATORS[expr.operator](expr), ctx)
     return {
         "op": expr.operator.symbol,
-        "left": _dump_expr(expr.left, ctx),
-        "right": _dump_expr(expr.right, ctx),
+        "left": _dump_prop(expr.left, ctx),
+        "right": _dump_prop(expr.right, ctx),
     }
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_unary_expression(expr: expressions.UnaryExpression, ctx: JANIContext) -> JSON:
-    return {"op": expr.operator.symbol, "exp": _dump_expr(expr.operand, ctx)}
+    return {"op": expr.operator.symbol, "exp": _dump_prop(expr.operand, ctx)}
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_derivative(expr: expressions.Derivative, ctx: JANIContext) -> JSON:
     return {"op": "der", "var": expr.identifier}
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_sample(expr: expressions.Sample, ctx: JANIContext) -> JSON:
     return {
         "distribution": expr.distribution.jani_name,
-        "args": [_dump_expr(argument, ctx) for argument in expr.arguments],
+        "args": [_dump_prop(argument, ctx) for argument in expr.arguments],
     }
 
 
-@_dump_expr.register
+@_dump_prop.register
 def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
     ctx.require(ModelFeature.NONDET_EXPRESSIONS)
     return {
         "op": "nondet",
         "var": expr.identifier,
-        "exp": _dump_expr(expr.condition, ctx),
+        "exp": _dump_prop(expr.condition, ctx),
     }
 
 
-checks.check_singledispatch(_dump_expr, model.Expression)
+def _dump_prop_interval(pi: properties.PropertyInterval, ctx: JANIContext) -> JSON:
+    prop_interval: _JANIMap = {}
+    if pi.lower is not None:
+        prop_interval["lower"] = _dump_prop(pi.lower, ctx)
+    if pi.lower_exclusive is not None:
+        prop_interval["lower-exclusive"] = _dump_prop(pi.lower_exclusive, ctx)
+    if pi.upper is not None:
+        prop_interval["upper"] = _dump_prop(pi.upper, ctx)
+    if pi.lower_exclusive is not None:
+        prop_interval["upper-exclusive"] = _dump_prop(pi.upper_exclusive, ctx)
+    return prop_interval
+
+
+def _dump_reward_bound(rb: properties.RewardBound, ctx: JANIContext) -> JSON:
+    return {
+        "exp": _dump_prop(rb.expression, ctx),
+        "accumulate": [elem.value for elem in rb.accumulate],
+        "bounds": _dump_prop_interval(rb.bounds, ctx),
+    }
+
+
+def _dump_reward_instant(ri: properties.RewardInstant, ctx: JANIContext) -> JSON:
+    return {
+        "exp": _dump_prop(ri.expression, ctx),
+        "accumulate": [elem.value for elem in ri.accumulate],
+        "instant": _dump_prop(ri.instant, ctx),
+    }
+
+
+@_dump_prop.register
+def _dump_filter(prop: properties.Filter, ctx: JANIContext) -> JSON:
+    return {
+        "op": "filter",
+        "fun": prop.function.value,
+        "values": _dump_prop(prop.values, ctx),
+        "states": _dump_prop(prop.states, ctx),
+    }
+
+
+@_dump_prop.register
+def _dump_probability(prop: properties.ProbabilityProp, ctx: JANIContext) -> JSON:
+    return {
+        "op": prop.operator.value,
+        "exp": _dump_prop(prop.expression, ctx),
+    }
+
+
+@_dump_prop.register
+def _dump_path_formula(prop: properties.PathFormula, ctx: JANIContext) -> JSON:
+    return {
+        "op": prop.operator.value,
+        "exp": _dump_prop(prop.expression, ctx),
+    }
+
+
+@_dump_prop.register
+def _dump_expected(prop: properties.Expected, ctx: JANIContext) -> JSON:
+    expected: _JANIMap = {
+        "op": prop.operator.value,
+        "exp": _dump_prop(prop.expression, ctx),
+    }
+    if prop.accumulate is not None:
+        expected["accumulate"] = [elem.value for elem in prop.accumulate]
+    if prop.reach is not None:
+        expected["reach"] = _dump_prop(prop.reach, ctx)
+    if prop.step_instant is not None:
+        expected["step-instant"] = _dump_prop(prop.step_instant, ctx)
+    if prop.time_instant is not None:
+        expected["time-instant"] = _dump_prop(prop.time_instant, ctx)
+    if prop.reward_instants is not None:
+        expected["reward-instants"] = [
+            _dump_reward_instant(ri, ctx) for ri in prop.reward_instants
+        ]
+    return expected
+
+
+@_dump_prop.register
+def _dump_steady(prop: properties.Steady, ctx: JANIContext) -> JSON:
+    steady: _JANIMap = {
+        "op": prop.operator.value,
+        "exp": _dump_prop(prop.expression, ctx),
+    }
+    if prop.accumulate is not None:
+        steady["accumulate"] = [elem.value for elem in prop.accumulate]
+    return steady
+
+
+@_dump_prop.register
+def _dump_timed(prop: properties.Timed, ctx: JANIContext) -> JSON:
+    timed: _JANIMap = {
+        "op": prop.operator.value,
+        "left": _dump_prop(prop.left, ctx),
+        "right": _dump_prop(prop.right, ctx),
+    }
+    if prop.step_bounds is not None:
+        timed["step-bounds"] = _dump_prop_interval(prop.step_bounds, ctx)
+    if prop.time_bounds is not None:
+        timed["time-bounds"] = _dump_prop_interval(prop.time_bounds, ctx)
+    if prop.reward_bounds is not None:
+        timed["reward-bounds"] = [
+            _dump_reward_bound(rb, ctx) for rb in prop.reward_bounds
+        ]
+    return timed
+
+
+@_dump_prop.register
+def _dump_state_predicates(sp: properties.StatePredicates, ctx: JANIContext) -> JSON:
+    return {"op": sp.value}
+
+
+checks.check_singledispatch(_dump_prop, model.Property)
 
 
 @functools.singledispatch
@@ -275,7 +385,7 @@ def _dump_var_decl(decl: context.VariableDeclaration, ctx: JANIContext) -> JSON:
     if decl.is_transient is not None:
         jani_declaration["transient"] = decl.is_transient
     if decl.initial_value is not None:
-        jani_declaration["initial-value"] = _dump_expr(decl.initial_value, ctx)
+        jani_declaration["initial-value"] = _dump_prop(decl.initial_value, ctx)
     return jani_declaration
 
 
@@ -285,14 +395,14 @@ def _dump_const_decl(decl: context.ConstantDeclaration, ctx: JANIContext) -> JSO
         "type": _dump_type(decl.typ, ctx),
     }
     if decl.value is not None:
-        jani_declaration["value"] = _dump_expr(decl.value, ctx)
+        jani_declaration["value"] = _dump_prop(decl.value, ctx)
     return jani_declaration
 
 
 def _dump_assignment(assignment: effects.Assignment, ctx: JANIContext) -> JSON:
     jani_assignment: _JANIMap = {
         "ref": _dump_target(assignment.target, ctx),
-        "value": _dump_expr(assignment.value, ctx),
+        "value": _dump_prop(assignment.value, ctx),
     }
     if assignment.index != 0:
         jani_assignment["index"] = assignment.index
@@ -305,7 +415,7 @@ def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
         "x-momba-anonymous": loc.name is None,
     }
     if loc.progress_invariant is not None:
-        jani_location["time-progress"] = _dump_expr(loc.progress_invariant, ctx)
+        jani_location["time-progress"] = _dump_prop(loc.progress_invariant, ctx)
     if loc.transient_values is not None:
         jani_location["transient-values"] = [
             _dump_assignment(assignment, ctx) for assignment in loc.transient_values
@@ -316,7 +426,7 @@ def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
 def _dump_destination(dst: model.Destination, ctx: JANIContext) -> JSON:
     jani_destination: _JANIMap = {"location": ctx.get_name(dst.location)}
     if dst.probability is not None:
-        jani_destination["probability"] = {"exp": _dump_expr(dst.probability, ctx)}
+        jani_destination["probability"] = {"exp": _dump_prop(dst.probability, ctx)}
     if dst.assignments:
         jani_destination["assignments"] = [
             _dump_assignment(assignment, ctx) for assignment in dst.assignments
@@ -332,9 +442,9 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
     if edge.action is not None:
         jani_edge["action"] = ctx.require_action(str(edge.action))
     if edge.rate is not None:
-        jani_edge["rate"] = {"exp": _dump_expr(edge.rate, ctx)}
+        jani_edge["rate"] = {"exp": _dump_prop(edge.rate, ctx)}
     if edge.guard is not None:
-        jani_edge["guard"] = {"exp": _dump_expr(edge.guard, ctx)}
+        jani_edge["guard"] = {"exp": _dump_prop(edge.guard, ctx)}
     return jani_edge
 
 
@@ -408,6 +518,10 @@ def dump_structure(
         ],
         "automata": [
             _dump_automaton(automaton, ctx) for automaton in network.ctx.automata
+        ],
+        "properties": [
+            {"name": prop.name, "expression": _dump_prop(prop.prop, ctx)}
+            for prop in network.ctx.properties
         ],
         "system": _dump_system(network, ctx),
         # important: has to be at the end, because we collect

@@ -15,7 +15,7 @@ import re
 
 from momba import model
 from momba.ext import jani
-from momba.model import expressions, types
+from momba.model import expressions, properties, types
 from momba.model.expressions import minimum, maximum
 
 
@@ -112,23 +112,32 @@ def build_model(
         if ground is Underground.ICE:
             return expressions.convert(0)
 
-    network = model.Network(model.ModelType.MDP)
+    ctx = model.Context(model.ModelType.MDP)
+    network = ctx.create_network()
 
-    network.declare_constant("DIM_X", types.INT, width)
-    network.declare_constant("DIM_Y", types.INT, height)
-    network.declare_constant("TRACK_SIZE", types.INT, width * height)
+    ctx.global_scope.declare_constant("DIM_X", types.INT, width)
+    ctx.global_scope.declare_constant("DIM_Y", types.INT, height)
+    ctx.global_scope.declare_constant("TRACK_SIZE", types.INT, width * height)
 
     DIM_X = expressions.identifier("DIM_X")
     DIM_Y = expressions.identifier("DIM_Y")
     TRACK_SIZE = expressions.identifier("TRACK_SIZE")
 
-    network.declare_variable("car_dx", types.INT)
-    network.declare_variable("car_dy", types.INT)
-    network.declare_variable("car_pos", types.INT[0, expressions.sub(TRACK_SIZE, 1)])
+    ctx.global_scope.declare_variable("car_dx", types.INT)
+    ctx.global_scope.declare_variable("car_dy", types.INT)
+    ctx.global_scope.declare_variable(
+        "car_pos", types.INT[0, expressions.sub(TRACK_SIZE, 1)]
+    )
 
     car_dx = expressions.identifier("car_dx")
     car_dy = expressions.identifier("car_dy")
     car_pos = expressions.identifier("car_pos")
+
+    in_goal = expressions.lor(
+        *(expressions.eq(car_pos, expressions.convert(g)) for g in track_goal)
+    )
+    prop = properties.maxProb(in_goal)
+    ctx.define_property(prop, name="goalProb")
 
     network.restrict_initial = expressions.lor(
         *(expressions.eq(car_pos, expressions.convert(pos)) for pos in track_start)
