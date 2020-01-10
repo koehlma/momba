@@ -82,7 +82,7 @@ This is the full abstract grammar of MOML:
         | <assignment>
 
     <assignment> ::=
-        | IDENTIFIER ‘:=’ <expression>
+        | ‘assign’ [/\d+/] IDENTIFIER ‘:=’ <expression>
 
 
     <instance-definition> ::=

@@ -16,6 +16,7 @@ import re
 KEYWORDS = {
     "model_type",
     "transient",
+    "assign",
     "variable",
     "constant",
     "action",

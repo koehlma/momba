@@ -205,9 +205,7 @@ def _construct_floor(arguments: t.List[model.Expression]) -> model.Expression:
 
 def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 1:
-        raise Exception(
-            f"ceil takes exactly 1 argument but {len(arguments)} are given"
-        )
+        raise Exception(f"ceil takes exactly 1 argument but {len(arguments)} are given")
     return expressions.ceil(arguments[0])
 
 
@@ -317,10 +315,17 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
 
 
 def _parse_assignment(stream: TokenStream) -> model.Assignment:
+    stream.expect("assign")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
+    if stream.check(lexer.TokenType.INTEGER):
+        index = int(stream.consume().text)
+        if index < 0:
+            stream.make_error(f"unexpected token")
+    else:
+        index = 0
     stream.expect(":=")
     value = parse_expression(stream)
-    return model.Assignment(effects.Identifier(name), value=value)
+    return model.Assignment(effects.Identifier(name), value=value, index=index)
 
 
 def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Location:
@@ -336,7 +341,7 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
                 if progress_invariant is not None:
                     raise stream.make_error(f"duplicate definition of invariant")
                 progress_invariant = parse_expression(stream)
-            elif stream.check(lexer.TokenType.IDENTIFIER):
+            elif stream.check("assign"):
                 transient_values.add(_parse_assignment(stream))
             else:
                 raise stream.make_error(f"expected location body")
@@ -392,7 +397,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                             if stream.accept("probability"):
                                 assert probability is None
                                 probability = parse_expression(stream)
-                            elif stream.check(lexer.TokenType.IDENTIFIER):
+                            elif stream.check("assign"):
                                 assignments.add(_parse_assignment(stream))
                             else:
                                 raise stream.make_error("unexpected token")

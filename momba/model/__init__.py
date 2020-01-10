@@ -34,6 +34,7 @@ __all__ = [
     "expressions",
     "Property",
     "Assignment",
+    "distributions",
     "Context",
     "ConstantDeclaration",
     "VariableDeclaration",
