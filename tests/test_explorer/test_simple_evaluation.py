@@ -18,10 +18,10 @@ def test_basic_evaluation() -> None:
     automaton = network.create_automaton()
     automaton.scope.declare_variable("x", model.types.INT)
 
-    x = model.expressions.var("x")
+    x = model.expressions.identifier("x")
 
     valuation = evaluation.Valuation()
-    valuation.store(x.identifier, evaluation.Integer(5))
+    valuation.store(x.name, evaluation.Integer(5))
 
     eval_ctx = evaluation.EvaluationContext(valuation=valuation, scope=automaton.scope)
 

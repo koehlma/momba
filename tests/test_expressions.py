@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from momba.model import context, errors, types
-from momba.model.expressions import const, ite, var
+from momba.model.expressions import const, ite, identifier
 
 import pytest
 
@@ -16,7 +16,7 @@ def test_basic_inferences() -> None:
     scope = ctx.new_scope()
     scope.declare_variable("x", types.BOOL)
 
-    expr = var("x").land(var("y"))
+    expr = identifier("x").land(identifier("y"))
 
     with pytest.raises(errors.UnboundIdentifierError):
         scope.get_type(expr)
@@ -28,12 +28,12 @@ def test_basic_inferences() -> None:
     scope.declare_variable("z", types.INT)
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(var("x").land(var("z")))
+        scope.get_type(identifier("x").land(identifier("z")))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(var("z"), var("x"), var("y")))
+        scope.get_type(ite(identifier("z"), identifier("x"), identifier("y")))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(var("x"), var("z"), var("y")))
+        scope.get_type(ite(identifier("x"), identifier("z"), identifier("y")))
 
-    assert scope.get_type(ite(var("x"), var("z"), const(3))) == types.INT
+    assert scope.get_type(ite(identifier("x"), identifier("z"), const(3))) == types.INT

@@ -124,7 +124,7 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
         return expressions.convert(jani_expression)
     elif isinstance(jani_expression, str):
-        return expressions.var(jani_expression)
+        return expressions.identifier(jani_expression)
     elif isinstance(jani_expression, dict):
         if "constant" in jani_expression:
             return expressions.convert(jani_expression["constant"])

@@ -100,13 +100,15 @@ class Expression(properties.Property, abc.ABC):
         return land(self, other)
 
 
-@dataclasses.dataclass(frozen=True)
-class Constant(Expression):
-    value: values.Value
-
+class _Leaf(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return ()
+
+
+@dataclasses.dataclass(frozen=True)
+class Constant(_Leaf):
+    value: values.Value
 
     def is_constant_in(self, scope: context.Scope) -> bool:
         return True
@@ -116,23 +118,14 @@ class Constant(Expression):
 
 
 @dataclasses.dataclass(frozen=True)
-class Identifier(Expression):
-    identifier: context.Identifier
-
-    @property
-    def children(self) -> t.Sequence[Expression]:
-        return ()
+class Identifier(_Leaf):
+    name: str
 
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return scope.lookup(self.identifier).is_constant_in(scope)
+        return scope.lookup(self.name).is_constant_in(scope)
 
     def infer_type(self, scope: context.Scope) -> types.Type:
-        declaration = scope.lookup(self.identifier)
-        if isinstance(declaration, context.VariableDeclaration):
-            return declaration.typ
-        elif isinstance(declaration, context.ConstantDeclaration):
-            return declaration.typ
-        raise AssertionError()
+        return scope.lookup(self.name).typ
 
 
 # XXX: this class should be abstract, however, then it would not type-check
@@ -346,14 +339,14 @@ class Sample(Expression):
 
 @dataclasses.dataclass(frozen=True)
 class Selection(Expression):
-    identifier: context.Identifier
+    name: str
     condition: Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         condition_type = scope.get_type(self.condition)
         if condition_type != types.BOOL:
             raise errors.InvalidTypeError("condition must have type `types.BOOL`")
-        declaration = scope.lookup(self.identifier)
+        declaration = scope.lookup(self.name)
         assert isinstance(declaration, context.VariableDeclaration)
         return declaration.typ
 
@@ -367,7 +360,7 @@ class Selection(Expression):
 
 @dataclasses.dataclass(frozen=True)
 class Derivative(Expression):
-    identifier: context.Identifier
+    identifier: str
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return types.REAL
@@ -378,10 +371,6 @@ class Derivative(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return ()
-
-
-def var(identifier: context.Identifier) -> Identifier:
-    return Identifier(identifier)
 
 
 def ite(
@@ -401,10 +390,6 @@ def convert(value: MaybeExpression) -> Expression:
     if isinstance(value, Expression):
         return value
     return const(value)
-
-
-def identifier(name: str) -> Identifier:
-    return Identifier(name)
 
 
 BinaryConstructor = t.Callable[[Expression, Expression], Expression]
@@ -553,3 +538,7 @@ logic_equiv = equiv
 
 def logic_rimplies(left: Expression, right: Expression) -> Expression:
     return Boolean(operators.BooleanOperator.IMPLY, right, left)
+
+
+def identifier(name: str) -> Identifier:
+    return Identifier(name)

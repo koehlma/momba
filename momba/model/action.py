@@ -4,15 +4,9 @@
 
 from __future__ import annotations
 
-import typing as t
-
 import dataclasses
-
-if t.TYPE_CHECKING:
-    from . import context  # noqa: F401
 
 
 @dataclasses.dataclass(frozen=True)
 class Action:
-    ctx: context.Context
     name: str

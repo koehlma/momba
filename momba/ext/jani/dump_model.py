@@ -170,7 +170,7 @@ def _dump_prop(prop: model.Property, ctx: JANIContext) -> JSON:
 
 @_dump_prop.register
 def _dump_identifier(expr: expressions.Identifier, ctx: JANIContext) -> JSON:
-    return expr.identifier
+    return expr.name
 
 
 @_dump_prop.register
@@ -247,7 +247,7 @@ def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
     ctx.require(ModelFeature.NONDET_EXPRESSIONS)
     return {
         "op": "nondet",
-        "var": expr.identifier,
+        "var": expr.name,
         "exp": _dump_prop(expr.condition, ctx),
     }
 
@@ -372,7 +372,7 @@ def _dump_target(target: effects.Target, ctx: JANIContext) -> JSON:
 
 @_dump_target.register
 def _dump_target_identifier(target: effects.Identifier, ctx: JANIContext) -> JSON:
-    return target.identifier
+    return target.name
 
 
 checks.check_singledispatch(_dump_target, effects.Target)

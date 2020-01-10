@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from momba.model.automata import Automaton, Edge, Location, Destination
-from momba.model.expressions import var
+from momba.model.expressions import identifier
 from momba.model import context, errors, types
 
 import pytest
@@ -16,12 +16,14 @@ def test_basic_inferences() -> None:
     automaton.scope.declare_constant("T", types.INT)
     automaton.scope.declare_variable("x", types.CLOCK)
 
-    location_1 = Location("Location1", progress_invariant=var("x").lt(var("T")))
+    location_1 = Location(
+        "Location1", progress_invariant=identifier("x").lt(identifier("T"))
+    )
     location_2 = Location("Location2")
 
     edge = Edge(
         location_1,
-        guard=var("x").gt(var("T")),
+        guard=identifier("x").gt(identifier("T")),
         destinations=frozenset({Destination(location_2)}),
     )
 
@@ -29,5 +31,5 @@ def test_basic_inferences() -> None:
 
     with pytest.raises(errors.ModelingError):
         automaton.add_location(
-            Location("InvalidInvariant", progress_invariant=var("z"))
+            Location("InvalidInvariant", progress_invariant=identifier("z"))
         )

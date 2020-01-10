@@ -21,13 +21,13 @@ class Target(abc.ABC):
 
 @dataclasses.dataclass(frozen=True)
 class Identifier(Target):
-    identifier: context.Identifier
+    name: str
 
     def infer_type(self, scope: context.Scope) -> types.Type:
-        declaration = scope.lookup(self.identifier)
+        declaration = scope.lookup(self.name)
         if not isinstance(declaration, context.VariableDeclaration):
             raise errors.NotAVariableError(
-                f"invalid assignment to non-variable identifier {self.identifier}"
+                f"invalid assignment to non-variable identifier {self.name}"
             )
         return declaration.typ
 

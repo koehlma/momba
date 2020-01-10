@@ -17,14 +17,19 @@ from .automata import (
 from .context import (
     ConstantDeclaration,
     Context,
-    Identifier,
     ModelType,
     Scope,
     VariableDeclaration,
 )
 from .effects import Assignment
-from .expressions import BinaryConstructor, Expression, convert, ite, logic_not
-from .expressions import var as identifier
+from .expressions import (
+    BinaryConstructor,
+    Expression,
+    convert,
+    ite,
+    logic_not,
+    identifier,
+)
 from .network import Composition, Network, Synchronization
 from .properties import Property
 from .types import Type

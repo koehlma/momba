@@ -56,13 +56,13 @@ class ImprecisionWarning(UserWarning):
 class Valuation:
     parent: t.Optional[Valuation]
 
-    _values: t.Dict[model.Identifier, Value]
+    _values: t.Dict[str, Value]
 
     def __init__(self, parent: t.Optional[Valuation] = None) -> None:
         self.parent = parent
         self._values = {}
 
-    def load(self, identifier: model.Identifier) -> Value:
+    def load(self, identifier: str) -> Value:
         try:
             return self._values[identifier]
         except KeyError:
@@ -73,7 +73,7 @@ class Valuation:
                     f"identifier {identifier} is not bound to a value"
                 )
 
-    def store(self, identifier: model.Identifier, value: Value) -> None:
+    def store(self, identifier: str, value: Value) -> None:
         self._values[identifier] = value
 
 
@@ -84,7 +84,7 @@ class EvaluationContext:
     valuation: Valuation
     scope: context.Scope
 
-    def load(self, identifier: context.Identifier) -> Value:
+    def load(self, identifier: str) -> Value:
         return self.valuation.load(identifier)
 
 
@@ -133,7 +133,7 @@ def _model_value_real(value: model.values.RealValue, ctx: EvaluationContext) -> 
 
 @evaluate.register
 def _eval_identifier(expr: expressions.Identifier, ctx: EvaluationContext) -> Value:
-    return ctx.load(expr.identifier)
+    return ctx.load(expr.name)
 
 
 @evaluate.register

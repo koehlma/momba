@@ -10,7 +10,6 @@ import dataclasses
 import enum
 
 from . import errors, expressions, types
-from .action import Action
 from .automata import Automaton
 from .network import Network
 from .properties import Property
@@ -52,15 +51,12 @@ TA_MODEL_TYPES = {
     ModelType.SHA,
 }
 
-
-Identifier = str
-
 Typed = t.Union["expressions.Expression", "effects.Target"]
 
 
 @dataclasses.dataclass(frozen=True)
 class Declaration:
-    identifier: Identifier
+    identifier: str
     typ: types.Type
 
     comment: t.Optional[str] = None
@@ -130,7 +126,7 @@ class Scope:
     ctx: Context
     parent: t.Optional[Scope]
 
-    _declarations: t.Dict[Identifier, Declaration]
+    _declarations: t.Dict[str, Declaration]
     _types: t.Dict[Typed, types.Type]
 
     def __init__(self, ctx: Context, parent: t.Optional[Scope] = None):
@@ -183,7 +179,7 @@ class Scope:
     def is_constant(self, expression: expressions.Expression) -> bool:
         return expression.is_constant_in(self)
 
-    def lookup(self, identifier: Identifier) -> Declaration:
+    def lookup(self, identifier: str) -> Declaration:
         try:
             return self._declarations[identifier]
         except KeyError:
@@ -203,7 +199,7 @@ class Scope:
 
     def declare_variable(
         self,
-        identifier: Identifier,
+        identifier: str,
         typ: types.Type,
         *,
         is_transient: t.Optional[bool] = None,
@@ -217,7 +213,7 @@ class Scope:
 
     def declare_constant(
         self,
-        identifier: Identifier,
+        identifier: str,
         typ: types.Type,
         *,
         value: t.Optional[expressions.MaybeExpression] = None,
@@ -266,7 +262,6 @@ class Context:
     model_type: ModelType
     global_scope: Scope
 
-    _actions: t.Set[Action]
     _automata: t.Set[Automaton]
     _networks: t.Set[Network]
     _properties: t.Set[PropertyDefinition]
@@ -308,11 +303,6 @@ class Context:
             if automaton.name == name:
                 return automaton
         raise Exception(f"there is no automaton with name {name}")
-
-    def create_action(self, name: str) -> Action:
-        action = Action(self, name)
-        self._actions.add(action)
-        return action
 
     def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
         automaton = Automaton(self, name=name)
