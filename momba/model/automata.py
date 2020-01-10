@@ -227,13 +227,13 @@ class Automaton:
         edge = Edge(source, frozenset(destinations), action, guard, rate)
         self.add_edge(edge)
 
-    def incoming(self, location: Location) -> t.AbstractSet[Edge]:
+    def get_incoming_edges(self, location: Location) -> t.AbstractSet[Edge]:
         """
         Returns the set of outgoing edges from the given location.
         """
         return self._incoming[location]
 
-    def outgoing(self, location: Location) -> t.AbstractSet[Edge]:
+    def get_outgoing_edges(self, location: Location) -> t.AbstractSet[Edge]:
         """
         Returns the set of incoming edges to the given location.
         """

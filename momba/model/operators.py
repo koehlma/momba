@@ -49,6 +49,17 @@ class ComparisonOperator(BinaryOperator, enum.Enum):
     GE = "≥"
     GT = ">"
 
+    def swap(self) -> ComparisonOperator:
+        return _COMPARISON_SWAP_TABLE[self]
+
+
+_COMPARISON_SWAP_TABLE = {
+    ComparisonOperator.LT: ComparisonOperator.GT,
+    ComparisonOperator.LE: ComparisonOperator.GE,
+    ComparisonOperator.GE: ComparisonOperator.LE,
+    ComparisonOperator.GT: ComparisonOperator.LT,
+}
+
 
 class UnaryOperator:
     symbol: str

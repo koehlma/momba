@@ -193,8 +193,30 @@ class InvalidClockError(ValueError):
     pass
 
 
+class AbstractDBM(abc.ABC):
+    @property
+    @abc.abstractmethod
+    def constraints(self) -> t.AbstractSet[Constraint]:
+        raise NotImplementedError()
+
+
+@dataclasses.dataclass(frozen=True)
+class FrozenDBM(AbstractDBM):
+    _clocks: _FrozenClocks
+    _constraints: t.FrozenSet[Constraint]
+
+    def create_dbm(self) -> DBM:
+        dbm = DBM.create_unconstrained(self._clocks)
+        dbm.constrain(*self._constraints)
+        return dbm
+
+    @property
+    def constraints(self) -> t.AbstractSet[Constraint]:
+        return self._constraints
+
+
 @dataclasses.dataclass
-class DBM:
+class DBM(AbstractDBM):
     _clocks: _FrozenClocks
     _matrix: _Matrix
 
@@ -254,6 +276,9 @@ class DBM:
             if self.get_bound(clock, clock) < _ZERO_BOUND:
                 return True
         return False
+
+    def freeze(self) -> FrozenDBM:
+        return FrozenDBM(self._clocks, frozenset(self.constraints))
 
     def get_interval(self, clock: Clock) -> Interval:
         lower_bound = self.get_bound(ZERO_CLOCK, clock)
@@ -376,7 +401,7 @@ class DBM:
             self._canonicalize()
 
 
-def print_constraints(dbm: DBM) -> None:
+def print_constraints(dbm: AbstractDBM) -> None:
     for constraint in dbm.constraints:
         print(constraint)
 

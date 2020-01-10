@@ -11,7 +11,7 @@ import dataclasses
 NumberType = t.Union[int, float]
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Interval:
     infimum: NumberType
     supremum: NumberType
