@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from . import ext, model
 
-from .version import version
+from .metadata import version
 
 __version__ = version
 

@@ -15,7 +15,7 @@ import warnings
 from ... import model
 from ...model import effects, context, expressions, operators, properties, types, values
 from ...utils import checks
-from ...version import version
+from ...metadata import version
 
 
 # XXX: ignore this type definition, mypy does not support recursive types
