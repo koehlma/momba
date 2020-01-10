@@ -12,5 +12,9 @@ from __future__ import annotations
 
 from . import ext, model
 
+from .version import version
+
+__version__ = version
+
 
 __all__ = ["ext", "model"]

@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "momba"
+version = "0.1.3.dev0"
+description = "A Python library for quantitative models."
+authors = [
+    "Maximilian Köhl <mkoehl@cs.uni-saarland.de>"
+]
+license = "MIT"
+readme = "README.rst"
+repository = "https://dgit.cs.uni-saarland.de/koehlma/momba.git"
+homepage = "https://depend.cs.uni-saarland.de/~koehl/momba/"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 2 - Pre-Alpha",
+    "Operating System :: OS Independent"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pytest-cov = "^2.8.1"
+black = { version = "^19.10b0", allow-prereleases = true }
+flake8 = "^3.7.9"
+flake8-bugbear = "^20.1.2"
+pep8-naming = "^0.9.1"
+mypy = "^0.761"
+tox = "^3.14.3"
+sphinx = "^2.3.1"
+sphinx-rtd-theme = "^0.4.3"
+
+[tool.poetry.scripts]
+moml = "momba.moml.__main__:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

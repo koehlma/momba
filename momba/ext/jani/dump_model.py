@@ -15,7 +15,7 @@ import warnings
 from ... import model
 from ...model import effects, context, expressions, operators, properties, types, values
 from ...utils import checks
-from ...version import get_release
+from ...version import version
 
 
 # XXX: ignore this type definition, mypy does not support recursive types
@@ -520,8 +520,8 @@ def dump_structure(
         jani_metadata
     jani_model: _JANIMap = {
         "jani-version": 1,
-        "x-generator": f"Momba (v{get_release()})",
-        "x-momba-release": get_release(),
+        "x-generator": f"Momba (v{version})",
+        "x-momba-release": version,
         "name": network.name or "A Momba Model",
         "x-momba-anonymous": network.name is None,
         "metadata": _dump_metadata(network.ctx),

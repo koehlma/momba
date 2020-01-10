@@ -20,8 +20,10 @@ class MomlLexer(RegexLexer):  # type:ignore
     tokens = {
         "root": [
             (r"\s+", token.Whitespace),
-            (r"|".join(moml.lexer.KEYWORDS), token.Keyword),
-            (r"|".join(moml.lexer.PRIMITIVE_TYPES), token.Keyword),
+            (r"edge|transient|instance|variable|probability|network|location|model_type|from|"
+             r"rate|automaton|guard|initial|invariant|constant|composition|synchronize|input|"
+             r"action|enable|restrict|to|metadata", token.Keyword),
+            (r"bool|int|real|clock|continuous", token.Keyword),
             (r"\"[^\"]*\"", token.String),
             (r"\\d+\\.\\d+", token.Number),
             (r"\\d+", token.Number),

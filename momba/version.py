@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from importlib import metadata
 
-def get_release() -> str:
-    return "0.1.3dev"
+
+version = metadata.version(__package__)
