@@ -25,24 +25,21 @@ if t.TYPE_CHECKING:
 class ModelType(enum.Enum):
     """ Type of the model. """
 
-    LTS = "lts", "Labeled Transition System"
-    DTMC = "dtmc", "Discrete-Time Markov Chain"
-    CTMC = "ctmc", "Continuous-Time Markov Chain"
-    MDP = "mdp", "Markov Decision Process"
-    CTMDP = "ctmdp", "Continuous-Time Markov Decision Process"
-    MA = "ma", "Markov Automaton"
-    TA = "ta", "Timed Automaton"
-    PTA = "pta", "Probabilistic Timed Automaton"
-    STA = "sta", "Stochastic Timed Automaton"
-    HA = "ha", "Hybrid Automaton"
-    PHA = "pha", "Probabilistic Timed Automaton"
-    SHA = "sha", "Stochastic Hybrid Automaton"
-
-    abbreviation: str
+    LTS = "Labeled Transition System"
+    DTMC = "Discrete-Time Markov Chain"
+    CTMC = "Continuous-Time Markov Chain"
+    MDP = "Markov Decision Process"
+    CTMDP = "Continuous-Time Markov Decision Process"
+    MA = "Markov Automaton"
+    TA = "Timed Automaton"
+    PTA = "Probabilistic Timed Automaton"
+    STA = "Stochastic Timed Automaton"
+    HA = "Hybrid Automaton"
+    PHA = "Probabilistic Timed Automaton"
+    SHA = "Stochastic Hybrid Automaton"
     full_name: str
 
-    def __init__(self, abbreviation: str, full_name: str):
-        self.abbreviation = abbreviation
+    def __init__(self, full_name: str):
         self.full_name = full_name
 
 

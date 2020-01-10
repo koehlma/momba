@@ -15,6 +15,7 @@ import warnings
 from ... import model
 from ...model import effects, context, expressions, operators, properties, types, values
 from ...utils import checks
+from ...version import get_release
 
 
 # XXX: ignore this type definition, mypy does not support recursive types
@@ -500,14 +501,32 @@ def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
     }
 
 
+def _dump_metadata(model_ctx: model.Context) -> _JANIMap:
+    jani_metadata: _JANIMap = {}
+    for field in {"version", "author", "description", "doi", "url"}:
+        try:
+            jani_metadata[field] = model_ctx.metadata[field]
+        except KeyError:
+            pass
+    return jani_metadata
+
+
 def dump_structure(
     network: model.Network, *, allow_momba_operators: bool = False
 ) -> JSON:
     ctx = JANIContext(allow_momba_operators=allow_momba_operators)
+    jani_metadata: t.Dict[str, str] = {}
+    if "name" in network.ctx.metadata:
+        jani_metadata
     jani_model: _JANIMap = {
         "jani-version": 1,
-        "name": "XXX-momba",  # names are not supported yet
-        "type": network.ctx.model_type.abbreviation,
+        "x-generator": f"Momba (v{get_release()})",
+        "x-momba-release": get_release(),
+        "name": network.name or "A Momba Model",
+        "x-momba-anonymous": network.name is None,
+        "metadata": _dump_metadata(network.ctx),
+        "x-momba-metadata": dict(network.ctx.metadata),
+        "type": network.ctx.model_type.name.lower(),
         "variables": [
             _dump_var_decl(var_decl, ctx)
             for var_decl in network.ctx.global_scope.variable_declarations

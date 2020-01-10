@@ -371,7 +371,7 @@ def _check_fields(
 ) -> None:
     if not isinstance(jani_structure, dict):
         raise InvalidJANIError(f"expected map but found {jani_structure!r}")
-    fields = set(jani_structure.keys())
+    fields = {field for field in jani_structure.keys() if not field.startswith("x-")}
     for field in unsupported:
         if (field in optional or field in required) and field in fields:
             warnings.warn(

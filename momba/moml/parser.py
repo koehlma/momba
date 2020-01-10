@@ -515,8 +515,7 @@ def _parse_moml(stream: TokenStream, ctx: model.Context) -> model.Context:
         elif stream.check(lexer.TokenType.END_OF_FILE):
             break
         elif stream.check("metadata"):
-            # TODO: integrate this somehow into the modeling context
-            fields = _parse_metadata(stream)  # noqa
+            ctx.update_metadata(_parse_metadata(stream))
         else:
             raise stream.make_error("unexpected token")
     return ctx
