@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from . import expressions, types, values
+from . import expressions, types, values, distributions
 
 from .automata import (
     Automaton,

@@ -203,8 +203,17 @@ def _construct_floor(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.floor(arguments[0])
 
 
+def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(
+            f"ceil takes exactly 1 argument but {len(arguments)} are given"
+        )
+    return expressions.ceil(arguments[0])
+
+
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
-    "floor": _construct_floor
+    "floor": _construct_floor,
+    "ceil": _construct_ceil,
 }
 
 
@@ -217,6 +226,14 @@ def _parse_primary_expression(stream: TokenStream) -> model.Expression:
         name = stream.consume().text
         if stream.accept(lexer.TokenType.LEFT_PAR):
             arguments: t.List[model.Expression] = []
+            if name == "sample":
+                distribution = model.distributions.by_name(
+                    stream.expect(lexer.TokenType.STRING).match["string"]
+                )
+                while not stream.accept(lexer.TokenType.RIGHT_PAR):
+                    stream.expect(",")
+                    arguments.append(parse_expression(stream))
+                return expressions.Sample(distribution, tuple(arguments))
             if not stream.accept(lexer.TokenType.RIGHT_PAR):
                 arguments.append(parse_expression(stream))
                 while not stream.accept(lexer.TokenType.RIGHT_PAR):
