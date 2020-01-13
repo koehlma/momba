@@ -123,7 +123,10 @@ class BooleanConstant(Constant):
 
 
 class NumericConstant(Constant, abc.ABC):
-    pass
+    @property
+    @abc.abstractmethod
+    def as_float(self) -> float:
+        raise NotImplementedError()
 
 
 TRUE = BooleanConstant(True)
@@ -136,6 +139,11 @@ class IntegerConstant(NumericConstant):
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return types.INT
+
+    @property
+    def as_float(self) -> float:
+        # TODO: emit a warning to keep track of imprecisions
+        return float(self.integer)
 
 
 _NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
@@ -163,6 +171,13 @@ class RealConstant(NumericConstant):
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return types.REAL
+
+    @property
+    def as_float(self) -> float:
+        # TODO: emit a warning to keep track of imprecisions
+        if isinstance(self.real, NamedReal):
+            return self.real.float_value
+        return float(self.real)
 
 
 @dataclasses.dataclass(frozen=True)
