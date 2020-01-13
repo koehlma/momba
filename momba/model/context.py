@@ -14,8 +14,6 @@ from .automata import Automaton
 from .network import Network
 from .properties import Property
 
-from .. import kit
-
 if t.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
     from . import effects  # noqa: F401
