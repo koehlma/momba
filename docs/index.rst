@@ -4,7 +4,8 @@ Welcome to Momba's documentation!
 .. warning::
     **Momba is still in its early stages of development.
     Please expect things to break.
-    The API is unstable and might change without further notice and deprecation period.**
+    The API is unstable and might change without further notice and deprecation period.
+    Some parts of this documentation are wishful thinking describing features not yet implemented.**
 
 *Momba* is a Python library for working with quantitative models.
 Momba's core modeling formalism are networks of interacting *stochastic hybrid automata* (SHA) as per the `JANI specification`_.
@@ -36,15 +37,15 @@ __ https://dgit.cs.uni-saarland.de/koehlma/momba/tree/master/examples
 
 Development
 -----------
-Momba uses `Pipenv`_ for dependency management. Run :code:`pipenv install --dev` to create a virtual environment in :code:`.venv` containing all the dependencies needed for development.
+Momba uses `Poetry`_ for dependency management. Run :code:`poetry install` to create a virtual environment in :code:`.venv` containing all the dependencies needed for development.
 Momba comes with a configuration for `Visual Studio Code`_ which requires the virtual environment to be present in :code:`.venv` and enables linting and type checking.
-Before *pushing* ensure that :code:`pipenv run tox` runs without any problems.
+Before *pushing* ensure that :code:`poetry run tox` runs without any problems.
 This will run the tests and perform type checking as well as linting.
 
-.. _`Pipenv`: https://pipenv.kennethreitz.org/
+.. _`Poetry`: https://python-poetry.org/
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 
-To build this documentation run :code:`pipenv run sphinx-build docs build/docs`.
+To build this documentation run :code:`poetry run sphinx-build docs build/docs`.
 
 
 Contents
