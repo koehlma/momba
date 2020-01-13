@@ -219,6 +219,20 @@ class Scope:
         value: t.Optional[expressions.MaybeExpression] = None,
         comment: t.Optional[str] = None,
     ) -> None:
+        """
+        Declare a constant in the scope.
+
+        Parameters:
+            identifier (str):
+                The name of the constant to declare.
+            typ (types.Type):
+                The type of the constant.
+            value:
+                The value of the constant. If none is provided, the constant becomes
+                a parameter of the model.
+            comment:
+                An optional comment describing the constant.
+        """
         if value is None:
             self.declare(
                 ConstantDeclaration(identifier, typ, comment=comment, value=value)
@@ -229,14 +243,6 @@ class Scope:
                     identifier, typ, comment=comment, value=expressions.convert(value)
                 )
             )
-
-    def get_dbm(self, expression: expressions.Expression) -> kit.DBM:
-        """
-        Returns a DBM for the given expression.
-
-        The expression musst be a conjunction of clock constraints.
-        """
-        raise NotImplementedError()
 
 
 class Context:
