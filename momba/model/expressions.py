@@ -8,8 +8,11 @@ import typing as t
 
 import abc
 import dataclasses
+import enum
+import math
+import numbers
 
-from . import context, errors, operators, properties, types, values
+from . import context, errors, operators, properties, types
 
 if t.TYPE_CHECKING:
     from . import distributions
@@ -106,15 +109,60 @@ class _Leaf(Expression):
         return ()
 
 
-@dataclasses.dataclass(frozen=True)
-class Constant(_Leaf):
-    value: values.Value
-
+class Constant(_Leaf, abc.ABC):
     def is_constant_in(self, scope: context.Scope) -> bool:
         return True
 
+
+@dataclasses.dataclass(frozen=True)
+class BooleanConstant(Constant):
+    boolean: bool
+
     def infer_type(self, scope: context.Scope) -> types.Type:
-        return self.value.typ
+        return types.BOOL
+
+
+class NumericConstant(Constant, abc.ABC):
+    pass
+
+
+TRUE = BooleanConstant(True)
+FALSE = BooleanConstant(False)
+
+
+@dataclasses.dataclass(frozen=True)
+class IntegerConstant(NumericConstant):
+    integer: int
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        return types.INT
+
+
+_NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
+
+
+class NamedReal(enum.Enum):
+    PI = "π", math.pi
+    E = "e", math.e
+
+    symbol: str
+    float_value: float
+
+    def __init__(self, symbol: str, float_value: float) -> None:
+        self.symbol = symbol
+        self.float_value = float_value
+        _NAMED_REAL_MAP[symbol] = self
+
+
+Real = t.Union[NamedReal, numbers.Real]
+
+
+@dataclasses.dataclass(frozen=True)
+class RealConstant(NumericConstant):
+    real: Real
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        return types.REAL
 
 
 @dataclasses.dataclass(frozen=True)
@@ -379,11 +427,29 @@ def ite(
     return Conditional(condition, consequence, alternative)
 
 
-def const(value: values.PythonValue) -> Constant:
-    return Constant(values.pack(value))
+PythonRealString = t.Literal["π", "e"]
+PythonReal = t.Union[numbers.Real, float, PythonRealString, NamedReal]
+PythonNumeric = t.Union[int, PythonReal]
+PythonValue = t.Union[bool, PythonNumeric]
 
 
-MaybeExpression = t.Union[values.PythonValue, Expression]
+class ConversionError(ValueError):
+    pass
+
+
+def const(value: PythonValue) -> Constant:
+    if isinstance(value, bool):
+        return BooleanConstant(value)
+    if isinstance(value, int):
+        return IntegerConstant(value)
+    elif isinstance(value, (numbers.Number, NamedReal)):
+        return RealConstant(value)
+    elif isinstance(value, str):
+        return RealConstant(_NAMED_REAL_MAP[value])
+    raise ConversionError(f"unable to convert Python value {value!r} to Momba value")
+
+
+MaybeExpression = t.Union[PythonValue, Expression]
 
 
 def convert(value: MaybeExpression) -> Expression:

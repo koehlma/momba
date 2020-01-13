@@ -13,7 +13,7 @@ import json
 import warnings
 
 from ... import model
-from ...model import effects, context, expressions, operators, properties, types, values
+from ...model import effects, context, expressions, operators, properties, types
 from ...utils import checks
 from ...metadata import version
 
@@ -135,35 +135,6 @@ checks.check_singledispatch(_dump_type, types.Type)
 
 
 @functools.singledispatch
-def _dump_model_value(value: model.Value, ctx: JANIContext) -> JSON:
-    raise NotImplementedError(f"dump has not been implemented for model value {value}")
-
-
-@_dump_model_value.register
-def _dump_boolean_value(value: values.BooleanValue, ctx: JANIContext) -> JSON:
-    return value.boolean
-
-
-@_dump_model_value.register
-def _dump_integer_value(value: values.IntegerValue, ctx: JANIContext) -> JSON:
-    return value.integer
-
-
-@_dump_model_value.register
-def _dump_real_value(value: values.RealValue, ctx: JANIContext) -> JSON:
-    if isinstance(value.real, values.NamedReal):
-        return {"constant": value.real.symbol}
-    if not isinstance(value.real, float):
-        warnings.warn(
-            f"imprecise conversion: JSON does not support the number type {type(value.real)}"
-        )
-    return float(value.real)
-
-
-checks.check_singledispatch(_dump_model_value, model.Value)
-
-
-@functools.singledispatch
 def _dump_prop(prop: model.Property, ctx: JANIContext) -> JSON:
     raise NotImplementedError(f"dump has not been implemented for property {prop}")
 
@@ -174,8 +145,24 @@ def _dump_identifier(expr: expressions.Identifier, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
-def _dump_constant(expr: expressions.Constant, ctx: JANIContext) -> JSON:
-    return _dump_model_value(expr.value, ctx)
+def _dump_boolean_constant(expr: expressions.BooleanConstant, ctx: JANIContext) -> JSON:
+    return expr.boolean
+
+
+@_dump_prop.register
+def _dump_integer_constant(expr: expressions.IntegerConstant, ctx: JANIContext) -> JSON:
+    return expr.integer
+
+
+@_dump_prop.register
+def _dump_real_constant(expr: expressions.RealConstant, ctx: JANIContext) -> JSON:
+    if isinstance(expr.real, expressions.NamedReal):
+        return {"constant": expr.real.symbol}
+    if not isinstance(expr.real, float):
+        warnings.warn(
+            f"imprecise conversion: JSON does not support the number type {type(expr.real)}"
+        )
+    return float(expr.real)
 
 
 @_dump_prop.register

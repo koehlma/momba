@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from . import expressions, types, values, distributions
+from . import expressions, types, distributions
 
 from .automata import (
     Automaton,
@@ -33,7 +33,7 @@ from .expressions import (
 from .network import Composition, Network, Synchronization
 from .properties import Property
 from .types import Type
-from .values import Value
+
 
 __all__ = [
     "expressions",
