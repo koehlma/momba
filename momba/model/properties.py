@@ -100,7 +100,7 @@ class Timed(Property):
 
 
 def filter(
-    func: operators.FilterFunction, values: Expression, states: Expression
+    func: operators.FilterFunction, values: Property, states: Property
 ) -> Property:
     return Filter(func, values, states)
 
