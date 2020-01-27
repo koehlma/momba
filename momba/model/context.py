@@ -9,7 +9,7 @@ import typing as t
 import dataclasses
 import enum
 
-from . import errors, expressions, types
+from . import action, errors, expressions, types
 from .automata import Automaton
 from .network import Network
 from .properties import Property
@@ -177,6 +177,9 @@ class Scope:
     def is_constant(self, expression: expressions.Expression) -> bool:
         return expression.is_constant_in(self)
 
+    def is_local(self, identifier: str) -> bool:
+        return identifier in self._declarations
+
     def lookup(self, identifier: str) -> Declaration:
         try:
             return self._declarations[identifier]
@@ -266,6 +269,7 @@ class Context:
     model_type: ModelType
     global_scope: Scope
 
+    _action_types: t.Dict[str, action.ActionType]
     _automata: t.Set[Automaton]
     _networks: t.Set[Network]
     _properties: t.Set[PropertyDefinition]
@@ -275,6 +279,7 @@ class Context:
     def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
+        self._action_types = {}
         self._automata = set()
         self._networks = set()
         self._properties = set()
@@ -307,6 +312,26 @@ class Context:
             if automaton.name == name:
                 return automaton
         raise Exception(f"there is no automaton with name {name}")
+
+    def get_action_type_by_name(self, name: str) -> action.ActionType:
+        return self._action_types[name]
+
+    def add_action_type(self, action: action.ActionType) -> None:
+        if action.name in self._action_types:
+            assert self._action_types[action.name] == action
+        self._action_types[action.name] = action
+
+    def create_action_type(
+        self, name: str, *, parameters: t.Sequence[action.ActionParameter] = ()
+    ) -> action.ActionType:
+        if name in self._action_types:
+            raise Exception(f"action with name {name} already exists")
+        self._action_types[name] = action.ActionType(name, tuple(parameters))
+        return self._action_types[name]
+
+    @property
+    def action_types(self) -> t.ValuesView[action.ActionType]:
+        return self._action_types.values()
 
     def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
         automaton = Automaton(self, name=name)

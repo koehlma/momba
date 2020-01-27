@@ -373,14 +373,14 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
             location_name = stream.expect(lexer.TokenType.IDENTIFIER).text
             stream.expect(":")
             stream.expect(lexer.TokenType.INDENT)
-            action: t.Optional[str] = None
+            action_pattern: t.Optional[model.ActionPattern] = None
             guard: t.Optional[model.Expression] = None
             rate: t.Optional[model.Expression] = None
             destinations: t.Set[model.Destination] = set()
             while not stream.accept(lexer.TokenType.DEDENT):
                 if stream.accept("action"):
-                    assert action is None
-                    action = stream.expect(lexer.TokenType.IDENTIFIER).text
+                    assert action_pattern is None
+                    action_pattern = _parse_action_pattern(stream, ctx)
                 elif stream.accept("guard"):
                     assert guard is None
                     guard = parse_expression(stream)
@@ -413,7 +413,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
             automaton.create_edge(
                 location_map[location_name],
                 frozenset(destinations),
-                action=action,
+                action_pattern=action_pattern,
                 guard=guard,
                 rate=rate,
             )
@@ -422,10 +422,20 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
     return automaton
 
 
-def _parse_action(stream: TokenStream) -> t.Optional[str]:
+def _parse_action_pattern(
+    stream: TokenStream, ctx: model.Context
+) -> t.Optional[model.ActionPattern]:
     if stream.accept({"-", "τ"}):
         return None
-    return stream.expect(lexer.TokenType.IDENTIFIER).text
+    action = ctx.get_action_type_by_name(stream.expect(lexer.TokenType.IDENTIFIER).text)
+    arguments: t.List[str] = []
+    if stream.accept("(") and not stream.accept(")"):
+        while True:
+            arguments.append(stream.expect(lexer.TokenType.IDENTIFIER).text)
+            if stream.accept(")"):
+                break
+            stream.expect(",")
+    return model.ActionPattern(action, tuple(arguments))
 
 
 def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
@@ -472,18 +482,20 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                 stream.expect(lexer.TokenType.INDENT)
                 while not stream.accept(lexer.TokenType.DEDENT):
                     stream.expect("synchronize")
-                    actions: t.List[t.Optional[str]] = []
-                    actions.append(_parse_action(stream))
+                    actions: t.List[t.Optional[model.ActionPattern]] = []
+                    actions.append(_parse_action_pattern(stream, ctx))
                     while stream.accept("|"):
-                        actions.append(_parse_action(stream))
+                        actions.append(_parse_action_pattern(stream, ctx))
                     assert len(actions) == len(instances)
                     stream.expect(lexer.TokenType.ARROW)
-                    result = _parse_action(stream)
-                    vector: t.Dict[model.Instance, str] = {}
+                    result_pattern = _parse_action_pattern(stream, ctx)
+                    vector: t.Dict[model.Instance, model.ActionPattern] = {}
                     for index, action in enumerate(actions):
                         if action is not None:
                             vector[instances[index]] = action
-                    composition.create_synchronization(vector, result)
+                    composition.create_synchronization(
+                        vector, result_pattern=result_pattern
+                    )
 
 
 def _parse_metadata(stream: TokenStream) -> t.Mapping[str, str]:
@@ -499,6 +511,26 @@ def _parse_metadata(stream: TokenStream) -> t.Mapping[str, str]:
     return fields
 
 
+def _parse_action_declaration(stream: TokenStream) -> model.ActionType:
+    stream.expect("action")
+    name = stream.expect(lexer.TokenType.IDENTIFIER).text
+    comment: t.Optional[str] = None
+    parameters: t.List[model.ActionParameter] = []
+    if stream.accept("(") and not stream.accept(")"):
+        while True:
+            typ = parse_type(stream)
+            parameter_comment: t.Optional[str] = None
+            if stream.check(lexer.TokenType.STRING):
+                parameter_comment = stream.consume().match["string"]
+            parameters.append(model.ActionParameter(typ, comment=parameter_comment))
+            if stream.accept(")"):
+                break
+            stream.expect(",")
+    if stream.check(lexer.TokenType.STRING):
+        comment = stream.consume().match["string"]
+    return model.ActionType(name, tuple(parameters), comment=comment)
+
+
 def _parse_moml(stream: TokenStream, ctx: model.Context) -> model.Context:
     automaton_map: t.Dict[str, model.Automaton] = {}
     while True:
@@ -510,6 +542,8 @@ def _parse_moml(stream: TokenStream, ctx: model.Context) -> model.Context:
             automaton = parse_automaton(stream, ctx)
             assert automaton.name not in automaton_map and automaton.name is not None
             automaton_map[automaton.name] = automaton
+        elif stream.check("action"):
+            ctx.add_action_type(_parse_action_declaration(stream))
         elif stream.check("network"):
             _parse_network(stream, ctx)
         elif stream.check(lexer.TokenType.END_OF_FILE):

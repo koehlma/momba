@@ -13,14 +13,7 @@ from . import effects, context, errors, types
 
 if t.TYPE_CHECKING:
     # XXX: stupid stuff to make mypy and the linter happy
-    from . import expressions  # noqa: F401
-
-
-Action = str
-
-
-def action(name: str) -> Action:
-    return Action(name)
+    from . import action, expressions  # noqa: F401
 
 
 @dataclasses.dataclass(frozen=True, eq=False)
@@ -102,19 +95,23 @@ class Destination:
 class Edge:
     location: Location
     destinations: t.AbstractSet[Destination]
-    action: t.Optional[Action] = None
+    action_pattern: t.Optional[action.ActionPattern] = None
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
 
     def validate(self, scope: context.Scope) -> None:
-        if self.guard is not None and scope.get_type(self.guard) != types.BOOL:
+        if self.rate is not None and not scope.get_type(self.rate).is_numeric:
+            raise errors.InvalidTypeError(f"type of rate on edge {self} is not numeric")
+        edge_scope = scope.new_child_scope()
+        if self.action_pattern is not None:
+            self.action_pattern.apply(edge_scope)
+        if self.guard is not None and edge_scope.get_type(self.guard) != types.BOOL:
             raise errors.InvalidTypeError(
                 f"type of guard on edge {self} is not `types.BOOL`"
             )
-        if self.rate is not None and not scope.get_type(self.rate).is_numeric:
-            raise errors.InvalidTypeError(f"type of rate on edge {self} is not numeric")
+
         for destination in self.destinations:
-            destination.validate(scope)
+            destination.validate(edge_scope)
 
 
 class Automaton:
@@ -199,6 +196,8 @@ class Automaton:
         """
         Adds an edge to the automaton.
         """
+        if edge.action_pattern is not None:
+            self.ctx.add_action_type(edge.action_pattern.action_type)
         edge.validate(self.scope)
         edge.location.validate(self.scope)
         for destination in edge.destinations:
@@ -215,7 +214,7 @@ class Automaton:
         source: Location,
         destinations: t.AbstractSet[Destination],
         *,
-        action: t.Optional[Action] = None,
+        action_pattern: t.Optional[action.ActionPattern] = None,
         guard: t.Optional[expressions.Expression] = None,
         rate: t.Optional[expressions.Expression] = None,
     ) -> None:
@@ -224,7 +223,7 @@ class Automaton:
 
         See :class:`Edge` for more details.
         """
-        edge = Edge(source, frozenset(destinations), action, guard, rate)
+        edge = Edge(source, frozenset(destinations), action_pattern, guard, rate)
         self.add_edge(edge)
 
     def get_incoming_edges(self, location: Location) -> t.AbstractSet[Edge]:

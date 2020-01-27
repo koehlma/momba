@@ -33,7 +33,7 @@ This is the full abstract grammar of MOML:
         | ‘constant’ IDENTIFIER ‘:’ <type> [‘:=’ <expression>] [<comment>]
 
     <action-declaration> ::=
-        | ‘action’ IDENTIFIER [<comment>]
+        | ‘action’ IDENTIFIER [‘(’ [<action-parameter> [(‘,’ <action-parameter>)+]] ‘)’] [<comment>]
 
     <automaton-definition> ::=
         | ‘automaton’ IDENTIFIER ‘:’ INDENT <automaton-specification>* DEDENT
@@ -47,6 +47,10 @@ This is the full abstract grammar of MOML:
 
     <metadata-field> ::=
         | <string> ‘:’ <string>
+
+
+    <action-parameter> ::=
+        | <type> [<comment>]
 
 
     <automaton-specification> ::=
@@ -100,10 +104,10 @@ This is the full abstract grammar of MOML:
         | ‘composition’ IDENTIFIER [‘|’ IDENTIFIER] [‘:’ INDENT <composition-specification>* DEDENT]
 
     <composition-specification> ::=
-        | ‘synchronize’ <action> [‘|’ <action>] (‘->’ | ‘→’) <action>
+        | ‘synchronize’ <action-pattern> [(‘|’ <action-pattern>)+] (‘->’ | ‘→’) <action-pattern>
 
-    <action> ::=
-        | IDENTIFIER
+    <action-pattern> ::=
+        | IDENTIFIER [‘(’ [IDENTIFIER [(‘,’ IDENTIFIER)+]] ‘)’]
         | ‘-’ | ‘τ’
 
 

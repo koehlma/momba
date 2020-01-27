@@ -12,14 +12,22 @@ from . import errors, expressions, types
 from .automata import Automaton, Instance
 
 if t.TYPE_CHECKING:
+    from .action import ActionPattern
     from . import context
     from .expressions import Expression
 
 
 @dataclasses.dataclass(frozen=True, eq=False)
 class Synchronization:
-    vector: t.Mapping[Instance, str]
-    result: t.Optional[str] = None
+    vector: t.Mapping[Instance, ActionPattern]
+    result: t.Optional[ActionPattern] = None
+    condition: t.Optional[Expression] = None
+
+    def construct_scope(self, ctx: context.Context) -> context.Scope:
+        scope = ctx.new_scope()
+        for pattern in self.vector.values():
+            pattern.apply(scope)
+        return scope
 
 
 @dataclasses.dataclass(frozen=True, eq=False)
@@ -28,14 +36,17 @@ class Composition:
     synchronizations: t.Set[Synchronization] = dataclasses.field(default_factory=set)
 
     def create_synchronization(
-        self, vector: t.Mapping[Instance, str], result: t.Optional[str] = None
+        self,
+        vector: t.Mapping[Instance, ActionPattern],
+        *,
+        result_pattern: t.Optional[ActionPattern] = None,
     ) -> None:
         for instance in vector.keys():
             if instance not in self.instances:
                 raise errors.ModelingError(
                     f"instance {instance} is not part of composition"
                 )
-        self.synchronizations.add(Synchronization(vector, result))
+        self.synchronizations.add(Synchronization(vector, result_pattern))
 
 
 class Network:

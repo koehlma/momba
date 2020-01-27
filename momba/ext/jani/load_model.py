@@ -467,14 +467,27 @@ def _target(jani_target: t.Any) -> effects.Target:
     raise InvalidJANIError(f"{jani_target!r} is not a valid lvalue")
 
 
-def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
+def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automata.Edge:
     _check_fields(
         jani_edge,
         required={"location", "destinations"},
         optional={"action", "rate", "guard", "comment"},
     )
     location = locations[jani_edge["location"]]
-    action = jani_edge["action"] if "action" in jani_edge else None
+    action_pattern: t.Optional[model.ActionPattern] = None
+    if "action" in jani_edge:
+        if isinstance(str, jani_edge["action"]):
+            action_pattern = model.ActionPattern(
+                ctx.get_action_type_by_name(jani_edge["action"])
+            )
+        else:
+            _check_fields(
+                jani_edge["action"], required={"name"}, optional={"arguments"}
+            )
+            action_pattern = model.ActionPattern(
+                ctx.get_action_type_by_name(jani_edge["action"]["name"]),
+                arguments=jani_edge["action"].get("arguments", ()),
+            )
     rate = _expression(jani_edge["rate"]["exp"]) if "rate" in jani_edge else None
     guard = _expression(jani_edge["guard"]["exp"]) if "guard" in jani_edge else None
     destinations = frozenset(
@@ -499,10 +512,30 @@ def _edge(locations: _Locations, jani_edge: t.Any) -> automata.Edge:
     return automata.Edge(
         location=location,
         destinations=destinations,
-        action=action,
+        action_pattern=action_pattern,
         guard=guard,
         rate=rate,
     )
+
+
+def _action_parameter(jani_action_parameter: t.Any) -> model.ActionParameter:
+    _check_fields(
+        jani_action_parameter, required={"type"}, optional={"comment"},
+    )
+    typ = _type(jani_action_parameter["type"])
+    comment = jani_action_parameter.get("comment", None)
+    return model.ActionParameter(typ, comment=comment)
+
+
+def _action(jani_action: t.Any) -> model.ActionType:
+    _check_fields(jani_action, required={"name"}, optional={"comment", "parameters"})
+    name = jani_action["name"]
+    comment = jani_action.get("comment", None)
+    parameters: t.List[model.ActionParameter] = []
+    if "parameters" in jani_action:
+        for jani_parameter in jani_action["parameters"]:
+            parameters.append(_action_parameter(jani_parameter))
+    return model.ActionType(name, tuple(parameters), comment=comment)
 
 
 JANIModel = t.Union[bytes, str]
@@ -551,6 +584,9 @@ def load_model(source: JANIModel) -> model.Network:
         )
         restrict_initial = _expression(jani_model["restrict-initial"]["exp"])
         network.restrict_initial = restrict_initial
+    if "actions" in jani_model:
+        for jani_action in jani_model["actions"]:
+            network.ctx.add_action_type(_action(jani_action))
     for jani_automaton in jani_model["automata"]:
         _check_fields(
             jani_automaton,
@@ -580,7 +616,7 @@ def load_model(source: JANIModel) -> model.Network:
             restrict_initial = _expression(jani_automaton["restrict-initial"]["exp"])
             automaton.restrict_initial = restrict_initial
         for jani_edge in jani_automaton["edges"]:
-            automaton.add_edge(_edge(locations, jani_edge))
+            automaton.add_edge(_edge(network.ctx, locations, jani_edge))
         for jani_location in jani_automaton["initial-locations"]:
             automaton.add_initial_location(locations[jani_location])
     for jani_prop in jani_model["properties"]:

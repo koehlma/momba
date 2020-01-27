@@ -38,6 +38,7 @@ class ModelFeature(enum.Enum):
     TRIGONOMETRIC_FUNCTIONS = "trigonometric-functions"
 
     X_MOMBA_OPERATORS = "x-momba-operators"
+    X_MOMBA_VALUE_PASSING = "x-momba-value-passing"
 
 
 _NamedObject = t.Union[model.Location, model.Automaton]
@@ -403,7 +404,9 @@ def _dump_location(loc: model.Location, ctx: JANIContext) -> JSON:
         "x-momba-anonymous": loc.name is None,
     }
     if loc.progress_invariant is not None:
-        jani_location["time-progress"] = _dump_prop(loc.progress_invariant, ctx)
+        jani_location["time-progress"] = {
+            "exp": _dump_prop(loc.progress_invariant, ctx)
+        }
     if loc.transient_values is not None:
         jani_location["transient-values"] = [
             _dump_assignment(assignment, ctx) for assignment in loc.transient_values
@@ -427,8 +430,8 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
         "location": ctx.get_name(edge.location),
         "destinations": [_dump_destination(dst, ctx) for dst in edge.destinations],
     }
-    if edge.action is not None:
-        jani_edge["action"] = ctx.require_action(str(edge.action))
+    if edge.action_pattern is not None:
+        jani_edge["action"] = _dump_action_pattern(edge.action_pattern, ctx)
     if edge.rate is not None:
         jani_edge["rate"] = {"exp": _dump_prop(edge.rate, ctx)}
     if edge.guard is not None:
@@ -450,6 +453,21 @@ def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
     }
 
 
+def _dump_action_pattern(
+    pattern: t.Optional[model.ActionPattern], ctx: JANIContext
+) -> JSON:
+    if pattern is not None:
+        if pattern.arguments:
+            ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
+            return {
+                "name": pattern.action_type.name,
+                "arguments": list(pattern.arguments),
+            }
+        else:
+            return pattern.action_type.name
+    return None
+
+
 def _dump_sync(
     instance_vector: t.Sequence[model.Instance],
     sync: model.Synchronization,
@@ -457,11 +475,12 @@ def _dump_sync(
 ) -> JSON:
     jani_sync: _JANIMap = {
         "synchronise": [
-            sync.vector.get(instance, None) for instance in instance_vector
+            _dump_action_pattern(sync.vector.get(instance, None), ctx)
+            for instance in instance_vector
         ],
     }
     if sync.result is not None:
-        jani_sync["result"] = sync.result
+        jani_sync["result"] = _dump_action_pattern(sync.result, ctx)
     return jani_sync
 
 
@@ -498,6 +517,22 @@ def _dump_metadata(model_ctx: model.Context) -> _JANIMap:
     return jani_metadata
 
 
+def _dump_action_type(action_type: model.ActionType, ctx: JANIContext) -> _JANIMap:
+    jani_action: _JANIMap = {"name": action_type.name}
+    jani_parameters: t.List[_JANIMap] = []
+    for parameter in action_type.parameters:
+        ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
+        jani_parameter: _JANIMap = {"type": _dump_type(parameter.typ, ctx)}
+        if parameter.comment is not None:
+            jani_parameter["comment"] = parameter.comment
+        jani_parameters.append(jani_parameter)
+    if jani_parameters:
+        jani_action["parameters"] = jani_parameters
+    if action_type.comment is not None:
+        jani_action["comment"] = action_type.comment
+    return jani_action
+
+
 def dump_structure(
     network: model.Network, *, allow_momba_operators: bool = False
 ) -> JSON:
@@ -522,6 +557,10 @@ def dump_structure(
             _dump_const_decl(const_decl, ctx)
             for const_decl in network.ctx.global_scope.constant_declarations
         ],
+        "actions": [
+            _dump_action_type(action_type, ctx)
+            for action_type in network.ctx.action_types
+        ],
         "automata": [
             _dump_automaton(automaton, ctx) for automaton in network.ctx.automata
         ],
@@ -530,9 +569,7 @@ def dump_structure(
             for prop in network.ctx.properties
         ],
         "system": _dump_system(network, ctx),
-        # important: has to be at the end, because we collect
-        # the features and actions while building
-        "actions": [{"name": action} for action in ctx.actions],
+        # important: has to be at the end, because we collect the features while dumping
         "features": [feature.value for feature in ctx.features],
     }
     return jani_model

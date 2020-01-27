@@ -20,6 +20,8 @@ KEYWORDS = {
     "variable",
     "constant",
     "action",
+    "comment",
+    "parameter",
     "automaton",
     "network",
     "initial",
@@ -215,4 +217,4 @@ def lex(code: str, *, row: int = 0, column: int = 0) -> t.Iterator[Token]:
 
 
 if __name__ == "__main__":
-    print("|".join(KEYWORDS))
+    print("|".join(sorted(KEYWORDS)))

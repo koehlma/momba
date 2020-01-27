@@ -19,6 +19,12 @@ A *valuation* maps variables to values.
 Each edge leads from a single *source location* via a *guard* and an *action* to a *symbolic probability distribution* over *variable assignments* and *successor locations*.
 
 
+.. toctree::
+   :maxdepth: 2
+
+   expressions
+
+
 .. _JANI specification: http://www.jani-spec.org/
 
 
