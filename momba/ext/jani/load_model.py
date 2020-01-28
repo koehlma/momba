@@ -486,7 +486,7 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
             )
             action_pattern = model.ActionPattern(
                 ctx.get_action_type_by_name(jani_edge["action"]["name"]),
-                arguments=jani_edge["action"].get("arguments", ()),
+                identifiers=jani_edge["action"].get("arguments", ()),
             )
     rate = _expression(jani_edge["rate"]["exp"]) if "rate" in jani_edge else None
     guard = _expression(jani_edge["guard"]["exp"]) if "guard" in jani_edge else None
@@ -573,11 +573,11 @@ def load_model(source: JANIModel) -> model.Network:
     if "variables" in jani_model:
         for jani_declaration in jani_model["variables"]:
             var_declaration = _variable_declaration(jani_declaration)
-            network.ctx.global_scope.declare(var_declaration)
+            network.ctx.global_scope.add_declaration(var_declaration)
     if "constants" in jani_model:
         for jani_declaration in jani_model["constants"]:
             const_declaration = _constant_declaration(jani_declaration)
-            network.ctx.global_scope.declare(const_declaration)
+            network.ctx.global_scope.add_declaration(const_declaration)
     if "restrict-initial" in jani_model:
         _check_fields(
             jani_model["restrict-initial"], required={"exp"}, optional={"comment"}
@@ -602,7 +602,7 @@ def load_model(source: JANIModel) -> model.Network:
         if "variables" in jani_automaton:
             for jani_declaration in jani_automaton["variables"]:
                 declaration = _variable_declaration(jani_declaration)
-                automaton.scope.declare(declaration)
+                automaton.scope.add_declaration(declaration)
         locations = {
             jani_location["name"]: _location(jani_location)
             for jani_location in jani_automaton["locations"]
@@ -614,7 +614,7 @@ def load_model(source: JANIModel) -> model.Network:
                 optional={"comment"},
             )
             restrict_initial = _expression(jani_automaton["restrict-initial"]["exp"])
-            automaton.restrict_initial = restrict_initial
+            automaton.initial_restriction = restrict_initial
         for jani_edge in jani_automaton["edges"]:
             automaton.add_edge(_edge(network.ctx, locations, jani_edge))
         for jani_location in jani_automaton["initial-locations"]:

@@ -54,7 +54,7 @@ We extend the `action` fields of an `edge` with:
         Identifier,
         {
             "name": Identifier,
-            "?arguments": Array.of([
+            "?identifiers": Array.of([
                 Identifier
             ])
         }

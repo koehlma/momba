@@ -363,7 +363,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
     while not stream.accept(lexer.TokenType.DEDENT):
         if stream.check({"transient", "variable"}):
             declaration = _parse_variable_declaration(stream)
-            automaton.scope.declare(declaration)
+            automaton.scope.add_declaration(declaration)
         elif stream.check({"initial", "location"}):
             location = _parse_location(stream, automaton)
             assert location.name not in location_map and location.name is not None
@@ -535,9 +535,9 @@ def _parse_moml(stream: TokenStream, ctx: model.Context) -> model.Context:
     automaton_map: t.Dict[str, model.Automaton] = {}
     while True:
         if stream.check({"transient", "variable"}):
-            ctx.global_scope.declare(_parse_variable_declaration(stream))
+            ctx.global_scope.add_declaration(_parse_variable_declaration(stream))
         elif stream.check("constant"):
-            ctx.global_scope.declare(_parse_constant_declaration(stream))
+            ctx.global_scope.add_declaration(_parse_constant_declaration(stream))
         elif stream.check("automaton"):
             automaton = parse_automaton(stream, ctx)
             assert automaton.name not in automaton_map and automaton.name is not None

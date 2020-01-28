@@ -457,11 +457,11 @@ def _dump_action_pattern(
     pattern: t.Optional[model.ActionPattern], ctx: JANIContext
 ) -> JSON:
     if pattern is not None:
-        if pattern.arguments:
+        if pattern.identifiers:
             ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
             return {
                 "name": pattern.action_type.name,
-                "arguments": list(pattern.arguments),
+                "identifiers": list(pattern.identifiers),
             }
         else:
             return pattern.action_type.name

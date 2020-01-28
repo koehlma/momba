@@ -26,7 +26,7 @@ class Synchronization:
     def construct_scope(self, ctx: context.Context) -> context.Scope:
         scope = ctx.new_scope()
         for pattern in self.vector.values():
-            pattern.apply(scope)
+            pattern.declare_in(scope)
         return scope
 
 

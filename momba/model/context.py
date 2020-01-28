@@ -164,7 +164,7 @@ class Scope:
             if isinstance(decl, VariableDeclaration) and decl.typ == types.CLOCK
         )
 
-    def new_child_scope(self) -> Scope:
+    def create_child_scope(self) -> Scope:
         return Scope(self.ctx, parent=self)
 
     def get_type(self, typed: Typed) -> types.Type:
@@ -190,13 +190,16 @@ class Scope:
                 )
             return self.parent.lookup(identifier)
 
-    def declare(self, declaration: Declaration) -> None:
+    def add_declaration(self, declaration: Declaration) -> None:
         if declaration.identifier in self._declarations:
             raise errors.InvalidDeclarationError(
                 f"identifier `{declaration.identifier} has already been declared"
             )
         declaration.validate(self)
         self._declarations[declaration.identifier] = declaration
+
+    def declare(self, identifier: str, typ: types.Type) -> None:
+        self.add_declaration(Declaration(identifier, typ))
 
     def declare_variable(
         self,
@@ -206,7 +209,7 @@ class Scope:
         is_transient: t.Optional[bool] = None,
         initial_value: t.Optional[expressions.Expression] = None,
     ) -> None:
-        self.declare(
+        self.add_declaration(
             VariableDeclaration(
                 identifier, typ, is_transient=is_transient, initial_value=initial_value
             )
@@ -235,11 +238,11 @@ class Scope:
                 An optional comment describing the constant.
         """
         if value is None:
-            self.declare(
+            self.add_declaration(
                 ConstantDeclaration(identifier, typ, comment=comment, value=value)
             )
         else:
-            self.declare(
+            self.add_declaration(
                 ConstantDeclaration(
                     identifier, typ, comment=comment, value=expressions.convert(value)
                 )
@@ -305,7 +308,7 @@ class Context:
         self._metadata.update(metadata)
 
     def new_scope(self) -> Scope:
-        return self.global_scope.new_child_scope()
+        return self.global_scope.create_child_scope()
 
     def get_automaton_by_name(self, name: str) -> Automaton:
         for automaton in self._automata:

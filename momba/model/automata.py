@@ -99,12 +99,16 @@ class Edge:
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
 
+    def create_edge_scope(self, parent: context.Scope) -> context.Scope:
+        scope = parent.create_child_scope()
+        if self.action_pattern is not None:
+            self.action_pattern.declare_in(scope)
+        return scope
+
     def validate(self, scope: context.Scope) -> None:
         if self.rate is not None and not scope.get_type(self.rate).is_numeric:
             raise errors.InvalidTypeError(f"type of rate on edge {self} is not numeric")
-        edge_scope = scope.new_child_scope()
-        if self.action_pattern is not None:
-            self.action_pattern.apply(edge_scope)
+        edge_scope = self.create_edge_scope(scope)
         if self.guard is not None and edge_scope.get_type(self.guard) != types.BOOL:
             raise errors.InvalidTypeError(
                 f"type of guard on edge {self} is not `types.BOOL`"
@@ -122,10 +126,10 @@ class Automaton:
 
     _locations: t.Set[Location]
     _initial_locations: t.Set[Location]
-    _restrict_initial: t.Optional[expressions.Expression]
+    _initial_restriction: t.Optional[expressions.Expression]
     _edges: t.Set[Edge]
-    _incoming: t.DefaultDict[Location, t.Set[Edge]]
-    _outgoing: t.DefaultDict[Location, t.Set[Edge]]
+    _incoming_edges: t.DefaultDict[Location, t.Set[Edge]]
+    _outgoing_edges: t.DefaultDict[Location, t.Set[Edge]]
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
@@ -133,10 +137,10 @@ class Automaton:
         self.name = name
         self._locations = set()
         self._initial_locations = set()
-        self._restrict_initial = None
+        self._initial_restriction = None
         self._edges = set()
-        self._incoming = collections.defaultdict(set)
-        self._outgoing = collections.defaultdict(set)
+        self._incoming_edges = collections.defaultdict(set)
+        self._outgoing_edges = collections.defaultdict(set)
 
     @property
     def locations(self) -> t.AbstractSet[Location]:
@@ -147,20 +151,20 @@ class Automaton:
         return self._initial_locations
 
     @property
-    def restrict_initial(self) -> t.Optional[expressions.Expression]:
-        return self._restrict_initial
+    def initial_restriction(self) -> t.Optional[expressions.Expression]:
+        return self._initial_restriction
 
-    @restrict_initial.setter
-    def restrict_initial(self, restrict_initial: expressions.Expression) -> None:
-        if self._restrict_initial is not None:
+    @initial_restriction.setter
+    def initial_restriction(self, initial_restriction: expressions.Expression) -> None:
+        if self._initial_restriction is not None:
             raise errors.InvalidOperationError(
                 f"restriction of initial valuations has already been set"
             )
-        if self.scope.get_type(restrict_initial) != types.BOOL:
+        if self.scope.get_type(initial_restriction) != types.BOOL:
             raise errors.InvalidTypeError(
                 f"restriction of initial valuations must have type `types.BOOL`"
             )
-        self._restrict_initial = restrict_initial
+        self._initial_restriction = initial_restriction
 
     @property
     def edges(self) -> t.AbstractSet[Edge]:
@@ -204,10 +208,10 @@ class Automaton:
             destination.location.validate(self.scope)
         self._edges.add(edge)
         self._locations.add(edge.location)
-        self._outgoing[edge.location].add(edge)
+        self._outgoing_edges[edge.location].add(edge)
         for destination in edge.destinations:
             self._locations.add(destination.location)
-            self._incoming[destination.location].add(edge)
+            self._incoming_edges[destination.location].add(edge)
 
     def create_edge(
         self,
@@ -230,13 +234,13 @@ class Automaton:
         """
         Returns the set of outgoing edges from the given location.
         """
-        return self._incoming[location]
+        return self._incoming_edges[location]
 
     def get_outgoing_edges(self, location: Location) -> t.AbstractSet[Edge]:
         """
         Returns the set of incoming edges to the given location.
         """
-        return self._outgoing[location]
+        return self._outgoing_edges[location]
 
     def declare_variable(self, name: str, typ: types.Type) -> None:
         """

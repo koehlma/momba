@@ -14,18 +14,6 @@ if t.TYPE_CHECKING:
 
 
 @dataclasses.dataclass(frozen=True)
-class ActionType:
-    name: str
-    parameters: t.Sequence[ActionParameter]
-
-    comment: t.Optional[str] = None
-
-    @property
-    def has_parameters(self) -> bool:
-        return bool(self.parameters)
-
-
-@dataclasses.dataclass(frozen=True)
 class ActionParameter:
     typ: types.Type
 
@@ -33,14 +21,34 @@ class ActionParameter:
 
 
 @dataclasses.dataclass(frozen=True)
+class ActionType:
+    name: str
+
+    # XXX: unable to type, could be any kind of hashable sequence
+    parameters: t.Tuple[ActionParameter, ...]
+
+    comment: t.Optional[str] = None
+
+    @property
+    def has_parameters(self) -> bool:
+        return bool(self.parameters)
+
+    def create_pattern(self, *identifiers: str) -> ActionPattern:
+        return ActionPattern(self, identifiers=identifiers)
+
+
+@dataclasses.dataclass(frozen=True)
 class ActionPattern:
     action_type: ActionType
 
-    arguments: t.Sequence[str] = ()
+    # XXX: unable to type, could be any kind of hashable sequence
+    identifiers: t.Tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        assert len(self.action_type.parameters) == len(self.arguments)
+        if len(self.action_type.parameters) != len(self.identifiers):
+            raise ValueError(f"number of parameters and identifiers does not match")
 
-    def apply(self, scope: context.Scope) -> None:
-        for name, parameter in zip(self.arguments, self.action_type.parameters):
-            scope.declare_variable(name, parameter.typ)
+    def declare_in(self, scope: context.Scope) -> None:
+        """ Declares the identifiers of the pattern in the given scope. """
+        for name, parameter in zip(self.identifiers, self.action_type.parameters):
+            scope.declare(name, parameter.typ)
