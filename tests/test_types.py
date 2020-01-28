@@ -38,7 +38,7 @@ def test_bounded_types() -> None:
 
     with pytest.raises(types.InvalidBoundError):
         ctx = context.Context()
-        scope = ctx.new_scope()
+        scope = ctx.global_scope.create_child_scope()
         types.INT.bound(..., "π").validate_in(scope)
     with pytest.raises(types.InvalidBoundError):
         types.INT.bound(..., ...)

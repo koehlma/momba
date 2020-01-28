@@ -451,7 +451,7 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
     while not stream.accept(lexer.TokenType.DEDENT):
         if stream.accept("restrict"):
             stream.expect("initial")
-            network.restrict_initial = parse_expression(stream)
+            network.initial_restriction = parse_expression(stream)
         elif stream.accept("instance"):
             name = stream.expect(lexer.TokenType.IDENTIFIER).text
             assert name not in instance_map

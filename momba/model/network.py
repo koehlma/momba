@@ -8,8 +8,8 @@ import typing as t
 
 import dataclasses
 
-from . import errors, expressions, types
-from .automata import Automaton, Instance
+from . import errors, types
+from .automata import Instance
 
 if t.TYPE_CHECKING:
     from .action import ActionPattern
@@ -24,7 +24,7 @@ class Synchronization:
     condition: t.Optional[Expression] = None
 
     def construct_scope(self, ctx: context.Context) -> context.Scope:
-        scope = ctx.new_scope()
+        scope = ctx.global_scope.create_child_scope()
         for pattern in self.vector.values():
             pattern.declare_in(scope)
         return scope
@@ -58,13 +58,13 @@ class Network:
 
     ctx: context.Context
 
-    _restrict_initial: t.Optional[Expression]
+    _initial_restriction: t.Optional[Expression]
     _system: t.Set[Composition]
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None,) -> None:
         self.ctx = ctx
         self.name = name
-        self._restrict_initial = None
+        self._initial_restriction = None
         self._system = set()
 
     @property
@@ -72,56 +72,27 @@ class Network:
         return self._system
 
     @property
-    def restrict_initial(self) -> t.Optional[Expression]:
-        return self._restrict_initial
+    def initial_restriction(self) -> t.Optional[Expression]:
+        return self._initial_restriction
 
-    @restrict_initial.setter
-    def restrict_initial(self, restrict_initial: Expression) -> None:
-        if self._restrict_initial is not None:
+    @initial_restriction.setter
+    def initial_restriction(self, initial_restriction: Expression) -> None:
+        if self._initial_restriction is not None:
             raise errors.InvalidOperationError(
                 f"restriction of initial valuations has already been set"
             )
-        if self.ctx.global_scope.get_type(restrict_initial) != types.BOOL:
+        if self.ctx.global_scope.get_type(initial_restriction) != types.BOOL:
             raise errors.InvalidTypeError(
                 f"restriction of initial valuations must have type `types.BOOL`"
             )
-        self._restrict_initial = restrict_initial
-
-    @property
-    def automata(self) -> t.AbstractSet[Automaton]:
-        """
-        The set of :py_class:`momba.Automaton` making up the model.
-        """
-        return self.ctx.automata
-
-    def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
-        return self.ctx.create_automaton(name=name)
-
-    def declare_variable(self, identifier: str, typ: types.Type) -> None:
-        self.ctx.global_scope.declare_variable(identifier, typ)
-
-    def declare_constant(
-        self,
-        identifier: str,
-        typ: types.Type,
-        *,
-        value: t.Optional[expressions.MaybeExpression] = None,
-        comment: t.Optional[str] = None,
-    ) -> None:
-        if value is None:
-            self.ctx.global_scope.declare_constant(identifier, typ, comment=comment)
-        else:
-            self.ctx.global_scope.declare_constant(
-                identifier, typ, value=expressions.convert(value), comment=comment
-            )
+        self._initial_restriction = initial_restriction
 
     def create_composition(self, instances: t.AbstractSet[Instance]) -> Composition:
         for instance in instances:
             if instance.automaton not in self.ctx.automata:
-                if instance.automaton not in self.automata:
-                    raise errors.ModelingError(
-                        f"automaton {instance.automaton} is not part of the network"
-                    )
+                raise errors.ModelingError(
+                    f"automaton {instance.automaton} is not part of the network"
+                )
         composition = Composition(frozenset(instances))
         self._system.add(composition)
         return composition

@@ -307,9 +307,6 @@ class Context:
     def update_metadata(self, metadata: t.Mapping[str, str]) -> None:
         self._metadata.update(metadata)
 
-    def new_scope(self) -> Scope:
-        return self.global_scope.create_child_scope()
-
     def get_automaton_by_name(self, name: str) -> Automaton:
         for automaton in self._automata:
             if automaton.name == name:
@@ -321,16 +318,15 @@ class Context:
 
     def add_action_type(self, action: action.ActionType) -> None:
         if action.name in self._action_types:
-            assert self._action_types[action.name] == action
+            raise Exception(f"action with name {action.name} already exists")
         self._action_types[action.name] = action
 
     def create_action_type(
         self, name: str, *, parameters: t.Sequence[action.ActionParameter] = ()
     ) -> action.ActionType:
-        if name in self._action_types:
-            raise Exception(f"action with name {name} already exists")
-        self._action_types[name] = action.ActionType(name, tuple(parameters))
-        return self._action_types[name]
+        action_type = action.ActionType(name, tuple(parameters))
+        self.add_action_type(action_type)
+        return action_type
 
     @property
     def action_types(self) -> t.ValuesView[action.ActionType]:

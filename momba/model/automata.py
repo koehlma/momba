@@ -113,7 +113,6 @@ class Edge:
             raise errors.InvalidTypeError(
                 f"type of guard on edge {self} is not `types.BOOL`"
             )
-
         for destination in self.destinations:
             destination.validate(edge_scope)
 
@@ -133,7 +132,7 @@ class Automaton:
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
-        self.scope = self.ctx.new_scope()
+        self.scope = self.ctx.global_scope.create_child_scope()
         self.name = name
         self._locations = set()
         self._initial_locations = set()

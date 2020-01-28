@@ -13,7 +13,7 @@ import pytest
 def test_basic_inferences() -> None:
     ctx = context.Context()
 
-    scope = ctx.new_scope()
+    scope = ctx.global_scope.create_child_scope()
     scope.declare_variable("x", types.BOOL)
 
     expr = identifier("x").land(identifier("y"))
