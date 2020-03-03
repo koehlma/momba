@@ -25,7 +25,7 @@ class ActionType:
     name: str
 
     # XXX: unable to type, could be any kind of hashable sequence
-    parameters: t.Tuple[ActionParameter, ...]
+    parameters: t.Tuple[ActionParameter, ...] = ()
 
     comment: t.Optional[str] = None
 

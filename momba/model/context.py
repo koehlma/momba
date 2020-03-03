@@ -253,20 +253,20 @@ class Context:
     """
     Represents a modeling context.
 
-    Attributes
-    ----------
-    model_type (ModelType):
-        The type of the model, e.g., SHA, PTA or MDP.
-    global_scope (Scope):
-        The scope for global variables and constants.
-    actions (AbstractSet[Action]):
-        A set of actions usable in the context.
-    automata (AbstractSet[Automata]):
-        Automata defined in the modeling context.
-    networks (AbstractSet[Network]):
-        Automata networks defined in the modeling context.
-    properties (AbstractSet[PropertyDefinition]):
-        Properties defined in the modeling context.
+    Parameters:
+        model_type: The model type to use for the context.
+
+    Attributes:
+        model_type:
+            The type of the model, e.g., SHA, PTA or MDP.
+        global_scope:
+            The scope for global variables and constants.
+        actions:
+            A set of actions usable in the context.
+        networks:
+            Automata networks defined in the modeling context.
+        properties:
+            Properties defined in the modeling context.
     """
 
     model_type: ModelType
@@ -290,6 +290,7 @@ class Context:
 
     @property
     def automata(self) -> t.AbstractSet[Automaton]:
+        """ The automata defined in the modeling context. """
         return self._automata
 
     @property
@@ -318,12 +319,14 @@ class Context:
 
     def add_action_type(self, action: action.ActionType) -> None:
         if action.name in self._action_types:
-            raise Exception(f"action with name {action.name} already exists")
+            assert action is self._action_types[action.name]
         self._action_types[action.name] = action
 
     def create_action_type(
         self, name: str, *, parameters: t.Sequence[action.ActionParameter] = ()
     ) -> action.ActionType:
+        if name in self._action_types:
+            raise Exception(f"action with name {action.name!r} already exists")
         action_type = action.ActionType(name, tuple(parameters))
         self.add_action_type(action_type)
         return action_type

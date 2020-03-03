@@ -241,11 +241,20 @@ class Automaton:
         """
         return self._outgoing_edges[location]
 
-    def declare_variable(self, name: str, typ: types.Type) -> None:
+    def declare_variable(
+        self,
+        name: str,
+        typ: types.Type,
+        *,
+        is_transient: t.Optional[bool] = None,
+        initial_value: t.Optional[expressions.Expression] = None,
+    ) -> None:
         """
         Declares a variable in the local scope of the automaton.
         """
-        self.scope.declare_variable(name, typ)
+        self.scope.declare_variable(
+            name, typ, is_transient=is_transient, initial_value=initial_value
+        )
 
     def create_instance(
         self, *, input_enable: t.AbstractSet[str] = frozenset()

@@ -26,7 +26,11 @@ class Expression(properties.Property, abc.ABC):
 
     @abc.abstractmethod
     def is_constant_in(self, scope: context.Scope) -> bool:
-        """ Returns `True` only if the expression has a constant value in the given scope. """
+        """ Returns `True` only if the expression has a constant value in the given scope.
+
+        Arguments:
+            scope: The scope to use.
+        """
         raise NotImplementedError()
 
     @abc.abstractmethod

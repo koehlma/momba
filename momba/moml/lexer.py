@@ -49,7 +49,7 @@ class TokenType(enum.Enum):
     regex: str
     pseudo: bool
 
-    COMMENT = r"#[^\n]*|\(\*(.|\s)*?\*\)"
+    COMMENT = r"u|\(\*(.|\s)*?\*\)"
 
     ASSIGN = r":="
 
