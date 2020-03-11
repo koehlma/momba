@@ -326,7 +326,7 @@ class Context:
         self, name: str, *, parameters: t.Sequence[action.ActionParameter] = ()
     ) -> action.ActionType:
         if name in self._action_types:
-            raise Exception(f"action with name {action.name!r} already exists")
+            raise Exception(f"action with name {name!r} already exists")
         action_type = action.ActionType(name, tuple(parameters))
         self.add_action_type(action_type)
         return action_type
