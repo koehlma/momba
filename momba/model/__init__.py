@@ -19,7 +19,9 @@ A modeling context can be locked for modification.
 
 from __future__ import annotations
 
-from . import expressions, types, distributions
+from . import expressions, types, distributions, effects
+
+from .action import ActionType, ActionParameter, ActionPattern
 
 from .automata import (
     Automaton,
@@ -38,6 +40,7 @@ from .context import (
 )
 from .effects import Assignment
 from .expressions import (
+    const,
     BinaryConstructor,
     Expression,
     convert,
@@ -52,7 +55,12 @@ from .types import Type
 
 __all__ = [
     "expressions",
+    "effects",
+    "const",
     "Property",
+    "ActionType",
+    "ActionParameter",
+    "ActionPattern",
     "Assignment",
     "distributions",
     "Context",

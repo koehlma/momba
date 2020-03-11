@@ -18,6 +18,10 @@ class Target(abc.ABC):
     def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
 
+    @abc.abstractmethod
+    def is_local_in(self, scope: context.Scope) -> bool:
+        raise NotImplementedError()
+
 
 @dataclasses.dataclass(frozen=True)
 class Identifier(Target):
@@ -30,6 +34,9 @@ class Identifier(Target):
                 f"invalid assignment to non-variable identifier {self.name}"
             )
         return declaration.typ
+
+    def is_local_in(self, scope: context.Scope) -> bool:
+        return scope.is_local(self.name)
 
 
 @dataclasses.dataclass(frozen=True)

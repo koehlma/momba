@@ -9,7 +9,7 @@ import typing as t
 import dataclasses
 import enum
 
-from . import errors, expressions, types
+from . import action, errors, expressions, types
 from .automata import Automaton
 from .network import Network
 from .properties import Property
@@ -164,7 +164,7 @@ class Scope:
             if isinstance(decl, VariableDeclaration) and decl.typ == types.CLOCK
         )
 
-    def new_child_scope(self) -> Scope:
+    def create_child_scope(self) -> Scope:
         return Scope(self.ctx, parent=self)
 
     def get_type(self, typed: Typed) -> types.Type:
@@ -177,6 +177,9 @@ class Scope:
     def is_constant(self, expression: expressions.Expression) -> bool:
         return expression.is_constant_in(self)
 
+    def is_local(self, identifier: str) -> bool:
+        return identifier in self._declarations
+
     def lookup(self, identifier: str) -> Declaration:
         try:
             return self._declarations[identifier]
@@ -187,13 +190,16 @@ class Scope:
                 )
             return self.parent.lookup(identifier)
 
-    def declare(self, declaration: Declaration) -> None:
+    def add_declaration(self, declaration: Declaration) -> None:
         if declaration.identifier in self._declarations:
             raise errors.InvalidDeclarationError(
                 f"identifier `{declaration.identifier} has already been declared"
             )
         declaration.validate(self)
         self._declarations[declaration.identifier] = declaration
+
+    def declare(self, identifier: str, typ: types.Type) -> None:
+        self.add_declaration(Declaration(identifier, typ))
 
     def declare_variable(
         self,
@@ -203,7 +209,7 @@ class Scope:
         is_transient: t.Optional[bool] = None,
         initial_value: t.Optional[expressions.Expression] = None,
     ) -> None:
-        self.declare(
+        self.add_declaration(
             VariableDeclaration(
                 identifier, typ, is_transient=is_transient, initial_value=initial_value
             )
@@ -232,11 +238,11 @@ class Scope:
                 An optional comment describing the constant.
         """
         if value is None:
-            self.declare(
+            self.add_declaration(
                 ConstantDeclaration(identifier, typ, comment=comment, value=value)
             )
         else:
-            self.declare(
+            self.add_declaration(
                 ConstantDeclaration(
                     identifier, typ, comment=comment, value=expressions.convert(value)
                 )
@@ -247,25 +253,26 @@ class Context:
     """
     Represents a modeling context.
 
-    Attributes
-    ----------
-    model_type (ModelType):
-        The type of the model, e.g., SHA, PTA or MDP.
-    global_scope (Scope):
-        The scope for global variables and constants.
-    actions (AbstractSet[Action]):
-        A set of actions usable in the context.
-    automata (AbstractSet[Automata]):
-        Automata defined in the modeling context.
-    networks (AbstractSet[Network]):
-        Automata networks defined in the modeling context.
-    properties (AbstractSet[PropertyDefinition]):
-        Properties defined in the modeling context.
+    Parameters:
+        model_type: The model type to use for the context.
+
+    Attributes:
+        model_type:
+            The type of the model, e.g., SHA, PTA or MDP.
+        global_scope:
+            The scope for global variables and constants.
+        actions:
+            A set of actions usable in the context.
+        networks:
+            Automata networks defined in the modeling context.
+        properties:
+            Properties defined in the modeling context.
     """
 
     model_type: ModelType
     global_scope: Scope
 
+    _action_types: t.Dict[str, action.ActionType]
     _automata: t.Set[Automaton]
     _networks: t.Set[Network]
     _properties: t.Set[PropertyDefinition]
@@ -275,6 +282,7 @@ class Context:
     def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
+        self._action_types = {}
         self._automata = set()
         self._networks = set()
         self._properties = set()
@@ -282,6 +290,7 @@ class Context:
 
     @property
     def automata(self) -> t.AbstractSet[Automaton]:
+        """ The automata defined in the modeling context. """
         return self._automata
 
     @property
@@ -299,14 +308,32 @@ class Context:
     def update_metadata(self, metadata: t.Mapping[str, str]) -> None:
         self._metadata.update(metadata)
 
-    def new_scope(self) -> Scope:
-        return self.global_scope.new_child_scope()
-
     def get_automaton_by_name(self, name: str) -> Automaton:
         for automaton in self._automata:
             if automaton.name == name:
                 return automaton
         raise Exception(f"there is no automaton with name {name}")
+
+    def get_action_type_by_name(self, name: str) -> action.ActionType:
+        return self._action_types[name]
+
+    def add_action_type(self, action: action.ActionType) -> None:
+        if action.name in self._action_types:
+            assert action is self._action_types[action.name]
+        self._action_types[action.name] = action
+
+    def create_action_type(
+        self, name: str, *, parameters: t.Sequence[action.ActionParameter] = ()
+    ) -> action.ActionType:
+        if name in self._action_types:
+            raise Exception(f"action with name {name!r} already exists")
+        action_type = action.ActionType(name, tuple(parameters))
+        self.add_action_type(action_type)
+        return action_type
+
+    @property
+    def action_types(self) -> t.ValuesView[action.ActionType]:
+        return self._action_types.values()
 
     def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
         automaton = Automaton(self, name=name)

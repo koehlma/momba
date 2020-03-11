@@ -16,10 +16,10 @@ DIE_MODEL = pathlib.Path(__file__).parent / "resources" / "die.jani"
 def test_basic_jani_import() -> None:
     network = jani.load_model(DIE_MODEL.read_text(encoding="utf-8"))
 
-    assert len(network.automata) == 1
+    assert len(network.ctx.automata) == 1
     assert network.ctx.global_scope.lookup("s").typ == types.INT.bound(0, 7)
 
-    (automaton,) = network.automata
+    (automaton,) = network.ctx.automata
 
     assert len(automaton.locations) == 1
 
@@ -28,9 +28,9 @@ def test_basic_import_export() -> None:
     network = jani.load_model(DIE_MODEL.read_text(encoding="utf-8"))
     network = jani.load_model(jani.dump_model(network))
 
-    assert len(network.automata) == 1
+    assert len(network.ctx.automata) == 1
     assert network.ctx.global_scope.lookup("s").typ == types.INT.bound(0, 7)
 
-    (automaton,) = network.automata
+    (automaton,) = network.ctx.automata
 
     assert len(automaton.locations) == 1
