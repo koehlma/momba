@@ -440,7 +440,7 @@ def _dump_edge(edge: model.Edge, ctx: JANIContext) -> JSON:
 
 
 def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
-    return {
+    jani_automaton: _JANIMap = {
         "name": ctx.get_name(automaton),
         "x-momba-anonymous": automaton.name is None,
         "variables": [
@@ -451,6 +451,11 @@ def _dump_automaton(automaton: model.Automaton, ctx: JANIContext) -> JSON:
         "edges": [_dump_edge(edge, ctx) for edge in automaton.edges],
         "initial-locations": [ctx.get_name(loc) for loc in automaton.initial_locations],
     }
+    if automaton.initial_restriction is not None:
+        jani_automaton["restrict-initial"] = {
+            "exp": _dump_prop(automaton.initial_restriction, ctx)
+        }
+    return jani_automaton
 
 
 def _dump_action_pattern(
@@ -572,6 +577,10 @@ def dump_structure(
         # important: has to be at the end, because we collect the features while dumping
         "features": [feature.value for feature in ctx.features],
     }
+    if network.initial_restriction is not None:
+        jani_model["restrict-initial"] = {
+            "exp": _dump_prop(network.initial_restriction, ctx)
+        }
     return jani_model
 
 
