@@ -497,14 +497,14 @@ def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
     synchronizations: t.Set[model.Synchronization] = set()
     for composition in network.system:
         synchronizations |= composition.synchronizations
+    jani_elements: t.List[_JANIMap] = []
+    for instance in instance_vector:
+        jani_instance: _JANIMap = {"automaton": ctx.get_name(instance.automaton)}
+        if instance.input_enable:
+            jani_instance["input-enable"] = list(instance.input_enable)
+        jani_elements.append(jani_instance)
     return {
-        "elements": [
-            {
-                "automaton": ctx.get_name(instance.automaton),
-                "input-enabled": list(instance.input_enable),
-            }
-            for instance in instance_vector
-        ],
+        "elements": jani_elements,
         "syncs": [
             _dump_sync(instance_vector, synchronization, ctx)
             for synchronization in synchronizations
