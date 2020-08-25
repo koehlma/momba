@@ -11,11 +11,11 @@ import enum
 from . import types
 
 
-_MAP: t.Dict[str, Distribution] = {}
+_MAP: t.Dict[str, NamedDistribution] = {}
 
 
-class Distribution(enum.Enum):
-    DISCRETE_UNIFORM = "DiscreteUniform", (types.INT, types.INT,)
+class NamedDistribution(enum.Enum):
+    DISCRETE_UNIFORM = "DiscreteUniform", (types.INT, types.INT,), types.INT
     BERNOULLI = "Bernoulli", (types.REAL,)
     BINOMIAL = "Binomial", (types.REAL,)
     NEGATIVE_BINOMIAL = "NegativeBinomial", (types.REAL, types.REAL,)
@@ -46,14 +46,19 @@ class Distribution(enum.Enum):
 
     jani_name: str
     parameter_types: t.Tuple[types.Type, ...]
+    result_type: types.Type
 
     def __init__(
-        self, jani_name: str, parameter_types: t.Tuple[types.Type, ...]
+        self,
+        jani_name: str,
+        parameter_types: t.Tuple[types.Type, ...],
+        result_type: types.Type = types.REAL,
     ) -> None:
         _MAP[jani_name] = self
         self.jani_name = jani_name
         self.parameter_types = parameter_types
+        self.result_type = result_type
 
 
-def by_name(jani_name: str) -> Distribution:
+def by_name(jani_name: str) -> NamedDistribution:
     return _MAP[jani_name]

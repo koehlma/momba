@@ -346,7 +346,7 @@ def _type(typ: t.Any) -> types.Type:
 def _comment_warning(structure: t.Any) -> None:
     if "comment" in structure:
         warnings.warn(
-            f"comments are currently not supported, comment information will be lost"
+            "comments are currently not supported, comment information will be lost"
         )
 
 
@@ -486,7 +486,8 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
             )
             action_pattern = model.ActionPattern(
                 ctx.get_action_type_by_name(jani_edge["action"]["name"]),
-                identifiers=jani_edge["action"].get("arguments", ()),
+                # FIXME: support import of action patterns
+                # identifiers=jani_edge["action"].get("arguments", ()),
             )
     rate = _expression(jani_edge["rate"]["exp"]) if "rate" in jani_edge else None
     guard = _expression(jani_edge["guard"]["exp"]) if "guard" in jani_edge else None

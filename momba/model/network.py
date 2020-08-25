@@ -72,6 +72,22 @@ class Network:
         return self._system
 
     @property
+    def links(self) -> t.AbstractSet[Synchronization]:
+        return frozenset(
+            link
+            for composition in self._system
+            for link in composition.synchronizations
+        )
+
+    @property
+    def instances(self) -> t.AbstractSet[Instance]:
+        return frozenset(
+            instance
+            for composition in self._system
+            for instance in composition.instances
+        )
+
+    @property
     def initial_restriction(self) -> t.Optional[Expression]:
         return self._initial_restriction
 
@@ -79,11 +95,11 @@ class Network:
     def initial_restriction(self, initial_restriction: Expression) -> None:
         if self._initial_restriction is not None:
             raise errors.InvalidOperationError(
-                f"restriction of initial valuations has already been set"
+                "restriction of initial valuations has already been set"
             )
         if self.ctx.global_scope.get_type(initial_restriction) != types.BOOL:
             raise errors.InvalidTypeError(
-                f"restriction of initial valuations must have type `types.BOOL`"
+                "restriction of initial valuations must have type `types.BOOL`"
             )
         self._initial_restriction = initial_restriction
 

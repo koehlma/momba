@@ -159,7 +159,7 @@ def _dump_integer_constant(expr: expressions.IntegerConstant, ctx: JANIContext) 
 def _dump_real_constant(expr: expressions.RealConstant, ctx: JANIContext) -> JSON:
     if isinstance(expr.real, expressions.NamedReal):
         return {"constant": expr.real.symbol}
-    if not isinstance(expr.real, float):
+    if not isinstance(expr.real, float) and expr.real != float(expr.real):
         warnings.warn(
             f"imprecise conversion: JSON does not support the number type {type(expr.real)}"
         )
@@ -462,14 +462,18 @@ def _dump_action_pattern(
     pattern: t.Optional[model.ActionPattern], ctx: JANIContext
 ) -> JSON:
     if pattern is not None:
-        if pattern.identifiers:
-            ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
-            return {
-                "name": pattern.action_type.name,
-                "identifiers": list(pattern.identifiers),
-            }
-        else:
-            return pattern.action_type.name
+        assert (
+            not pattern.arguments
+        ), "exporting action patterns with arguments to Jani is currently not supported"
+        # FIXME: add support for exporting patterns with arguments
+        # if pattern.identifiers:
+        #     ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
+        #     return {
+        #         "name": pattern.action_type.name,
+        #         "identifiers": list(pattern.identifiers),
+        #     }
+        # else:
+        return pattern.action_type.name
     return None
 
 

@@ -32,7 +32,7 @@ class Bound:
 
     def __post_init__(self) -> None:
         if self.is_infinity and not self.is_strict:
-            raise InvalidBoundError(f"bound with constant ∞ must be strict")
+            raise InvalidBoundError("bound with constant ∞ must be strict")
 
     @classmethod
     def less_than(cls, constant: NumberType) -> Bound:
@@ -91,7 +91,7 @@ class BaseClock(abc.ABC):
 
 class _ZeroClock(BaseClock):
     def __str__(self) -> str:
-        return f"0"
+        return "0"
 
 
 @dataclasses.dataclass(frozen=True)

@@ -34,6 +34,7 @@ class ModelType(enum.Enum):
     HA = "Hybrid Automaton"
     PHA = "Probabilistic Timed Automaton"
     SHA = "Stochastic Hybrid Automaton"
+
     full_name: str
 
     def __init__(self, full_name: str):
@@ -76,10 +77,10 @@ class VariableDeclaration(Declaration):
         if self.initial_value is not None:
             if not self.typ.is_assignable_from(scope.get_type(self.initial_value)):
                 raise errors.InvalidTypeError(
-                    f"type of initial value is not assignable to variable type"
+                    "type of initial value is not assignable to variable type"
                 )
             if not self.initial_value.is_constant_in(scope):
-                raise errors.NotAConstantError(f"initial value must be a constant")
+                raise errors.NotAConstantError("initial value must be a constant")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -96,7 +97,7 @@ class ConstantDeclaration(Declaration):
                 )
             if not self.typ.is_assignable_from(scope.get_type(self.value)):
                 raise errors.InvalidTypeError(
-                    f"constant expression is not assignable to constant type"
+                    "constant expression is not assignable to constant type"
                 )
 
     def is_constant_in(self, scope: Scope) -> bool:
@@ -179,6 +180,13 @@ class Scope:
 
     def is_local(self, identifier: str) -> bool:
         return identifier in self._declarations
+
+    def is_declared(self, identifier: str) -> bool:
+        if identifier in self._declarations:
+            return True
+        if self.parent is not None:
+            return self.parent.is_declared(identifier)
+        return False
 
     def lookup(self, identifier: str) -> Declaration:
         try:

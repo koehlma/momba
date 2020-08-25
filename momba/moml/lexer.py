@@ -49,7 +49,10 @@ class TokenType(enum.Enum):
     regex: str
     pseudo: bool
 
-    COMMENT = r"u|\(\*(.|\s)*?\*\)"
+    COMMENT = r"#.*|\(\*(.|\s)*?\*\)"
+
+    READ = r"\?>"
+    WRITE = r"<!"
 
     ASSIGN = r":="
 
@@ -197,7 +200,7 @@ def lex(code: str, *, row: int = 0, column: int = 0) -> t.Iterator[Token]:
                             end_column,
                         )
                     if indents[-1] != end_column:
-                        raise Exception(f"inconsistent indentation")
+                        raise LexerError("inconsistent indentation")
         else:
             end_column = column + len(text)
         if token_type in _OPEN_PARENTHESIS:

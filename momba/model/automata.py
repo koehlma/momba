@@ -20,6 +20,8 @@ if t.TYPE_CHECKING:
 class Instance:
     automaton: Automaton
 
+    arguments: t.Tuple[expressions.Expression, ...] = ()
+
     input_enable: t.FrozenSet[str] = frozenset()
 
 
@@ -63,12 +65,12 @@ class Location:
                 )
             if not effects.are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
-                    f"incompatible assignments for transient values"
+                    "incompatible assignments for transient values"
                 )
             for assignment in self.transient_values:
                 if assignment.index != 0:
                     raise errors.ModelingError(
-                        f"index of assignments for transient values must be zero"
+                        "index of assignments for transient values must be zero"
                     )
                 assignment.validate(scope)
 
@@ -86,7 +88,7 @@ class Destination:
             )
         if self.probability is not None:
             if not scope.get_type(self.probability).is_numeric:
-                raise errors.InvalidTypeError(f"probability value must be numeric")
+                raise errors.InvalidTypeError("probability value must be numeric")
         for assignment in self.assignments:
             assignment.validate(scope)
 
@@ -123,6 +125,8 @@ class Automaton:
 
     name: t.Optional[str]
 
+    _parameters: t.List[str]
+
     _locations: t.Set[Location]
     _initial_locations: t.Set[Location]
     _initial_restriction: t.Optional[expressions.Expression]
@@ -134,12 +138,20 @@ class Automaton:
         self.ctx = ctx
         self.scope = self.ctx.global_scope.create_child_scope()
         self.name = name
+        self._parameters = []
         self._locations = set()
         self._initial_locations = set()
         self._initial_restriction = None
         self._edges = set()
         self._incoming_edges = collections.defaultdict(set)
         self._outgoing_edges = collections.defaultdict(set)
+
+    def __repr__(self) -> str:
+        return f"<Automaton @ 0x{id(self):X} name={self.name!r}>"
+
+    @property
+    def parameters(self) -> t.Sequence[str]:
+        return self._parameters
 
     @property
     def locations(self) -> t.AbstractSet[Location]:
@@ -157,11 +169,11 @@ class Automaton:
     def initial_restriction(self, initial_restriction: expressions.Expression) -> None:
         if self._initial_restriction is not None:
             raise errors.InvalidOperationError(
-                f"restriction of initial valuations has already been set"
+                "restriction of initial valuations has already been set"
             )
         if self.scope.get_type(initial_restriction) != types.BOOL:
             raise errors.InvalidTypeError(
-                f"restriction of initial valuations must have type `types.BOOL`"
+                "restriction of initial valuations must have type `types.BOOL`"
             )
         self._initial_restriction = initial_restriction
 
@@ -256,13 +268,32 @@ class Automaton:
             name, typ, is_transient=is_transient, initial_value=initial_value
         )
 
+    def declare_parameter(
+        self,
+        name: str,
+        typ: types.Type,
+        *,
+        default_value: t.Optional[expressions.Expression] = None,
+    ) -> None:
+        """
+        Declarse a parameter for the automaton.
+        """
+        self.scope.declare_constant(name, typ, value=default_value)
+        self._parameters.append(name)
+
     def create_instance(
-        self, *, input_enable: t.AbstractSet[str] = frozenset()
+        self,
+        *,
+        parameters: t.Sequence[expressions.Expression] = (),
+        input_enable: t.AbstractSet[str] = frozenset(),
     ) -> Instance:
         """
         Creates an instance of the automaton for composition.
         """
-        return Instance(self, input_enable=frozenset(input_enable))
+        assert len(parameters) == len(self.parameters)
+        return Instance(
+            self, arguments=tuple(parameters), input_enable=frozenset(input_enable)
+        )
 
 
 Assignments = t.Union[

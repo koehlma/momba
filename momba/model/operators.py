@@ -4,53 +4,120 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import enum
+import fractions
+import math
 
 
-class BinaryOperator:
+class Operator:
     symbol: str
 
     def __init__(self, symbol: str):
         self.symbol = symbol
 
 
+class BinaryOperator(Operator):
+    pass
+
+
+class NativeBooleanFunction(t.Protocol):
+    def __call__(self, left: bool, right: bool) -> bool:
+        pass
+
+
 class BooleanOperator(BinaryOperator, enum.Enum):
-    AND = "∧"
-    OR = "∨"
-    XOR = "⊕"
-    IMPLY = "⇒"
-    EQUIV = "⇔"
+    AND = "∧", lambda left, right: left and right
+    OR = "∨", lambda left, right: left or right
+    XOR = "⊕", lambda left, right: (left or right) and not (left and right)
+    IMPLY = "⇒", lambda left, right: not left or right
+    EQUIV = "⇔", lambda left, right: left is right
+
+    native_function: NativeBooleanFunction
+
+    def __init__(self, symbol: str, native_function: NativeBooleanFunction) -> None:
+        super().__init__(symbol)
+        self.native_function = native_function
+
+
+Number = t.Union[int, float, fractions.Fraction]
+
+
+class NativeArithmeticFunction(t.Protocol):
+    def __call__(self, left: Number, right: Number) -> Number:
+        pass
 
 
 class ArithmeticOperator(BinaryOperator, enum.Enum):
-    ADD = "+"
-    SUB = "-"
-    MUL = "*"
-    MOD = "%"
+    ADD = "+", lambda left, right: left + right
+    SUB = "-", lambda left, right: left - right
+    MUL = "*", lambda left, right: left * right
+    MOD = "%", lambda left, right: left % right  # TODO: is this correct?
 
-    MIN = "min"
-    MAX = "max"
+    MIN = "min", lambda left, right: min(left, right)
+    MAX = "max", lambda left, right: max(left, right)
 
-    FLOOR_DIV = "//"
-    REAL_DIV = "/"
+    FLOOR_DIV = "//", lambda left, right: left // right
+    REAL_DIV = "/", lambda left, right: left / right
 
-    LOG = "log"
-    POW = "pow"
+    LOG = "log", lambda left, right: math.log(left, right)
+    POW = "pow", lambda left, right: pow(left, right)
+
+    native_function: NativeArithmeticFunction
+
+    def __init__(self, symbol: str, native_function: NativeArithmeticFunction) -> None:
+        super().__init__(symbol)
+        self.native_function = native_function
+
+
+class NativeEqualityFunction(t.Protocol):
+    def __call__(self, left: t.Any, right: t.Any) -> bool:
+        pass
 
 
 class EqualityOperator(BinaryOperator, enum.Enum):
-    EQ = "="
-    NEQ = "≠"
+    EQ = "=", lambda left, right: left == right
+    NEQ = "≠", lambda left, right: left != right
+
+    native_function: NativeEqualityFunction
+
+    def __init__(self, symbol: str, native_function: NativeEqualityFunction) -> None:
+        super().__init__(symbol)
+        self.native_function = native_function
+
+
+class NativeComparisonFunction(t.Protocol):
+    def __call__(self, left: t.Any, right: t.Any) -> bool:
+        pass
 
 
 class ComparisonOperator(BinaryOperator, enum.Enum):
-    LT = "<"
-    LE = "≤"
-    GE = "≥"
-    GT = ">"
+    LT = "<", True, lambda left, right: left < right
+    LE = "≤", False, lambda left, right: left <= right
+    GE = "≥", False, lambda left, right: left >= right
+    GT = ">", True, lambda left, right: left > right
+
+    is_strict: bool
+    native_function: NativeComparisonFunction
+
+    def __init__(
+        self, symbol: str, is_strict: bool, native_function: NativeComparisonFunction
+    ) -> None:
+        super().__init__(symbol)
+        self.is_strict = is_strict
+        self.native_function = native_function
 
     def swap(self) -> ComparisonOperator:
         return _COMPARISON_SWAP_TABLE[self]
+
+    @property
+    def is_less(self) -> bool:
+        return self in {ComparisonOperator.LT, ComparisonOperator.LE}
+
+    @property
+    def is_greater(self) -> bool:
+        return self in {ComparisonOperator.GE, ComparisonOperator.GT}
 
 
 _COMPARISON_SWAP_TABLE = {
@@ -61,20 +128,31 @@ _COMPARISON_SWAP_TABLE = {
 }
 
 
-class UnaryOperator:
-    symbol: str
-
-    def __init__(self, symbol: str):
-        self.symbol = symbol
+class UnaryOperator(Operator):
+    pass
 
 
-class Not(UnaryOperator, enum.Enum):
+class NotOperator(UnaryOperator, enum.Enum):
     NOT = "¬"
 
 
-class Round(UnaryOperator, enum.Enum):
-    CEIL = "ceil"
-    FLOOR = "floor"
+class NativeRoundFunction(t.Protocol):
+    def __call__(self, operand: Number) -> int:
+        pass
+
+
+class RoundOperator(UnaryOperator, enum.Enum):
+    CEIL = "ceil", lambda operand: math.ceil(operand)
+    FLOOR = "floor", lambda operand: math.floor(operand)
+
+    native_function: NativeRoundFunction
+
+    def __init__(self, symbol: str, native_function: NativeRoundFunction) -> None:
+        super().__init__(symbol)
+        self.native_function = native_function
+
+
+# TODO for MX: review the code for properties Michaela wrote
 
 
 class Expected(enum.Enum):

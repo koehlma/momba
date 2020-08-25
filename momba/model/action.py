@@ -4,27 +4,27 @@
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
-import dataclasses
+import abc
 
 
 if t.TYPE_CHECKING:
-    from . import context, types
+    from . import context, expressions, types
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class ActionParameter:
     typ: types.Type
 
     comment: t.Optional[str] = None
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class ActionType:
     name: str
 
-    # XXX: unable to type, could be any kind of hashable sequence
     parameters: t.Tuple[ActionParameter, ...] = ()
 
     comment: t.Optional[str] = None
@@ -33,22 +33,49 @@ class ActionType:
     def has_parameters(self) -> bool:
         return bool(self.parameters)
 
-    def create_pattern(self, *identifiers: str) -> ActionPattern:
-        return ActionPattern(self, identifiers=identifiers)
+    def create_pattern(self, *arguments: ActionArgument) -> ActionPattern:
+        return ActionPattern(self, arguments=arguments)
 
 
-@dataclasses.dataclass(frozen=True)
+class ActionArgument(abc.ABC):
+    pass
+
+
+@d.dataclass(frozen=True)
+class WriteArgument(ActionArgument):
+    # is evaluated in the automata's scope, not in the edge scope
+    expression: expressions.Expression
+
+
+@d.dataclass(frozen=True)
+class ReadArgument(ActionArgument):
+    # has to be declared in the automata's scope, may be transient
+    name: str
+
+
+@d.dataclass(frozen=True)
+class GuardArgument(ActionArgument):
+    name: str
+
+
+@d.dataclass(frozen=True)
 class ActionPattern:
     action_type: ActionType
 
-    # XXX: unable to type, could be any kind of hashable sequence
-    identifiers: t.Tuple[str, ...] = ()
+    arguments: t.Tuple[ActionArgument, ...] = ()
 
     def __post_init__(self) -> None:
-        if len(self.action_type.parameters) != len(self.identifiers):
-            raise ValueError(f"number of parameters and identifiers does not match")
+        if len(self.action_type.parameters) != len(self.arguments):
+            raise ValueError("number of parameters andarguments does not match")
 
     def declare_in(self, scope: context.Scope) -> None:
         """ Declares the identifiers of the pattern in the given scope. """
-        for name, parameter in zip(self.identifiers, self.action_type.parameters):
-            scope.declare(name, parameter.typ)
+        for argument, parameter in zip(self.arguments, self.action_type.parameters):
+            if isinstance(argument, GuardArgument):
+                if scope.is_declared(argument.name):
+                    assert scope.lookup(argument.name).typ == parameter.typ
+                else:
+                    scope.declare(argument.name, parameter.typ)
+            elif isinstance(argument, ReadArgument):
+                # FIXME: proper error reporting, should be declared, e.g., as transient
+                assert scope.is_declared(argument.name)

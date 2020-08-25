@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "momba"
-version = "0.1.4.dev0"
+version = "0.1.4.dev3"
 description = "A Python library for quantitative models."
 authors = [
     "Maximilian Köhl <mkoehl@cs.uni-saarland.de>"
@@ -19,6 +19,7 @@ classifiers = [
 python = "^3.8"
 click = {version = "^7.0", optional = true}
 sphinx_autodoc_typehints = "^1.10.3"
+mxu = "^0.0.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -33,7 +34,7 @@ sphinx = "^2.3.1"
 sphinx-rtd-theme = "^0.4.3"
 
 [tool.poetry.scripts]
-moml = "momba.moml.__main__:main"
+momba-moml = "momba.moml.__main__:main"
 
 [tool.poetry.extras]
 cli = ["click"]

@@ -7,10 +7,11 @@ from __future__ import annotations
 import typing as t
 
 import dataclasses
+import fractions
 
 from . import lexer
 from .. import model
-from ..model import expressions, types, effects
+from ..model import action, expressions, types, effects
 
 
 _IGNORE = {lexer.TokenType.WHITESPACE, lexer.TokenType.COMMENT}
@@ -58,7 +59,7 @@ class TokenStream:
 
     def consume(self) -> lexer.Token:
         if self._current_token is None:
-            raise ValueError(f"no token to consume")
+            raise ValueError("no token to consume")
         token = self._current_token
         self._current_token = self._next_token
         self._next_token = self._forward()
@@ -102,7 +103,7 @@ class TokenStream:
     @property
     def current_token(self) -> lexer.Token:
         if self._current_token is None:
-            raise self.make_error(f"expected token but found EOF")
+            raise self.make_error("expected token but found EOF")
         return self._current_token
 
     def make_error(self, message: str) -> MomlSyntaxError:
@@ -219,7 +220,7 @@ def _parse_primary_expression(stream: TokenStream) -> model.Expression:
     if stream.accept(lexer.TokenType.INTEGER, consume=False):
         return model.convert(int(stream.consume().text))
     elif stream.accept(lexer.TokenType.REAL, consume=False):
-        return model.convert(float(stream.consume().text))
+        return model.convert(fractions.Fraction(stream.consume().text))
     elif stream.accept(lexer.TokenType.IDENTIFIER, consume=False):
         name = stream.consume().text
         if stream.accept(lexer.TokenType.LEFT_PAR):
@@ -247,7 +248,7 @@ def _parse_primary_expression(stream: TokenStream) -> model.Expression:
         stream.expect(lexer.TokenType.RIGHT_PAR)
         return expr
     else:
-        raise stream.make_error(f"expected primary expression")
+        raise stream.make_error("expected primary expression")
 
 
 def _parse_unary_expression(stream: TokenStream) -> model.Expression:
@@ -320,7 +321,7 @@ def _parse_assignment(stream: TokenStream) -> model.Assignment:
     if stream.check(lexer.TokenType.INTEGER):
         index = int(stream.consume().text)
         if index < 0:
-            stream.make_error(f"unexpected token")
+            stream.make_error("unexpected token")
     else:
         index = 0
     stream.expect(":=")
@@ -339,12 +340,12 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
         while not stream.accept(lexer.TokenType.DEDENT):
             if stream.accept("invariant"):
                 if progress_invariant is not None:
-                    raise stream.make_error(f"duplicate definition of invariant")
+                    raise stream.make_error("duplicate definition of invariant")
                 progress_invariant = parse_expression(stream)
             elif stream.check("assign"):
                 transient_values.add(_parse_assignment(stream))
             else:
-                raise stream.make_error(f"expected location body")
+                raise stream.make_error("expected location body")
     return automaton.create_location(
         name,
         progress_invariant=progress_invariant,
@@ -356,9 +357,20 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
 def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
     stream.expect("automaton")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
+    automaton = ctx.create_automaton(name=name)
+    if stream.accept("("):
+        while not stream.accept(")"):
+            parameter_declaration = _parse_identifier_declaration(stream)
+            automaton.declare_parameter(
+                parameter_declaration.name,
+                parameter_declaration.typ,
+                default_value=parameter_declaration.value,
+            )
+            if not stream.accept(","):
+                stream.expect(")")
+                break
     stream.expect(":")
     stream.expect(lexer.TokenType.INDENT)
-    automaton = ctx.create_automaton(name=name)
     location_map: t.Dict[str, model.Location] = {}
     while not stream.accept(lexer.TokenType.DEDENT):
         if stream.check({"transient", "variable"}):
@@ -410,6 +422,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                     )
                 else:
                     raise stream.make_error("unexpected token")
+            assert destinations, "missign destinations"
             automaton.create_edge(
                 location_map[location_name],
                 frozenset(destinations),
@@ -427,15 +440,26 @@ def _parse_action_pattern(
 ) -> t.Optional[model.ActionPattern]:
     if stream.accept({"-", "τ"}):
         return None
-    action = ctx.get_action_type_by_name(stream.expect(lexer.TokenType.IDENTIFIER).text)
-    arguments: t.List[str] = []
+    action_type = ctx.get_action_type_by_name(
+        stream.expect(lexer.TokenType.IDENTIFIER).text
+    )
+    arguments: t.List[action.ActionArgument] = []
     if stream.accept("(") and not stream.accept(")"):
         while True:
-            arguments.append(stream.expect(lexer.TokenType.IDENTIFIER).text)
+            if stream.accept("<!"):
+                arguments.append(action.WriteArgument(parse_expression(stream)))
+            elif stream.accept("?>"):
+                arguments.append(
+                    action.ReadArgument(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                )
+            else:
+                arguments.append(
+                    action.GuardArgument(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                )
             if stream.accept(")"):
                 break
             stream.expect(",")
-    return model.ActionPattern(action, tuple(arguments))
+    return model.ActionPattern(action_type, arguments=tuple(arguments))
 
 
 def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
@@ -456,6 +480,13 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
             name = stream.expect(lexer.TokenType.IDENTIFIER).text
             assert name not in instance_map
             automaton_name = stream.expect(lexer.TokenType.IDENTIFIER).text
+            parameters: t.List[expressions.Expression] = []
+            if stream.accept("("):
+                while not stream.accept(")"):
+                    parameters.append(parse_expression(stream))
+                    if not stream.accept(","):
+                        stream.expect(")")
+                        break
             input_enable: t.Set[str] = set()
             if stream.accept(":"):
                 stream.expect(lexer.TokenType.INDENT)
@@ -467,7 +498,7 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                 stream.expect(lexer.TokenType.DEDENT)
             instance_map[name] = ctx.get_automaton_by_name(
                 automaton_name
-            ).create_instance(input_enable=input_enable)
+            ).create_instance(parameters=parameters, input_enable=input_enable)
         elif stream.accept("composition"):
             instances: t.List[model.Instance] = []
             instances.append(
@@ -482,20 +513,25 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                 stream.expect(lexer.TokenType.INDENT)
                 while not stream.accept(lexer.TokenType.DEDENT):
                     stream.expect("synchronize")
-                    actions: t.List[t.Optional[model.ActionPattern]] = []
-                    actions.append(_parse_action_pattern(stream, ctx))
+                    parenthesis = stream.accept("(")
+                    patterns: t.List[t.Optional[model.ActionPattern]] = []
+                    patterns.append(_parse_action_pattern(stream, ctx))
                     while stream.accept("|"):
-                        actions.append(_parse_action_pattern(stream, ctx))
-                    assert len(actions) == len(instances)
+                        patterns.append(_parse_action_pattern(stream, ctx))
+                    assert len(patterns) == len(instances)
                     stream.expect(lexer.TokenType.ARROW)
                     result_pattern = _parse_action_pattern(stream, ctx)
+                    if parenthesis:
+                        stream.expect(")")
                     vector: t.Dict[model.Instance, model.ActionPattern] = {}
-                    for index, action in enumerate(actions):
-                        if action is not None:
-                            vector[instances[index]] = action
+                    for index, action_pattern in enumerate(patterns):
+                        if action_pattern is not None:
+                            vector[instances[index]] = action_pattern
                     composition.create_synchronization(
                         vector, result_pattern=result_pattern
                     )
+        else:
+            raise stream.make_error("expected network element")
 
 
 def _parse_metadata(stream: TokenStream) -> t.Mapping[str, str]:

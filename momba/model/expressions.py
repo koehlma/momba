@@ -9,6 +9,7 @@ import typing as t
 import abc
 import dataclasses
 import enum
+import fractions
 import math
 import numbers
 
@@ -50,6 +51,12 @@ class Expression(properties.Property, abc.ABC):
     @property
     def is_sampling_free(self) -> bool:
         return all(not isinstance(e, Sample) for e in self.traverse)
+
+    @property
+    def identifiers(self) -> t.AbstractSet[Identifier]:
+        return frozenset(
+            child for child in self.traverse if isinstance(child, Identifier)
+        )
 
     def lor(self, other: Expression) -> Expression:
         if not isinstance(other, Expression):
@@ -167,7 +174,7 @@ class NamedReal(enum.Enum):
         _NAMED_REAL_MAP[symbol] = self
 
 
-Real = t.Union[NamedReal, numbers.Real]
+Real = t.Union[NamedReal, fractions.Fraction]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -352,7 +359,7 @@ class UnaryExpression(Expression):
 
 
 class Round(UnaryExpression):
-    operator: operators.Round
+    operator: operators.RoundOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
@@ -364,7 +371,7 @@ class Round(UnaryExpression):
 
 
 class Not(UnaryExpression):
-    operator: operators.Not
+    operator: operators.NotOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
@@ -377,7 +384,7 @@ class Not(UnaryExpression):
 
 @dataclasses.dataclass(frozen=True)
 class Sample(Expression):
-    distribution: distributions.Distribution
+    distribution: distributions.NamedDistribution
     arguments: t.Sequence[Expression]
 
     def __post_init__(self) -> None:
@@ -402,7 +409,7 @@ class Sample(Expression):
                     f"parameter type `{parameter_type}` is not assignable "
                     f"from argument type `{argument_type}`"
                 )
-        return types.REAL
+        return self.distribution.result_type
 
 
 @dataclasses.dataclass(frozen=True)
@@ -462,8 +469,8 @@ def const(value: PythonValue) -> Constant:
         return BooleanConstant(value)
     if isinstance(value, int):
         return IntegerConstant(value)
-    elif isinstance(value, (numbers.Number, NamedReal)):
-        return RealConstant(value)
+    elif isinstance(value, (fractions.Fraction, float)):
+        return RealConstant(fractions.Fraction(value))
     elif isinstance(value, str):
         return RealConstant(_NAMED_REAL_MAP[value])
     raise ConversionError(f"unable to convert Python value {value!r} to Momba value")
@@ -583,15 +590,15 @@ UnaryConstructor = t.Callable[[Expression], Expression]
 
 
 def lnot(operand: Expression) -> Expression:
-    return Not(operators.Not.NOT, operand)
+    return Not(operators.NotOperator.NOT, operand)
 
 
 def floor(operand: MaybeExpression) -> Expression:
-    return Round(operators.Round.FLOOR, convert(operand))
+    return Round(operators.RoundOperator.FLOOR, convert(operand))
 
 
 def ceil(operand: Expression) -> Expression:
-    return Round(operators.Round.CEIL, convert(operand))
+    return Round(operators.RoundOperator.CEIL, convert(operand))
 
 
 def normalize_xor(expr: Expression) -> Expression:
