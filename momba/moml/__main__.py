@@ -4,12 +4,9 @@
 
 from __future__ import annotations
 
-import dataclasses as d
 import typing as t
 
-import fractions
 import pathlib
-import random
 import sys
 
 import click
@@ -19,7 +16,6 @@ from .parser import TokenStream, parse_moml, MomlSyntaxError
 from .. import model
 
 from ..explore import engine
-from ..model import action
 from ..pure import pta
 
 from ..ext.jani import dump_model

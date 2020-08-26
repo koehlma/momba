@@ -418,3 +418,11 @@ def intersect(left: DBM[ClockT], right: DBM[ClockT]) -> DBM[ClockT]:
     result = left.copy()
     result.intersect(right)
     return result
+
+
+def create_clock(name: str) -> NamedClock:
+    return NamedClock(name)
+
+
+def create_clocks(*names: str) -> t.Sequence[NamedClock]:
+    return list(map(create_clock, names))
