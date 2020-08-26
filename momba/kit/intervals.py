@@ -7,15 +7,14 @@ from __future__ import annotations
 import typing as t
 
 import dataclasses
-import fractions
 
 
-NumberType = t.Union[int, float, fractions.Fraction]
+NumberT = t.TypeVar("NumberT")
 
 
 @dataclasses.dataclass(frozen=True)
-class Interval:
-    infimum: NumberType
-    supremum: NumberType
+class Interval(t.Generic[NumberT]):
+    infimum: NumberT
+    supremum: NumberT
     infimum_included: bool = True
     supremum_included: bool = True

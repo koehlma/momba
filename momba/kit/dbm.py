@@ -16,7 +16,7 @@ import fractions
 import itertools
 import math
 
-from .interval import Interval
+from .intervals import Interval
 
 
 NumberType = t.Union[int, float, fractions.Fraction]
@@ -288,7 +288,7 @@ class DBM(AbstractDBM[ClockT], t.Generic[ClockT]):
     def freeze(self) -> FrozenDBM[ClockT]:
         return FrozenDBM(self._clocks, frozenset(self.constraints))
 
-    def get_interval(self, clock: ClockT) -> Interval:
+    def get_interval(self, clock: ClockT) -> Interval[NumberType]:
         lower_bound = self.get_bound(ZERO_CLOCK, clock)
         upper_bound = self.get_bound(clock, ZERO_CLOCK)
         return Interval(
