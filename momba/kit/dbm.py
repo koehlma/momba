@@ -8,24 +8,25 @@ An implementation of *Difference Bound Matrices* (DBMs) in pure Python.
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import abc
-import dataclasses
+import fractions
 import itertools
 import math
 
 from .interval import Interval
 
 
-NumberType = t.Union[int, float]
+NumberType = t.Union[int, float, fractions.Fraction]
 
 
 class InvalidBoundError(ValueError):
     pass
 
 
-@dataclasses.dataclass(frozen=True, order=False)
+@d.dataclass(frozen=True, order=False)
 class Bound:
     constant: NumberType
     is_strict: bool = False
@@ -48,7 +49,13 @@ class Bound:
 
     @property
     def is_integer(self) -> bool:
-        return isinstance(self.constant, int) or self.constant.is_integer()
+        if isinstance(self.constant, int):
+            return True
+        elif isinstance(self.constant, float):
+            return self.constant.is_integer()
+        else:
+            assert isinstance(self.constant, fractions.Fraction)
+            return self.constant.denominator == 1
 
     def add(self, other: Bound) -> Bound:
         if self.is_strict or other.is_strict:
@@ -85,62 +92,62 @@ assert Bound(-3, is_strict=True) < Bound(2, is_strict=True)
 assert Bound(3, is_strict=True) > Bound(2, is_strict=False)
 
 
-class BaseClock(abc.ABC):
-    pass
-
-
-class _ZeroClock(BaseClock):
+@d.dataclass(frozen=True)
+class ZeroClock:
     def __str__(self) -> str:
         return "0"
 
 
-@dataclasses.dataclass(frozen=True)
-class Clock(BaseClock):
+@d.dataclass(frozen=True)
+class NamedClock:
     name: str
 
     def __str__(self) -> str:
         return f"Clock({self.name})"
 
 
-ZERO_CLOCK = _ZeroClock()
+ZERO_CLOCK = ZeroClock()
 
 
-@dataclasses.dataclass(frozen=True)
-class Difference:
-    left: BaseClock
-    right: BaseClock
+ClockT = t.TypeVar("ClockT", bound=t.Hashable)
+
+
+@d.dataclass(frozen=True)
+class Difference(t.Generic[ClockT]):
+    left: t.Union[ClockT, ZeroClock]
+    right: t.Union[ClockT, ZeroClock]
 
     def __str__(self) -> str:
         return f"{self.left} - {self.right}"
 
-    def bound(self, bound: Bound) -> Constraint:
+    def bound(self, bound: Bound) -> Constraint[ClockT]:
         return Constraint(self, bound=bound)
 
-    def less_than(self, constant: NumberType) -> Constraint:
+    def less_than(self, constant: NumberType) -> Constraint[ClockT]:
         return self.bound(Bound.less_than(constant))
 
-    def less_or_equal(self, constant: NumberType) -> Constraint:
+    def less_or_equal(self, constant: NumberType) -> Constraint[ClockT]:
         return self.bound(Bound.less_or_equal(constant))
 
 
-@dataclasses.dataclass(frozen=True)
-class Constraint:
-    difference: Difference
+@d.dataclass(frozen=True)
+class Constraint(t.Generic[ClockT]):
+    difference: Difference[ClockT]
     bound: Bound
 
     def __str__(self) -> str:
         return f"{self.difference} {self.bound}"
 
     @property
-    def clocks(self) -> t.AbstractSet[BaseClock]:
+    def clocks(self) -> t.AbstractSet[t.Union[ClockT, ZeroClock]]:
         return {self.difference.left, self.difference.right}
 
     @property
-    def left(self) -> BaseClock:
+    def left(self) -> t.Union[ClockT, ZeroClock]:
         return self.difference.left
 
     @property
-    def right(self) -> BaseClock:
+    def right(self) -> t.Union[ClockT, ZeroClock]:
         return self.difference.right
 
     @property
@@ -152,31 +159,25 @@ class Constraint:
         return self.bound.is_strict
 
 
-def create_clock(name: str) -> Clock:
-    return Clock(name)
-
-
-def create_clocks(*names: str) -> t.Sequence[Clock]:
-    return list(map(create_clock, names))
-
-
-def difference(clock: BaseClock, other: BaseClock) -> Difference:
+def difference(
+    clock: t.Union[ZeroClock, ClockT], other: t.Union[ZeroClock, ClockT]
+) -> Difference[ClockT]:
     return Difference(clock, other)
 
 
 _INFINITY_BOUND = Bound.less_than(float("inf"))
 _ZERO_BOUND = Bound.less_or_equal(0)
 
-_Matrix = t.Dict[Difference, Bound]
+_Matrix = t.Dict[Difference[ClockT], Bound]
 
 
-Clocks = t.AbstractSet[BaseClock]
+Clocks = t.AbstractSet[t.Union[ClockT, ZeroClock]]
 
-_FrozenClocks = t.FrozenSet[BaseClock]
+_FrozenClocks = t.FrozenSet[t.Union[ClockT, ZeroClock]]
 
 
-def _create_matrix(clocks: Clocks) -> _Matrix:
-    matrix: _Matrix = {}
+def _create_matrix(clocks: Clocks[ClockT]) -> _Matrix[ClockT]:
+    matrix: _Matrix[ClockT] = {}
     for clock in clocks:
         # the value of clocks is always positive, and …
         matrix[difference(ZERO_CLOCK, clock)] = _ZERO_BOUND
@@ -185,7 +186,7 @@ def _create_matrix(clocks: Clocks) -> _Matrix:
     return matrix
 
 
-def _freeze_clocks(clocks: Clocks) -> _FrozenClocks:
+def _freeze_clocks(clocks: Clocks[ClockT]) -> _FrozenClocks[ClockT]:
     return frozenset(clocks).union({ZERO_CLOCK})
 
 
@@ -193,41 +194,41 @@ class InvalidClockError(ValueError):
     pass
 
 
-class AbstractDBM(abc.ABC):
+class AbstractDBM(abc.ABC, t.Generic[ClockT]):
     @property
     @abc.abstractmethod
-    def constraints(self) -> t.AbstractSet[Constraint]:
+    def constraints(self) -> t.AbstractSet[Constraint[ClockT]]:
         raise NotImplementedError()
 
 
-@dataclasses.dataclass(frozen=True)
-class FrozenDBM(AbstractDBM):
-    _clocks: _FrozenClocks
-    _constraints: t.FrozenSet[Constraint]
+@d.dataclass(frozen=True)
+class FrozenDBM(AbstractDBM[ClockT], t.Generic[ClockT]):
+    _clocks: _FrozenClocks[ClockT]
+    _constraints: t.FrozenSet[Constraint[ClockT]]
 
-    def create_dbm(self) -> DBM:
+    def create_dbm(self) -> DBM[ClockT]:
         dbm = DBM.create_unconstrained(self._clocks)
         dbm.constrain(*self._constraints)
         return dbm
 
     @property
-    def constraints(self) -> t.AbstractSet[Constraint]:
+    def constraints(self) -> t.AbstractSet[Constraint[ClockT]]:
         return self._constraints
 
 
-@dataclasses.dataclass
-class DBM(AbstractDBM):
-    _clocks: _FrozenClocks
-    _matrix: _Matrix
+@d.dataclass
+class DBM(AbstractDBM[ClockT], t.Generic[ClockT]):
+    _clocks: _FrozenClocks[ClockT]
+    _matrix: _Matrix[ClockT]
 
     @classmethod
-    def create_unconstrained(cls, clocks: Clocks) -> DBM:
+    def create_unconstrained(cls, clocks: Clocks[ClockT]) -> DBM[ClockT]:
         """ Creates a DBM without any constraints. """
         frozen_clocks = _freeze_clocks(clocks)
         return DBM(frozen_clocks, _create_matrix(frozen_clocks))
 
     @classmethod
-    def create_zero(cls, clocks: Clocks) -> DBM:
+    def create_zero(cls, clocks: Clocks[ClockT]) -> DBM[ClockT]:
         """ Creates a DBM where all clocks are constraint to be zero. """
         frozen_clocks = _freeze_clocks(clocks)
         matrix = _create_matrix(frozen_clocks)
@@ -255,19 +256,26 @@ class DBM(AbstractDBM):
                 self._matrix[difference(x, z)] = xy_bound.add(yz_bound)
         assert self._assert_invariant()
 
-    def _set_bound(self, left: BaseClock, right: BaseClock, bound: Bound) -> None:
+    def _set_bound(
+        self,
+        left: t.Union[ClockT, ZeroClock],
+        right: t.Union[ClockT, ZeroClock],
+        bound: Bound,
+    ) -> None:
         self._matrix[difference(left, right)] = bound
         assert self._assert_invariant()
 
-    def get_bound(self, left: BaseClock, right: BaseClock) -> Bound:
+    def get_bound(
+        self, left: t.Union[ClockT, ZeroClock], right: t.Union[ClockT, ZeroClock]
+    ) -> Bound:
         return self._matrix.get(difference(left, right), _INFINITY_BOUND)
 
     @property
-    def clocks(self) -> t.AbstractSet[BaseClock]:
+    def clocks(self) -> t.AbstractSet[t.Union[ClockT, ZeroClock]]:
         return self._clocks
 
     @property
-    def constraints(self) -> t.AbstractSet[Constraint]:
+    def constraints(self) -> t.AbstractSet[Constraint[ClockT]]:
         return {Constraint(diff, bound) for diff, bound in self._matrix.items()}
 
     @property
@@ -277,10 +285,10 @@ class DBM(AbstractDBM):
                 return True
         return False
 
-    def freeze(self) -> FrozenDBM:
+    def freeze(self) -> FrozenDBM[ClockT]:
         return FrozenDBM(self._clocks, frozenset(self.constraints))
 
-    def get_interval(self, clock: Clock) -> Interval:
+    def get_interval(self, clock: ClockT) -> Interval:
         lower_bound = self.get_bound(ZERO_CLOCK, clock)
         upper_bound = self.get_bound(clock, ZERO_CLOCK)
         return Interval(
@@ -290,7 +298,7 @@ class DBM(AbstractDBM):
             supremum_included=not upper_bound.is_strict,
         )
 
-    def _constrain(self, difference: Difference, by: Bound) -> None:
+    def _constrain(self, difference: Difference[ClockT], by: Bound) -> None:
         if difference.left not in self._clocks or difference.right not in self._clocks:
             raise InvalidClockError(
                 f"cannot constrain {self} with {difference}: unknown clocks"
@@ -298,10 +306,10 @@ class DBM(AbstractDBM):
         if by < self._matrix.get(difference, _INFINITY_BOUND):
             self._matrix[difference] = by
 
-    def copy(self) -> DBM:
+    def copy(self) -> DBM[ClockT]:
         return DBM(_clocks=self._clocks, _matrix=self._matrix.copy())
 
-    def reset(self, clock: Clock, value: NumberType = 0) -> None:
+    def reset(self, clock: ClockT, value: NumberType = 0) -> None:
         assert not self.is_empty
         upper_bound = Bound.less_or_equal(value)
         lower_bound = Bound.less_or_equal(-value)
@@ -316,17 +324,17 @@ class DBM(AbstractDBM):
             )
 
     @t.overload
-    def constrain(self, *constraints: Constraint) -> None:
+    def constrain(self, *constraints: Constraint[ClockT]) -> None:
         pass
 
     @t.overload
-    def constrain(self, *, difference: Difference, by: Bound) -> None:
+    def constrain(self, *, difference: Difference[ClockT], by: Bound) -> None:
         pass
 
     def constrain(
         self,
-        *constraints: Constraint,
-        difference: t.Optional[Difference] = None,
+        *constraints: Constraint[ClockT],
+        difference: t.Optional[Difference[ClockT]] = None,
         by: t.Optional[Bound] = None,
     ) -> None:
         try:
@@ -392,7 +400,7 @@ class DBM(AbstractDBM):
         finally:
             self._canonicalize()
 
-    def intersect(self, other: DBM) -> None:
+    def intersect(self, other: DBM[ClockT]) -> None:
         assert other._clocks <= self._clocks
         try:
             for difference, bound in other._matrix.items():
@@ -401,33 +409,12 @@ class DBM(AbstractDBM):
             self._canonicalize()
 
 
-def print_constraints(dbm: AbstractDBM) -> None:
+def print_constraints(dbm: AbstractDBM[ClockT]) -> None:
     for constraint in dbm.constraints:
         print(constraint)
 
 
-def intersect(left: DBM, right: DBM) -> DBM:
+def intersect(left: DBM[ClockT], right: DBM[ClockT]) -> DBM[ClockT]:
     result = left.copy()
     result.intersect(right)
     return result
-
-
-@dataclasses.dataclass
-class DBMContext:
-    clocks: t.AbstractSet[Clock]
-
-    _clock_map: t.Dict[str, Clock] = dataclasses.field(default_factory=dict)
-
-    def __post_init__(self) -> None:
-        for clock in self.clocks:
-            assert clock.name not in self._clock_map
-            self._clock_map[clock.name] = clock
-
-    def get_clock_by_name(self, name: str) -> Clock:
-        return self._clock_map[name]
-
-    def create_unconstrained(self) -> DBM:
-        return DBM.create_unconstrained(self.clocks)
-
-    def create_zero(self) -> DBM:
-        return DBM.create_zero(self.clocks)

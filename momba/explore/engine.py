@@ -10,11 +10,13 @@ import typing as t
 import fractions
 import functools
 import itertools
+import random
 
 from mxu.maps import FrozenMap
 
 from .. import model
 
+from ..kit import dbm
 from ..model import action, automata, context, effects, expressions, operators, types
 from ..pure import pta, ta
 
@@ -153,6 +155,11 @@ class ClockVariable:
     identifier: str
     instance: t.Optional[automata.Instance] = None
 
+    def __str__(self) -> str:
+        if self.instance is None:
+            return self.identifier
+        return f"{self.identifier}@{self.instance.automaton.name}"
+
 
 def _contains_clock_identifier(
     expression: expressions.Expression, scope: context.Scope
@@ -167,8 +174,8 @@ def _extract_clock_constraints(
     expression: expressions.Expression,
     instance: automata.Instance,
     environment: evaluation.Environment,
-) -> t.Optional[ta.Constraints[ClockVariable]]:
-    constraints: t.Set[ta.Constraint[ClockVariable]] = set()
+) -> t.Optional[t.AbstractSet[dbm.Constraint[ClockVariable]]]:
+    constraints: t.Set[dbm.Constraint[ClockVariable]] = set()
     conjuncts: t.List[expressions.Expression] = []
     pending: t.List[expressions.Expression] = [expression]
     while pending:
@@ -194,11 +201,11 @@ def _extract_clock_constraints(
             assert not _contains_clock_identifier(
                 bound_expression, instance.automaton.scope
             )
-            left: ta.SomeClock[ClockVariable]
-            right: ta.SomeClock[ClockVariable]
+            left: t.Union[dbm.ZeroClock, ClockVariable]
+            right: t.Union[dbm.ZeroClock, ClockVariable]
             if isinstance(difference, expressions.Identifier):
                 left = ClockVariable(difference.name, instance)
-                right = ta.ZERO_CLOCK
+                right = dbm.ZERO_CLOCK
             else:
                 assert (
                     isinstance(difference, expressions.Arithmetic)
@@ -212,22 +219,20 @@ def _extract_clock_constraints(
             assert isinstance(evaluated_bound, evaluation.Numeric)
             if operator.is_less:
                 constraints.add(
-                    ta.Constraint(
-                        left,
-                        right,
-                        ta.Bound(
-                            evaluated_bound.as_fraction, strict=operator.is_strict,
+                    dbm.Constraint(
+                        dbm.difference(left, right),
+                        dbm.Bound(
+                            evaluated_bound.as_fraction, is_strict=operator.is_strict,
                         ),
                     )
                 )
             else:
                 assert operator.is_greater
                 constraints.add(
-                    ta.Constraint(
-                        right,
-                        left,
-                        ta.Bound(
-                            -evaluated_bound.as_fraction, strict=operator.is_strict,
+                    dbm.Constraint(
+                        dbm.difference(right, left),
+                        dbm.Bound(
+                            -evaluated_bound.as_fraction, is_strict=operator.is_strict,
                         ),
                     )
                 )
@@ -244,6 +249,10 @@ def _extract_clock_constraints(
 class Action:
     action_type: action.ActionType
     arguments: t.Tuple[evaluation.Value, ...]
+
+    def __str__(self) -> str:
+        arguments = ", ".join(map(str, self.arguments))
+        return f"{self.action_type.name}({arguments})"
 
 
 PTALocationType = ta.Location[GlobalState, ClockVariable]
@@ -262,9 +271,12 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
 
     network: model.Network
 
+    _cache: t.Dict[PTALocationType, t.FrozenSet[PTAEdgeType]]
+
     def __init__(self, network: model.Network) -> None:
         assert network.ctx.model_type in self.SUPPORTED_TYPES
         self.network = network
+        self._cache = {}
 
     @property
     def clock_variables(self) -> t.AbstractSet[ClockVariable]:
@@ -281,7 +293,7 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
         assert (
             not self.network.initial_restriction
         ), "initial restrictions are not yet supported"
-        invariant: t.Set[ta.Constraint[ClockVariable]] = set()
+        invariant: t.Set[dbm.Constraint[ClockVariable]] = set()
         instance_states: t.Dict[automata.Instance, InstanceState] = {}
         for instance in self.network.instances:
             assert (
@@ -394,7 +406,7 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
             FrozenMap(target_environments.global_namespace),
             FrozenMap.transfer_ownership(instance_states),
         )
-        invariant: t.Set[ta.Constraint[ClockVariable]] = set()
+        invariant: t.Set[dbm.Constraint[ClockVariable]] = set()
         for instance, state in global_state.instances.items():
             if state.location.progress_invariant is None:
                 continue
@@ -446,7 +458,7 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
                     slot_identifier.name, value, instance=slot_identifier.instance
                 )
         # check whether all guards are true
-        guard: t.Set[ta.Constraint[ClockVariable]] = set()
+        guard: t.Set[dbm.Constraint[ClockVariable]] = set()
         for instance, edge in edge_vector.edges.items():
             if edge.guard is None:
                 continue
@@ -510,6 +522,8 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
         )
 
     def get_edges_from(self, source: PTALocationType) -> t.AbstractSet[PTAEdgeType]:
+        if source in self._cache:
+            return self._cache[source]
         pta_edges: t.Set[PTAEdgeType] = set()
         for instance, state in source.state.instances.items():
             for edge in instance.automaton.get_outgoing_edges(state.location):
@@ -538,7 +552,8 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
                     pta_edge = self._compute_edge(source, edge_vector, link=link)
                     if pta_edge is not None:
                         pta_edges.add(pta_edge)
-        return frozenset(pta_edges)
+        self._cache[source] = frozenset(pta_edges)
+        return self._cache[source]
 
 
 @d.dataclass(eq=False, frozen=True)
@@ -735,3 +750,41 @@ class DeferredAssignment:
     instance: automata.Instance
     name: str
     value: expressions.Expression
+
+
+@d.dataclass(frozen=True)
+class ActionTypeOracle:
+    weights: t.Mapping[action.ActionType, int] = d.field(default_factory=dict)
+
+    default_weight: int = 10000
+
+    def __call__(
+        self,
+        location: PTALocationType,
+        valuation: t.Mapping[ClockVariable, fractions.Fraction],
+        options: t.AbstractSet[pta.Option[GlobalState, Action, ClockVariable]],
+    ) -> pta.Decision[GlobalState, Action, ClockVariable]:
+        weight_sum = sum(
+            self.weights.get(option.edge.action.action_type, self.default_weight)
+            if option.edge.action is not None
+            else self.default_weight
+            for option in options
+        )
+        threshold = random.randint(0, weight_sum)
+        total = 0
+        for option in options:
+            if option.edge.action is None:
+                total += self.default_weight
+            else:
+                total += self.weights.get(
+                    option.edge.action.action_type, self.default_weight
+                )
+            if threshold <= total:
+                break
+        assert (
+            option.time_upper_bound is not None
+        ), "infinite time upper bounds not supported by the uniform oracle"
+        time = option.time_lower_bound.constant + fractions.Fraction(
+            random.random()
+        ) * (option.time_upper_bound.constant - option.time_lower_bound.constant)
+        return pta.Decision(option.edge, time)

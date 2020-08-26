@@ -7,8 +7,10 @@ from __future__ import annotations
 import typing as t
 
 import dataclasses
+import fractions
 
-NumberType = t.Union[int, float]
+
+NumberType = t.Union[int, float, fractions.Fraction]
 
 
 @dataclasses.dataclass(frozen=True)

@@ -80,46 +80,6 @@ def check(moml_file: pathlib.Path) -> None:
         sys.exit(1)
 
 
-@d.dataclass(frozen=True)
-class ActionTypeOracle:
-    weights: t.Mapping[action.ActionType, int] = d.field(default_factory=dict)
-
-    default_weight: int = 10000
-
-    def __call__(
-        self,
-        location: engine.PTALocationType,
-        valuation: t.Mapping[engine.ClockVariable, fractions.Fraction],
-        options: t.AbstractSet[
-            pta.Option[engine.GlobalState, engine.Action, engine.ClockVariable]
-        ],
-    ) -> pta.Decision[engine.GlobalState, engine.Action, engine.ClockVariable]:
-        weight_sum = sum(
-            self.weights.get(option.edge.action.action_type, self.default_weight)
-            if option.edge.action is not None
-            else self.default_weight
-            for option in options
-        )
-        threshold = random.randint(0, weight_sum)
-        total = 0
-        for option in options:
-            if option.edge.action is None:
-                total += self.default_weight
-            else:
-                total += self.weights.get(
-                    option.edge.action.action_type, self.default_weight
-                )
-            if threshold <= total:
-                break
-        assert (
-            option.time_upper_bound is not None
-        ), "infinite time upper bounds not supported by the uniform oracle"
-        time = option.time_lower_bound.bound + fractions.Fraction(random.random()) * (
-            option.time_upper_bound.bound - option.time_lower_bound.bound
-        )
-        return pta.Decision(option.edge, time)
-
-
 @main.command()
 @click.argument("moml_file", type=pathlib.Path)
 @click.option(
@@ -179,7 +139,7 @@ def simulate(
 
         simulator = pta.PTASimulator(
             engine.MombaPTA(network),
-            oracle=ActionTypeOracle(
+            oracle=engine.ActionTypeOracle(
                 {
                     network.ctx.get_action_type_by_name(name): weight
                     for name, weight in weights
