@@ -164,14 +164,17 @@ class PTASimulator(t.Generic[StateT, ActionT, ClockT]):
             return None
         return Option(edge, time_lower_bound=lower_bound, time_upper_bound=upper_bound)
 
-    def run(self) -> t.Iterator[SimulationStep[StateT, ActionT, ClockT]]:
+    def run(
+        self, steps: t.Optional[int] = None
+    ) -> t.Iterator[SimulationStep[StateT, ActionT, ClockT]]:
         clock_variables = self.pta.clock_variables
         valuation: t.Dict[ClockT, fractions.Fraction] = {}
         time = fractions.Fraction(0)
         for variable in clock_variables:
             valuation[variable] = fractions.Fraction(0)
         (current_location,) = self.pta.initial_locations
-        while True:
+        step = 0
+        while steps is None or step < steps:
             options: t.Set[Option[StateT, ActionT, ClockT]] = set()
             edges = self.pta.get_edges_from(current_location)
             for edge in edges:
@@ -191,3 +194,4 @@ class PTASimulator(t.Generic[StateT, ActionT, ClockT]):
                 time, current_location, choice, destination, dict(valuation)
             )
             current_location = destination.location
+            step += 1
