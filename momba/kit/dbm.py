@@ -270,6 +270,13 @@ class DBM(AbstractDBM[ClockT], t.Generic[ClockT]):
     ) -> Bound:
         return self._matrix.get(difference(left, right), _INFINITY_BOUND)
 
+    def extend_clocks(self, clocks: Clocks[ClockT]) -> DBM[ClockT]:
+        matrix = dict(self._matrix)
+        for clock in clocks:
+            matrix[difference(ZERO_CLOCK, clock)] = _ZERO_BOUND
+            matrix[difference(clock, clock)] = _ZERO_BOUND
+        return DBM(_freeze_clocks(clocks | self.clocks), matrix)
+
     @property
     def clocks(self) -> t.AbstractSet[t.Union[ClockT, ZeroClock]]:
         return self._clocks
@@ -301,7 +308,7 @@ class DBM(AbstractDBM[ClockT], t.Generic[ClockT]):
     def _constrain(self, difference: Difference[ClockT], by: Bound) -> None:
         if difference.left not in self._clocks or difference.right not in self._clocks:
             raise InvalidClockError(
-                f"cannot constrain {self} with {difference}: unknown clocks"
+                f"unable to constrain with {difference}: unknown clocks"
             )
         if by < self._matrix.get(difference, _INFINITY_BOUND):
             self._matrix[difference] = by

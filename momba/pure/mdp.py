@@ -19,7 +19,7 @@ ActionT = t.TypeVar("ActionT", bound=t.Hashable)
 @d.dataclass(frozen=True)
 class Edge(t.Generic[LocationT, ActionT]):
     source: LocationT
-    action: ActionT
+    action: t.Optional[ActionT]
     destinations: Distribution[LocationT]
 
 

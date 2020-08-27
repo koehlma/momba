@@ -325,6 +325,12 @@ class Context:
     def get_action_type_by_name(self, name: str) -> action.ActionType:
         return self._action_types[name]
 
+    def get_network_by_name(self, name: str) -> Network:
+        for network in self._networks:
+            if network.name == name:
+                return network
+        raise Exception(f"network with name {name} does not exist")
+
     def add_action_type(self, action: action.ActionType) -> None:
         if action.name in self._action_types:
             assert action is self._action_types[action.name]

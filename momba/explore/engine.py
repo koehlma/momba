@@ -18,7 +18,7 @@ from .. import model
 
 from ..kit import dbm
 from ..model import action, automata, context, effects, expressions, operators, types
-from ..pure import pta, ta
+from ..pure import mdp, pta, ta
 
 from ..utils.distribution import Distribution
 
@@ -255,8 +255,12 @@ class Action:
         return f"{self.action_type.name}({arguments})"
 
 
+MDPLocationType = GlobalState
+MDPEdgeType = mdp.Edge[GlobalState, Action]
+
+
 PTALocationType = ta.Location[GlobalState, ClockVariable]
-PTAEdgeType = pta.Edge[GlobalState, t.Any, ClockVariable]
+PTAEdgeType = pta.Edge[GlobalState, Action, ClockVariable]
 
 
 class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
@@ -554,6 +558,51 @@ class MombaPTA(pta.PTA[GlobalState, Action, ClockVariable]):
                         pta_edges.add(pta_edge)
         self._cache[source] = frozenset(pta_edges)
         return self._cache[source]
+
+
+class MombaMDP(mdp.MDP[GlobalState, Action]):
+    SUPPORTED_TYPES = frozenset({model.ModelType.LTS, model.ModelType.MDP})
+
+    network: model.Network
+
+    _pta: MombaPTA
+
+    def __init__(self, network: model.Network):
+        assert network.ctx.model_type in self.SUPPORTED_TYPES
+        self.network = network
+        self._pta = MombaPTA(network)
+
+    @property
+    def initial_locations(self) -> t.AbstractSet[MDPLocationType]:
+        return frozenset(location.state for location in self._pta.initial_locations)
+
+    @property
+    def edges(self) -> t.AbstractSet[MDPEdgeType]:
+        raise NotImplementedError()
+
+    @property
+    def locations(self) -> t.AbstractSet[MDPLocationType]:
+        raise NotImplementedError()
+
+    def get_edges_from(self, source: MDPLocationType) -> t.AbstractSet[MDPEdgeType]:
+        return frozenset(
+            mdp.Edge(
+                source=source,
+                action=edge.action,
+                destinations=Distribution(
+                    {
+                        destination.location.state: edge.destinations.get_probability(
+                            destination
+                        )
+                        for destination in edge.destinations.support
+                    }
+                ),
+            )
+            for edge in self._pta.get_edges_from(ta.Location(frozenset(), source))
+        )
+
+    def get_edges_to(self, destination: MDPLocationType) -> t.AbstractSet[MDPEdgeType]:
+        raise NotImplementedError()
 
 
 @d.dataclass(eq=False, frozen=True)
