@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import dataclasses
@@ -196,6 +197,11 @@ _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, model.BinaryConstructor] = {
 _BuiltinFunctionConstructor = t.Callable[[t.List[model.Expression]], model.Expression]
 
 
+@d.dataclass
+class Environment:
+    macro_expressions: t.Dict[str, model.Expression] = d.field(default_factory=dict)
+
+
 def _construct_floor(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(
@@ -216,11 +222,19 @@ _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
 }
 
 
-def _parse_primary_expression(stream: TokenStream) -> model.Expression:
+def _parse_primary_expression(
+    stream: TokenStream, environment: Environment
+) -> model.Expression:
     if stream.accept(lexer.TokenType.INTEGER, consume=False):
         return model.convert(int(stream.consume().text))
     elif stream.accept(lexer.TokenType.REAL, consume=False):
         return model.convert(fractions.Fraction(stream.consume().text))
+    elif stream.accept(lexer.TokenType.MACRO, consume=False):
+        name = stream.consume().match["macro_name"]
+        try:
+            return environment.macro_expressions[name]
+        except KeyError:
+            raise MomlSyntaxError(f"unknown macro {name!r}")
     elif stream.accept(lexer.TokenType.IDENTIFIER, consume=False):
         name = stream.consume().text
         if stream.accept(lexer.TokenType.LEFT_PAR):
@@ -231,48 +245,60 @@ def _parse_primary_expression(stream: TokenStream) -> model.Expression:
                 )
                 while not stream.accept(lexer.TokenType.RIGHT_PAR):
                     stream.expect(",")
-                    arguments.append(parse_expression(stream))
+                    arguments.append(parse_expression(stream, environment=environment))
                 return expressions.Sample(distribution, tuple(arguments))
             if not stream.accept(lexer.TokenType.RIGHT_PAR):
-                arguments.append(parse_expression(stream))
+                arguments.append(parse_expression(stream, environment=environment))
                 while not stream.accept(lexer.TokenType.RIGHT_PAR):
                     stream.expect(",")
-                    arguments.append(parse_expression(stream))
+                    arguments.append(parse_expression(stream, environment=environment))
             if name not in _BUILTIN_FUNCTIONS:
                 raise Exception(f"unknown function {name}")
             return _BUILTIN_FUNCTIONS[name](arguments)
         else:
             return model.identifier(name)
     elif stream.accept(lexer.TokenType.LEFT_PAR):
-        expr = parse_expression(stream)
+        expr = parse_expression(stream, environment=environment)
         stream.expect(lexer.TokenType.RIGHT_PAR)
         return expr
     else:
         raise stream.make_error("expected primary expression")
 
 
-def _parse_unary_expression(stream: TokenStream) -> model.Expression:
+def _parse_unary_expression(
+    stream: TokenStream, environment: Environment
+) -> model.Expression:
     if stream.accept(lexer.TokenType.LOGIC_NOT):
-        return model.logic_not(_parse_unary_expression(stream))
-    return _parse_primary_expression(stream)
+        return model.logic_not(_parse_unary_expression(stream, environment=environment))
+    return _parse_primary_expression(stream, environment=environment)
+
+
+DEFAULT_ENVIRONMENT = Environment()
 
 
 def parse_expression(
-    stream: TokenStream, *, min_precedence: int = 0
+    stream: TokenStream,
+    *,
+    min_precedence: int = 0,
+    environment: Environment = DEFAULT_ENVIRONMENT,
 ) -> model.Expression:
-    left = _parse_unary_expression(stream)
+    left = _parse_unary_expression(stream, environment=environment)
     while _PRECEDENCE.get(stream.current_token.token_type, -1) >= min_precedence:
         operator = stream.consume()
         precedence = _PRECEDENCE[operator.token_type]
         if operator.token_type is lexer.TokenType.QUESTIONMARK:
-            consequence = parse_expression(stream)
+            consequence = parse_expression(stream, environment=environment)
             stream.expect(":")
-            alternative = parse_expression(stream, min_precedence=precedence)
+            alternative = parse_expression(
+                stream, min_precedence=precedence, environment=environment
+            )
             left = model.ite(left, consequence, alternative)
         else:
             if operator.token_type not in _RIGHT_ASSOCIATIVE:
                 precedence += 1
-            right = parse_expression(stream, min_precedence=precedence)
+            right = parse_expression(
+                stream, min_precedence=precedence, environment=environment
+            )
             left = _BINARY_CONSTRUCTORS[operator.token_type](left, right)
     return left
 

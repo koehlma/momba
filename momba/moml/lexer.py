@@ -106,6 +106,8 @@ class TokenType(enum.Enum):
 
     MINUS = r"-"
 
+    MACRO = r"\$(?P<macro_name>\w+)"
+
     IDENTIFIER = r"\w+"
 
     WHITESPACE = r"\s+"

@@ -23,4 +23,10 @@ def parse(source: str, *, ctx: t.Optional[model.Context] = None) -> model.Contex
     return parser.parse_moml(parser.TokenStream(source), ctx=ctx)
 
 
+def inline_expression(source: str, **macros: model.Expression) -> model.Expression:
+    return parser.parse_expression(
+        parser.TokenStream(source), environment=parser.Environment(macros)
+    )
+
+
 __all__ = ["lexer", "parser", "parse_type", "parse_expression", "parse"]
