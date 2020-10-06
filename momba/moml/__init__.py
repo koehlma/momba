@@ -8,6 +8,8 @@ import typing as t
 
 from .. import model
 
+from ..model import expressions
+
 from . import lexer, parser
 
 
@@ -23,9 +25,14 @@ def parse(source: str, *, ctx: t.Optional[model.Context] = None) -> model.Contex
     return parser.parse_moml(parser.TokenStream(source), ctx=ctx)
 
 
-def inline_expression(source: str, **macros: model.Expression) -> model.Expression:
+def inline_expression(
+    source: str, **macros: expressions.MaybeExpression
+) -> model.Expression:
     return parser.parse_expression(
-        parser.TokenStream(source), environment=parser.Environment(macros)
+        parser.TokenStream(source),
+        environment=parser.Environment(
+            {name: expressions.convert(value) for name, value in macros.items()}
+        ),
     )
 
 

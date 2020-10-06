@@ -215,11 +215,19 @@ class Scope:
         typ: types.Type,
         *,
         is_transient: t.Optional[bool] = None,
-        initial_value: t.Optional[expressions.Expression] = None,
+        initial_value: t.Optional[expressions.MaybeExpression] = None,
+        comment: t.Optional[str] = None,
     ) -> None:
+        value = None
+        if initial_value is not None:
+            value = expressions.convert(initial_value)
         self.add_declaration(
             VariableDeclaration(
-                identifier, typ, is_transient=is_transient, initial_value=initial_value
+                identifier,
+                typ,
+                is_transient=is_transient,
+                initial_value=value,
+                comment=comment,
             )
         )
 
