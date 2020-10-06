@@ -12,8 +12,9 @@ cache:
 checks:
   stage: build
   script:
-    - pip install tox
+    - pip install tox black
     - tox
+    - black --check --diff -l 88 momba tests
 
 docs-build:
   stage: build
