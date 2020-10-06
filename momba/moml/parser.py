@@ -337,7 +337,10 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     info = _parse_identifier_declaration(stream)
     stream.accept(lexer.TokenType.STRING)  # TODO: comment
     return model.VariableDeclaration(
-        info.name, info.typ, is_transient=is_transient, initial_value=info.value,
+        info.name,
+        info.typ,
+        is_transient=is_transient,
+        initial_value=info.value,
     )
 
 

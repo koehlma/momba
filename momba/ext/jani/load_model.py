@@ -333,7 +333,9 @@ def _type(typ: t.Any) -> types.Type:
     assert isinstance(typ, dict)
     if typ["kind"] == "bounded":
         _check_fields(
-            typ, required={"kind", "base"}, optional={"lower-bound", "upper-bound"},
+            typ,
+            required={"kind", "base"},
+            optional={"lower-bound", "upper-bound"},
         )
         base = _type(typ["base"])
         assert isinstance(base, types.Numeric)
@@ -521,7 +523,9 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
 
 def _action_parameter(jani_action_parameter: t.Any) -> model.ActionParameter:
     _check_fields(
-        jani_action_parameter, required={"type"}, optional={"comment"},
+        jani_action_parameter,
+        required={"type"},
+        optional={"comment"},
     )
     typ = _type(jani_action_parameter["type"])
     comment = jani_action_parameter.get("comment", None)
@@ -622,7 +626,8 @@ def load_model(source: JANIModel) -> model.Network:
             automaton.add_initial_location(locations[jani_location])
     for jani_prop in jani_model["properties"]:
         _check_fields(
-            jani_prop, required={"expression", "name"},
+            jani_prop,
+            required={"expression", "name"},
         )
         network.ctx.define_property(
             _property(jani_prop["expression"]), name=jani_prop["name"]

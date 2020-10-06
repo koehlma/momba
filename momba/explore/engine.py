@@ -222,7 +222,8 @@ def _extract_clock_constraints(
                     dbm.Constraint(
                         dbm.difference(left, right),
                         dbm.Bound(
-                            evaluated_bound.as_fraction, is_strict=operator.is_strict,
+                            evaluated_bound.as_fraction,
+                            is_strict=operator.is_strict,
                         ),
                     )
                 )
@@ -232,7 +233,8 @@ def _extract_clock_constraints(
                     dbm.Constraint(
                         dbm.difference(right, left),
                         dbm.Bound(
-                            -evaluated_bound.as_fraction, is_strict=operator.is_strict,
+                            -evaluated_bound.as_fraction,
+                            is_strict=operator.is_strict,
                         ),
                     )
                 )
@@ -701,7 +703,8 @@ class TransientEnvironments:
         values: t.Dict[DeferredAssignment, evaluation.Value] = {}
         for assignment in assignments:
             values[assignment] = evaluation.evaluate(
-                assignment.value, self.get_edge_environment(assignment.instance),
+                assignment.value,
+                self.get_edge_environment(assignment.instance),
             )
         for assignment in assignments:
             self.assign(

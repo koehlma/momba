@@ -31,8 +31,7 @@ class Numeric(Type, abc.ABC):
         return True
 
     def bound(self, lower: Bound, upper: Bound) -> BoundedType:
-        """ Bounds the numeric type with the given bounds.
-        """
+        """Bounds the numeric type with the given bounds."""
         return BoundedType(
             self, BoundedType.convert_bound(lower), BoundedType.convert_bound(upper)
         )

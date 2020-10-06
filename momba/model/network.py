@@ -61,7 +61,12 @@ class Network:
     _initial_restriction: t.Optional[Expression]
     _system: t.Set[Composition]
 
-    def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None,) -> None:
+    def __init__(
+        self,
+        ctx: context.Context,
+        *,
+        name: t.Optional[str] = None,
+    ) -> None:
         self.ctx = ctx
         self.name = name
         self._initial_restriction = None

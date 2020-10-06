@@ -32,7 +32,10 @@ def main() -> None:
 @click.argument("moml_file", type=pathlib.Path)
 @click.argument("output_directory", type=pathlib.Path)
 @click.option(
-    "--indent", type=int, default=None, help="Indentation to use for the JANI files.",
+    "--indent",
+    type=int,
+    default=None,
+    help="Indentation to use for the JANI files.",
 )
 @click.option(
     "--network",
@@ -59,7 +62,10 @@ def export(
             continue
         print(f"Exporting network `{network.name}` to JANI...")
         (output_directory / f"model_{network.name}.jani").write_bytes(
-            dump_model(network, indent=indent,)
+            dump_model(
+                network,
+                indent=indent,
+            )
         )
 
 
@@ -79,7 +85,10 @@ def check(moml_file: pathlib.Path) -> None:
 @main.command()
 @click.argument("moml_file", type=pathlib.Path)
 @click.option(
-    "--network", "network_name", type=str, help="Name of the network to simulate.",
+    "--network",
+    "network_name",
+    type=str,
+    help="Name of the network to simulate.",
 )
 @click.option("--steps", type=int, default=1000, help="Number of steps to simulate.")
 @click.option(
@@ -153,7 +162,8 @@ def simulate(
             print(f"t = {step.time}, {action}")
             for name in watch_globals:
                 print(
-                    f"  {name}:", step.destination.location.state.binding[name],
+                    f"  {name}:",
+                    step.destination.location.state.binding[name],
                 )
             counter += 1
             if counter >= steps:
