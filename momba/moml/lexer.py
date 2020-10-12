@@ -104,7 +104,7 @@ class TokenType(enum.Enum):
     STRING = r"\"(?P<string>[^\"]*)\""
 
     REAL = r"\d+\.\d+"
-    INTEGER = r"-?\d+"
+    INTEGER = r"\d+"
 
     MINUS = r"-"
 
