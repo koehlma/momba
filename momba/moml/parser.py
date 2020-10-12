@@ -221,13 +221,13 @@ def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
 def _construct_min(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 2:
         raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
-    return expressions.minimum(arguments[0], argument[1])
+    return expressions.minimum(arguments[0], arguments[1])
 
 
 def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 2:
         raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
-    return expressions.maximum(arguments[0], argument[1])
+    return expressions.maximum(arguments[0], arguments[1])
 
 
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
