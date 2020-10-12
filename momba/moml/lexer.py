@@ -80,6 +80,8 @@ class TokenType(enum.Enum):
     COMP_EQ = r"="
     COMP_NEQ = r"≠|!="
 
+    POWER = r"\*\*"
+
     PLUS = r"\+"
     STAR = r"\*"
     PERCENTAGE = r"%"
@@ -214,22 +216,10 @@ def lex(code: str, *, row: int = 0, column: int = 0) -> t.Iterator[Token]:
         column = end_column
     for _ in indents[1:]:
         yield Token(
-            TokenType.DEDENT,
-            "",
-            match,
-            end_row,
-            end_column,
-            end_row,
-            end_column,
+            TokenType.DEDENT, "", match, end_row, end_column, end_row, end_column,
         )
     yield Token(
-        TokenType.END_OF_FILE,
-        "",
-        match,
-        end_row,
-        end_column,
-        end_row,
-        end_column,
+        TokenType.END_OF_FILE, "", match, end_row, end_column, end_row, end_column,
     )
 
 

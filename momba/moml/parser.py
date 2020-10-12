@@ -149,6 +149,7 @@ def parse_type(stream: TokenStream) -> types.Type:
 
 
 _PRECEDENCE = {
+    lexer.TokenType.POWER: 41,
     lexer.TokenType.STAR: 31,
     lexer.TokenType.SLASH: 31,
     lexer.TokenType.SLASH_SLASH: 31,
@@ -173,6 +174,7 @@ _PRECEDENCE = {
 _RIGHT_ASSOCIATIVE = {lexer.TokenType.LOGIC_IMPLIES}
 
 _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, model.BinaryConstructor] = {
+    lexer.TokenType.POWER: expressions.power,
     lexer.TokenType.STAR: expressions.mul,
     lexer.TokenType.SLASH: expressions.real_div,
     lexer.TokenType.SLASH_SLASH: expressions.floor_div,
@@ -216,9 +218,23 @@ def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.ceil(arguments[0])
 
 
+def _construct_min(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 2:
+        raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
+    return expressions.minimum(arguments[0], argument[1])
+
+
+def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 2:
+        raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
+    return expressions.maximum(arguments[0], argument[1])
+
+
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
     "floor": _construct_floor,
     "ceil": _construct_ceil,
+    "min": _construct_min,
+    "max": _construct_max,
 }
 
 
@@ -337,10 +353,7 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     info = _parse_identifier_declaration(stream)
     stream.accept(lexer.TokenType.STRING)  # TODO: comment
     return model.VariableDeclaration(
-        info.name,
-        info.typ,
-        is_transient=is_transient,
-        initial_value=info.value,
+        info.name, info.typ, is_transient=is_transient, initial_value=info.value,
     )
 
 
