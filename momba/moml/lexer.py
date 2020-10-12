@@ -77,7 +77,7 @@ class TokenType(enum.Enum):
     LOGIC_EQUIV = r"⇔|<=>"
     LOGIC_NOT = r"¬|not"
 
-    COMP_EQ = r"=|=="
+    COMP_EQ = r"==|="
     COMP_NEQ = r"≠|!="
 
     POWER = r"\*\*"
