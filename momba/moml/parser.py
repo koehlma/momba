@@ -12,7 +12,7 @@ import fractions
 
 from . import lexer
 from .. import model
-from ..model import action, expressions, types, effects, properties
+from ..model import action, expressions, types, effects, properties, operators
 
 
 _IGNORE = {lexer.TokenType.WHITESPACE, lexer.TokenType.COMMENT}
@@ -226,8 +226,26 @@ def _construct_min(arguments: t.List[model.Expression]) -> model.Expression:
 
 def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 2:
-        raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
+        raise Exception(f"max takes exactly 2 argument but {len(arguments)} are given")
     return expressions.maximum(arguments[0], arguments[1])
+
+
+def _construct_probability_min(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"Pmin takes exactly 1 argument but {len(arguments)} are given")
+    return properties.min_prob(arguments[0])
+
+
+def _construct_probability_max(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"Pmax takes exactly 1 argument but {len(arguments)} are given")
+    return properties.max_prob(arguments[0])
+
+
+def _construct_finally(arguments: t.List[model.Expression],) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"F takes exactly 1 argument but {len(arguments)} are given")
+    return properties.until(expressions.convert(True), arguments[0])
 
 
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
@@ -235,11 +253,14 @@ _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
     "ceil": _construct_ceil,
     "min": _construct_min,
     "max": _construct_max,
+    "Pmin": _construct_probability_min,
+    "Pmax": _construct_probability_max,
+    "F": _construct_finally,
 }
 
 _FILTER_FUNCTIONS: t.Mapping[str, operators.FilterFunction] = {
-    "min": operators.FilterFunction.MIN
-    "max": operators.FilterFunction.MAX
+    "min": operators.FilterFunction.MIN,
+    "max": operators.FilterFunction.MAX,
 }
 
 
