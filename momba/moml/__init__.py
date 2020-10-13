@@ -34,4 +34,8 @@ def expression(source: str, **macros: expressions.MaybeExpression) -> model.Expr
     )
 
 
+expr = expression
+prop = expression  # FIXME:
+
+
 __all__ = ["lexer", "parser", "parse_type", "parse_expression", "parse"]
