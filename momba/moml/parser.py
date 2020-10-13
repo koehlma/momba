@@ -230,6 +230,12 @@ def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.maximum(arguments[0], arguments[1])
 
 
+def _construct_abs(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"abs takes exactly 1 argument but {len(arguments)} are given")
+    return expressions.maximum(arguments[0], expressions.sub(0, arguments[0]))
+
+
 def _construct_probability_min(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(f"Pmin takes exactly 1 argument but {len(arguments)} are given")
@@ -251,6 +257,7 @@ def _construct_finally(arguments: t.List[model.Expression],) -> model.Expression
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
     "floor": _construct_floor,
     "ceil": _construct_ceil,
+    "abs": _construct_abs,
     "min": _construct_min,
     "max": _construct_max,
     "Pmin": _construct_probability_min,
