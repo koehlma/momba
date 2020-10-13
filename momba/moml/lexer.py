@@ -77,8 +77,10 @@ class TokenType(enum.Enum):
     LOGIC_EQUIV = r"⇔|<=>"
     LOGIC_NOT = r"¬|not"
 
-    COMP_EQ = r"="
+    COMP_EQ = r"==|="
     COMP_NEQ = r"≠|!="
+
+    POWER = r"\*\*"
 
     PLUS = r"\+"
     STAR = r"\*"
@@ -105,7 +107,7 @@ class TokenType(enum.Enum):
     STRING = r"\"(?P<string>[^\"]*)\""
 
     REAL = r"\d+\.\d+"
-    INTEGER = r"-?\d+"
+    INTEGER = r"\d+"
 
     MINUS = r"-"
 

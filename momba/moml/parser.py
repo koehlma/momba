@@ -149,6 +149,7 @@ def parse_type(stream: TokenStream) -> types.Type:
 
 
 _PRECEDENCE = {
+    lexer.TokenType.POWER: 41,
     lexer.TokenType.STAR: 31,
     lexer.TokenType.SLASH: 31,
     lexer.TokenType.SLASH_SLASH: 31,
@@ -173,6 +174,7 @@ _PRECEDENCE = {
 _RIGHT_ASSOCIATIVE = {lexer.TokenType.LOGIC_IMPLIES}
 
 _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, model.BinaryConstructor] = {
+    lexer.TokenType.POWER: expressions.power,
     lexer.TokenType.STAR: expressions.mul,
     lexer.TokenType.SLASH: expressions.real_div,
     lexer.TokenType.SLASH_SLASH: expressions.floor_div,
@@ -216,9 +218,23 @@ def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.ceil(arguments[0])
 
 
+def _construct_min(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 2:
+        raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
+    return expressions.minimum(arguments[0], arguments[1])
+
+
+def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 2:
+        raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
+    return expressions.maximum(arguments[0], arguments[1])
+
+
 _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
     "floor": _construct_floor,
     "ceil": _construct_ceil,
+    "min": _construct_min,
+    "max": _construct_max,
 }
 
 _FILTER_FUNCTIONS: t.Mapping[str, operators.FilterFunction] = {
@@ -287,6 +303,10 @@ def _parse_unary_expression(
 ) -> model.Expression:
     if stream.accept(lexer.TokenType.LOGIC_NOT):
         return model.logic_not(_parse_unary_expression(stream, environment=environment))
+    elif stream.accept(lexer.TokenType.MINUS):
+        return expressions.sub(
+            model.convert(0), _parse_unary_expression(stream, environment=environment)
+        )
     return _parse_primary_expression(stream, environment=environment)
 
 

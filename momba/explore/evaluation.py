@@ -239,7 +239,7 @@ def _evaluate_comparison(
 def _evaluate_condition(
     expression: expressions.Conditional, environment: Environment
 ) -> Distribution[Value]:
-    if evaluate(expression, environment).as_bool:
+    if evaluate(expression.condition, environment).as_bool:
         return _evaluate(expression.consequence, environment)
     else:
         return _evaluate(expression.alternative, environment)

@@ -449,9 +449,11 @@ class Derivative(Expression):
 
 
 def ite(
-    condition: Expression, consequence: Expression, alternative: Expression
+    condition: MaybeExpression,
+    consequence: MaybeExpression,
+    alternative: MaybeExpression,
 ) -> Expression:
-    return Conditional(condition, consequence, alternative)
+    return Conditional(convert(condition), convert(consequence), convert(alternative))
 
 
 PythonRealString = t.Literal["π", "e"]
@@ -488,42 +490,46 @@ def convert(value: MaybeExpression) -> Expression:
 BinaryConstructor = t.Callable[[Expression, Expression], Expression]
 
 
-def lor(*expressions: Expression) -> Expression:
-    if len(expressions) == 2:
-        return Boolean(operators.BooleanOperator.OR, expressions[0], expressions[1])
-    result = convert(False)
-    for disjunct in expressions:
-        result = Boolean(operators.BooleanOperator.OR, result, disjunct)
+def lor(*expressions: MaybeExpression) -> Expression:
+    if len(expressions) == 1:
+        return expressions[0]
+    result = Boolean(
+        operators.BooleanOperator.OR, convert(expressions[0]), convert(expressions[1]),
+    )
+    for disjunct in expressions[2:]:
+        result = Boolean(operators.BooleanOperator.OR, result, convert(disjunct))
     return result
 
 
-def land(*expressions: Expression) -> Expression:
-    if len(expressions) == 2:
-        return Boolean(operators.BooleanOperator.AND, expressions[0], expressions[1])
-    result = convert(True)
-    for conjunct in expressions:
-        result = Boolean(operators.BooleanOperator.AND, result, conjunct)
+def land(*expressions: MaybeExpression) -> Expression:
+    if len(expressions) == 1:
+        return expressions[0]
+    result = Boolean(
+        operators.BooleanOperator.AND, convert(expressions[0]), convert(expressions[1]),
+    )
+    for conjunct in expressions[2:]:
+        result = Boolean(operators.BooleanOperator.AND, result, convert(conjunct))
     return result
 
 
-def xor(left: Expression, right: Expression) -> Expression:
-    return Boolean(operators.BooleanOperator.XOR, left, right)
+def xor(left: MaybeExpression, right: MaybeExpression) -> Expression:
+    return Boolean(operators.BooleanOperator.XOR, convert(left), convert(right))
 
 
-def implies(left: Expression, right: Expression) -> Expression:
-    return Boolean(operators.BooleanOperator.IMPLY, left, right)
+def implies(left: MaybeExpression, right: MaybeExpression) -> Expression:
+    return Boolean(operators.BooleanOperator.IMPLY, convert(left), convert(right))
 
 
-def equiv(left: Expression, right: Expression) -> Expression:
-    return Boolean(operators.BooleanOperator.EQUIV, left, right)
+def equiv(left: MaybeExpression, right: MaybeExpression) -> Expression:
+    return Boolean(operators.BooleanOperator.EQUIV, convert(left), convert(right))
 
 
-def eq(left: Expression, right: Expression) -> BinaryExpression:
-    return Equality(operators.EqualityOperator.EQ, left, right)
+def eq(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Equality(operators.EqualityOperator.EQ, convert(left), convert(right))
 
 
-def neq(left: Expression, right: Expression) -> BinaryExpression:
-    return Equality(operators.EqualityOperator.NEQ, left, right)
+def neq(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
+    return Equality(operators.EqualityOperator.NEQ, convert(left), convert(right))
 
 
 def lt(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
@@ -589,15 +595,15 @@ def log(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
 UnaryConstructor = t.Callable[[Expression], Expression]
 
 
-def lnot(operand: Expression) -> Expression:
-    return Not(operators.NotOperator.NOT, operand)
+def lnot(operand: MaybeExpression) -> Expression:
+    return Not(operators.NotOperator.NOT, convert(operand))
 
 
 def floor(operand: MaybeExpression) -> Expression:
     return Round(operators.RoundOperator.FLOOR, convert(operand))
 
 
-def ceil(operand: Expression) -> Expression:
+def ceil(operand: MaybeExpression) -> Expression:
     return Round(operators.RoundOperator.CEIL, convert(operand))
 
 
@@ -629,8 +635,8 @@ logic_implies = implies
 logic_equiv = equiv
 
 
-def logic_rimplies(left: Expression, right: Expression) -> Expression:
-    return Boolean(operators.BooleanOperator.IMPLY, right, left)
+def logic_rimplies(left: MaybeExpression, right: MaybeExpression) -> Expression:
+    return Boolean(operators.BooleanOperator.IMPLY, convert(right), convert(left))
 
 
 def identifier(name: str) -> Identifier:
