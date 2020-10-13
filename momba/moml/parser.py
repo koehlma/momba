@@ -12,7 +12,7 @@ import fractions
 
 from . import lexer
 from .. import model
-from ..model import action, expressions, types, effects
+from ..model import action, expressions, types, effects, properties
 
 
 _IGNORE = {lexer.TokenType.WHITESPACE, lexer.TokenType.COMMENT}
@@ -221,6 +221,11 @@ _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
     "ceil": _construct_ceil,
 }
 
+_FILTER_FUNCTIONS: t.Mapping[str, operators.FilterFunction] = {
+    "min": operators.FilterFunction.MIN
+    "max": operators.FilterFunction.MAX
+}
+
 
 def _parse_primary_expression(
     stream: TokenStream, environment: Environment
@@ -255,6 +260,18 @@ def _parse_primary_expression(
             if name not in _BUILTIN_FUNCTIONS:
                 raise Exception(f"unknown function {name}")
             return _BUILTIN_FUNCTIONS[name](arguments)
+        elif stream.accept(lexer.TokenType.FILTER_LEFT):
+            filter_function = _FILTER_FUNCTIONS[name]
+            values = parse_expression(stream, environment=environment)
+            stream.expect(lexer.TokenType.PIPE)
+            if stream.accept("initial"):
+                states = properties.StatePredicates.INITIAL
+            elif stream.accept("deadlock"):
+                states = properties.StatePredicates.DEADLOCK
+            else:
+                stream.expect("timelock")
+                states = properties.StatePredicates.TIMELOCK
+            return properties.filter(filter_function, values, states)
         else:
             return model.identifier(name)
     elif stream.accept(lexer.TokenType.LEFT_PAR):
@@ -337,10 +354,7 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     info = _parse_identifier_declaration(stream)
     stream.accept(lexer.TokenType.STRING)  # TODO: comment
     return model.VariableDeclaration(
-        info.name,
-        info.typ,
-        is_transient=is_transient,
-        initial_value=info.value,
+        info.name, info.typ, is_transient=is_transient, initial_value=info.value,
     )
 
 

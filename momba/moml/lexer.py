@@ -93,6 +93,9 @@ class TokenType(enum.Enum):
     LEFT_BRACE = r"\{"
     RIGHT_BRACE = r"\}"
 
+    FILTER_LEFT = r"\(\{"
+    FILTER_RIGHT = r"\}\)"
+
     LEFT_PAR = r"\("
     RIGHT_PAR = r"\)"
 
@@ -214,22 +217,10 @@ def lex(code: str, *, row: int = 0, column: int = 0) -> t.Iterator[Token]:
         column = end_column
     for _ in indents[1:]:
         yield Token(
-            TokenType.DEDENT,
-            "",
-            match,
-            end_row,
-            end_column,
-            end_row,
-            end_column,
+            TokenType.DEDENT, "", match, end_row, end_column, end_row, end_column,
         )
     yield Token(
-        TokenType.END_OF_FILE,
-        "",
-        match,
-        end_row,
-        end_column,
-        end_row,
-        end_column,
+        TokenType.END_OF_FILE, "", match, end_row, end_column, end_row, end_column,
     )
 
 
