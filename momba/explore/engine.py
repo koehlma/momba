@@ -52,9 +52,10 @@ class NamespaceBuilder:
 
     @property
     def binding(self) -> Binding:
-        assert (
-            not self.has_deferred
-        ), "unable to compute initial values due to missing definitions"
+        assert not self.has_deferred, (
+            f"unable to compute initial values due to missing definitions "
+            f"{', '.join(map(repr, self.deferred.values()))}"
+        )
         return FrozenMap(self.namespace)
 
     @property
@@ -96,6 +97,10 @@ class NamespaceBuilder:
                 deferred_definition.uses.remove(top.name)
                 if not deferred_definition.uses:
                     stack.append(deferred_definition)
+            try:
+                del self.deferred[top.name]
+            except KeyError:
+                pass
 
     def assign(self, name: str, value: evaluation.Value) -> None:
         assert name not in self.defined, f"invalid double definition of name {name!r}"
@@ -222,8 +227,7 @@ def _extract_clock_constraints(
                     dbm.Constraint(
                         dbm.difference(left, right),
                         dbm.Bound(
-                            evaluated_bound.as_fraction,
-                            is_strict=operator.is_strict,
+                            evaluated_bound.as_fraction, is_strict=operator.is_strict,
                         ),
                     )
                 )
@@ -233,8 +237,7 @@ def _extract_clock_constraints(
                     dbm.Constraint(
                         dbm.difference(right, left),
                         dbm.Bound(
-                            -evaluated_bound.as_fraction,
-                            is_strict=operator.is_strict,
+                            -evaluated_bound.as_fraction, is_strict=operator.is_strict,
                         ),
                     )
                 )
@@ -703,8 +706,7 @@ class TransientEnvironments:
         values: t.Dict[DeferredAssignment, evaluation.Value] = {}
         for assignment in assignments:
             values[assignment] = evaluation.evaluate(
-                assignment.value,
-                self.get_edge_environment(assignment.instance),
+                assignment.value, self.get_edge_environment(assignment.instance),
             )
         for assignment in assignments:
             self.assign(

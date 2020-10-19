@@ -95,6 +95,9 @@ class TokenType(enum.Enum):
     LEFT_BRACE = r"\{"
     RIGHT_BRACE = r"\}"
 
+    FILTER_LEFT = r"\(\{"
+    FILTER_RIGHT = r"\}\)"
+
     LEFT_PAR = r"\("
     RIGHT_PAR = r"\)"
 

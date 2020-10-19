@@ -27,11 +27,15 @@ def parse(source: str, *, ctx: t.Optional[model.Context] = None) -> model.Contex
 
 def expression(source: str, **macros: expressions.MaybeExpression) -> model.Expression:
     return parser.parse_expression(
-        parser.TokenStream(source),
+        parser.TokenStream(source.strip()),
         environment=parser.Environment(
             {name: expressions.convert(value) for name, value in macros.items()}
         ),
     )
+
+
+expr = expression
+prop = expression  # FIXME:
 
 
 __all__ = ["lexer", "parser", "parse_type", "parse_expression", "parse"]
