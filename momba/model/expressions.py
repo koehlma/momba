@@ -492,7 +492,7 @@ BinaryConstructor = t.Callable[[Expression, Expression], Expression]
 
 def lor(*expressions: MaybeExpression) -> Expression:
     if len(expressions) == 1:
-        return expressions[0]
+        return convert(expressions[0])
     result = Boolean(
         operators.BooleanOperator.OR, convert(expressions[0]), convert(expressions[1]),
     )
@@ -503,7 +503,7 @@ def lor(*expressions: MaybeExpression) -> Expression:
 
 def land(*expressions: MaybeExpression) -> Expression:
     if len(expressions) == 1:
-        return expressions[0]
+        return convert(expressions[0])
     result = Boolean(
         operators.BooleanOperator.AND, convert(expressions[0]), convert(expressions[1]),
     )

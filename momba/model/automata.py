@@ -130,7 +130,7 @@ class Automaton:
     _locations: t.Set[Location]
     _initial_locations: t.Set[Location]
     _initial_restriction: t.Optional[expressions.Expression]
-    _edges: t.Set[Edge]
+    _edges: t.List[Edge]
     _incoming_edges: t.DefaultDict[Location, t.Set[Edge]]
     _outgoing_edges: t.DefaultDict[Location, t.Set[Edge]]
 
@@ -142,7 +142,7 @@ class Automaton:
         self._locations = set()
         self._initial_locations = set()
         self._initial_restriction = None
-        self._edges = set()
+        self._edges = []
         self._incoming_edges = collections.defaultdict(set)
         self._outgoing_edges = collections.defaultdict(set)
 
@@ -178,7 +178,7 @@ class Automaton:
         self._initial_restriction = initial_restriction
 
     @property
-    def edges(self) -> t.AbstractSet[Edge]:
+    def edges(self) -> t.Sequence[Edge]:
         return self._edges
 
     def add_location(self, location: Location, *, initial: bool = False) -> None:
@@ -217,7 +217,7 @@ class Automaton:
         edge.location.validate(self.scope)
         for destination in edge.destinations:
             destination.location.validate(self.scope)
-        self._edges.add(edge)
+        self._edges.append(edge)
         self._locations.add(edge.location)
         self._outgoing_edges[edge.location].add(edge)
         for destination in edge.destinations:
