@@ -5,6 +5,7 @@
 import dataclasses as d
 import typing as t
 
+import fractions
 import json
 import pathlib
 import subprocess
@@ -14,37 +15,11 @@ from .. import model
 from ..analysis import checkers
 from ..jani import dump_model
 
+from .errors import ToolError, ToolTimeoutError
+
 
 Timeout = t.Optional[t.Union[float, int]]
 Command = t.Sequence[t.Union[str, pathlib.Path]]
-
-
-class ModestError(Exception):
-    command: Command
-
-    stdout: t.Optional[bytes]
-    stderr: t.Optional[bytes]
-
-    returncode: t.Optional[int]
-
-    def __init__(
-        self,
-        message: str,
-        command: Command = (),
-        *,
-        stdout: t.Optional[bytes] = None,
-        stderr: t.Optional[bytes] = None,
-        returncode: t.Optional[int] = None,
-    ) -> None:
-        super().__init__(message)
-        self.command = command
-        self.stdout = stdout
-        self.stderr = stderr
-        self.returncode = returncode
-
-
-class ModestTimeoutError(ModestError):
-    pass
 
 
 @d.dataclass(eq=False)
@@ -79,14 +54,14 @@ class Toolset:
                     capture_output=capture_output,
                 )
             except subprocess.TimeoutExpired as timeout_error:
-                raise ModestTimeoutError(
+                raise ToolTimeoutError(
                     "timeout expired during execution of `modest check`",
                     command=command,
                     stdout=timeout_error.stdout,
                     stderr=timeout_error.stderr,
                 )
             if process.returncode != 0:
-                raise ModestError(
+                raise ToolError(
                     f"`modest check` terminated with non-zero returncode {process.returncode}",
                     command=command,
                     stdout=process.stdout,
@@ -96,7 +71,7 @@ class Toolset:
             try:
                 return json.loads(output_file.read_text(encoding="utf-8-sig"))
             except FileNotFoundError:
-                raise ModestError(
+                raise ToolError(
                     "`modest check` did not generate an output file",
                     command=command,
                     stdout=process.stdout,
@@ -132,7 +107,7 @@ class ModestChecker(checkers.Checker):
             input_file.write_bytes(dump_model(network, properties=named_properties))
             result = self.toolset.check((input_file,))
             return {
-                dataset["property"]: dataset["value"]
+                dataset["property"]: fractions.Fraction(dataset["value"])
                 for dataset in result["data"]
                 if "property" in dataset
             }

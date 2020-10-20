@@ -227,11 +227,21 @@ def construct_model(scenario: Scenario) -> model.Network:
     ctx.global_scope.declare_constant("HEIGHT", types.INT, value=track.height)
     ctx.global_scope.declare_constant("TRACK_SIZE", types.INT, value=track.size)
     ctx.global_scope.declare_constant(
-        "TANK_SIZE", types.INT, value=scenario.tank_size,
+        "TANK_SIZE",
+        types.INT,
+        value=scenario.tank_size,
     )
 
-    ctx.global_scope.declare_variable("car_dx", types.INT, initial_value=0)
-    ctx.global_scope.declare_variable("car_dy", types.INT, initial_value=0)
+    ctx.global_scope.declare_variable(
+        "car_dx",
+        types.INT.bound(-scenario.max_speed, scenario.max_speed),
+        initial_value=0,
+    )
+    ctx.global_scope.declare_variable(
+        "car_dy",
+        types.INT.bound(-scenario.max_speed, scenario.max_speed),
+        initial_value=0,
+    )
 
     ctx.global_scope.declare_variable(
         "car_pos",
@@ -264,7 +274,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         initial = automaton.create_location(initial=True)
 
         def update_speed(
-            current: model.Expression, acceleration: expressions.MaybeExpression
+            current: model.Expression, acceleration: expressions.ValueOrExpression
         ) -> model.Expression:
             return expr(
                 "max(min($current + $acceleration, $max_speed), -$max_speed)",
@@ -298,7 +308,8 @@ def construct_model(scenario: Scenario) -> model.Network:
                             ),
                         },
                         probability=expr(
-                            "1 - $p", p=scenario.underground.acceleration_probability,
+                            "1 - $p",
+                            p=scenario.underground.acceleration_probability,
                         ),
                     ),
                 },
@@ -403,7 +414,8 @@ def construct_model(scenario: Scenario) -> model.Network:
             source=initial,
             destinations={
                 model.create_destination(
-                    initial, assignments={"car_pos": next_car_pos},
+                    initial,
+                    assignments={"car_pos": next_car_pos},
                 )
             },
             action_pattern=step,
@@ -417,7 +429,8 @@ def construct_model(scenario: Scenario) -> model.Network:
     controller = construct_controller_automaton().create_instance()
 
     network.create_link(
-        {car: step, tank: step, controller: step}, result=step,
+        {car: step, tank: step, controller: step},
+        result=step,
     )
 
     return network
@@ -495,7 +508,9 @@ def generate(
             )
             (output_directory / filename).write_bytes(
                 jani.dump_model(
-                    network, indent=indent, allow_momba_operators=allow_momba_operators,
+                    network,
+                    indent=indent,
+                    allow_momba_operators=allow_momba_operators,
                 )
             )
 
