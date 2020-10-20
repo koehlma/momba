@@ -20,7 +20,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install black flake8 flake8-bugbear pep8-naming mypy
+        pip install poetry 
+        poetry export --dev -f requirements.txt --output requirements.txt
+        pip install -r requirements.txt
     - name: Style check with black
       run: |
         black --check --diff -l 88 momba tests
@@ -29,4 +31,4 @@ jobs:
         flake8 momba tests
     - name: Type Check with mypy
       run: |
-        mypy momba tests  
+        mypy momba 
