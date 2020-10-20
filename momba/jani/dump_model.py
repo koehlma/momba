@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -12,10 +12,10 @@ import functools
 import json
 import warnings
 
-from ... import model
-from ...model import effects, context, expressions, operators, properties, types
-from ...utils import checks
-from ...metadata import version
+from .. import model
+from ..model import effects, context, expressions, operators, properties, types
+from ..utils import checks
+from ..metadata import version
 
 
 # XXX: ignore this type definition, mypy does not support recursive types
@@ -129,10 +129,12 @@ def _dump_bounded_type(typ: types.BoundedType, ctx: JANIContext) -> JSON:
 @_dump_type.register
 def _dump_array_type(typ: types.ArrayType, ctx: JANIContext) -> JSON:
     ctx.require(ModelFeature.ARRAYS)
-    return {"kind": "array", "base": _dump_type(typ.base, ctx)}
+    return {"kind": "array", "base": _dump_type(typ.element, ctx)}
 
 
-checks.check_singledispatch(_dump_type, types.Type)
+checks.check_singledispatch(
+    _dump_type, types.Type, ignore={types.StateType, types.SetType}
+)
 
 
 @functools.singledispatch
@@ -141,8 +143,8 @@ def _dump_prop(prop: model.Property, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
-def _dump_identifier(expr: expressions.Identifier, ctx: JANIContext) -> JSON:
-    return expr.name
+def _dump_identifier(expr: expressions.Name, ctx: JANIContext) -> JSON:
+    return expr.identifier
 
 
 @_dump_prop.register
@@ -180,17 +182,51 @@ _DERIVED_OPERATORS = {
     operators.BooleanOperator.IMPLY,
     operators.ComparisonOperator.GT,
     operators.ComparisonOperator.GE,
-    operators.ArithmeticOperator.MIN,
-    operators.ArithmeticOperator.MAX,
+    operators.ArithmeticBinaryOperator.MIN,
+    operators.ArithmeticBinaryOperator.MAX,
+    operators.ArithmeticUnaryOperator.ABS,
+    operators.ArithmeticUnaryOperator.SGN,
+    operators.ArithmeticUnaryOperator.TRC,
 }
 
 
 _Transform = t.Callable[[expressions.Expression], expressions.Expression]
 
+
+def normalize_xor(expr: expressions.Expression) -> expressions.Expression:
+    assert (
+        isinstance(expr, expressions.Boolean)
+        and expr.operator is operators.BooleanOperator.XOR
+    )
+    return expressions.logic_or(
+        expressions.logic_and(expressions.logic_not(expr.left), expr.right),
+        expressions.logic_and(expr.right, expressions.logic_not(expr.left)),
+    )
+
+
+def normalize_equiv(expr: expressions.Expression) -> expressions.Expression:
+    assert (
+        isinstance(expr, expressions.Boolean)
+        and expr.operator is operators.BooleanOperator.EQUIV
+    )
+    return expressions.logic_and(
+        expressions.logic_implies(expr.left, expr.right),
+        expressions.logic_implies(expr.right, expr.left),
+    )
+
+
+def normalize_floor_div(expr: expressions.Expression) -> expressions.Expression:
+    assert (
+        isinstance(expr, expressions.ArithmeticBinary)
+        and expr.operator is operators.ArithmeticBinaryOperator.FLOOR_DIV
+    )
+    return expressions.floor(expressions.real_div(expr.left, expr.right))
+
+
 _MOMBA_OPERATORS: t.Mapping[operators.BinaryOperator, _Transform] = {
-    operators.BooleanOperator.XOR: expressions.normalize_xor,
-    operators.BooleanOperator.EQUIV: expressions.normalize_equiv,
-    operators.ArithmeticOperator.FLOOR_DIV: expressions.normalize_floor_div,
+    operators.BooleanOperator.XOR: normalize_xor,
+    operators.BooleanOperator.EQUIV: normalize_equiv,
+    operators.ArithmeticBinaryOperator.FLOOR_DIV: normalize_floor_div,
 }
 
 
@@ -240,7 +276,7 @@ def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
     }
 
 
-def _dump_prop_interval(pi: properties.PropertyInterval, ctx: JANIContext) -> JSON:
+def _dump_prop_interval(pi: properties.Interval, ctx: JANIContext) -> JSON:
     prop_interval: _JANIMap = {}
     if pi.lower is not None:
         prop_interval["lower"] = _dump_prop(pi.lower, ctx)
@@ -270,41 +306,41 @@ def _dump_reward_instant(ri: properties.RewardInstant, ctx: JANIContext) -> JSON
 
 
 @_dump_prop.register
-def _dump_filter(prop: properties.Filter, ctx: JANIContext) -> JSON:
+def _dump_filter(prop: properties.Aggregate, ctx: JANIContext) -> JSON:
     return {
         "op": "filter",
-        "fun": prop.function.value,
+        "fun": prop.function.symbol,
         "values": _dump_prop(prop.values, ctx),
-        "states": _dump_prop(prop.states, ctx),
+        "states": _dump_prop(prop.predicate, ctx),
     }
 
 
 @_dump_prop.register
-def _dump_probability(prop: properties.ProbabilityProp, ctx: JANIContext) -> JSON:
+def _dump_probability(prop: properties.Probability, ctx: JANIContext) -> JSON:
     return {
-        "op": prop.operator.value,
-        "exp": _dump_prop(prop.expression, ctx),
+        "op": "Pmax" if prop.operator is operators.MinMax.MAX else "Pmin",
+        "exp": _dump_prop(prop.formula, ctx),
     }
 
 
 @_dump_prop.register
-def _dump_path_formula(prop: properties.PathFormula, ctx: JANIContext) -> JSON:
+def _dump_path_formula(prop: properties.PathQuantifier, ctx: JANIContext) -> JSON:
     return {
-        "op": prop.operator.value,
-        "exp": _dump_prop(prop.expression, ctx),
+        "op": prop.quantifier.value,
+        "exp": _dump_prop(prop.formula, ctx),
     }
 
 
 @_dump_prop.register
-def _dump_expected(prop: properties.Expected, ctx: JANIContext) -> JSON:
+def _dump_expected(prop: properties.ExpectedReward, ctx: JANIContext) -> JSON:
     expected: _JANIMap = {
-        "op": prop.operator.value,
-        "exp": _dump_prop(prop.expression, ctx),
+        "op": "Emax" if prop.operator is operators.MinMax.MAX else "Emin",
+        "exp": _dump_prop(prop.reward, ctx),
     }
     if prop.accumulate is not None:
         expected["accumulate"] = [elem.value for elem in prop.accumulate]
-    if prop.reach is not None:
-        expected["reach"] = _dump_prop(prop.reach, ctx)
+    if prop.reachability is not None:
+        expected["reach"] = _dump_prop(prop.reachability, ctx)
     if prop.step_instant is not None:
         expected["step-instant"] = _dump_prop(prop.step_instant, ctx)
     if prop.time_instant is not None:
@@ -317,10 +353,10 @@ def _dump_expected(prop: properties.Expected, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
-def _dump_steady(prop: properties.Steady, ctx: JANIContext) -> JSON:
+def _dump_steady(prop: properties.SteadyState, ctx: JANIContext) -> JSON:
     steady: _JANIMap = {
-        "op": prop.operator.value,
-        "exp": _dump_prop(prop.expression, ctx),
+        "op": "Smax" if prop.operator is operators.MinMax.MAX else "Smin",
+        "exp": _dump_prop(prop.formula, ctx),
     }
     if prop.accumulate is not None:
         steady["accumulate"] = [elem.value for elem in prop.accumulate]
@@ -328,7 +364,7 @@ def _dump_steady(prop: properties.Steady, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
-def _dump_timed(prop: properties.Timed, ctx: JANIContext) -> JSON:
+def _dump_timed(prop: properties.BinaryPathFormula, ctx: JANIContext) -> JSON:
     timed: _JANIMap = {
         "op": prop.operator.value,
         "left": _dump_prop(prop.left, ctx),
@@ -346,8 +382,27 @@ def _dump_timed(prop: properties.Timed, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
-def _dump_state_predicates(sp: properties.StatePredicates, ctx: JANIContext) -> JSON:
-    return {"op": sp.value}
+def _dump_state_selector(prop: properties.StateSelector, ctx: JANIContext) -> JSON:
+    return {"op": prop.predicate.value}
+
+
+@_dump_prop.register
+def _dump_unary_path_formula(
+    prop: properties.UnaryPathFormula, ctx: JANIContext
+) -> JSON:
+    jani_prop: _JANIMap = {
+        "op": prop.operator.value,
+        "exp": _dump_prop(prop.formula, ctx),
+    }
+    if prop.step_bounds is not None:
+        jani_prop["step-bounds"] = _dump_prop_interval(prop.step_bounds, ctx)
+    if prop.time_bounds is not None:
+        jani_prop["time-bounds"] = _dump_prop_interval(prop.time_bounds, ctx)
+    if prop.reward_bounds is not None:
+        jani_prop["reward-bounds"] = [
+            _dump_reward_bound(rb, ctx) for rb in prop.reward_bounds
+        ]
+    return jani_prop
 
 
 checks.check_singledispatch(_dump_prop, model.Property)
@@ -359,8 +414,8 @@ def _dump_target(target: effects.Target, ctx: JANIContext) -> JSON:
 
 
 @_dump_target.register
-def _dump_target_identifier(target: effects.Identifier, ctx: JANIContext) -> JSON:
-    return target.name
+def _dump_target_identifier(target: effects.Name, ctx: JANIContext) -> JSON:
+    return target.identifier
 
 
 checks.check_singledispatch(_dump_target, effects.Target)
@@ -477,30 +532,22 @@ def _dump_action_pattern(
     return None
 
 
-def _dump_sync(
-    instance_vector: t.Sequence[model.Instance],
-    sync: model.Synchronization,
-    ctx: JANIContext,
+def _dump_link(
+    instance_vector: t.Sequence[model.Instance], link: model.Link, ctx: JANIContext,
 ) -> JSON:
     jani_sync: _JANIMap = {
         "synchronise": [
-            _dump_action_pattern(sync.vector.get(instance, None), ctx)
+            _dump_action_pattern(link.vector.get(instance, None), ctx)
             for instance in instance_vector
         ],
     }
-    if sync.result is not None:
-        jani_sync["result"] = _dump_action_pattern(sync.result, ctx)
+    if link.result is not None:
+        jani_sync["result"] = _dump_action_pattern(link.result, ctx)
     return jani_sync
 
 
 def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
-    instances: t.Set[model.Instance] = set()
-    for composition in network.system:
-        instances |= composition.instances
-    instance_vector = list(instances)
-    synchronizations: t.Set[model.Synchronization] = set()
-    for composition in network.system:
-        synchronizations |= composition.synchronizations
+    instance_vector = list(network.instances)
     jani_elements: t.List[_JANIMap] = []
     for instance in instance_vector:
         jani_instance: _JANIMap = {"automaton": ctx.get_name(instance.automaton)}
@@ -509,10 +556,7 @@ def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
         jani_elements.append(jani_instance)
     return {
         "elements": jani_elements,
-        "syncs": [
-            _dump_sync(instance_vector, synchronization, ctx)
-            for synchronization in synchronizations
-        ],
+        "syncs": [_dump_link(instance_vector, link, ctx) for link in network.links],
     }
 
 
@@ -543,10 +587,18 @@ def _dump_action_type(action_type: model.ActionType, ctx: JANIContext) -> _JANIM
 
 
 def dump_structure(
-    network: model.Network, *, allow_momba_operators: bool = False
+    network: model.Network,
+    *,
+    allow_momba_operators: bool = False,
+    properties: t.Optional[t.Mapping[str, model.Property]] = None,
 ) -> JSON:
     ctx = JANIContext(allow_momba_operators=allow_momba_operators)
     jani_metadata: t.Dict[str, str] = {}
+    if properties is None:
+        properties = {
+            definition.name: definition.prop
+            for definition in network.ctx.named_properties.values()
+        }
     if "name" in network.ctx.metadata:
         jani_metadata
     jani_model: _JANIMap = {
@@ -568,14 +620,14 @@ def dump_structure(
         ],
         "actions": [
             _dump_action_type(action_type, ctx)
-            for action_type in network.ctx.action_types
+            for action_type in network.ctx.action_types.values()
         ],
         "automata": [
             _dump_automaton(automaton, ctx) for automaton in network.ctx.automata
         ],
         "properties": [
-            {"name": prop.name, "expression": _dump_prop(prop.prop, ctx)}
-            for prop in network.ctx.properties
+            {"name": name, "expression": _dump_prop(prop, ctx)}
+            for name, prop in properties.items()
         ],
         "system": _dump_system(network, ctx),
         # important: has to be at the end, because we collect the features while dumping
@@ -593,6 +645,7 @@ def dump_model(
     *,
     indent: t.Optional[int] = None,
     allow_momba_operators: bool = False,
+    properties: t.Optional[t.Mapping[str, model.Property]] = None,
 ) -> bytes:
     """
     Takes a Momba automata network and exports it to the JANI format.
@@ -604,8 +657,9 @@ def dump_model(
     Returns:
         The model in UTF-8 encoded JANI format.
     """
-    return json.dumps(
-        dump_structure(network, allow_momba_operators=allow_momba_operators),
-        indent=indent,
-        ensure_ascii=False,
-    ).encode("utf-8")
+    jani_structure = dump_structure(
+        network, allow_momba_operators=allow_momba_operators, properties=properties
+    )
+    return json.dumps(jani_structure, indent=indent, ensure_ascii=False,).encode(
+        "utf-8"
+    )

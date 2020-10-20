@@ -22,7 +22,6 @@ class Edge(t.Generic[LocationT, ActionT]):
 
 
 class LTS(
-    base.TS[LocationT, Edge[LocationT, ActionT]],
-    t.Generic[LocationT, ActionT],
+    base.TS[LocationT, Edge[LocationT, ActionT]], t.Generic[LocationT, ActionT],
 ):
     pass

@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ import typing as t
 import enum
 import fractions
 import math
+
+from . import types
 
 
 class Operator:
@@ -30,8 +32,12 @@ class NativeBooleanFunction(t.Protocol):
 class BooleanOperator(BinaryOperator, enum.Enum):
     AND = "∧", lambda left, right: left and right
     OR = "∨", lambda left, right: left or right
-    XOR = "⊕", lambda left, right: (left or right) and not (left and right)
+
+    # requires JANI extension `derived-operators`
     IMPLY = "⇒", lambda left, right: not left or right
+
+    # requires JANI extension `x-momba-operators`
+    XOR = "⊕", lambda left, right: (left or right) and not (left and right)
     EQUIV = "⇔", lambda left, right: left is right
 
     native_function: NativeBooleanFunction
@@ -44,29 +50,34 @@ class BooleanOperator(BinaryOperator, enum.Enum):
 Number = t.Union[int, float, fractions.Fraction]
 
 
-class NativeArithmeticFunction(t.Protocol):
+class NativeBinaryArithmeticFunction(t.Protocol):
     def __call__(self, left: Number, right: Number) -> Number:
         pass
 
 
-class ArithmeticOperator(BinaryOperator, enum.Enum):
+class ArithmeticBinaryOperator(BinaryOperator, enum.Enum):
     ADD = "+", lambda left, right: left + right
     SUB = "-", lambda left, right: left - right
     MUL = "*", lambda left, right: left * right
-    MOD = "%", lambda left, right: left % right  # TODO: is this correct?
+    MOD = "%", lambda left, right: left % right
 
-    MIN = "min", lambda left, right: min(left, right)
-    MAX = "max", lambda left, right: max(left, right)
-
-    FLOOR_DIV = "//", lambda left, right: left // right
     REAL_DIV = "/", lambda left, right: left / right
 
     LOG = "log", lambda left, right: math.log(left, right)
     POW = "pow", lambda left, right: pow(left, right)
 
-    native_function: NativeArithmeticFunction
+    # requires JANI extension `derived-operators`
+    MIN = "min", lambda left, right: min(left, right)
+    MAX = "max", lambda left, right: max(left, right)
 
-    def __init__(self, symbol: str, native_function: NativeArithmeticFunction) -> None:
+    # requires JANI extension `x-momba-operators`
+    FLOOR_DIV = "//", lambda left, right: left // right
+
+    native_function: NativeBinaryArithmeticFunction
+
+    def __init__(
+        self, symbol: str, native_function: NativeBinaryArithmeticFunction
+    ) -> None:
         super().__init__(symbol)
         self.native_function = native_function
 
@@ -95,6 +106,8 @@ class NativeComparisonFunction(t.Protocol):
 class ComparisonOperator(BinaryOperator, enum.Enum):
     LT = "<", True, lambda left, right: left < right
     LE = "≤", False, lambda left, right: left <= right
+
+    # requires JANI extension `derived-operators`
     GE = "≥", False, lambda left, right: left >= right
     GT = ">", True, lambda left, right: left > right
 
@@ -136,58 +149,85 @@ class NotOperator(UnaryOperator, enum.Enum):
     NOT = "¬"
 
 
-class NativeRoundFunction(t.Protocol):
+class NativeUnaryArithmeticFunction(t.Protocol):
     def __call__(self, operand: Number) -> int:
         pass
 
 
-class RoundOperator(UnaryOperator, enum.Enum):
-    CEIL = "ceil", lambda operand: math.ceil(operand)
-    FLOOR = "floor", lambda operand: math.floor(operand)
+class ArithmeticUnaryOperator(UnaryOperator, enum.Enum):
+    CEIL = "ceil", lambda _: types.INT, lambda operand: math.ceil(operand)
+    FLOOR = "floor", lambda _: types.INT, lambda operand: math.floor(operand)
 
-    native_function: NativeRoundFunction
+    # requires JANI extension `derived-operators`
+    ABS = "abs", lambda typ: typ, lambda operand: abs(operand)
+    SGN = (
+        "sgn",
+        lambda _: types.INT,
+        lambda operand: -1 if operand < 0 else (1 if operand > 0 else 0),
+    )
+    TRC = "trc", lambda _: types.INT, lambda operand: math.trunc(operand)
 
-    def __init__(self, symbol: str, native_function: NativeRoundFunction) -> None:
+    infer_result_type: types.InferTypeUnary
+    native_function: NativeUnaryArithmeticFunction
+
+    def __init__(
+        self,
+        symbol: str,
+        infer_result_type: types.InferTypeUnary,
+        native_function: NativeUnaryArithmeticFunction,
+    ) -> None:
         super().__init__(symbol)
+        self.infer_result_type = infer_result_type
         self.native_function = native_function
 
 
-# TODO for MX: review the code for properties Michaela wrote
-
-
-class Expected(enum.Enum):
-    EMAX = "Emax"
-    EMIN = "Emin"
-
-
-class Probability(enum.Enum):
-    PMIN = "Pmin"
-    PMAX = "Pmax"
-
-
-class Steady(enum.Enum):
-    SMIN = "Smin"
-    SMAX = "Smax"
-
-
-class PathOperator(enum.Enum):
-    FORALL = "∀"
-    EXISTS = "∃"
-
-
-class TimeOperator(enum.Enum):
-    UNTIL = "U"
-    WEAKU = "W"
-
-
-class FilterFunction(enum.Enum):
+class MinMax(enum.Enum):
     MIN = "min"
     MAX = "max"
-    SUM = "sum"
-    AVG = "avg"
-    COUNT = "count"
-    ARGMIN = "argmin"
-    ARGMAX = "argmax"
-    EXISTS = "∃"
+
+
+class Quantifier(enum.Enum):
     FORALL = "∀"
-    VALUES = "values"
+    EXISTS = "∃"
+
+
+class BinaryPathOperator(enum.Enum):
+    UNTIL = "U"
+    WEAK_UNTIL = "W"
+
+    # requires JANI extension `derived-operators`
+    RELEASE = "R"
+
+
+class UnaryPathOperator(enum.Enum):
+    # requires JANI extension `derived-operators`
+    EVENTUALLY = "F"
+    GLOBALLY = "G"
+
+
+class AggregationFunction(enum.Enum):
+    MIN = "min", {types.REAL}, lambda _: types.REAL
+    MAX = "max", {types.REAL}, lambda _: types.REAL
+    SUM = "sum", {types.REAL}, lambda _: types.REAL
+    AVG = "avg", {types.REAL}, lambda _: types.REAL
+    COUNT = "count", {types.BOOL}, lambda _: types.INT
+    EXISTS = "∃", {types.BOOL}, lambda _: types.BOOL
+    FORALL = "∀", {types.BOOL}, lambda _: types.BOOL
+    ARGMIN = "argmin", {types.REAL}, lambda _: types.set_of(types.STATE)
+    ARGMAX = "argmax", {types.REAL}, lambda _: types.set_of(types.STATE)
+    VALUES = "values", {types.REAL, types.BOOL}, lambda typ: types.set_of(typ)
+
+    symbol: str
+
+    allowed_values_type: t.Set[types.Type]
+    infer_result_type: types.InferTypeUnary
+
+    def __init__(
+        self,
+        symbol: str,
+        allowed_values_type: t.Set[types.Type],
+        infer_result_type: types.InferTypeUnary,
+    ) -> None:
+        self.symbol = symbol
+        self.allowed_values_type = allowed_values_type
+        self.infer_result_type = infer_result_type

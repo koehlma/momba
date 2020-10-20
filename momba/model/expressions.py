@@ -1,22 +1,23 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import abc
-import dataclasses
+import decimal
 import enum
 import fractions
 import math
-import numbers
+import warnings
 
-from . import context, errors, operators, properties, types
+from . import errors, operators, properties, types
 
 if t.TYPE_CHECKING:
-    from . import distributions
+    from . import context, distributions
 
 
 class Expression(properties.Property, abc.ABC):
@@ -27,92 +28,30 @@ class Expression(properties.Property, abc.ABC):
 
     @abc.abstractmethod
     def is_constant_in(self, scope: context.Scope) -> bool:
-        """Returns `True` only if the expression has a constant value in the given scope.
+        """
+        Returns `True` only if the expression has a constant value in the given scope.
 
         Arguments:
             scope: The scope to use.
         """
         raise NotImplementedError()
 
-    @abc.abstractmethod
-    def infer_type(self, scope: context.Scope) -> types.Type:
-        raise NotImplementedError()
-
-    @property
-    def traverse(self) -> t.Iterable[Expression]:
+    def traverse(self) -> t.Iterator[Expression]:
         yield self
         for child in self.children:
-            yield from child.traverse
+            yield from child.traverse()
 
     @property
     def subexpressions(self) -> t.AbstractSet[Expression]:
-        return frozenset(self.traverse)
+        return frozenset(self.traverse())
 
     @property
     def is_sampling_free(self) -> bool:
-        return all(not isinstance(e, Sample) for e in self.traverse)
+        return all(not isinstance(e, Sample) for e in self.traverse())
 
     @property
-    def identifiers(self) -> t.AbstractSet[Identifier]:
-        return frozenset(
-            child for child in self.traverse if isinstance(child, Identifier)
-        )
-
-    def lor(self, other: Expression) -> Expression:
-        if not isinstance(other, Expression):
-            return NotImplemented
-        return Boolean(operators.BooleanOperator.OR, self, other)
-
-    def lnot(self) -> Expression:
-        return lnot(self)
-
-    def add(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.ADD, self, convert(other))
-
-    def radd(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.ADD, convert(other), self)
-
-    def sub(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.SUB, self, convert(other))
-
-    def rsub(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.SUB, convert(other), self)
-
-    def mul(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.MUL, self, convert(other))
-
-    def rmul(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.MUL, convert(other), self)
-
-    def mod(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.MOD, self, convert(other))
-
-    def rmod(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.MOD, convert(other), self)
-
-    def floordiv(self, other: MaybeExpression) -> Expression:
-        return Arithmetic(operators.ArithmeticOperator.FLOOR_DIV, convert(other), self)
-
-    def eq(self, other: Expression) -> Expression:
-        return Equality(operators.EqualityOperator.EQ, self, other)
-
-    def neq(self, other: Expression) -> Expression:
-        return Equality(operators.EqualityOperator.NEQ, self, other)
-
-    def lt(self, other: Expression) -> Expression:
-        return Comparison(operators.ComparisonOperator.LT, self, other)
-
-    def le(self, other: Expression) -> Expression:
-        return Comparison(operators.ComparisonOperator.LE, self, other)
-
-    def ge(self, other: Expression) -> Expression:
-        return Comparison(operators.ComparisonOperator.GE, self, other)
-
-    def gt(self, other: Expression) -> Expression:
-        return Comparison(operators.ComparisonOperator.GT, self, other)
-
-    def land(self, other: Expression) -> Expression:
-        return land(self, other)
+    def used_names(self) -> t.AbstractSet[Name]:
+        return frozenset(child for child in self.traverse() if isinstance(child, Name))
 
 
 class _Leaf(Expression):
@@ -126,7 +65,7 @@ class Constant(_Leaf, abc.ABC):
         return True
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class BooleanConstant(Constant):
     boolean: bool
 
@@ -140,12 +79,17 @@ class NumericConstant(Constant, abc.ABC):
     def as_float(self) -> float:
         raise NotImplementedError()
 
+    @property
+    @abc.abstractmethod
+    def as_fraction(self) -> fractions.Fraction:
+        raise NotImplementedError()
+
 
 TRUE = BooleanConstant(True)
 FALSE = BooleanConstant(False)
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class IntegerConstant(NumericConstant):
     integer: int
 
@@ -154,8 +98,14 @@ class IntegerConstant(NumericConstant):
 
     @property
     def as_float(self) -> float:
-        # TODO: emit a warning to keep track of imprecisions
+        warnings.warn(
+            "converting an integer constant to a float may result in a loss of precision"
+        )
         return float(self.integer)
+
+    @property
+    def as_fraction(self) -> fractions.Fraction:
+        return fractions.Fraction(self.integer)
 
 
 _NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
@@ -177,7 +127,7 @@ class NamedReal(enum.Enum):
 Real = t.Union[NamedReal, fractions.Fraction]
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class RealConstant(NumericConstant):
     real: Real
 
@@ -186,26 +136,38 @@ class RealConstant(NumericConstant):
 
     @property
     def as_float(self) -> float:
-        # TODO: emit a warning to keep track of imprecisions
+        warnings.warn(
+            "converting a real constant to a float may result in a loss of precision"
+        )
         if isinstance(self.real, NamedReal):
             return self.real.float_value
         return float(self.real)
 
+    @property
+    def as_fraction(self) -> fractions.Fraction:
+        if isinstance(self.real, fractions.Fraction):
+            return self.real
+        else:
+            warnings.warn(
+                "converting a named real constant do a fraction does result in a loss of precision"
+            )
+            return fractions.Fraction(self.real.float_value)
 
-@dataclasses.dataclass(frozen=True)
-class Identifier(_Leaf):
-    name: str
+
+@d.dataclass(frozen=True)
+class Name(_Leaf):
+    identifier: str
 
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return scope.lookup(self.name).is_constant_in(scope)
+        return scope.lookup(self.identifier).is_constant_in(scope)
 
     def infer_type(self, scope: context.Scope) -> types.Type:
-        return scope.lookup(self.name).typ
+        return scope.lookup(self.identifier).typ
 
 
 # XXX: this class should be abstract, however, then it would not type-check
 # https://github.com/python/mypy/issues/5374
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class BinaryExpression(Expression):
     operator: operators.BinaryOperator
     left: Expression
@@ -236,15 +198,15 @@ class Boolean(BinaryExpression):
         return types.BOOL
 
 
-_REAL_OPERATORS = {
-    operators.ArithmeticOperator.REAL_DIV,
-    operators.ArithmeticOperator.LOG,
-    operators.ArithmeticOperator.POW,
+_REAL_RESULT_OPERATORS = {
+    operators.ArithmeticBinaryOperator.REAL_DIV,
+    operators.ArithmeticBinaryOperator.LOG,
+    operators.ArithmeticBinaryOperator.POW,
 }
 
 
-class Arithmetic(BinaryExpression):
-    operator: operators.ArithmeticOperator
+class ArithmeticBinary(BinaryExpression):
+    operator: operators.ArithmeticBinaryOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
@@ -256,7 +218,7 @@ class Arithmetic(BinaryExpression):
         is_int = (
             types.INT.is_assignable_from(left_type)
             and types.INT.is_assignable_from(right_type)
-            and self.operator not in _REAL_OPERATORS
+            and self.operator not in _REAL_RESULT_OPERATORS
         )
         if is_int:
             return types.INT
@@ -281,14 +243,15 @@ class Equality(BinaryExpression):
     def infer_type(self, scope: context.Scope) -> types.Type:
         left_type = scope.get_type(self.left)
         right_type = scope.get_type(self.right)
+        left_assignable_right = left_type.is_assignable_from(right_type)
+        right_assignable_left = right_type.is_assignable_from(left_type)
+        if left_assignable_right or right_assignable_left:
+            return types.BOOL
         # XXX: JANI specifies that “left and right must be assignable to some common type”
-        if not left_type.is_assignable_from(
-            right_type
-        ) and not right_type.is_assignable_from(left_type):
-            raise errors.InvalidTypeError(
-                "invalid combination of type for equality comparison"
-            )
-        return types.BOOL
+        # not sure whether this implementation reflects this specification
+        raise errors.InvalidTypeError(
+            "invalid combination of type for equality comparison"
+        )
 
 
 class Comparison(BinaryExpression):
@@ -304,7 +267,7 @@ class Comparison(BinaryExpression):
         return types.BOOL
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Conditional(Expression):
     condition: Expression
     consequence: Expression
@@ -341,7 +304,7 @@ class Conditional(Expression):
 
 # XXX: this class should be abstract, however, then it would not type-check
 # https://github.com/python/mypy/issues/5374
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class UnaryExpression(Expression):
     operator: operators.UnaryOperator
     operand: Expression
@@ -358,8 +321,8 @@ class UnaryExpression(Expression):
         raise NotImplementedError()
 
 
-class Round(UnaryExpression):
-    operator: operators.RoundOperator
+class ArithmeticUnary(UnaryExpression):
+    operator: operators.ArithmeticUnaryOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         operand_type = scope.get_type(self.operand)
@@ -367,7 +330,7 @@ class Round(UnaryExpression):
             raise errors.InvalidTypeError(
                 f"expected a numeric type but got {operand_type}"
             )
-        return types.INT
+        return self.operator.infer_result_type(operand_type)
 
 
 class Not(UnaryExpression):
@@ -382,14 +345,17 @@ class Not(UnaryExpression):
         return types.BOOL
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Sample(Expression):
-    distribution: distributions.NamedDistribution
+    distribution: distributions.DistributionType
     arguments: t.Sequence[Expression]
 
     def __post_init__(self) -> None:
-        if len(self.arguments) != len(self.distribution.parameter_types):
-            raise ValueError("parameter and arguments arity mismatch")
+        if len(self.arguments) != self.distribution.arity:
+            raise errors.InvalidTypeError(
+                f"distribution {self.distribution} requires {self.distribution.arity} "
+                f"arguments but {len(self.arguments)} were given"
+            )
 
     @property
     def children(self) -> t.Sequence[Expression]:
@@ -412,7 +378,8 @@ class Sample(Expression):
         return self.distribution.result_type
 
 
-@dataclasses.dataclass(frozen=True)
+# requires JANI extension `nondet-selection`
+@d.dataclass(frozen=True)
 class Selection(Expression):
     name: str
     condition: Expression
@@ -433,7 +400,7 @@ class Selection(Expression):
         return (self.condition,)
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Derivative(Expression):
     identifier: str
 
@@ -448,196 +415,216 @@ class Derivative(Expression):
         return ()
 
 
-def ite(
-    condition: MaybeExpression,
-    consequence: MaybeExpression,
-    alternative: MaybeExpression,
-) -> Expression:
-    return Conditional(convert(condition), convert(consequence), convert(alternative))
+RealValue = t.Union[t.Literal["π", "e"], float, fractions.Fraction, decimal.Decimal]
+NumericValue = t.Union[int, RealValue]
+Value = t.Union[bool, NumericValue]
 
-
-PythonRealString = t.Literal["π", "e"]
-PythonReal = t.Union[numbers.Real, float, PythonRealString, NamedReal]
-PythonNumeric = t.Union[int, PythonReal]
-PythonValue = t.Union[bool, PythonNumeric]
+ValueOrExpression = t.Union[Expression, Value]
 
 
 class ConversionError(ValueError):
     pass
 
 
-def const(value: PythonValue) -> Constant:
-    if isinstance(value, bool):
-        return BooleanConstant(value)
-    if isinstance(value, int):
-        return IntegerConstant(value)
-    elif isinstance(value, (fractions.Fraction, float)):
-        return RealConstant(fractions.Fraction(value))
-    elif isinstance(value, str):
-        return RealConstant(_NAMED_REAL_MAP[value])
-    raise ConversionError(f"unable to convert Python value {value!r} to Momba value")
-
-
-MaybeExpression = t.Union[PythonValue, Expression]
-
-
-def convert(value: MaybeExpression) -> Expression:
-    if isinstance(value, Expression):
-        return value
-    return const(value)
-
-
-BinaryConstructor = t.Callable[[Expression, Expression], Expression]
-
-
-def lor(*expressions: MaybeExpression) -> Expression:
-    if len(expressions) == 1:
-        return convert(expressions[0])
-    result = Boolean(
-        operators.BooleanOperator.OR, convert(expressions[0]), convert(expressions[1]),
+def ensure_expr(value_or_expression: ValueOrExpression) -> Expression:
+    if isinstance(value_or_expression, Expression):
+        return value_or_expression
+    elif isinstance(value_or_expression, bool):
+        return BooleanConstant(value_or_expression)
+    elif isinstance(value_or_expression, int):
+        return IntegerConstant(value_or_expression)
+    elif isinstance(value_or_expression, (float, fractions.Fraction, decimal.Decimal)):
+        return RealConstant(fractions.Fraction(value_or_expression))
+    elif isinstance(value_or_expression, str):
+        try:
+            return RealConstant(_NAMED_REAL_MAP[value_or_expression])
+        except KeyError:
+            pass
+    raise ConversionError(
+        f"unable to convert Python value {value_or_expression!r} to expression"
     )
-    for disjunct in expressions[2:]:
-        result = Boolean(operators.BooleanOperator.OR, result, convert(disjunct))
+
+
+def ite(
+    condition: ValueOrExpression,
+    consequence: ValueOrExpression,
+    alternative: ValueOrExpression,
+) -> Expression:
+    return Conditional(
+        ensure_expr(condition), ensure_expr(consequence), ensure_expr(alternative)
+    )
+
+
+BinaryConstructor = t.Callable[[ValueOrExpression, ValueOrExpression], Expression]
+
+
+def _boolean_binary_expression(
+    operator: operators.BooleanOperator, expressions: t.Sequence[ValueOrExpression]
+) -> Expression:
+    if len(expressions) == 1:
+        return ensure_expr(expressions[0])
+    result = Boolean(
+        operator, ensure_expr(expressions[0]), ensure_expr(expressions[1]),
+    )
+    for operand in expressions[2:]:
+        result = Boolean(operator, result, ensure_expr(operand))
     return result
 
 
-def land(*expressions: MaybeExpression) -> Expression:
-    if len(expressions) == 1:
-        return convert(expressions[0])
-    result = Boolean(
-        operators.BooleanOperator.AND, convert(expressions[0]), convert(expressions[1]),
-    )
-    for conjunct in expressions[2:]:
-        result = Boolean(operators.BooleanOperator.AND, result, convert(conjunct))
-    return result
+def logic_or(*expressions: ValueOrExpression) -> Expression:
+    return _boolean_binary_expression(operators.BooleanOperator.OR, expressions)
 
 
-def xor(left: MaybeExpression, right: MaybeExpression) -> Expression:
-    return Boolean(operators.BooleanOperator.XOR, convert(left), convert(right))
+def logic_and(*expressions: ValueOrExpression) -> Expression:
+    return _boolean_binary_expression(operators.BooleanOperator.AND, expressions)
 
 
-def implies(left: MaybeExpression, right: MaybeExpression) -> Expression:
-    return Boolean(operators.BooleanOperator.IMPLY, convert(left), convert(right))
+def logic_xor(*expressions: ValueOrExpression) -> Expression:
+    return _boolean_binary_expression(operators.BooleanOperator.XOR, expressions)
 
 
-def equiv(left: MaybeExpression, right: MaybeExpression) -> Expression:
-    return Boolean(operators.BooleanOperator.EQUIV, convert(left), convert(right))
-
-
-def eq(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Equality(operators.EqualityOperator.EQ, convert(left), convert(right))
-
-
-def neq(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Equality(operators.EqualityOperator.NEQ, convert(left), convert(right))
-
-
-def lt(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LT, convert(left), convert(right))
-
-
-def le(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.LE, convert(left), convert(right))
-
-
-def ge(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GE, convert(left), convert(right))
-
-
-def gt(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Comparison(operators.ComparisonOperator.GT, convert(left), convert(right))
-
-
-def add(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.ADD, convert(left), convert(right))
-
-
-def sub(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.SUB, convert(left), convert(right))
-
-
-def mul(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MUL, convert(left), convert(right))
-
-
-def mod(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MOD, convert(left), convert(right))
-
-
-def minimum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MIN, convert(left), convert(right))
-
-
-def maximum(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.MAX, convert(left), convert(right))
-
-
-def real_div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(
-        operators.ArithmeticOperator.REAL_DIV, convert(left), convert(right)
+def logic_implies(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Boolean(
+        operators.BooleanOperator.IMPLY, ensure_expr(left), ensure_expr(right)
     )
 
 
-def floor_div(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(
-        operators.ArithmeticOperator.FLOOR_DIV, convert(left), convert(right)
+def logic_equiv(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Boolean(
+        operators.BooleanOperator.EQUIV, ensure_expr(left), ensure_expr(right)
     )
 
 
-def power(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.POW, convert(left), convert(right))
-
-
-def log(left: MaybeExpression, right: MaybeExpression) -> BinaryExpression:
-    return Arithmetic(operators.ArithmeticOperator.LOG, convert(left), convert(right))
-
-
-UnaryConstructor = t.Callable[[Expression], Expression]
-
-
-def lnot(operand: MaybeExpression) -> Expression:
-    return Not(operators.NotOperator.NOT, convert(operand))
-
-
-def floor(operand: MaybeExpression) -> Expression:
-    return Round(operators.RoundOperator.FLOOR, convert(operand))
-
-
-def ceil(operand: MaybeExpression) -> Expression:
-    return Round(operators.RoundOperator.CEIL, convert(operand))
-
-
-def normalize_xor(expr: Expression) -> Expression:
-    assert isinstance(expr, Boolean) and expr.operator is operators.BooleanOperator.XOR
-    return lor(land(lnot(expr.left), expr.right), land(expr.right, lnot(expr.left)))
-
-
-def normalize_equiv(expr: Expression) -> Expression:
-    assert (
-        isinstance(expr, Boolean) and expr.operator is operators.BooleanOperator.EQUIV
+def equals(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Equality(
+        operators.EqualityOperator.EQ, ensure_expr(left), ensure_expr(right)
     )
-    return land(implies(expr.left, expr.right), implies(expr.right, expr.left))
 
 
-def normalize_floor_div(expr: Expression) -> Expression:
-    assert (
-        isinstance(expr, Arithmetic)
-        and expr.operator is operators.ArithmeticOperator.FLOOR_DIV
+def not_equals(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Equality(
+        operators.EqualityOperator.NEQ, ensure_expr(left), ensure_expr(right)
     )
-    return floor(real_div(expr.left, expr.right))
 
 
-logic_not = lnot
-logic_or = lor
-logic_and = land
-logic_xor = xor
-logic_implies = implies
-logic_equiv = equiv
+def less_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Comparison(
+        operators.ComparisonOperator.LT, ensure_expr(left), ensure_expr(right)
+    )
 
 
-def logic_rimplies(left: MaybeExpression, right: MaybeExpression) -> Expression:
-    return Boolean(operators.BooleanOperator.IMPLY, convert(right), convert(left))
+def less_or_equal_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Comparison(
+        operators.ComparisonOperator.LE, ensure_expr(left), ensure_expr(right)
+    )
 
 
-def identifier(name: str) -> Identifier:
-    return Identifier(name)
+def greater_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return Comparison(
+        operators.ComparisonOperator.GE, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def greater_or_equal_than(
+    left: ValueOrExpression, right: ValueOrExpression
+) -> Expression:
+    return Comparison(
+        operators.ComparisonOperator.GT, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def add(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.ADD, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def sub(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.SUB, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def mul(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.MUL, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def mod(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.MOD, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def real_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.REAL_DIV,
+        ensure_expr(left),
+        ensure_expr(right),
+    )
+
+
+def log(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.LOG, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def power(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.POW, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def minimum(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.MIN, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def maximum(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.MAX, ensure_expr(left), ensure_expr(right)
+    )
+
+
+def floor_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    return ArithmeticBinary(
+        operators.ArithmeticBinaryOperator.FLOOR_DIV,
+        ensure_expr(left),
+        ensure_expr(right),
+    )
+
+
+UnaryConstructor = t.Callable[[ValueOrExpression], Expression]
+
+
+def logic_not(operand: ValueOrExpression) -> Expression:
+    return Not(operators.NotOperator.NOT, ensure_expr(operand))
+
+
+def floor(operand: ValueOrExpression) -> Expression:
+    return ArithmeticUnary(
+        operators.ArithmeticUnaryOperator.FLOOR, ensure_expr(operand)
+    )
+
+
+def ceil(operand: ValueOrExpression) -> Expression:
+    return ArithmeticUnary(operators.ArithmeticUnaryOperator.CEIL, ensure_expr(operand))
+
+
+def absolute(operand: ValueOrExpression) -> Expression:
+    return ArithmeticUnary(operators.ArithmeticUnaryOperator.ABS, ensure_expr(operand))
+
+
+def sgn(operand: ValueOrExpression) -> Expression:
+    return ArithmeticUnary(operators.ArithmeticUnaryOperator.SGN, ensure_expr(operand))
+
+
+def trunc(operand: ValueOrExpression) -> Expression:
+    return ArithmeticUnary(operators.ArithmeticUnaryOperator.TRC, ensure_expr(operand))
+
+
+def name(identifier: str) -> Name:
+    return Name(identifier)

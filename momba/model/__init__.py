@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 """
 Data-structures for the representation of quantitative models.
@@ -9,83 +9,92 @@ Automata and automata networks are mutable. This is an intentional design
 choice. The validity of the model is partly assured during construction,
 for instance, a location can only be added if the invariant is a boolean
 expression in the scope of the automaton. As usual, if an algorithm works
-on a model, e.g., analyzing it, the model must not be modified. In general
-models can only be extended with further entities, e.g., locations. The
-library does not support removing locations or swapping expressions et
-cetera.
-
-A modeling context can be locked for modification.
+on a model, e.g., analyzing it, the model must not be modified.
 """
 
 from __future__ import annotations
 
-from . import expressions, types, distributions, effects
+from . import effects, errors, expressions, operators, properties, types
 
-from .action import ActionType, ActionParameter, ActionPattern
+from .actions import (
+    ActionType,
+    ActionPattern,
+    ActionParameter,
+    ActionArgument,
+    ReadArgument,
+    WriteArgument,
+    GuardArgument,
+)
 
 from .automata import (
+    Instance,
     Automaton,
+    Location,
     Destination,
     Edge,
-    Instance,
-    Location,
     create_destination,
 )
+
 from .context import (
-    ConstantDeclaration,
-    Context,
     ModelType,
-    Scope,
+    Declaration,
     VariableDeclaration,
+    ConstantDeclaration,
+    PropertyDefinition,
+    Scope,
+    Context,
 )
-from .effects import Assignment
-from .expressions import (
-    const,
-    BinaryConstructor,
-    Expression,
-    convert,
-    ite,
-    logic_not,
-    identifier,
-)
-from .network import Composition, Network, Synchronization
+
+from .distributions import DistributionType
+
+from .expressions import Expression
+
+from .networks import Link, Network
+
 from .properties import Property
+
 from .types import Type
 
 
 __all__ = [
-    "expressions",
     "effects",
-    "const",
-    "Property",
-    "ActionType",
-    "ActionParameter",
-    "ActionPattern",
-    "Assignment",
-    "distributions",
-    "Context",
-    "ConstantDeclaration",
-    "VariableDeclaration",
-    "logic_not",
-    "ite",
-    "convert",
-    "identifier",
-    "BinaryConstructor",
+    "errors",
+    "expressions",
+    "operators",
+    "properties",
     "types",
-    "values",
+    # from `.actions`
+    "ActionType",
+    "ActionPattern",
+    "ActionParameter",
+    "ActionArgument",
+    "ReadArgument",
+    "WriteArgument",
+    "GuardArgument",
+    # from `.automata`
+    "Instance",
     "Automaton",
     "Location",
-    "Edge",
     "Destination",
+    "Edge",
     "create_destination",
-    "Instance",
-    "Identifier",
+    # from `.context`
     "ModelType",
+    "Declaration",
+    "VariableDeclaration",
+    "ConstantDeclaration",
+    "PropertyDefinition",
     "Scope",
+    "Context",
+    # from `.distributions`
+    "DistributionType",
+    # from `.expressions`
     "Expression",
+    # from `.networks`
     "Network",
-    "Synchronization",
-    "Composition",
-    "Value",
+    "Link",
+    # from `.property`
+    "Property",
+    # from `.types`
     "Type",
 ]

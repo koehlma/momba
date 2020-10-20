@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -10,9 +10,10 @@ import typing as t
 import dataclasses
 import fractions
 
-from . import lexer
 from .. import model
-from ..model import action, expressions, types, effects, properties, operators
+from ..model import actions, expressions, types, effects, properties, operators
+
+from . import lexer
 
 
 _IGNORE = {lexer.TokenType.WHITESPACE, lexer.TokenType.COMMENT}
@@ -119,13 +120,6 @@ class TokenStream:
         )
 
 
-@dataclasses.dataclass
-class Context:
-    stream: TokenStream
-    scope: model.Scope
-    automaton: t.Optional[model.Automaton]
-
-
 def parse_primitive_type(stream: TokenStream) -> types.Type:
     return _PRIMITIVE_TYPES[stream.expect(_PRIMITIVE_TYPES.keys()).text]
 
@@ -136,7 +130,7 @@ def parse_type(stream: TokenStream) -> types.Type:
         if stream.accept("]"):
             typ = types.ArrayType(typ)
         else:
-            if not isinstance(typ, types.Numeric):
+            if not isinstance(typ, types.NumericType):
                 raise stream.make_error(
                     f"{typ} is not numeric; only numeric types can be bounded"
                 )
@@ -144,7 +138,7 @@ def parse_type(stream: TokenStream) -> types.Type:
             stream.expect(",")
             upper_bound = parse_expression(stream)
             stream.expect("]")
-            typ = types.BoundedType(typ, lower_bound, upper_bound)
+            typ = typ.bound(lower_bound, upper_bound)
     return typ
 
 
@@ -166,14 +160,13 @@ _PRECEDENCE = {
     lexer.TokenType.LOGIC_OR: 11,
     lexer.TokenType.LOGIC_XOR: 11,
     lexer.TokenType.LOGIC_IMPLIES: 10,
-    lexer.TokenType.LOGIC_RIMPLIES: 10,
     lexer.TokenType.LOGIC_EQUIV: 10,
     lexer.TokenType.QUESTIONMARK: 5,
 }
 
 _RIGHT_ASSOCIATIVE = {lexer.TokenType.LOGIC_IMPLIES}
 
-_BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, model.BinaryConstructor] = {
+_BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, expressions.BinaryConstructor] = {
     lexer.TokenType.POWER: expressions.power,
     lexer.TokenType.STAR: expressions.mul,
     lexer.TokenType.SLASH: expressions.real_div,
@@ -181,22 +174,22 @@ _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, model.BinaryConstructor] = {
     lexer.TokenType.PERCENTAGE: expressions.mod,
     lexer.TokenType.PLUS: expressions.add,
     lexer.TokenType.MINUS: expressions.sub,
-    lexer.TokenType.COMP_EQ: expressions.eq,
-    lexer.TokenType.COMP_NEQ: expressions.neq,
-    lexer.TokenType.COMP_LT: expressions.lt,
-    lexer.TokenType.COMP_LE: expressions.le,
-    lexer.TokenType.COMP_GE: expressions.ge,
-    lexer.TokenType.COMP_GT: expressions.gt,
+    lexer.TokenType.COMP_EQ: expressions.equals,
+    lexer.TokenType.COMP_NEQ: expressions.not_equals,
+    lexer.TokenType.COMP_LT: expressions.less_than,
+    lexer.TokenType.COMP_LE: expressions.less_or_equal_than,
+    lexer.TokenType.COMP_GE: expressions.greater_than,
+    lexer.TokenType.COMP_GT: expressions.greater_or_equal_than,
     lexer.TokenType.LOGIC_AND: expressions.logic_and,
     lexer.TokenType.LOGIC_OR: expressions.logic_or,
     lexer.TokenType.LOGIC_XOR: expressions.logic_xor,
     lexer.TokenType.LOGIC_IMPLIES: expressions.logic_implies,
-    lexer.TokenType.LOGIC_RIMPLIES: expressions.logic_rimplies,
     lexer.TokenType.LOGIC_EQUIV: expressions.logic_equiv,
 }
 
 
-_BuiltinFunctionConstructor = t.Callable[[t.List[model.Expression]], model.Expression]
+_BuiltinExpressionConstructor = t.Callable[[t.List[model.Expression]], model.Expression]
+_BuiltinPropertyConstructor = t.Callable[[t.List[model.Property]], model.Property]
 
 
 @d.dataclass
@@ -218,6 +211,24 @@ def _construct_ceil(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.ceil(arguments[0])
 
 
+def _construct_abs(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"abs takes exactly 1 argument but {len(arguments)} are given")
+    return expressions.absolute(arguments[0])
+
+
+def _construct_sgn(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"sgn takes exactly 1 argument but {len(arguments)} are given")
+    return expressions.sgn(arguments[0])
+
+
+def _construct_trc(arguments: t.List[model.Expression]) -> model.Expression:
+    if len(arguments) != 1:
+        raise Exception(f"sgn takes exactly 1 argument but {len(arguments)} are given")
+    return expressions.trunc(arguments[0])
+
+
 def _construct_min(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 2:
         raise Exception(f"min takes exactly 2 argument but {len(arguments)} are given")
@@ -230,124 +241,168 @@ def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.maximum(arguments[0], arguments[1])
 
 
-def _construct_abs(arguments: t.List[model.Expression]) -> model.Expression:
-    if len(arguments) != 1:
-        raise Exception(f"abs takes exactly 1 argument but {len(arguments)} are given")
-    return expressions.maximum(arguments[0], expressions.sub(0, arguments[0]))
-
-
-def _construct_probability_min(arguments: t.List[model.Expression]) -> model.Expression:
+def _construct_probability_min(arguments: t.List[model.Property]) -> model.Property:
     if len(arguments) != 1:
         raise Exception(f"Pmin takes exactly 1 argument but {len(arguments)} are given")
     return properties.min_prob(arguments[0])
 
 
-def _construct_probability_max(arguments: t.List[model.Expression]) -> model.Expression:
+def _construct_probability_max(arguments: t.List[model.Property]) -> model.Property:
     if len(arguments) != 1:
         raise Exception(f"Pmax takes exactly 1 argument but {len(arguments)} are given")
     return properties.max_prob(arguments[0])
 
 
-def _construct_finally(arguments: t.List[model.Expression],) -> model.Expression:
+def _construct_finally(arguments: t.List[model.Property],) -> model.Property:
     if len(arguments) != 1:
         raise Exception(f"F takes exactly 1 argument but {len(arguments)} are given")
-    return properties.until(expressions.convert(True), arguments[0])
+    return properties.eventually(arguments[0])
 
 
-_BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinFunctionConstructor] = {
+def _construct_globally(arguments: t.List[model.Property],) -> model.Property:
+    if len(arguments) != 1:
+        raise Exception(f"G takes exactly 1 argument but {len(arguments)} are given")
+    return properties.globally(arguments[0])
+
+
+_BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinExpressionConstructor] = {
     "floor": _construct_floor,
     "ceil": _construct_ceil,
     "abs": _construct_abs,
+    "sgn": _construct_sgn,
+    "trc": _construct_trc,
     "min": _construct_min,
     "max": _construct_max,
+}
+
+_PROPERTY_FUNCTIONS: t.Mapping[str, _BuiltinPropertyConstructor] = {
     "Pmin": _construct_probability_min,
     "Pmax": _construct_probability_max,
     "F": _construct_finally,
+    "G": _construct_globally,
 }
 
-_FILTER_FUNCTIONS: t.Mapping[str, operators.FilterFunction] = {
-    "min": operators.FilterFunction.MIN,
-    "max": operators.FilterFunction.MAX,
+_AGGREGATION_FUNCTIONS: t.Mapping[str, operators.AggregationFunction] = {
+    "exists": operators.AggregationFunction.EXISTS,
+    "forall": operators.AggregationFunction.FORALL,
+    **{operator.symbol: operator for operator in operators.AggregationFunction},
 }
 
 
-def _parse_primary_expression(
-    stream: TokenStream, environment: Environment
+def _parse_property_function(
+    constructor: _BuiltinPropertyConstructor,
+    stream: TokenStream,
+    environment: Environment,
+) -> model.Property:
+    arguments: t.List[model.Property] = []
+    if not stream.accept(lexer.TokenType.RIGHT_PAR):
+        arguments.append(parse_property(stream, environment=environment))
+        while not stream.accept(lexer.TokenType.RIGHT_PAR):
+            stream.expect(",")
+            arguments.append(parse_property(stream, environment=environment))
+    return constructor(arguments)
+
+
+def _parse_builtin_function(
+    constructor: _BuiltinExpressionConstructor,
+    stream: TokenStream,
+    environment: Environment,
 ) -> model.Expression:
+    arguments: t.List[model.Expression] = []
+    if not stream.accept(lexer.TokenType.RIGHT_PAR):
+        arguments.append(parse_expression(stream, environment=environment))
+        while not stream.accept(lexer.TokenType.RIGHT_PAR):
+            stream.expect(",")
+            arguments.append(parse_expression(stream, environment=environment))
+    return constructor(arguments)
+
+
+def _parse_primary(stream: TokenStream, environment: Environment) -> model.Property:
     if stream.accept(lexer.TokenType.INTEGER, consume=False):
-        return model.convert(int(stream.consume().text))
+        return expressions.ensure_expr(int(stream.consume().text))
     elif stream.accept(lexer.TokenType.REAL, consume=False):
-        return model.convert(fractions.Fraction(stream.consume().text))
+        return expressions.ensure_expr(fractions.Fraction(stream.consume().text))
+    elif stream.accept("true"):
+        return expressions.TRUE
+    elif stream.accept("false"):
+        return expressions.FALSE
     elif stream.accept(lexer.TokenType.MACRO, consume=False):
         name = stream.consume().match["macro_name"]
         try:
             return environment.macro_expressions[name]
         except KeyError:
-            raise MomlSyntaxError(f"unknown macro {name!r}")
+            raise stream.make_error(f"no macro with name {name} found")
+        if stream.accept("("):
+            raise stream.make_error(
+                "functional syntax-aware macros are not supported yet"
+            )
     elif stream.accept(lexer.TokenType.IDENTIFIER, consume=False):
-        name = stream.consume().text
+        identifier = stream.consume().text
         if stream.accept(lexer.TokenType.LEFT_PAR):
-            arguments: t.List[model.Expression] = []
-            if name == "sample":
-                distribution = model.distributions.by_name(
+            if identifier == "sample":
+                arguments: t.List[model.Expression] = []
+                distribution = model.DistributionType.by_name(
                     stream.expect(lexer.TokenType.STRING).match["string"]
                 )
                 while not stream.accept(lexer.TokenType.RIGHT_PAR):
                     stream.expect(",")
                     arguments.append(parse_expression(stream, environment=environment))
                 return expressions.Sample(distribution, tuple(arguments))
-            if not stream.accept(lexer.TokenType.RIGHT_PAR):
-                arguments.append(parse_expression(stream, environment=environment))
-                while not stream.accept(lexer.TokenType.RIGHT_PAR):
-                    stream.expect(",")
-                    arguments.append(parse_expression(stream, environment=environment))
-            if name not in _BUILTIN_FUNCTIONS:
-                raise Exception(f"unknown function {name}")
-            return _BUILTIN_FUNCTIONS[name](arguments)
+            elif identifier in _PROPERTY_FUNCTIONS:
+                return _parse_property_function(
+                    _PROPERTY_FUNCTIONS[identifier], stream, environment
+                )
+            elif identifier in _BUILTIN_FUNCTIONS:
+                return _parse_builtin_function(
+                    _BUILTIN_FUNCTIONS[identifier], stream, environment
+                )
+            raise stream.make_error(f"unknown function {identifier}")
         elif stream.accept(lexer.TokenType.FILTER_LEFT):
-            filter_function = _FILTER_FUNCTIONS[name]
-            values = parse_expression(stream, environment=environment)
+            function = _AGGREGATION_FUNCTIONS[identifier]
+            values = parse_property(stream, environment=environment)
             stream.expect(lexer.TokenType.PIPE)
             if stream.accept("initial"):
-                states = properties.StatePredicates.INITIAL
+                states = properties.INITIAL_STATES
             elif stream.accept("deadlock"):
-                states = properties.StatePredicates.DEADLOCK
+                states = properties.DEADLOCK_STATES
             else:
                 stream.expect("timelock")
-                states = properties.StatePredicates.TIMELOCK
-            return properties.filter(filter_function, values, states)
+                states = properties.TIMELOCK_STATES
+            return properties.aggregate(function, values, states)
         else:
-            return model.identifier(name)
+            return expressions.name(identifier)
     elif stream.accept(lexer.TokenType.LEFT_PAR):
         expr = parse_expression(stream, environment=environment)
         stream.expect(lexer.TokenType.RIGHT_PAR)
         return expr
     else:
-        raise stream.make_error("expected primary expression")
+        raise stream.make_error("expected primary expression or property")
 
 
-def _parse_unary_expression(
-    stream: TokenStream, environment: Environment
-) -> model.Expression:
+def _parse_unary(stream: TokenStream, environment: Environment) -> model.Property:
     if stream.accept(lexer.TokenType.LOGIC_NOT):
-        return model.logic_not(_parse_unary_expression(stream, environment=environment))
+        operand = _parse_unary(stream, environment=environment)
+        # FIXME: proper error reporting
+        assert isinstance(operand, model.Expression)
+        return expressions.logic_not(operand)
     elif stream.accept(lexer.TokenType.MINUS):
-        return expressions.sub(
-            model.convert(0), _parse_unary_expression(stream, environment=environment)
-        )
-    return _parse_primary_expression(stream, environment=environment)
+        operand = _parse_unary(stream, environment=environment)
+        # FIXME: proper error reporting
+        assert isinstance(operand, model.Expression)
+        return expressions.sub(expressions.ensure_expr(0), operand)
+    return _parse_primary(stream, environment=environment)
 
 
 DEFAULT_ENVIRONMENT = Environment()
 
 
-def parse_expression(
+def parse_property(
     stream: TokenStream,
     *,
     min_precedence: int = 0,
     environment: Environment = DEFAULT_ENVIRONMENT,
-) -> model.Expression:
-    left = _parse_unary_expression(stream, environment=environment)
+) -> model.Property:
+    left = _parse_unary(stream, environment=environment)
     while _PRECEDENCE.get(stream.current_token.token_type, -1) >= min_precedence:
         operator = stream.consume()
         precedence = _PRECEDENCE[operator.token_type]
@@ -357,15 +412,33 @@ def parse_expression(
             alternative = parse_expression(
                 stream, min_precedence=precedence, environment=environment
             )
-            left = model.ite(left, consequence, alternative)
+            # FIXME: proper error reporting
+            assert isinstance(left, model.Expression)
+            left = expressions.ite(left, consequence, alternative)
         else:
             if operator.token_type not in _RIGHT_ASSOCIATIVE:
                 precedence += 1
             right = parse_expression(
                 stream, min_precedence=precedence, environment=environment
             )
+            # FIXME: proper error reporting
+            assert isinstance(left, model.Expression)
             left = _BINARY_CONSTRUCTORS[operator.token_type](left, right)
     return left
+
+
+def parse_expression(
+    stream: TokenStream,
+    *,
+    min_precedence: int = 0,
+    environment: Environment = DEFAULT_ENVIRONMENT,
+) -> model.Expression:
+    prop = parse_property(
+        stream, min_precedence=min_precedence, environment=environment
+    )
+    # FIXME: proper error reporting
+    assert isinstance(prop, model.Expression)
+    return prop
 
 
 @dataclasses.dataclass(frozen=True)
@@ -406,7 +479,7 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     )
 
 
-def _parse_assignment(stream: TokenStream) -> model.Assignment:
+def _parse_assignment(stream: TokenStream) -> effects.Assignment:
     stream.expect("assign")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
     if stream.check(lexer.TokenType.INTEGER):
@@ -417,7 +490,7 @@ def _parse_assignment(stream: TokenStream) -> model.Assignment:
         index = 0
     stream.expect(":=")
     value = parse_expression(stream)
-    return model.Assignment(effects.Identifier(name), value=value, index=index)
+    return effects.Assignment(effects.Name(name), value=value, index=index)
 
 
 def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Location:
@@ -425,7 +498,7 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
     stream.expect("location")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
     progress_invariant: t.Optional[model.Expression] = None
-    transient_values: t.Set[model.Assignment] = set()
+    transient_values: t.Set[effects.Assignment] = set()
     if stream.accept(":"):
         stream.expect(lexer.TokenType.INDENT)
         while not stream.accept(lexer.TokenType.DEDENT):
@@ -493,7 +566,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                 elif stream.accept("to"):
                     target_name = stream.expect(lexer.TokenType.IDENTIFIER).text
                     probability: t.Optional[model.Expression] = None
-                    assignments: t.Set[model.Assignment] = set()
+                    assignments: t.Set[effects.Assignment] = set()
                     if stream.accept(":"):
                         stream.expect(lexer.TokenType.INDENT)
                         while not stream.accept(lexer.TokenType.DEDENT):
@@ -534,18 +607,20 @@ def _parse_action_pattern(
     action_type = ctx.get_action_type_by_name(
         stream.expect(lexer.TokenType.IDENTIFIER).text
     )
-    arguments: t.List[action.ActionArgument] = []
+    arguments: t.List[actions.ActionArgument] = []
     if stream.accept("(") and not stream.accept(")"):
         while True:
             if stream.accept("<!"):
-                arguments.append(action.WriteArgument(parse_expression(stream)))
+                arguments.append(actions.WriteArgument(parse_expression(stream)))
             elif stream.accept("?>"):
                 arguments.append(
-                    action.ReadArgument(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                    actions.ReadArgument(stream.expect(lexer.TokenType.IDENTIFIER).text)
                 )
             else:
                 arguments.append(
-                    action.GuardArgument(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                    actions.GuardArgument(
+                        stream.expect(lexer.TokenType.IDENTIFIER).text
+                    )
                 )
             if stream.accept(")"):
                 break
@@ -599,7 +674,6 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                 instances.append(
                     instance_map[stream.expect(lexer.TokenType.IDENTIFIER).text]
                 )
-            composition = network.create_composition(frozenset(instances))
             if stream.accept(":"):
                 stream.expect(lexer.TokenType.INDENT)
                 while not stream.accept(lexer.TokenType.DEDENT):
@@ -618,9 +692,7 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                     for index, action_pattern in enumerate(patterns):
                         if action_pattern is not None:
                             vector[instances[index]] = action_pattern
-                    composition.create_synchronization(
-                        vector, result_pattern=result_pattern
-                    )
+                    network.create_link(vector, result=result_pattern)
         else:
             raise stream.make_error("expected network element")
 

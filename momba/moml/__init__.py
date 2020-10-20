@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from .. import model
 
 from ..model import expressions
 
-from . import lexer, parser
+from . import parser
 
 
 def parse_type(source: str) -> model.Type:
@@ -25,17 +25,19 @@ def parse(source: str, *, ctx: t.Optional[model.Context] = None) -> model.Contex
     return parser.parse_moml(parser.TokenStream(source), ctx=ctx)
 
 
-def expression(source: str, **macros: expressions.MaybeExpression) -> model.Expression:
+def expr(source: str, **macros: expressions.ValueOrExpression) -> model.Expression:
     return parser.parse_expression(
         parser.TokenStream(source.strip()),
         environment=parser.Environment(
-            {name: expressions.convert(value) for name, value in macros.items()}
+            {name: expressions.ensure_expr(value) for name, value in macros.items()}
         ),
     )
 
 
-expr = expression
-prop = expression  # FIXME:
-
-
-__all__ = ["lexer", "parser", "parse_type", "parse_expression", "parse"]
+def prop(source: str, **macros: expressions.ValueOrExpression) -> model.Property:
+    return parser.parse_property(
+        parser.TokenStream(source.strip()),
+        environment=parser.Environment(
+            {name: expressions.ensure_expr(value) for name, value in macros.items()}
+        ),
+    )

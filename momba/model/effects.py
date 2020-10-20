@@ -1,16 +1,20 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import abc
 import collections
 import dataclasses
 
-from . import context, errors, expressions, types
+from . import context, errors
+
+if t.TYPE_CHECKING:
+    from . import expressions, types
 
 
 class Target(abc.ABC):
@@ -23,23 +27,23 @@ class Target(abc.ABC):
         raise NotImplementedError()
 
 
-@dataclasses.dataclass(frozen=True)
-class Identifier(Target):
-    name: str
+@d.dataclass(frozen=True)
+class Name(Target):
+    identifier: str
 
     def infer_type(self, scope: context.Scope) -> types.Type:
-        declaration = scope.lookup(self.name)
+        declaration = scope.lookup(self.identifier)
         if not isinstance(declaration, context.VariableDeclaration):
             raise errors.NotAVariableError(
-                f"invalid assignment to non-variable identifier {self.name}"
+                f"invalid assignment to non-variable identifier {self.identifier}"
             )
         return declaration.typ
 
     def is_local_in(self, scope: context.Scope) -> bool:
-        return scope.is_local(self.name)
+        return scope.is_local(self.identifier)
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Assignment:
     target: Target
     value: expressions.Expression
@@ -55,9 +59,10 @@ class Assignment:
 
 
 def are_compatible(assignments: t.Iterable[Assignment]) -> bool:
-    groups: t.DefaultDict[int, t.AbstractSet[Target]] = collections.defaultdict(set)
+    groups: t.DefaultDict[int, t.Set[Target]] = collections.defaultdict(set)
     for assignment in assignments:
         target = assignment.target
         if target in groups[assignment.index]:
             return False
+        groups[assignment.index].add(target)
     return True

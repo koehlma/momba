@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ def check_singledispatch(
         if error:
             raise NoImplementationError(msg)
         else:
-            warnings.warn(NoImplementationWarning(msg))
+            warnings.warn(NoImplementationWarning(msg), stacklevel=2)
 
 
 class NoEntryError(Exception):

@@ -1,14 +1,12 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
-#
-# This code is partially copied from a private project.
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
-import dataclasses
 import enum
 import re
 
@@ -40,6 +38,8 @@ KEYWORDS = {
     "composition",
     "synchronize",
     "metadata",
+    "true",
+    "false",
 }
 
 PRIMITIVE_TYPES = {"bool", "int", "real", "clock", "continuous"}
@@ -73,7 +73,6 @@ class TokenType(enum.Enum):
     LOGIC_OR = r"∨|or"
     LOGIC_XOR = r"⊕|xor"
     LOGIC_IMPLIES = r"⇒|==>"
-    LOGIC_RIMPLIES = r"⇐|<=="
     LOGIC_EQUIV = r"⇔|<=>"
     LOGIC_NOT = r"¬|not"
 
@@ -131,7 +130,7 @@ class TokenType(enum.Enum):
         self.pseudo = pseudo
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Token:
     token_type: TokenType
 

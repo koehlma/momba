@@ -1,22 +1,21 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import collections
-import dataclasses
 
-from . import effects, context, errors, types
+from . import actions, effects, errors, expressions, types
 
 if t.TYPE_CHECKING:
-    # XXX: stupid stuff to make mypy and the linter happy
-    from . import action, expressions  # noqa: F401
+    from . import context
 
 
-@dataclasses.dataclass(frozen=True, eq=False)
+@d.dataclass(frozen=True, eq=False)
 class Instance:
     automaton: Automaton
 
@@ -25,11 +24,11 @@ class Instance:
     input_enable: t.FrozenSet[str] = frozenset()
 
 
-ProgressInvariant = t.Optional["expressions.Expression"]
-TransientValues = t.AbstractSet[effects.Assignment]
+ProgressInvariant = t.Optional[expressions.Expression]
+TransientValues = t.AbstractSet["effects.Assignment"]
 
 
-@dataclasses.dataclass(frozen=True, eq=False)
+@d.dataclass(frozen=True, eq=False)
 class Location:
     """
     Represents a location of a SHA.
@@ -45,12 +44,13 @@ class Location:
     """
 
     name: t.Optional[str] = None
+
     progress_invariant: ProgressInvariant = None
     transient_values: TransientValues = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
         if self.progress_invariant is not None:
-            if scope.ctx.model_type not in context.TA_MODEL_TYPES:
+            if not scope.ctx.model_type.is_timed:
                 raise errors.ModelingError(
                     f"location invariant is not allowed for model type {scope.ctx.model_type}"
                 )
@@ -59,7 +59,7 @@ class Location:
                     f"type of invariant in location {self} is not `types.BOOL`"
                 )
         if self.transient_values:
-            if scope.ctx.model_type not in context.TA_MODEL_TYPES:
+            if not scope.ctx.model_type.is_timed:
                 raise errors.ModelingError(
                     f"transient values are not allowed for model type {scope.ctx.model_type}"
                 )
@@ -75,7 +75,7 @@ class Location:
                 assignment.validate(scope)
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Destination:
     location: Location
     probability: t.Optional[expressions.Expression] = None
@@ -93,11 +93,11 @@ class Destination:
             assignment.validate(scope)
 
 
-@dataclasses.dataclass(frozen=True)
+@d.dataclass(frozen=True)
 class Edge:
     location: Location
     destinations: t.AbstractSet[Destination]
-    action_pattern: t.Optional[action.ActionPattern] = None
+    action_pattern: t.Optional[actions.ActionPattern] = None
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
 
@@ -229,7 +229,7 @@ class Automaton:
         source: Location,
         destinations: t.AbstractSet[Destination],
         *,
-        action_pattern: t.Optional[action.ActionPattern] = None,
+        action_pattern: t.Optional[actions.ActionPattern] = None,
         guard: t.Optional[expressions.Expression] = None,
         rate: t.Optional[expressions.Expression] = None,
     ) -> None:
@@ -297,7 +297,7 @@ class Automaton:
 
 
 Assignments = t.Union[
-    t.AbstractSet[effects.Assignment], t.Mapping[str, "expressions.Expression"]
+    t.AbstractSet["effects.Assignment"], t.Mapping[str, "expressions.Expression"]
 ]
 
 
@@ -312,7 +312,7 @@ def create_destination(
             location,
             probability,
             assignments=frozenset(
-                effects.Assignment(effects.Identifier(name), value)
+                effects.Assignment(effects.Name(name), value)
                 for name, value in assignments.items()
             ),
         )

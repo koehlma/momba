@@ -24,7 +24,6 @@ class Edge(t.Generic[LocationT, ActionT]):
 
 
 class MDP(
-    base.TS[LocationT, Edge[LocationT, ActionT]],
-    t.Generic[LocationT, ActionT],
+    base.TS[LocationT, Edge[LocationT, ActionT]], t.Generic[LocationT, ActionT],
 ):
     pass
