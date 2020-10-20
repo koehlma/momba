@@ -253,13 +253,17 @@ def _construct_probability_max(arguments: t.List[model.Property]) -> model.Prope
     return properties.max_prob(arguments[0])
 
 
-def _construct_finally(arguments: t.List[model.Property],) -> model.Property:
+def _construct_finally(
+    arguments: t.List[model.Property],
+) -> model.Property:
     if len(arguments) != 1:
         raise Exception(f"F takes exactly 1 argument but {len(arguments)} are given")
     return properties.eventually(arguments[0])
 
 
-def _construct_globally(arguments: t.List[model.Property],) -> model.Property:
+def _construct_globally(
+    arguments: t.List[model.Property],
+) -> model.Property:
     if len(arguments) != 1:
         raise Exception(f"G takes exactly 1 argument but {len(arguments)} are given")
     return properties.globally(arguments[0])
@@ -475,7 +479,10 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     info = _parse_identifier_declaration(stream)
     stream.accept(lexer.TokenType.STRING)  # TODO: comment
     return model.VariableDeclaration(
-        info.name, info.typ, is_transient=is_transient, initial_value=info.value,
+        info.name,
+        info.typ,
+        is_transient=is_transient,
+        initial_value=info.value,
     )
 
 

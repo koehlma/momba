@@ -533,7 +533,9 @@ def _dump_action_pattern(
 
 
 def _dump_link(
-    instance_vector: t.Sequence[model.Instance], link: model.Link, ctx: JANIContext,
+    instance_vector: t.Sequence[model.Instance],
+    link: model.Link,
+    ctx: JANIContext,
 ) -> JSON:
     jani_sync: _JANIMap = {
         "synchronise": [
@@ -660,6 +662,8 @@ def dump_model(
     jani_structure = dump_structure(
         network, allow_momba_operators=allow_momba_operators, properties=properties
     )
-    return json.dumps(jani_structure, indent=indent, ensure_ascii=False,).encode(
-        "utf-8"
-    )
+    return json.dumps(
+        jani_structure,
+        indent=indent,
+        ensure_ascii=False,
+    ).encode("utf-8")

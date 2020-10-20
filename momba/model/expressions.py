@@ -464,7 +464,9 @@ def _boolean_binary_expression(
     if len(expressions) == 1:
         return ensure_expr(expressions[0])
     result = Boolean(
-        operator, ensure_expr(expressions[0]), ensure_expr(expressions[1]),
+        operator,
+        ensure_expr(expressions[0]),
+        ensure_expr(expressions[1]),
     )
     for operand in expressions[2:]:
         result = Boolean(operator, result, ensure_expr(operand))
