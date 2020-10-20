@@ -96,7 +96,7 @@ class AccumulationInstant(enum.Enum):
 class ExpectedReward(Property):
     operator: operators.MinMax
     reward: Property
-    accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None
+    accumulate: t.Optional[t.FrozenSet[AccumulationInstant]] = None
     reachability: t.Optional[Property] = None
     step_instant: t.Optional[expressions.Expression] = None
     time_instant: t.Optional[expressions.Expression] = None
@@ -110,7 +110,7 @@ class ExpectedReward(Property):
 @d.dataclass(frozen=True)
 class RewardInstant:
     expression: expressions.Expression
-    accumulate: t.Sequence[AccumulationInstant]
+    accumulate: t.FrozenSet[AccumulationInstant]
     instant: expressions.Expression
 
 
@@ -118,7 +118,7 @@ class RewardInstant:
 class SteadyState(Property):
     operator: operators.MinMax
     formula: Property
-    accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None
+    accumulate: t.Optional[t.FrozenSet[AccumulationInstant]] = None
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         # TODO: check the types of the provided arguments
@@ -172,7 +172,7 @@ class Interval:
 @d.dataclass(frozen=True)
 class RewardBound:
     expression: expressions.Expression
-    accumulate: t.Sequence[AccumulationInstant]
+    accumulate: t.FrozenSet[AccumulationInstant]
     bounds: Interval
 
 
@@ -203,7 +203,7 @@ def exists_path(formula: Property) -> Property:
 def min_expected_reward(
     reward: expressions.Expression,
     *,
-    accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None,
+    accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
     reachability: t.Optional[Property] = None,
     step_instant: t.Optional[expressions.Expression] = None,
     time_instant: t.Optional[expressions.Expression] = None,
@@ -212,7 +212,7 @@ def min_expected_reward(
     return ExpectedReward(
         operators.MinMax.MIN,
         reward,
-        accumulate=accumulate,
+        accumulate=None if accumulate is None else frozenset(accumulate),
         reachability=reachability,
         step_instant=step_instant,
         time_instant=time_instant,
@@ -223,7 +223,7 @@ def min_expected_reward(
 def max_expected_reward(
     reward: expressions.Expression,
     *,
-    accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None,
+    accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
     reachability: t.Optional[Property] = None,
     step_instant: t.Optional[expressions.Expression] = None,
     time_instant: t.Optional[expressions.Expression] = None,
@@ -232,7 +232,7 @@ def max_expected_reward(
     return ExpectedReward(
         operators.MinMax.MAX,
         reward,
-        accumulate=accumulate,
+        accumulate=None if accumulate is None else frozenset(accumulate),
         reachability=reachability,
         step_instant=step_instant,
         time_instant=time_instant,
@@ -241,15 +241,27 @@ def max_expected_reward(
 
 
 def min_steady_state(
-    formula: Property, *, accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None
+    formula: Property,
+    *,
+    accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
 ) -> Property:
-    return SteadyState(operators.MinMax.MIN, formula, accumulate=accumulate)
+    return SteadyState(
+        operators.MinMax.MIN,
+        formula,
+        accumulate=None if accumulate is None else frozenset(accumulate),
+    )
 
 
 def max_steady_state(
-    formula: Property, *, accumulate: t.Optional[t.Sequence[AccumulationInstant]] = None
+    formula: Property,
+    *,
+    accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
 ) -> Property:
-    return SteadyState(operators.MinMax.MAX, formula, accumulate=accumulate)
+    return SteadyState(
+        operators.MinMax.MAX,
+        formula,
+        accumulate=None if accumulate is None else frozenset(accumulate),
+    )
 
 
 def until(
