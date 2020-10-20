@@ -34,9 +34,8 @@ Check out the [examples](./examples) or read the [documentation](https://koehlma
 
 The idea to harvest a general purpose programming environment for formal modelling is not new at all.
 For instance, the [SVL language](https://link.springer.com/chapter/10.1007/0-306-47003-9_24) combines the power of process algebraic modelling with the power of the bourne shell.
-Many formal modeling tools also already provide Python bindings, e.g., [Storm](https://moves-rwth.github.io/stormpy/) and [Spot](https://spot.lrde.epita.fr/).
+Many formal modelling tools also already provide Python bindings, e.g., [Storm](https://moves-rwth.github.io/stormpy/) and [Spot](https://spot.lrde.epita.fr/).
 Momba tries not to be yet another incarnation of these ideas.
-
 While the construction of formal models clearly is an integral part of Momba, Momba is more than just a framework for constructing models with the help of Python.
 Most importantly, it also provides features to work with these models such as a simulator or an interface to different model checking tools.
 At the same time, it is not just a binding to an API developed for another language, like C++.
