@@ -312,6 +312,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                     ),
                 },
                 action_pattern=step,
+                annotation={"ax": ax, "ay": ay},
             )
 
         return automaton

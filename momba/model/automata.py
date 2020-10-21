@@ -9,10 +9,15 @@ import typing as t
 
 import collections
 
+from mxu.maps import FrozenMap
+
 from . import actions, effects, errors, expressions, types
 
 if t.TYPE_CHECKING:
     from . import context
+
+
+Annotation = t.Mapping[str, t.Union[int, str, float]]
 
 
 @d.dataclass(frozen=True, eq=False)
@@ -100,6 +105,7 @@ class Edge:
     action_pattern: t.Optional[actions.ActionPattern] = None
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
+    annotation: t.Optional[Annotation] = None
 
     def create_edge_scope(self, parent: context.Scope) -> context.Scope:
         scope = parent.create_child_scope()
@@ -232,13 +238,21 @@ class Automaton:
         action_pattern: t.Optional[actions.ActionPattern] = None,
         guard: t.Optional[expressions.Expression] = None,
         rate: t.Optional[expressions.Expression] = None,
+        annotation: t.Optional[Annotation] = None,
     ) -> None:
         """
         Creates a new edge with the given parameters.
 
         See :class:`Edge` for more details.
         """
-        edge = Edge(source, frozenset(destinations), action_pattern, guard, rate)
+        edge = Edge(
+            source,
+            frozenset(destinations),
+            action_pattern,
+            guard,
+            rate,
+            FrozenMap(annotation),
+        )
         self.add_edge(edge)
 
     def get_incoming_edges(self, location: Location) -> t.AbstractSet[Edge]:
