@@ -1,38 +1,27 @@
 Welcome to Momba's documentation!
 =================================
 
-.. warning::
-    **Momba is still in its early stages of development.
-    Please expect things to break.
-    The API is unstable and might change without further notice and deprecation period.
-    Some parts of this documentation are wishful thinking describing features not yet implemented.**
-
-*Momba* is a Python library for working with quantitative models.
-Momba's core modeling formalism are networks of interacting *stochastic hybrid automata* (SHA) as per the `JANI specification`_.
-Momba aims to be a platform for prototyping and the development of new techniques and algorithms for the analysis of quantitative models.
-For the time being, Momba does not aim to be a model checker itself.
-Instead, Momba relies on external tools for model checking via the JANI interaction protocol.
-In particular, Momba works well with `The Modest Toolset`__ and `EPMC`__.
+Momba is a Python framework for dealing with quantitative models centered around the `JANI-model`_ interchange format. Momba strives to deliver an integrated and intuitive experience to aid the process of model construction, validation, and analysis. It provides convenience functions for the modular constructions of models effectively turning Python into a syntax-aware macro language for quantitative models. Momba's built-in simulator allows gaining confidence in a model, for instance, by rapidly prototyping a tool for interactive model exploration and visualization, or by connecting it to a testing framework. Finally, thanks to the JANI-model interchange format, several state-of-the-art model checkers and other tools are readily available for analysis.
 
 __ http://www.modestchecker.net/
 __ https://github.com/ISCAS-PMC/ePMC
 
-.. _JANI specification: http://www.jani-spec.org/
+.. _JANI-model: http://www.jani-spec.org/
 
 
 Getting Started
 ---------------
-Momba requires Python 3.8 or newer. To install Momba from `PyPi`__ simply run:
+Momba requires Python 3.8 or newer. To install Momba from `PyPi`_ simply run:
 
 .. code-block:: bash
 
     pip install momba
 
 A good way of getting started with Momba is to read this documentation, in particular, the section :ref:`Momba models` which describes how quantitative models are represented in Momba.
-Also, check out `the examples`__.
+Also, check out `the examples`_.
 
-__ https://pypi.org/
-__ https://dgit.cs.uni-saarland.de/koehlma/momba/tree/master/examples
+.. _`PyPi`: https://pypi.org/
+.. _`the examples`: https://dgit.cs.uni-saarland.de/koehlma/momba/tree/master/examples
 
 
 Development
