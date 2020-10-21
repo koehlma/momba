@@ -7,6 +7,7 @@ from __future__ import annotations
 import typing as t
 
 import pathlib
+import time
 
 import click
 
@@ -107,7 +108,11 @@ def check(
         for checker_name in checker_names:
             checker = CHECKERS[checker_name]
             print(f"Invoking checker '{checker_name}'...")
-            print_results(checker.check(network))
+            start_time = time.monotonic()
+            result = checker.check(network)
+            end_time = time.monotonic()
+            print(f"Results after {end_time - start_time:.2f}s:")
+            print_results(result)
     except ToolError as error:
         print("Error while invoking model checker:")
         print(" ".join(map(str, error.command)))

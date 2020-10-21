@@ -354,7 +354,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         car_y = expr("car_pos // WIDTH")
 
         offtrack = expr(
-            "($x >= WIDTH) or ($x < 0) or ($y >= HEIGHT) or ($y < 0)",
+            "$x >= WIDTH or $x < 0 or $y >= HEIGHT or $y < 0",
             x=expr("$car_x + car_dx", car_x=car_x),
             y=expr("$car_y + car_dy", car_y=car_y),
         )
