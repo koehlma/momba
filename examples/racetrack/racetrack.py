@@ -321,6 +321,8 @@ def construct_model(scenario: Scenario) -> model.Network:
         automaton = ctx.create_automaton(name="tank")
         initial = automaton.create_location(initial=True)
 
+        car_dx, car_dy = expr("car_dx"), expr("car_dy")
+        fuel_model = scenario.compute_consumption
         automaton.create_edge(
             source=initial,
             destinations={
@@ -329,9 +331,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                     assignments={
                         "fuel": expr(
                             "min(TANK_SIZE, max(0, fuel - floor($consumption)))",
-                            consumption=scenario.compute_consumption(
-                                expr("car_dx"), expr("car_dy")
-                            ),
+                            consumption=fuel_model(car_dx, car_dy),
                         )
                     },
                 )
@@ -479,6 +479,9 @@ def generate(
 ) -> None:
     """
     Generates a family of JANI models from the provided track file.
+
+    TRACK_FILE A Racetrack track in ASCII format.
+    OUTPUT_DIRECTORY A directory to write the JANI models to.
     """
     output_directory.mkdir(parents=True, exist_ok=True)
 

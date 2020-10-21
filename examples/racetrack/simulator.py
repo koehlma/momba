@@ -9,6 +9,7 @@ import typing as t
 
 import pathlib
 import random
+import sys
 
 import click
 
@@ -16,10 +17,22 @@ import colorama
 
 from momba.explore import engine
 
-from racetrack import Scenario, Coordinate, Track, CellType, construct_model
+from racetrack import (
+    Scenario,
+    Coordinate,
+    Track,
+    Underground,
+    TankType,
+    CellType,
+    construct_model,
+)
 
 
 colorama.init()
+
+
+# allow for deeper recursions as this may be necessary for some large tracks
+sys.setrecursionlimit(10 ** 6)
 
 
 _BACKGROUND_COLORS = {
@@ -65,7 +78,35 @@ def format_track(track: Track, car: t.Optional[int] = None) -> str:
     default=False,
     help="Drive randomly instead of interactively.",
 )
-def race(track_file: pathlib.Path, crazy_driver: bool) -> None:
+@click.option("--max-speed", type=int, default=2, help="Top speed of the car.")
+@click.option(
+    "--max-acceleration",
+    type=int,
+    default=2,
+    help="Top acceleration of the car.",
+)
+@click.option(
+    "--underground",
+    "underground_name",
+    type=click.Choice(tuple(underground.name for underground in Underground)),
+    default=Underground.TARMAC.name,
+    help="The underground to drive on.",
+)
+@click.option(
+    "--tank-type",
+    "tank_type_name",
+    type=click.Choice(tuple(tank_type.name for tank_type in TankType)),
+    default=TankType.LARGE.name,
+    help="The tank type to drive with.",
+)
+def race(
+    track_file: pathlib.Path,
+    crazy_driver: bool,
+    max_speed: int,
+    max_acceleration: int,
+    underground_name: str,
+    tank_type_name: str,
+) -> None:
     track = Track.from_source(track_file.read_text(encoding="utf-8"))
     print("Input Track".center(track.width))
 
@@ -81,7 +122,14 @@ def race(track_file: pathlib.Path, crazy_driver: bool) -> None:
         )
     )
 
-    scenario = Scenario(track, start_cell=start_cell, max_acceleration=2, max_speed=2)
+    scenario = Scenario(
+        track,
+        start_cell=start_cell,
+        max_acceleration=max_acceleration,
+        max_speed=max_speed,
+        underground=Underground[underground_name],
+        tank_type=TankType[tank_type_name],
+    )
 
     print("\nBuilding model...")
     network = construct_model(scenario)
