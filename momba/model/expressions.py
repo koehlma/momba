@@ -523,7 +523,7 @@ def less_or_equal_than(left: ValueOrExpression, right: ValueOrExpression) -> Exp
 
 def greater_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
     return Comparison(
-        operators.ComparisonOperator.GE, ensure_expr(left), ensure_expr(right)
+        operators.ComparisonOperator.GT, ensure_expr(left), ensure_expr(right)
     )
 
 
@@ -531,7 +531,7 @@ def greater_or_equal_than(
     left: ValueOrExpression, right: ValueOrExpression
 ) -> Expression:
     return Comparison(
-        operators.ComparisonOperator.GT, ensure_expr(left), ensure_expr(right)
+        operators.ComparisonOperator.GE, ensure_expr(left), ensure_expr(right)
     )
 
 
