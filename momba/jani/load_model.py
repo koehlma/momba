@@ -261,7 +261,7 @@ def _property(jani_property: t.Any) -> properties.Property:
         else:
             reward_instants = None
         return properties.ExpectedReward(
-            operator=_MIN_MAX_OPERATORS[jani_property["on"]],
+            operator=_MIN_MAX_OPERATORS[jani_property["op"]],
             reward=_property(jani_property["exp"]),
             accumulate=accumulate,
             reachability=reachability,
