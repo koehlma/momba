@@ -23,6 +23,10 @@ jobs:
         pip install poetry 
         poetry export --dev -f requirements.txt --output requirements.txt
         pip install -r requirements.txt
+    - name: Install Momba
+      run: |
+        poetry build -f wheel
+        pip install dist/*.whl
     - name: Build documentation
       run: |
         sphinx-build docs build/docs
