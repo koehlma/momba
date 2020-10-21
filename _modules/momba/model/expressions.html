@@ -1,0 +1,830 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>momba.model.expressions &mdash; Momba unknown documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Momba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                unknown
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Momba Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../moml/index.html">MOML Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../explore/index.html">State-Space Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/index.html">Model Analysis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Momba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>momba.model.expressions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for momba.model.expressions</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2019-2020, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">d</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">decimal</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">fractions</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">errors</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">distributions</span>
+
+
+<div class="viewcode-block" id="Expression"><a class="viewcode-back" href="../../../model/expressions.html#momba.model.Expression">[docs]</a><span class="k">class</span> <span class="nc">Expression</span><span class="p">(</span><span class="n">properties</span><span class="o">.</span><span class="n">Property</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Expression.is_constant_in"><a class="viewcode-back" href="../../../model/expressions.html#momba.model.Expression.is_constant_in">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns `True` only if the expression has a constant value in the given scope.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            scope: The scope to use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">traverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">child</span><span class="o">.</span><span class="n">traverse</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">subexpressions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_sampling_free</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">used_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Name</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">child</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Name</span><span class="p">))</span></div>
+
+
+<span class="k">class</span> <span class="nc">_Leaf</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">_Leaf</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BooleanConstant</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
+    <span class="n">boolean</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+
+
+<span class="k">class</span> <span class="nc">NumericConstant</span><span class="p">(</span><span class="n">Constant</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">as_fraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<span class="n">TRUE</span><span class="p">:</span> <span class="n">Expression</span> <span class="o">=</span> <span class="n">BooleanConstant</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">FALSE</span><span class="p">:</span> <span class="n">Expression</span> <span class="o">=</span> <span class="n">BooleanConstant</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IntegerConstant</span><span class="p">(</span><span class="n">NumericConstant</span><span class="p">):</span>
+    <span class="n">integer</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;converting an integer constant to a float may result in a loss of precision&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_fraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+
+
+<span class="n">_NAMED_REAL_MAP</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NamedReal</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<span class="k">class</span> <span class="nc">NamedReal</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">PI</span> <span class="o">=</span> <span class="s2">&quot;π&quot;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">e</span>
+
+    <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">float_value</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">float_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">float_value</span> <span class="o">=</span> <span class="n">float_value</span>
+        <span class="n">_NAMED_REAL_MAP</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+
+
+<span class="n">Real</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">NamedReal</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">RealConstant</span><span class="p">(</span><span class="n">NumericConstant</span><span class="p">):</span>
+    <span class="n">real</span><span class="p">:</span> <span class="n">Real</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;converting a real constant to a float may result in a loss of precision&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">NamedReal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">float_value</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_fraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;converting a named real constant do a fraction does result in a loss of precision&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">float_value</span><span class="p">)</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Name</span><span class="p">(</span><span class="n">_Leaf</span><span class="p">):</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scope</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scope</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span><span class="o">.</span><span class="n">typ</span>
+
+
+<span class="c1"># XXX: this class should be abstract, however, then it would not type-check</span>
+<span class="c1"># https://github.com/python/mypy/issues/5374</span>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">BinaryExpression</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">BinaryOperator</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+    <span class="c1"># XXX: this method shall be implemented by all subclasses</span>
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Boolean</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected types.BOOL but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">right_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected types.BOOL but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+
+
+<span class="n">_REAL_RESULT_OPERATORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">REAL_DIV</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">LOG</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">POW</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">ArithmeticBinary</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_numeric</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="s2">&quot;operands of arithmetic expressions must have a numeric type&quot;</span>
+            <span class="p">)</span>
+        <span class="n">is_int</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">left_type</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">right_type</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">operator</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_REAL_RESULT_OPERATORS</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+
+
+<span class="k">class</span> <span class="nc">Equality</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span>
+
+    <span class="k">def</span> <span class="nf">get_common_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">right_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">left_type</span>
+        <span class="k">elif</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">left_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">right_type</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s2">&quot;type-inference should ensure that some of the above is true&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="n">left_assignable_right</span> <span class="o">=</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">right_type</span><span class="p">)</span>
+        <span class="n">right_assignable_left</span> <span class="o">=</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">left_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">left_assignable_right</span> <span class="ow">or</span> <span class="n">right_assignable_left</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+        <span class="c1"># XXX: JANI specifies that “left and right must be assignable to some common type”</span>
+        <span class="c1"># not sure whether this implementation reflects this specification</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+            <span class="s2">&quot;invalid combination of type for equality comparison&quot;</span>
+        <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Comparison</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected numeric type but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected numeric type but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Conditional</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">consequence</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">alternative</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">consequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alternative</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">consequence</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alternative</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">condition_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">condition_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;expected `types.BOOL` but got `</span><span class="si">{</span><span class="n">condition_type</span><span class="si">}</span><span class="s2">`&quot;</span>
+            <span class="p">)</span>
+        <span class="n">consequence_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">consequence</span><span class="p">)</span>
+        <span class="n">alternative_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternative</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">consequence_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">alternative_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">consequence_type</span>
+        <span class="k">elif</span> <span class="n">alternative_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">consequence_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">alternative_type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="s2">&quot;invalid combination of consequence and alternative types&quot;</span>
+            <span class="p">)</span>
+
+
+<span class="c1"># XXX: this class should be abstract, however, then it would not type-check</span>
+<span class="c1"># https://github.com/python/mypy/issues/5374</span>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UnaryExpression</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">UnaryOperator</span>
+    <span class="n">operand</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+    <span class="c1"># XXX: this method shall be implemented by all subclasses</span>
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">ArithmeticUnary</span><span class="p">(</span><span class="n">UnaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">operand_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">operand_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;expected a numeric type but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">infer_result_type</span><span class="p">(</span><span class="n">operand_type</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Not</span><span class="p">(</span><span class="n">UnaryExpression</span><span class="p">):</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">NotOperator</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">operand_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">operand_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;expected `types.BOOL` but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Sample</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">distribution</span><span class="p">:</span> <span class="n">distributions</span><span class="o">.</span><span class="n">DistributionType</span>
+    <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">arity</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;distribution </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="si">}</span><span class="s2"> requires </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">arity</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;arguments but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span><span class="si">}</span><span class="s2"> were given&quot;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="c1"># we already know that the arity of the parameters and arguments match</span>
+        <span class="k">for</span> <span class="n">argument</span><span class="p">,</span> <span class="n">parameter_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">parameter_types</span>
+        <span class="p">):</span>
+            <span class="n">argument_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parameter_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">argument_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;parameter type `</span><span class="si">{</span><span class="n">parameter_type</span><span class="si">}</span><span class="s2">` is not assignable &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;from argument type `</span><span class="si">{</span><span class="n">argument_type</span><span class="si">}</span><span class="s2">`&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">result_type</span>
+
+
+<span class="c1"># requires JANI extension `nondet-selection`</span>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Selection</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">condition_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">condition_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;condition must have type `types.BOOL`&quot;</span><span class="p">)</span>
+        <span class="n">declaration</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">declaration</span><span class="o">.</span><span class="n">typ</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">,)</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Derivative</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">()</span>
+
+
+<span class="n">RealValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;π&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">]</span>
+<span class="n">NumericValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">RealValue</span><span class="p">]</span>
+<span class="n">Value</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">NumericValue</span><span class="p">]</span>
+
+<span class="n">ValueOrExpression</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="n">Value</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">ConversionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">ensure_expr</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value_or_expression</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BooleanConstant</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">IntegerConstant</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">RealConstant</span><span class="p">(</span><span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RealConstant</span><span class="p">(</span><span class="n">_NAMED_REAL_MAP</span><span class="p">[</span><span class="n">value_or_expression</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">raise</span> <span class="n">ConversionError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;unable to convert Python value </span><span class="si">{</span><span class="n">value_or_expression</span><span class="si">!r}</span><span class="s2"> to expression&quot;</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">ite</span><span class="p">(</span>
+    <span class="n">condition</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span>
+    <span class="n">consequence</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span>
+    <span class="n">alternative</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Conditional</span><span class="p">(</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">condition</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">consequence</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">alternative</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="n">BinaryConstructor</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">ValueOrExpression</span><span class="p">],</span> <span class="n">Expression</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_boolean_binary_expression</span><span class="p">(</span>
+    <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="p">,</span> <span class="n">expressions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">ValueOrExpression</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expressions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">expressions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Boolean</span><span class="p">(</span>
+        <span class="n">operator</span><span class="p">,</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">expressions</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">expressions</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">operand</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Boolean</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">logic_or</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">OR</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">logic_and</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">AND</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">logic_xor</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">XOR</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">logic_implies</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Boolean</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">IMPLY</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">logic_equiv</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Boolean</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">EQUIV</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">equals</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Equality</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">not_equals</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Equality</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span><span class="o">.</span><span class="n">NEQ</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">less_than</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">LT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">less_or_equal_than</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">LE</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">greater_than</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GE</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">greater_or_equal_than</span><span class="p">(</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">ADD</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">SUB</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MUL</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MOD</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">real_div</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">REAL_DIV</span><span class="p">,</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">LOG</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">POW</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">minimum</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">maximum</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">floor_div</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">FLOOR_DIV</span><span class="p">,</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
+        <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="n">UnaryConstructor</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">ValueOrExpression</span><span class="p">],</span> <span class="n">Expression</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">logic_not</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Not</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">NotOperator</span><span class="o">.</span><span class="n">NOT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">floor</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span>
+        <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">FLOOR</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">ceil</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">CEIL</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">absolute</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">ABS</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">sgn</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">SGN</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">trunc</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">TRC</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Name</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">Name</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+     
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>momba.jani.dump_model &mdash; Momba unknown documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Momba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                unknown
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Momba Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../moml/index.html">MOML Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../explore/index.html">State-Space Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis/index.html">Model Analysis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Momba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>momba.jani.dump_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for momba.jani.dump_model</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2019-2020, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">import</span> <span class="nn">dataclasses</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">model</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">effects</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">checks</span>
+<span class="kn">from</span> <span class="nn">..metadata</span> <span class="kn">import</span> <span class="n">version</span>
+
+
+<span class="c1"># XXX: ignore this type definition, mypy does not support recursive types</span>
+<span class="n">JSON</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="s2">&quot;JSON&quot;</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;JSON&quot;</span><span class="p">]]</span>  <span class="c1"># type: ignore</span>
+
+<span class="n">_JANIMap</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">JSON</span><span class="p">]</span>  <span class="c1"># type: ignore</span>
+
+
+<span class="k">class</span> <span class="nc">ModelFeature</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">ARRAYS</span> <span class="o">=</span> <span class="s2">&quot;arrays&quot;</span>
+    <span class="n">DATATYPES</span> <span class="o">=</span> <span class="s2">&quot;datatypes&quot;</span>
+    <span class="n">DERIVED_OPERATORS</span> <span class="o">=</span> <span class="s2">&quot;derived-operators&quot;</span>
+    <span class="n">EDGE_PRIORITIES</span> <span class="o">=</span> <span class="s2">&quot;edge-priorities&quot;</span>
+    <span class="n">FUNCTIONS</span> <span class="o">=</span> <span class="s2">&quot;functions&quot;</span>
+    <span class="n">HYPERBOLIC_FUNCTIONS</span> <span class="o">=</span> <span class="s2">&quot;hyperbolic-functions&quot;</span>
+    <span class="n">NAMED_EXPRESSIONS</span> <span class="o">=</span> <span class="s2">&quot;named-expressions&quot;</span>
+    <span class="n">NONDET_EXPRESSIONS</span> <span class="o">=</span> <span class="s2">&quot;nondet-expressions&quot;</span>
+    <span class="n">STATE_EXIT_REWARDS</span> <span class="o">=</span> <span class="s2">&quot;state-exit-rewards&quot;</span>
+    <span class="n">TRADEOFF_PROPERTIES</span> <span class="o">=</span> <span class="s2">&quot;tradeoff-properties&quot;</span>
+    <span class="n">TRIGONOMETRIC_FUNCTIONS</span> <span class="o">=</span> <span class="s2">&quot;trigonometric-functions&quot;</span>
+
+    <span class="n">X_MOMBA_OPERATORS</span> <span class="o">=</span> <span class="s2">&quot;x-momba-operators&quot;</span>
+    <span class="n">X_MOMBA_VALUE_PASSING</span> <span class="o">=</span> <span class="s2">&quot;x-momba-value-passing&quot;</span>
+
+
+<span class="n">_NamedObject</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">]</span>
+
+
+<span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">JANIContext</span><span class="p">:</span>
+    <span class="n">allow_momba_operators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">_name_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">_actions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="n">_names</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">_NamedObject</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="n">_features</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">ModelFeature</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataclasses</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">set</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">ModelFeature</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actions</span>
+
+    <span class="k">def</span> <span class="nf">get_unique_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;__momba_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name_counter</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">_NamedObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="n">obj</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="n">obj</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unique_name</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">require_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_actions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action</span>
+
+    <span class="k">def</span> <span class="nf">require</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="n">ModelFeature</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+
+
+<span class="nd">@functools</span><span class="o">.</span><span class="n">singledispatch</span>
+<span class="k">def</span> <span class="nf">_dump_type</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dump has not been implemented for type </span><span class="si">{</span><span class="n">typ</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_type_integer</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">IntegerType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;int&quot;</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_type_real</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">RealType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;real&quot;</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_type_bool</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BoolType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;bool&quot;</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_type_clock</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ClockType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;clock&quot;</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_type_continuous</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ContinuousType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;continuous&quot;</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_bounded_type</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BoundedType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_type</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;bounded&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">_dump_type</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">typ</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">:</span>
+        <span class="n">jani_type</span><span class="p">[</span><span class="s2">&quot;upper-bound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">typ</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">:</span>
+        <span class="n">jani_type</span><span class="p">[</span><span class="s2">&quot;lower-bound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jani_type</span>
+
+
+<span class="nd">@_dump_type</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_array_type</span><span class="p">(</span><span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">ArrayType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">ARRAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="n">_dump_type</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">element</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+
+
+<span class="n">checks</span><span class="o">.</span><span class="n">check_singledispatch</span><span class="p">(</span>
+    <span class="n">_dump_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">StateType</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">SetType</span><span class="p">}</span>
+<span class="p">)</span>
+
+
+<span class="nd">@functools</span><span class="o">.</span><span class="n">singledispatch</span>
+<span class="k">def</span> <span class="nf">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Property</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dump has not been implemented for property </span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_identifier</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">identifier</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_boolean_constant</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">BooleanConstant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">boolean</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_integer_constant</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">IntegerConstant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">expr</span><span class="o">.</span><span class="n">integer</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_real_constant</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">RealConstant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">NamedReal</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;constant&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">symbol</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">expr</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;imprecise conversion: JSON does not support the number type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_conditional</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Conditional</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;ite&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;if&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;then&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">consequence</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;else&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">alternative</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="n">_DERIVED_OPERATORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">IMPLY</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GT</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GE</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">ABS</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">SGN</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">TRC</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="n">_Transform</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">],</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_xor</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Boolean</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">XOR</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_or</span><span class="p">(</span>
+        <span class="n">expressions</span><span class="o">.</span><span class="n">logic_and</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">logic_not</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">),</span> <span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">),</span>
+        <span class="n">expressions</span><span class="o">.</span><span class="n">logic_and</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_not</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">)),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_equiv</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Boolean</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">EQUIV</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_and</span><span class="p">(</span>
+        <span class="n">expressions</span><span class="o">.</span><span class="n">logic_implies</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">),</span>
+        <span class="n">expressions</span><span class="o">.</span><span class="n">logic_implies</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">normalize_floor_div</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ArithmeticBinary</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">FLOOR_DIV</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">real_div</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">))</span>
+
+
+<span class="n">_MOMBA_OPERATORS</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">operators</span><span class="o">.</span><span class="n">BinaryOperator</span><span class="p">,</span> <span class="n">_Transform</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">XOR</span><span class="p">:</span> <span class="n">normalize_xor</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">EQUIV</span><span class="p">:</span> <span class="n">normalize_equiv</span><span class="p">,</span>
+    <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">FLOOR_DIV</span><span class="p">:</span> <span class="n">normalize_floor_div</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_binary_expression</span><span class="p">(</span>
+    <span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">BinaryExpression</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span> <span class="ow">in</span> <span class="n">_DERIVED_OPERATORS</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">DERIVED_OPERATORS</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span> <span class="ow">in</span> <span class="n">_MOMBA_OPERATORS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">allow_momba_operators</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">X_MOMBA_OPERATORS</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">_MOMBA_OPERATORS</span><span class="p">[</span><span class="n">expr</span><span class="o">.</span><span class="n">operator</span><span class="p">](</span><span class="n">expr</span><span class="p">),</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+        <span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_unary_expression</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">UnaryExpression</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">operand</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_derivative</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Derivative</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;der&quot;</span><span class="p">,</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">identifier</span><span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_sample</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Sample</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;distribution&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">jani_name</span><span class="p">,</span>
+        <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_prop</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">arguments</span><span class="p">],</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_selection</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Selection</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">NONDET_EXPRESSIONS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;nondet&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_prop_interval</span><span class="p">(</span><span class="n">pi</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">Interval</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">prop_interval</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">pi</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prop_interval</span><span class="p">[</span><span class="s2">&quot;lower&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">pi</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pi</span><span class="o">.</span><span class="n">lower_exclusive</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prop_interval</span><span class="p">[</span><span class="s2">&quot;lower-exclusive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">pi</span><span class="o">.</span><span class="n">lower_exclusive</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pi</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prop_interval</span><span class="p">[</span><span class="s2">&quot;upper&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">pi</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pi</span><span class="o">.</span><span class="n">lower_exclusive</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prop_interval</span><span class="p">[</span><span class="s2">&quot;upper-exclusive&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">pi</span><span class="o">.</span><span class="n">upper_exclusive</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prop_interval</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_reward_bound</span><span class="p">(</span><span class="n">rb</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">RewardBound</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">rb</span><span class="o">.</span><span class="n">expression</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;accumulate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">elem</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">rb</span><span class="o">.</span><span class="n">accumulate</span><span class="p">],</span>
+        <span class="s2">&quot;bounds&quot;</span><span class="p">:</span> <span class="n">_dump_prop_interval</span><span class="p">(</span><span class="n">rb</span><span class="o">.</span><span class="n">bounds</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_reward_instant</span><span class="p">(</span><span class="n">ri</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">RewardInstant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">expression</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;accumulate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">elem</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">accumulate</span><span class="p">],</span>
+        <span class="s2">&quot;instant&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">ri</span><span class="o">.</span><span class="n">instant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_filter</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">Aggregate</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fun&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_probability</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">Probability</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;Pmax&quot;</span> <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">MinMax</span><span class="o">.</span><span class="n">MAX</span> <span class="k">else</span> <span class="s2">&quot;Pmin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_path_formula</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">PathQuantifier</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">quantifier</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_expected</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">ExpectedReward</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">expected</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;Emax&quot;</span> <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">MinMax</span><span class="o">.</span><span class="n">MAX</span> <span class="k">else</span> <span class="s2">&quot;Emin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">reward</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">accumulate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">expected</span><span class="p">[</span><span class="s2">&quot;accumulate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">accumulate</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">reachability</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">expected</span><span class="p">[</span><span class="s2">&quot;reach&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">reachability</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">step_instant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">expected</span><span class="p">[</span><span class="s2">&quot;step-instant&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">step_instant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">time_instant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">expected</span><span class="p">[</span><span class="s2">&quot;time-instant&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">time_instant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_instants</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">expected</span><span class="p">[</span><span class="s2">&quot;reward-instants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_dump_reward_instant</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">ri</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_instants</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">expected</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_steady</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">SteadyState</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">steady</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;Smax&quot;</span> <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">operator</span> <span class="ow">is</span> <span class="n">operators</span><span class="o">.</span><span class="n">MinMax</span><span class="o">.</span><span class="n">MAX</span> <span class="k">else</span> <span class="s2">&quot;Smin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">accumulate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">steady</span><span class="p">[</span><span class="s2">&quot;accumulate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">accumulate</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">steady</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_timed</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">BinaryPathFormula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">timed</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="s2">&quot;left&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;right&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">step_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timed</span><span class="p">[</span><span class="s2">&quot;step-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop_interval</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">step_bounds</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">time_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timed</span><span class="p">[</span><span class="s2">&quot;time-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop_interval</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">time_bounds</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">timed</span><span class="p">[</span><span class="s2">&quot;reward-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_dump_reward_bound</span><span class="p">(</span><span class="n">rb</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">rb</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_bounds</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">timed</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_state_selector</span><span class="p">(</span><span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">StateSelector</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">predicate</span><span class="o">.</span><span class="n">value</span><span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_unary_path_formula</span><span class="p">(</span>
+    <span class="n">prop</span><span class="p">:</span> <span class="n">properties</span><span class="o">.</span><span class="n">UnaryPathFormula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_prop</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="n">prop</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">step_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_prop</span><span class="p">[</span><span class="s2">&quot;step-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop_interval</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">step_bounds</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">time_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_prop</span><span class="p">[</span><span class="s2">&quot;time-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop_interval</span><span class="p">(</span><span class="n">prop</span><span class="o">.</span><span class="n">time_bounds</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_bounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_prop</span><span class="p">[</span><span class="s2">&quot;reward-bounds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_dump_reward_bound</span><span class="p">(</span><span class="n">rb</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">rb</span> <span class="ow">in</span> <span class="n">prop</span><span class="o">.</span><span class="n">reward_bounds</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">jani_prop</span>
+
+
+<span class="n">checks</span><span class="o">.</span><span class="n">check_singledispatch</span><span class="p">(</span><span class="n">_dump_prop</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">Property</span><span class="p">)</span>
+
+
+<span class="nd">@functools</span><span class="o">.</span><span class="n">singledispatch</span>
+<span class="k">def</span> <span class="nf">_dump_target</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">effects</span><span class="o">.</span><span class="n">Target</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_dump_target has not been implemented for </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@_dump_target</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_target_identifier</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">effects</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">target</span><span class="o">.</span><span class="n">identifier</span>
+
+
+<span class="n">checks</span><span class="o">.</span><span class="n">check_singledispatch</span><span class="p">(</span><span class="n">_dump_target</span><span class="p">,</span> <span class="n">effects</span><span class="o">.</span><span class="n">Target</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_var_decl</span><span class="p">(</span><span class="n">decl</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_declaration</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">decl</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">_dump_type</span><span class="p">(</span><span class="n">decl</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">decl</span><span class="o">.</span><span class="n">is_transient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_declaration</span><span class="p">[</span><span class="s2">&quot;transient&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">decl</span><span class="o">.</span><span class="n">is_transient</span>
+    <span class="k">if</span> <span class="n">decl</span><span class="o">.</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_declaration</span><span class="p">[</span><span class="s2">&quot;initial-value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">decl</span><span class="o">.</span><span class="n">initial_value</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jani_declaration</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_const_decl</span><span class="p">(</span><span class="n">decl</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">ConstantDeclaration</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_declaration</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">decl</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">_dump_type</span><span class="p">(</span><span class="n">decl</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">decl</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_declaration</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">decl</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jani_declaration</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_assignment</span><span class="p">(</span><span class="n">assignment</span><span class="p">:</span> <span class="n">effects</span><span class="o">.</span><span class="n">Assignment</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_assignment</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ref&quot;</span><span class="p">:</span> <span class="n">_dump_target</span><span class="p">(</span><span class="n">assignment</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">assignment</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">assignment</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">jani_assignment</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">assignment</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">return</span> <span class="n">jani_assignment</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_location</span><span class="p">(</span><span class="n">loc</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_location</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">loc</span><span class="p">),</span>
+        <span class="s2">&quot;x-momba-anonymous&quot;</span><span class="p">:</span> <span class="n">loc</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">loc</span><span class="o">.</span><span class="n">progress_invariant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_location</span><span class="p">[</span><span class="s2">&quot;time-progress&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">loc</span><span class="o">.</span><span class="n">progress_invariant</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">if</span> <span class="n">loc</span><span class="o">.</span><span class="n">transient_values</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_location</span><span class="p">[</span><span class="s2">&quot;transient-values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_dump_assignment</span><span class="p">(</span><span class="n">assignment</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="n">loc</span><span class="o">.</span><span class="n">transient_values</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">jani_location</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_destination</span><span class="p">(</span><span class="n">dst</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Destination</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_destination</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">location</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">dst</span><span class="o">.</span><span class="n">probability</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_destination</span><span class="p">[</span><span class="s2">&quot;probability&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">dst</span><span class="o">.</span><span class="n">probability</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">dst</span><span class="o">.</span><span class="n">assignments</span><span class="p">:</span>
+        <span class="n">jani_destination</span><span class="p">[</span><span class="s2">&quot;assignments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">_dump_assignment</span><span class="p">(</span><span class="n">assignment</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="n">dst</span><span class="o">.</span><span class="n">assignments</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">jani_destination</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Edge</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_edge</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">location</span><span class="p">),</span>
+        <span class="s2">&quot;destinations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_destination</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">dst</span> <span class="ow">in</span> <span class="n">edge</span><span class="o">.</span><span class="n">destinations</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">action_pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_action_pattern</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">action_pattern</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">rate</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">guard</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;guard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">guard</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">jani_edge</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_automaton</span><span class="p">(</span><span class="n">automaton</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_automaton</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">automaton</span><span class="p">),</span>
+        <span class="s2">&quot;x-momba-anonymous&quot;</span><span class="p">:</span> <span class="n">automaton</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_var_decl</span><span class="p">(</span><span class="n">var_decl</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">var_decl</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">variable_declarations</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;locations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_location</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">locations</span><span class="p">],</span>
+        <span class="s2">&quot;edges&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">edges</span><span class="p">],</span>
+        <span class="s2">&quot;initial-locations&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span> <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">automaton</span><span class="o">.</span><span class="n">initial_locations</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">automaton</span><span class="o">.</span><span class="n">initial_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_automaton</span><span class="p">[</span><span class="s2">&quot;restrict-initial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">automaton</span><span class="o">.</span><span class="n">initial_restriction</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">jani_automaton</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_action_pattern</span><span class="p">(</span>
+    <span class="n">pattern</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">ActionPattern</span><span class="p">],</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">pattern</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="p">),</span> <span class="s2">&quot;exporting action patterns with arguments to Jani is currently not supported&quot;</span>
+        <span class="c1"># FIXME: add support for exporting patterns with arguments</span>
+        <span class="c1"># if pattern.identifiers:</span>
+        <span class="c1">#     ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)</span>
+        <span class="c1">#     return {</span>
+        <span class="c1">#         &quot;name&quot;: pattern.action_type.name,</span>
+        <span class="c1">#         &quot;identifiers&quot;: list(pattern.identifiers),</span>
+        <span class="c1">#     }</span>
+        <span class="c1"># else:</span>
+        <span class="k">return</span> <span class="n">pattern</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_link</span><span class="p">(</span>
+    <span class="n">instance_vector</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">],</span>
+    <span class="n">link</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Link</span><span class="p">,</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">jani_sync</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;synchronise&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_action_pattern</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">ctx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instance_vector</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_sync</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dump_action_pattern</span><span class="p">(</span><span class="n">link</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jani_sync</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_system</span><span class="p">(</span><span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">instance_vector</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">instances</span><span class="p">)</span>
+    <span class="n">jani_elements</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_JANIMap</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instance_vector</span><span class="p">:</span>
+        <span class="n">jani_instance</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;automaton&quot;</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">input_enable</span><span class="p">:</span>
+            <span class="n">jani_instance</span><span class="p">[</span><span class="s2">&quot;input-enable&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">input_enable</span><span class="p">)</span>
+        <span class="n">jani_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jani_instance</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="n">jani_elements</span><span class="p">,</span>
+        <span class="s2">&quot;syncs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_link</span><span class="p">(</span><span class="n">instance_vector</span><span class="p">,</span> <span class="n">link</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">links</span><span class="p">],</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_metadata</span><span class="p">(</span><span class="n">model_ctx</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_JANIMap</span><span class="p">:</span>
+    <span class="n">jani_metadata</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;doi&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">}:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">jani_metadata</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_ctx</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">jani_metadata</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_action_type</span><span class="p">(</span><span class="n">action_type</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">ActionType</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_JANIMap</span><span class="p">:</span>
+    <span class="n">jani_action</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">action_type</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="n">jani_parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_JANIMap</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="n">action_type</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">X_MOMBA_VALUE_PASSING</span><span class="p">)</span>
+        <span class="n">jani_parameter</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">_dump_type</span><span class="p">(</span><span class="n">parameter</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">parameter</span><span class="o">.</span><span class="n">comment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">jani_parameter</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="n">comment</span>
+        <span class="n">jani_parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jani_parameter</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">jani_parameters</span><span class="p">:</span>
+        <span class="n">jani_action</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">jani_parameters</span>
+    <span class="k">if</span> <span class="n">action_type</span><span class="o">.</span><span class="n">comment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_action</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action_type</span><span class="o">.</span><span class="n">comment</span>
+    <span class="k">return</span> <span class="n">jani_action</span>
+
+
+<span class="k">def</span> <span class="nf">dump_structure</span><span class="p">(</span>
+    <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">allow_momba_operators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">Property</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">JANIContext</span><span class="p">(</span><span class="n">allow_momba_operators</span><span class="o">=</span><span class="n">allow_momba_operators</span><span class="p">)</span>
+    <span class="n">jani_metadata</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">properties</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">definition</span><span class="o">.</span><span class="n">prop</span>
+            <span class="k">for</span> <span class="n">definition</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">named_properties</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+        <span class="n">jani_metadata</span>
+    <span class="n">jani_model</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;jani-version&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;x-generator&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Momba (v</span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x-momba-release&quot;</span><span class="p">:</span> <span class="n">version</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">network</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;A Momba Model&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;x-momba-anonymous&quot;</span><span class="p">:</span> <span class="n">network</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="n">_dump_metadata</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;x-momba-metadata&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">metadata</span><span class="p">),</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+        <span class="s2">&quot;variables&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_var_decl</span><span class="p">(</span><span class="n">var_decl</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">var_decl</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">variable_declarations</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;constants&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_const_decl</span><span class="p">(</span><span class="n">const_decl</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">const_decl</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">constant_declarations</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_action_type</span><span class="p">(</span><span class="n">action_type</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">action_type</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">action_types</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;automata&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">_dump_automaton</span><span class="p">(</span><span class="n">automaton</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">automaton</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">automata</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;expression&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)}</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;system&quot;</span><span class="p">:</span> <span class="n">_dump_system</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="c1"># important: has to be at the end, because we collect the features while dumping</span>
+        <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">feature</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">features</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">initial_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">jani_model</span><span class="p">[</span><span class="s2">&quot;restrict-initial&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">initial_restriction</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">jani_model</span>
+
+
+<div class="viewcode-block" id="dump_model"><a class="viewcode-back" href="../../../jani/jani_model.html#momba.jani.dump_model">[docs]</a><span class="k">def</span> <span class="nf">dump_model</span><span class="p">(</span>
+    <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">indent</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">allow_momba_operators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">Property</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a Momba automata network and exports it to the JANI format.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        network: The Momba automata network to export to JANI.</span>
+<span class="sd">        indent: Indentation of the final JSON.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The model in UTF-8 encoded JANI format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">jani_structure</span> <span class="o">=</span> <span class="n">dump_structure</span><span class="p">(</span>
+        <span class="n">network</span><span class="p">,</span> <span class="n">allow_momba_operators</span><span class="o">=</span><span class="n">allow_momba_operators</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+        <span class="n">jani_structure</span><span class="p">,</span>
+        <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+        <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+     
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

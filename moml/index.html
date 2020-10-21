@@ -1,0 +1,269 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MOML Language &mdash; Momba unknown documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MOML Grammar" href="grammar.html" />
+    <link rel="prev" title="Expressions" href="../model/expressions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Momba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                unknown
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Momba Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MOML Language</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vs-code-support">VS Code Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../explore/index.html">State-Space Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/index.html">Model Analysis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Momba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>MOML Language</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/moml/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="moml-language">
+<h1>MOML Language<a class="headerlink" href="#moml-language" title="Permalink to this headline">¶</a></h1>
+<p>The <em>Momba Modeling Language</em> (MOML) is <strong>a model description language</strong> based on the <a class="reference external" href="http://www.jani-spec.org/">JANI specification</a>.
+In comparison to JANI, MOML is less verbose and thus easier to read and write.
+However, MOML is still a <strong>low-level language</strong> forcing you to specify every detail of your model explicitly.
+Depending on your use-case such fine grained control over the constructed model might not be necessary and you may want to consider using a <em>higher-level</em> language like <a class="reference external" href="http://www.modestchecker.net/">Modest</a>.
+If you, however, want explicit control over every aspect of your model, give MOML a try.</p>
+<p>Momba comes with a converter to convert between MOML and JANI.
+Hence, you can use your MOML model with any tool supporting the JANI specification such as <a class="reference external" href="http://www.modestchecker.net/">The Modest Toolset</a> and <a class="reference external" href="https://github.com/ISCAS-PMC/ePMC">EPMC</a>.</p>
+<div class="highlight-moml notranslate"><div class="highlight"><pre><span></span><span class="k">model_type</span><span class="w"> </span><span class="n">DTMC</span><span class="w"></span>
+
+<span class="k">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Simple Die&quot;</span><span class="w"></span>
+
+<span class="k">variable</span><span class="w"> </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">int</span><span class="p">[</span><span class="n">1</span><span class="p">,</span><span class="n">6</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="s">&quot;side of a die&quot;</span><span class="w"></span>
+
+<span class="k">automaton</span><span class="w"> </span><span class="n">Die</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">initial</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="n">l</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">2</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">4</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">5</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+
+<span class="k">network</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">instance</span><span class="w"> </span><span class="n">die</span><span class="w"> </span><span class="n">Die</span><span class="w"></span>
+<span class="w">    </span><span class="k">composition</span><span class="w"> </span><span class="n">die</span><span class="w"></span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+</ul>
+</div>
+<div class="section" id="vs-code-support">
+<h2>VS Code Support<a class="headerlink" href="#vs-code-support" title="Permalink to this headline">¶</a></h2>
+<p>We provide a <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=koehlma.moml-language">VS Code extension for MOML</a>:</p>
+<img alt="../_images/vscode.jpg" src="../_images/vscode.jpg" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="grammar.html" class="btn btn-neutral float-right" title="MOML Grammar" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../model/expressions.html" class="btn btn-neutral float-left" title="Expressions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+     
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

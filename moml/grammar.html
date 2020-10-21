@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MOML Grammar &mdash; Momba unknown documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="State-Space Exploration" href="../explore/index.html" />
+    <link rel="prev" title="MOML Language" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Momba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                unknown
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Momba Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">MOML Language</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MOML Grammar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vs-code-support">VS Code Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../explore/index.html">State-Space Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/index.html">Model Analysis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Momba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">MOML Language</a> &raquo;</li>
+        
+      <li>MOML Grammar</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/moml/grammar.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="moml-grammar">
+<h1>MOML Grammar<a class="headerlink" href="#moml-grammar" title="Permalink to this headline">¶</a></h1>
+<p>This is the full abstract grammar of MOML:</p>
+<div class="highlight-bnf notranslate"><div class="highlight"><pre><span></span><span class="k">&lt;model&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;model-type&gt;</span><span class="p">]</span><span class="w"> </span><span class="k">&lt;specification&gt;</span><span class="o">*</span><span class="w"></span>
+
+
+<span class="k">&lt;model-type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘model_type’</span><span class="w"> </span><span class="n">MODEL-TYPE</span><span class="w"></span>
+
+
+<span class="k">&lt;specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;metadata-definition&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;variable-declaration&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;constant-declaration&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;action-declaration&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;automaton-definition&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;network-definition&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;property-definition&gt;</span><span class="w"></span>
+
+<span class="k">&lt;metadata-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘metadata’</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;metadata-field&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="w"></span>
+
+<span class="k">&lt;variable-declaration&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="s">‘transient’</span><span class="p">]</span><span class="w"> </span><span class="s">‘variable’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="k">&lt;type&gt;</span><span class="w"> </span><span class="p">[</span><span class="s">‘:=’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;constant-declaration&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘constant’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="k">&lt;type&gt;</span><span class="w"> </span><span class="p">[</span><span class="s">‘:=’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;action-declaration&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘action’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘(’</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;action-parameter&gt;</span><span class="w"> </span><span class="p">[(</span><span class="s">‘,’</span><span class="w"> </span><span class="k">&lt;action-parameter&gt;</span><span class="p">)</span><span class="o">+</span><span class="p">]]</span><span class="w"> </span><span class="s">‘)’</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;automaton-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘automaton’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;automaton-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="w"></span>
+
+<span class="k">&lt;network-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘network’</span><span class="w"> </span><span class="p">[</span><span class="n">IDENTIFIER</span><span class="p">]</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;network-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="w"></span>
+
+<span class="k">&lt;property-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘property’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:=’</span><span class="w"> </span><span class="k">&lt;property&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+
+
+<span class="k">&lt;metadata-field&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;string&gt;</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="k">&lt;string&gt;</span><span class="w"></span>
+
+
+<span class="k">&lt;action-parameter&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;type&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+
+
+<span class="k">&lt;automaton-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;variable-declaration&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;location-definition&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;edge-definition&gt;</span><span class="w"></span>
+
+<span class="k">&lt;network-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;instance-definition&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;restrict-initial&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;composition&gt;</span><span class="w"></span>
+
+
+<span class="k">&lt;location-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="p">[</span><span class="s">‘initial’</span><span class="p">]</span><span class="w"> </span><span class="s">‘location’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;location-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;location-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘invariant’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;assignment&gt;</span><span class="w"></span>
+
+
+<span class="k">&lt;edge-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘edge’</span><span class="w"> </span><span class="s">‘from’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;edge-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="w"></span>
+
+<span class="k">&lt;edge-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘action’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘guard’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘rate’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘to’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;destination-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;destination-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘probability’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;comment&gt;</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;assignment&gt;</span><span class="w"></span>
+
+<span class="k">&lt;assignment&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘assign’</span><span class="w"> </span><span class="p">[</span>/\d+/<span class="p">]</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘:=’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+
+
+<span class="k">&lt;instance-definition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘instance’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;instance-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;instance-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘input’</span><span class="w"> </span><span class="s">‘enable’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘,’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">]</span><span class="w"></span>
+
+
+<span class="k">&lt;restrict-initial&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘restrict’</span><span class="w"> </span><span class="s">‘initial’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+
+
+<span class="k">&lt;composition&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘composition’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘|’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="s">‘:’</span><span class="w"> </span><span class="n">INDENT</span><span class="w"> </span><span class="k">&lt;composition-specification&gt;</span><span class="o">*</span><span class="w"> </span><span class="n">DEDENT</span><span class="p">]</span><span class="w"></span>
+
+<span class="k">&lt;composition-specification&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘synchronize’</span><span class="w"> </span><span class="k">&lt;action-pattern&gt;</span><span class="w"> </span><span class="p">[(</span><span class="s">‘|’</span><span class="w"> </span><span class="k">&lt;action-pattern&gt;</span><span class="p">)</span><span class="o">+</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="s">‘-&gt;’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘→’</span><span class="p">)</span><span class="w"> </span><span class="k">&lt;action-pattern&gt;</span><span class="w"></span>
+
+<span class="k">&lt;action-pattern&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[</span><span class="s">‘(’</span><span class="w"> </span><span class="p">[</span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="p">[(</span><span class="s">‘,’</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="p">)</span><span class="o">+</span><span class="p">]]</span><span class="w"> </span><span class="s">‘)’</span><span class="p">]</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘-’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘τ’</span><span class="w"></span>
+
+
+<span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;constant&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"> </span><span class="s">‘(’</span><span class="w"> </span><span class="p">[</span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="p">[</span><span class="s">‘,’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="p">]]</span><span class="w"> </span><span class="s">‘)’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="n">IDENTIFIER</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;unary-operator&gt;</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="k">&lt;binary-operator&gt;</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="s">‘?’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="s">‘:’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+
+<span class="k">&lt;constant&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘true’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘false’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span>/[0-9]+/<span class="w"> </span><span class="s">‘.’</span><span class="w"> </span>/[0-9]+/<span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘real[’</span><span class="w"> </span><span class="k">&lt;NAMED-REAL&gt;</span><span class="w"> </span><span class="s">‘]’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span>/[0-9]+/<span class="w"></span>
+
+<span class="k">&lt;unary-operator&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘¬’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘not’</span><span class="w"></span>
+
+<span class="k">&lt;binary-operator&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘∨’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘or’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘∧’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘and’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘⊕’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘xor’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘⇒’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘==&gt;’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘⇔’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘&lt;=&gt;’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘=’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘!=’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘≠’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘&lt;’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘≤’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘≥’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘&gt;’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘+’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘-’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘*’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘%’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘/’</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s">‘//’</span><span class="w"></span>
+
+
+<span class="k">&lt;property&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="c">… TODO …</span><span class="w"></span>
+
+
+<span class="k">&lt;comment&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘&quot;’</span><span class="w"> </span>/([^&quot;]|\&quot;)/<span class="w"> </span><span class="s">‘&quot;’</span><span class="w"></span>
+
+
+<span class="k">&lt;string&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘&quot;’</span><span class="w"> </span>/([^&quot;]|\&quot;)/<span class="w"> </span><span class="s">‘&quot;’</span><span class="w"></span>
+
+
+<span class="k">&lt;type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;primitive-type&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;bounded-type&gt;</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;array-type&gt;</span><span class="w"></span>
+
+<span class="k">&lt;primitive-type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘bool’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;numeric-type&gt;</span><span class="w"></span>
+
+<span class="k">&lt;numeric-type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘int’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘real’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘clock’</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="s">‘continuous’</span><span class="w"></span>
+
+<span class="k">&lt;bounded-type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;numeric-type&gt;</span><span class="w"> </span><span class="s">‘[’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="s">‘,’</span><span class="w"> </span><span class="k">&lt;expression&gt;</span><span class="w"> </span><span class="s">‘]’</span><span class="w"></span>
+
+<span class="k">&lt;array-type&gt;</span><span class="w"> </span><span class="o">::=</span><span class="w"></span>
+<span class="w">    </span><span class="o">|</span><span class="w"> </span><span class="k">&lt;type&gt;</span><span class="w"> </span><span class="s">‘[]’</span><span class="w"></span>
+</pre></div>
+</div>
+<p>If the model type is omitted the file must not contain anything else than property definitions.
+This allows to separate property and model definitions.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../explore/index.html" class="btn btn-neutral float-right" title="State-Space Exploration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="MOML Language" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+     
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

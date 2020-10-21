@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>JANI Value Passing &mdash; Momba unknown documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Momba
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                unknown
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../model/index.html">Momba Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../moml/index.html">MOML Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../explore/index.html">State-Space Exploration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis/index.html">Model Analysis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Momba</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>JANI Value Passing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/jani/jani_vp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jani-value-passing">
+<h1>JANI Value Passing<a class="headerlink" href="#jani-value-passing" title="Permalink to this headline">¶</a></h1>
+<p>This document specifies the JANI feature <em>x-momba-value-passing</em> which extends the <em>JANI model interchange format</em> (<a class="reference external" href="http://www.jani-spec.org/">JANI-model</a>) with <em>value passing</em> via synchronization inspired by LOTOS.
+In principle, JANI-model already allows for efficient value passing via transient global variables <a class="reference internal" href="#bdhhjt17" id="id1"><span>[BDHHJT17]</span></a>.
+While perfectly adequate for model checking purposes, this approach to value passing has two shortcomings:
+(1) it restricts compositionality by not allowing two instances of the same automaton to participate in a synchronization while passing values over the same global variables and
+(2) it does not allow one to reason about an automaton solely on the basis of its observable behavior in terms of actions.
+Thus, we extend JANI-model with a feature for explicit value passing.</p>
+<p>This document is structured as follows: after presenting the general idea informally, we proceed by specifying the necessary syntactic extensions to the JSON-schema of JANI-model.
+Subsequently, we describe the static and dynamic semantics of the extension.</p>
+<div class="section" id="general-idea">
+<h2>General Idea<a class="headerlink" href="#general-idea" title="Permalink to this headline">¶</a></h2>
+<p>The intuitive idea is to extend actions with <em>parameters</em> giving rise to <em>action schemas</em>.
+An <em>action schema</em> <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> and a list of parameter types <span class="math notranslate nohighlight">\(\tau_i\)</span>.
+A concrete action <span class="math notranslate nohighlight">\(\alpha(\nu_1, \ldots, \nu_n)\)</span>, then, consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> uniquely identifying an action schema <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> and <em>arguments</em> <span class="math notranslate nohighlight">\(\nu_i\)</span> such that each <span class="math notranslate nohighlight">\(\nu_i\)</span> has a type which is assignable to <span class="math notranslate nohighlight">\(\tau_i\)</span>.</p>
+<p>An <em>action pattern</em> <span class="math notranslate nohighlight">\(\alpha(x_1, \ldots, x_n)\)</span> consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> uniquely identifying an action schema <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> and identifiers <span class="math notranslate nohighlight">\(x_i\)</span>.
+The <cite>action</cite> fields of an edge now becomes an action pattern and the corresponding identifiers are available in the guard and for assignments.</p>
+<p>Each edge with an action pattern introduces a new <em>edge scope</em> in which the guard and all expressions occurring in a destination specification are evaluated.</p>
+<p>A synchronization vector has the form <span class="math notranslate nohighlight">\(\langle p_1, \ldots, p_m\rangle \to p\)</span> where all :math:<a href="#id2"><span class="problematic" id="id3">`</span></a>p`s are action patterns.</p>
+<p>Generally, we allow identifiers to occur multiple times if they have the same time.
+We replace all except one of the occurances with different identifiers and add an assertion that they are all equal.</p>
+</div>
+<div class="section" id="syntactical-extension">
+<h2>Syntactical Extension<a class="headerlink" href="#syntactical-extension" title="Permalink to this headline">¶</a></h2>
+<p>We extend the each action declaration of the <cite>actions</cite> field in <cite>Model</cite> with an optional field <cite>parameters</cite>:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">Identifier</span><span class="p">,</span>
+    <span class="s2">&quot;?parameters&quot;</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">({</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="nx">Type</span><span class="p">,</span>
+        <span class="s2">&quot;?comment&quot;</span><span class="o">:</span> <span class="nb">String</span>
+    <span class="p">}),</span>
+    <span class="s2">&quot;?comment&quot;</span><span class="o">:</span> <span class="nb">String</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We extend the <cite>action</cite> fields of an <cite>edge</cite> with:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">ActionPattern</span> <span class="o">=</span> <span class="nx">schema</span><span class="p">([</span>
+    <span class="nx">Identifier</span><span class="p">,</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">Identifier</span><span class="p">,</span>
+        <span class="s2">&quot;?identifiers&quot;</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">([</span>
+            <span class="nx">Identifier</span>
+        <span class="p">])</span>
+    <span class="p">}</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<p>We extend a synchronization vector as follows:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;synchronise&quot;</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">([</span><span class="nx">ActionPattern</span><span class="p">,</span> <span class="kc">null</span><span class="p">])</span>
+    <span class="s2">&quot;?result&quot;</span><span class="o">:</span> <span class="nx">ActionPattern</span><span class="p">,</span>
+    <span class="s2">&quot;?condition&quot;</span><span class="o">:</span> <span class="nx">Expression</span><span class="p">,</span>
+    <span class="s2">&quot;?comment&quot;</span><span class="o">:</span> <span class="nb">String</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-semantics">
+<h2>Static Semantics<a class="headerlink" href="#static-semantics" title="Permalink to this headline">¶</a></h2>
+<p>If there are no parameters in place, then we do not care.</p>
+<p>If there are parameters, the number of arguments for an action pattern and the number of parameters of the respective action type has to be identical.</p>
+<p>Within an edge, the following has to hold: For each argument, if the respective parameter has “READ” direction, the argument is an identifier, otherwise, it is an arbitrary expression.
+Each identifier must occur at most once as “READ” direction argument.</p>
+<p>For each synchronization vector, for each pattern in the vector: For each argument, if the respective parameter has “WRITE” direction, the argument is an identifier, otherwise, it is an arbitrary expression.
+Within each synchronization vector, each identifier must occur at most once as “WRITE” direction argument.
+For the <cite>result</cite> fields this is reversed.</p>
+<p>Scoping: An action pattern introduces a new scope.</p>
+<p>Within an edge: Identifiers occurring as “READ” direction arguments can be used and contain a value of the respective parameter type for expressions in destinations and the <cite>guard</cite> field.</p>
+<p>Within a synchronization vector: Identifiers occurring as “WRITE” direction arguments can be used and contain a value of the respective type for expressions occurring in “READ” direction argument respectively “WRITE” direction arguments in the resulting action.</p>
+<p>Expressions occurring in <cite>WRITE</cite>-parameters must not contain any sampling expressions. They may, however, contain the <cite>nondet</cite> operator as specified in JANI feature <em>nondet-selection</em>.</p>
+</div>
+<div class="section" id="dynamic-semantics">
+<h2>Dynamic Semantics<a class="headerlink" href="#dynamic-semantics" title="Permalink to this headline">¶</a></h2>
+<p>As the guard may refer identifiers bound in the action pattern, we consider possible synchronization actions before evaluating the guard.</p>
+<p>The semantics are as follows:</p>
+<ol class="arabic simple">
+<li><p>For all automata the expressions occurring in <cite>WRITE</cite> direction arguments are evaluated.</p></li>
+<li><p>Those values are bound to the respective identifiers in the synchronization vector.</p></li>
+<li><p>The condition of the synchronization is evaluated. If it evaluates to false, the respective actions are not possible, if it evaluates to true, we proceed.</p></li>
+<li><p>The expressions in the <cite>READ</cite> direction arguments in the synchronization vector are evaluated.</p></li>
+<li><p>The results of those evaluations are bound to the respective identifiers in the pattern for each automata.</p></li>
+<li><p>The <cite>guard</cite> of each of those actions is evaluated with those values.</p></li>
+<li><p>If all guards evaluate to <cite>true</cite> then the automata atomically take the respective edges together. The values bound to the identifiers in the automata are available for the assignments and probabilities for each destination. The assignments are resolved as usually using their indices.</p></li>
+</ol>
+<dl class="citation">
+<dt class="label" id="bdhhjt17"><span class="brackets"><a class="fn-backref" href="#id1">BDHHJT17</a></span></dt>
+<dd><p>Carlos E. Budde, Christian Dehnert, Ernst Moritz Hahn, Arnd Hartmanns, Sebastian Junges, and Andrea Turrini:
+JANI: Quantitative Model and Tool Interaction. TACAS (2) 2017: 151-168</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+     
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
