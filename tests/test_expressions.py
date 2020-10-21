@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <mkoehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
 from momba.model import context, errors, types
-from momba.model.expressions import const, ite, identifier
+from momba.model.expressions import ensure_expr, ite, name, logic_and
 
 import pytest
 
@@ -16,7 +16,7 @@ def test_basic_inferences() -> None:
     scope = ctx.global_scope.create_child_scope()
     scope.declare_variable("x", types.BOOL)
 
-    expr = identifier("x").land(identifier("y"))
+    expr = logic_and(name("x"), name("y"))
 
     with pytest.raises(errors.UnboundIdentifierError):
         scope.get_type(expr)
@@ -28,12 +28,12 @@ def test_basic_inferences() -> None:
     scope.declare_variable("z", types.INT)
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(identifier("x").land(identifier("z")))
+        scope.get_type(logic_and(name("x"), name("z")))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(identifier("z"), identifier("x"), identifier("y")))
+        scope.get_type(ite(name("z"), name("x"), name("y")))
 
     with pytest.raises(errors.InvalidTypeError):
-        scope.get_type(ite(identifier("x"), identifier("z"), identifier("y")))
+        scope.get_type(ite(name("x"), name("z"), name("y")))
 
-    assert scope.get_type(ite(identifier("x"), identifier("z"), const(3))) == types.INT
+    assert scope.get_type(ite(name("x"), name("z"), ensure_expr(3))) == types.INT
