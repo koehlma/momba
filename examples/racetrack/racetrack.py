@@ -20,7 +20,7 @@ import click
 
 from momba import jani, model
 from momba.model import expressions, types
-from momba.model.expressions import logic_or
+from momba.model.expressions import logic_or, FALSE
 from momba.moml import expr, prop
 
 
@@ -257,9 +257,7 @@ def construct_model(scenario: Scenario) -> model.Network:
     step = ctx.create_action_type("step").create_pattern()
 
     goal_cells = track.goal_cells
-    on_goal = reduce(
-        logic_or, (expr("car_pos == $g", g=g) for g in goal_cells), expr("false")
-    )
+    on_goal = reduce(logic_or, (expr("car_pos == $g", g=g) for g in goal_cells), FALSE)
 
     ctx.define_property(
         "goalProbability", prop("min({ Pmax(F($on_goal)) | initial })", on_goal=on_goal)
@@ -373,11 +371,12 @@ def construct_model(scenario: Scenario) -> model.Network:
             *(
                 is_blocked_at(
                     expr(
-                        "floor($car_x + $factor * car_dx)"
-                        " + WIDTH * floor($car_y + $factor * car_dy)",
+                        "floor($car_x + ($speed / $max_speed) * car_dx)"
+                        " + WIDTH * floor($car_y + ($speed / $max_speed) * car_dy)",
                         car_x=car_x,
                         car_y=car_y,
-                        factor=speed / scenario.max_speed,
+                        speed=speed,
+                        max_speed=scenario.max_speed,
                     )
                 )
                 for speed in range(scenario.max_speed + 1)
@@ -395,15 +394,9 @@ def construct_model(scenario: Scenario) -> model.Network:
 
         next_car_pos = expr(
             """
-            max(
-                min(
-                    (
-                        max(min($car_x + car_dx, WIDTH - 1), 0)
-                        + (WIDTH * (max(min($car_y + car_dy, HEIGHT - 1), 0)))
-                    ),
-                    TRACK_SIZE - 1
-                ),
-                0
+            floor(
+                max(min($car_x + car_dx, WIDTH - 1), 0)
+                + (WIDTH * max(min($car_y + car_dy, HEIGHT - 1), 0))
             )
             """,
             car_x=car_x,

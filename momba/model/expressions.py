@@ -85,8 +85,8 @@ class NumericConstant(Constant, abc.ABC):
         raise NotImplementedError()
 
 
-TRUE = BooleanConstant(True)
-FALSE = BooleanConstant(False)
+TRUE: Expression = BooleanConstant(True)
+FALSE: Expression = BooleanConstant(False)
 
 
 @d.dataclass(frozen=True)
