@@ -8,6 +8,7 @@ from __future__ import annotations
 import typing as t
 
 import pathlib
+import random
 
 import click
 
@@ -57,7 +58,14 @@ def format_track(track: Track, car: t.Optional[int] = None) -> str:
 
 @click.command()
 @click.argument("track_file", type=pathlib.Path)
-def race(track_file: pathlib.Path) -> None:
+@click.option(
+    "--crazy-driver",
+    "crazy_driver",
+    is_flag=True,
+    default=False,
+    help="Drive randomly instead of interactively.",
+)
+def race(track_file: pathlib.Path, crazy_driver: bool) -> None:
     track = Track.from_source(track_file.read_text(encoding="utf-8"))
     print("Input Track".center(track.width))
 
@@ -93,12 +101,12 @@ def race(track_file: pathlib.Path) -> None:
         dy = state.binding["car_dy"].as_int
         fuel = state.binding["fuel"].as_int
 
+        print(f"\ndx: {dx}, dy: {dy}, fuel: {fuel}\n")
+        print(format_track(track, car_pos))
+
         if car_pos in scenario.track.goal_cells:
             print("\nGame won!")
             break
-
-        print(f"\ndx: {dx}, dy: {dy}, fuel: {fuel}\n")
-        print(format_track(track, car_pos))
 
         options: t.Dict[t.Tuple[int, int], engine.MDPEdge] = {}
         edges = mdp.get_edges_from(state)
@@ -106,6 +114,11 @@ def race(track_file: pathlib.Path) -> None:
         if not edges:
             print("\nGame over!")
             break
+
+        if crazy_driver:
+            # shortcut decision by letting the (random) crazy driver take the decision
+            state = random.choice(tuple(edges)).destinations.pick()
+            continue
 
         for option in edges:
             assert option.action is not None
