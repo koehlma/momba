@@ -256,8 +256,6 @@ class Action:
     action_type: actions.ActionType
     arguments: t.Tuple[evaluation.Value, ...]
 
-    vector: t.Mapping[automata.Instance, automata.Edge]
-
     def __str__(self) -> str:
         arguments = ", ".join(map(str, self.arguments))
         return f"{self.action_type.name}({arguments})"
@@ -266,6 +264,7 @@ class Action:
 @d.dataclass(frozen=True)
 class MDPEdge:
     source: GlobalState
+    vector: t.Mapping[automata.Instance, automata.Edge]
     action: t.Optional[Action]
     destinations: Distribution[GlobalState]
 
@@ -290,6 +289,7 @@ class PTADestination:
 class PTAEdge:
     source: PTALocation
     action: t.Optional[Action]
+    vector: t.Mapping[automata.Instance, automata.Edge]
     guard: t.FrozenSet[dbm.Constraint[ClockVariable]]
     destinations: Distribution[PTADestination]
 
@@ -527,9 +527,7 @@ class MombaPTA:
                     ), "only write and guard argument allowed in result pattern"
                     arguments.append(vector_namespace[argument.identifier])
             resulting_action = Action(
-                edge_vector.result_pattern.action_type,
-                tuple(arguments),
-                FrozenMap.transfer_ownership(edge_vector.edges),  # type: ignore  # FIXME:
+                edge_vector.result_pattern.action_type, tuple(arguments)
             )
         # compute all destinations
         pta_destinations: t.Dict[PTADestination, fractions.Fraction] = {}
@@ -554,6 +552,7 @@ class MombaPTA:
         return PTAEdge(
             source=source,
             action=resulting_action,
+            vector=FrozenMap.transfer_ownership(edge_vector.edges),  # type: ignore  # FIXME:
             guard=frozenset(guard),
             destinations=Distribution(pta_destinations),
         )
@@ -622,6 +621,7 @@ class MombaMDP:
             MDPEdge(
                 source=source,
                 action=edge.action,
+                vector=edge.vector,
                 destinations=Distribution(
                     {
                         destination.location.state: edge.destinations.get_probability(

@@ -121,8 +121,7 @@ def race(track_file: pathlib.Path, crazy_driver: bool) -> None:
             continue
 
         for option in edges:
-            assert option.action is not None
-            annotation = option.action.vector[car_instance].annotation
+            annotation = option.vector[car_instance].annotation
             assert annotation is not None
             ax = annotation["ax"]
             ay = annotation["ay"]
