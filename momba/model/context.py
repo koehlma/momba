@@ -79,12 +79,6 @@ class VariableDeclaration(Declaration):
     is_transient: t.Optional[bool] = None
     initial_value: t.Optional[expressions.Expression] = None
 
-    def __post_init__(self) -> None:
-        if self.is_transient and self.initial_value is None:
-            raise errors.InvalidDeclarationError(
-                "a variable declared transient needs a value"
-            )
-
     def validate(self, scope: Scope) -> None:
         if self.initial_value is not None:
             if not self.typ.is_assignable_from(scope.get_type(self.initial_value)):
@@ -95,6 +89,8 @@ class VariableDeclaration(Declaration):
                 raise errors.NotAConstantError(
                     "initial value is required to be a constant"
                 )
+        # FIXME: check whether wether an initial value is provided if the
+        # variable is transient and not provided via value passing
 
 
 @d.dataclass(frozen=True)
