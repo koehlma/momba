@@ -7,13 +7,10 @@ from __future__ import annotations
 import dataclasses as d
 import typing as t
 
-import itertools
 import functools
 import fractions
 
-from ..model import context, distributions, expressions, operators, types
-
-from ..utils.distribution import Distribution
+from ..model import context, expressions, operators, types
 
 
 Number = t.Union[int, fractions.Fraction]
@@ -108,9 +105,7 @@ class Environment:
 
 
 @functools.singledispatch
-def _evaluate(
-    expression: expressions.Expression, environment: Environment
-) -> Distribution[Value]:
+def _evaluate(expression: expressions.Expression, environment: Environment) -> Value:
     raise NotImplementedError(
         f"evaluation function not implemented for {type(expression)}"
     )
@@ -119,62 +114,37 @@ def _evaluate(
 @_evaluate.register
 def _evaluate_integer_constant(
     expression: expressions.IntegerConstant, environment: Environment
-) -> Distribution[Value]:
-    return Distribution.create_dirac(Integer(expression.integer))
+) -> Value:
+    return Integer(expression.integer)
 
 
 @_evaluate.register
 def _evaluate_real_constant(
     expression: expressions.RealConstant, environment: Environment
-) -> Distribution[Value]:
-    assert isinstance(expression.real, fractions.Fraction)
-    return Distribution.create_dirac(Real(expression.real))
+) -> Value:
+    return Real(expression.as_fraction)
 
 
 @_evaluate.register
 def _evaluate_boolean_constant(
     expression: expressions.BooleanConstant, environment: Environment
-) -> Distribution[Value]:
-    return Distribution.create_dirac(Boolean(expression.boolean))
+) -> Value:
+    return Boolean(expression.boolean)
 
 
 @_evaluate.register
 def _evaluate_identifier(
     expression: expressions.Name, environment: Environment
-) -> Distribution[Value]:
-    return Distribution.create_dirac(environment.lookup(expression.identifier))
-
-
-def _iter_product(
-    *distributions: Distribution[Value],
-) -> t.Iterator[t.Tuple[fractions.Fraction, t.Tuple[Value, ...]]]:
-    for values in itertools.product(
-        *(distribution.support for distribution in distributions)
-    ):
-        probability = fractions.Fraction(1)
-        for value, distribution in zip(values, distributions):
-            probability *= distribution.get_probability(value)
-        yield probability, values
-
-
-def _lift(function: t.Callable[..., Value]) -> t.Callable[..., Distribution[Value]]:
-    def wrapper(*distributions: Distribution[Value]) -> Distribution[Value]:
-        result_dist: t.Dict[Value, fractions.Fraction] = {}
-        for probability, values in _iter_product(*distributions):
-            result_value = function(*values)
-            result_dist[result_value] = result_dist.get(result_value, 0) + probability
-        return Distribution(result_dist)
-
-    functools.update_wrapper(wrapper, function)
-    return wrapper
+) -> Value:
+    return environment.lookup(expression.identifier)
 
 
 def _evaluate_binary(
     elementary_function: t.Callable[[Value, Value], Value],
     expression: expressions.BinaryExpression,
     environment: Environment,
-) -> Distribution[Value]:
-    return _lift(elementary_function)(
+) -> Value:
+    return elementary_function(
         _evaluate(expression.left, environment),
         _evaluate(expression.right, environment),
     )
@@ -183,7 +153,7 @@ def _evaluate_binary(
 @_evaluate.register
 def _evaluate_boolean(
     expression: expressions.Boolean, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     def elementary_function(left: Value, right: Value) -> Value:
         return Boolean(expression.operator.native_function(left.as_bool, right.as_bool))
 
@@ -202,7 +172,7 @@ def _convert_numeric(number: operators.Number, typ: types.Type) -> Value:
 @_evaluate.register
 def _evaluate_arithmetic(
     expression: expressions.ArithmeticBinary, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     typ = environment.scope.get_type(expression)
 
     def elementary_function(left: Value, right: Value) -> Value:
@@ -216,7 +186,7 @@ def _evaluate_arithmetic(
 @_evaluate.register
 def _evaluate_equality(
     expression: expressions.Equality, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     def elementary_function(left: Value, right: Value) -> Value:
         return Boolean(expression.operator.native_function(left, right))
 
@@ -226,7 +196,7 @@ def _evaluate_equality(
 @_evaluate.register
 def _evaluate_comparison(
     expression: expressions.Comparison, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     def elementary_function(left: Value, right: Value) -> Value:
         return Boolean(
             expression.operator.native_function(left.as_number, right.as_number)
@@ -238,7 +208,7 @@ def _evaluate_comparison(
 @_evaluate.register
 def _evaluate_condition(
     expression: expressions.Conditional, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     if evaluate(expression.condition, environment).as_bool:
         return _evaluate(expression.consequence, environment)
     else:
@@ -249,14 +219,14 @@ def _evaluate_unary(
     elementary_function: t.Callable[[Value], Value],
     expression: expressions.UnaryExpression,
     environment: Environment,
-) -> Distribution[Value]:
-    return _lift(elementary_function)(_evaluate(expression.operand, environment))
+) -> Value:
+    return elementary_function(_evaluate(expression.operand, environment))
 
 
 @_evaluate.register
 def _evaluate_round(
     expression: expressions.ArithmeticUnary, environment: Environment
-) -> Distribution[Value]:
+) -> Value:
     def elementary_function(operand: Value) -> Value:
         return Integer(expression.operator.native_function(operand.as_number))
 
@@ -264,37 +234,12 @@ def _evaluate_round(
 
 
 @_evaluate.register
-def _evaluate_not(
-    expression: expressions.Not, environment: Environment
-) -> Distribution[Value]:
+def _evaluate_not(expression: expressions.Not, environment: Environment) -> Value:
     def elementary_function(operand: Value) -> Value:
         return Boolean(not operand.as_bool)
 
     return _evaluate_unary(elementary_function, expression, environment)
 
 
-@_evaluate.register
-def _evaluate_sample(
-    expression: expressions.Sample, environment: Environment
-) -> Distribution[Value]:
-    assert (
-        expression.distribution is distributions.DistributionType.DISCRETE_UNIFORM
-    ), f"evaluation is not supported for distribution {expression.distribution.name!r}"
-    lower_bound = evaluate(expression.arguments[0], environment).as_int
-    upper_bound = evaluate(expression.arguments[1], environment).as_int
-    return Distribution.create_uniform(
-        *(Integer(integer) for integer in range(lower_bound, upper_bound + 1))
-    )
-
-
 def evaluate(expression: expressions.Expression, environment: Environment) -> Value:
-    distribution = _evaluate(expression, environment)
-    assert distribution.is_dirac, "expected non-probabilistic expression"
-    (result,) = distribution.support
-    return result
-
-
-def evaluate_probabilistically(
-    expression: expressions.Expression, environment: Environment
-) -> Distribution[Value]:
     return _evaluate(expression, environment)
