@@ -117,7 +117,7 @@ def race(
     start_cell = int(
         click.prompt(
             "Please select a start cell",
-            type=click.Choice(tuple(map(str, track.start_cells))),
+            type=click.Choice(tuple(map(str, sorted(track.start_cells)))),
             show_choices=True,
         )
     )
