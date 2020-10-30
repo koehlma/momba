@@ -567,11 +567,13 @@ def load_model(source: JANIModel) -> model.Network:
     if "variables" in jani_model:
         for jani_declaration in jani_model["variables"]:
             var_declaration = _variable_declaration(jani_declaration)
-            network.ctx.global_scope.add_declaration(var_declaration)
+            network.ctx.global_scope.add_declaration(var_declaration, validate=False)
     if "constants" in jani_model:
         for jani_declaration in jani_model["constants"]:
             const_declaration = _constant_declaration(jani_declaration)
-            network.ctx.global_scope.add_declaration(const_declaration)
+            network.ctx.global_scope.add_declaration(const_declaration, validate=False)
+    for declaration in network.ctx.global_scope.declarations:
+        declaration.validate(network.ctx.global_scope)
     if "restrict-initial" in jani_model:
         _check_fields(
             jani_model["restrict-initial"], required={"exp"}, optional={"comment"}
@@ -596,7 +598,9 @@ def load_model(source: JANIModel) -> model.Network:
         if "variables" in jani_automaton:
             for jani_declaration in jani_automaton["variables"]:
                 declaration = _variable_declaration(jani_declaration)
-                automaton.scope.add_declaration(declaration)
+                automaton.scope.add_declaration(declaration, validate=False)
+        for declaration in automaton.scope.declarations:
+            declaration.validate(automaton.scope)
         locations = {
             jani_location["name"]: _location(jani_location)
             for jani_location in jani_automaton["locations"]
