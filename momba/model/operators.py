@@ -61,7 +61,10 @@ class ArithmeticBinaryOperator(BinaryOperator, enum.Enum):
     MUL = "*", lambda left, right: left * right
     MOD = "%", lambda left, right: left % right
 
-    REAL_DIV = "/", lambda left, right: left / right
+    REAL_DIV = (
+        "/",
+        lambda left, right: fractions.Fraction(left) / fractions.Fraction(right),
+    )
 
     LOG = "log", lambda left, right: math.log(left, right)
     POW = "pow", lambda left, right: pow(left, right)

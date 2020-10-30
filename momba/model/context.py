@@ -214,12 +214,13 @@ class Scope:
                 )
             return self.parent.lookup(identifier)
 
-    def add_declaration(self, declaration: Declaration) -> None:
+    def add_declaration(self, declaration: Declaration, validate: bool = True) -> None:
         if declaration.identifier in self._declarations:
             raise errors.InvalidDeclarationError(
                 f"identifier `{declaration.identifier}` has already been declared"
             )
-        declaration.validate(self)
+        if validate:
+            declaration.validate(self)
         self._declarations[declaration.identifier] = declaration
 
     def declare_variable(
