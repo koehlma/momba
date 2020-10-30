@@ -595,7 +595,7 @@ def load_model(source: JANIModel) -> model.Network:
         },
         unsupported={"comment"},
     )
-    network = model.Network(model.Context())
+    network = model.Network(model.Context(model.ModelType[jani_model["type"].upper()]))
     if "variables" in jani_model:
         for jani_declaration in jani_model["variables"]:
             var_declaration = _variable_declaration(jani_declaration)
