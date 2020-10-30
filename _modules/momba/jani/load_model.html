@@ -475,9 +475,7 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">typ</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;bounded&quot;</span><span class="p">:</span>
         <span class="n">_check_fields</span><span class="p">(</span>
-            <span class="n">typ</span><span class="p">,</span>
-            <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">},</span>
-            <span class="n">optional</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lower-bound&quot;</span><span class="p">,</span> <span class="s2">&quot;upper-bound&quot;</span><span class="p">},</span>
+            <span class="n">typ</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">},</span> <span class="n">optional</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lower-bound&quot;</span><span class="p">,</span> <span class="s2">&quot;upper-bound&quot;</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">_type</span><span class="p">(</span><span class="n">typ</span><span class="p">[</span><span class="s2">&quot;base&quot;</span><span class="p">])</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">NumericType</span><span class="p">)</span>
@@ -620,7 +618,7 @@
     <span class="n">location</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[</span><span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]]</span>
     <span class="n">action_pattern</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">ActionPattern</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="s2">&quot;action&quot;</span> <span class="ow">in</span> <span class="n">jani_edge</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">action_pattern</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ActionPattern</span><span class="p">(</span>
                 <span class="n">ctx</span><span class="o">.</span><span class="n">get_action_type_by_name</span><span class="p">(</span><span class="n">jani_edge</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">])</span>
             <span class="p">)</span>
@@ -665,9 +663,7 @@
 
 <span class="k">def</span> <span class="nf">_action_parameter</span><span class="p">(</span><span class="n">jani_action_parameter</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">ActionParameter</span><span class="p">:</span>
     <span class="n">_check_fields</span><span class="p">(</span>
-        <span class="n">jani_action_parameter</span><span class="p">,</span>
-        <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">},</span>
-        <span class="n">optional</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;comment&quot;</span><span class="p">},</span>
+        <span class="n">jani_action_parameter</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">},</span> <span class="n">optional</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;comment&quot;</span><span class="p">},</span>
     <span class="p">)</span>
     <span class="n">typ</span> <span class="o">=</span> <span class="n">_type</span><span class="p">(</span><span class="n">jani_action_parameter</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">])</span>
     <span class="n">comment</span> <span class="o">=</span> <span class="n">jani_action_parameter</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -772,8 +768,7 @@
             <span class="n">automaton</span><span class="o">.</span><span class="n">add_initial_location</span><span class="p">(</span><span class="n">locations</span><span class="p">[</span><span class="n">jani_location</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">jani_prop</span> <span class="ow">in</span> <span class="n">jani_model</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]:</span>
         <span class="n">_check_fields</span><span class="p">(</span>
-            <span class="n">jani_prop</span><span class="p">,</span>
-            <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;expression&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">},</span>
+            <span class="n">jani_prop</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;expression&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
             <span class="n">jani_prop</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">_property</span><span class="p">(</span><span class="n">jani_prop</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">])</span>
