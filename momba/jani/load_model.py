@@ -54,15 +54,17 @@ _BINARY_OP_MAP: t.Mapping[str, expressions.BinaryConstructor] = {
     "//": expressions.floor_div,  # defined by the `x-momba-operators`extension
     "pow": expressions.power,
     "log": expressions.log,
+    "min": expressions.minimum,  # defined by the `derived-operators` extension
+    "max": expressions.maximum,  # defined by the `derived-operators` extension
 }
 
 _UNARY_OP_MAP: t.Mapping[str, expressions.UnaryConstructor] = {
     "¬": expressions.logic_not,
     "floor": expressions.floor,
     "ceil": expressions.ceil,
-    "abs": expressions.absolute,
-    "trc": expressions.trunc,
-    "sgn": expressions.sgn,
+    "abs": expressions.absolute,  # defined by the `derived-operators` extension
+    "trc": expressions.trunc,  # defined by the `derived-operators` extension
+    "sgn": expressions.sgn,  # defined by the `derived-operators` extension
 }
 
 
@@ -105,6 +107,11 @@ _BINARY_PATH_OPERATORS: t.Mapping[str, operators.BinaryPathOperator] = {
     "U": operators.BinaryPathOperator.UNTIL,
     "W": operators.BinaryPathOperator.WEAK_UNTIL,
     "R": operators.BinaryPathOperator.RELEASE,
+}
+
+_UNARY_PATH_OPERATORS: t.Mapping[str, operators.UnaryPathOperator] = {
+    "F": operators.UnaryPathOperator.EVENTUALLY,
+    "G": operators.UnaryPathOperator.GLOBALLY,
 }
 
 
@@ -281,15 +288,15 @@ def _property(jani_property: t.Any) -> properties.Property:
             return properties.SteadyState(
                 _MIN_MAX_OPERATORS[jani_property["op"]], _property(jani_property["exp"])
             )
+    step_bounds: t.Optional[properties.Interval]
+    time_bounds: t.Optional[properties.Interval]
+    reward_bounds: t.Optional[t.Sequence[properties.RewardBound]]
     if jani_property["op"] in {"U", "W", "R"}:
         _check_fields(
             jani_property,
             required={"op", "left", "right"},
             optional={"step-bounds", "time-bounds", "reward-bounds"},
         )
-        step_bounds: t.Optional[properties.Interval]
-        time_bounds: t.Optional[properties.Interval]
-        reward_bounds: t.Optional[t.Sequence[properties.RewardBound]]
         time_operator = _BINARY_PATH_OPERATORS[jani_property["op"]]
         if "step-bounds" in jani_property:
             step_bounds = _property_interval(jani_property["step-bounds"])
@@ -311,6 +318,31 @@ def _property(jani_property: t.Any) -> properties.Property:
             time_bounds,
             reward_bounds,
         )
+    if jani_property["op"] in _UNARY_PATH_OPERATORS:
+        _check_fields(
+            jani_property,
+            required={"op", "exp"},
+            optional={"step-bounds", "time-bounds", "reward-bounds"},
+        )
+        if "step-bounds" in jani_property:
+            step_bounds = _property_interval(jani_property["step-bounds"])
+        else:
+            step_bounds = None
+        if "time-bounds" in jani_property:
+            time_bounds = _property_interval(jani_property["time-bounds"])
+        else:
+            time_bounds = None
+        if "reward-bounds" in jani_property:
+            reward_bounds = list(map(_reward_bound, jani_property["reward-bounds"]))
+        else:
+            reward_bounds = None
+        return properties.UnaryPathFormula(
+            _UNARY_PATH_OPERATORS[jani_property["op"]],
+            _property(jani_property["exp"]),
+            step_bounds,
+            time_bounds,
+            reward_bounds,
+        )
     if jani_property["op"] in _STATE_SELECTORS:
         return _STATE_SELECTORS[jani_property["op"]]
     raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
@@ -322,7 +354,9 @@ def _type(typ: t.Any) -> types.Type:
     assert isinstance(typ, dict)
     if typ["kind"] == "bounded":
         _check_fields(
-            typ, required={"kind", "base"}, optional={"lower-bound", "upper-bound"},
+            typ,
+            required={"kind", "base"},
+            optional={"lower-bound", "upper-bound"},
         )
         base = _type(typ["base"])
         assert isinstance(base, types.NumericType)
@@ -510,7 +544,9 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
 
 def _action_parameter(jani_action_parameter: t.Any) -> model.ActionParameter:
     _check_fields(
-        jani_action_parameter, required={"type"}, optional={"comment"},
+        jani_action_parameter,
+        required={"type"},
+        optional={"comment"},
     )
     typ = _type(jani_action_parameter["type"])
     comment = jani_action_parameter.get("comment", None)
@@ -615,7 +651,8 @@ def load_model(source: JANIModel) -> model.Network:
             automaton.add_initial_location(locations[jani_location])
     for jani_prop in jani_model["properties"]:
         _check_fields(
-            jani_prop, required={"expression", "name"},
+            jani_prop,
+            required={"expression", "name"},
         )
         network.ctx.define_property(
             jani_prop["name"], _property(jani_prop["expression"])
