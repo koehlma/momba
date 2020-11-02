@@ -36,12 +36,14 @@ class Network:
 
     _initial_restriction: t.Optional[Expression]
 
+    _instances: t.Set[Instance]
     _links: t.Set[Link]
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
         self.name = name
         self._initial_restriction = None
+        self._instances = set()
         self._links = set()
 
     @property
@@ -50,9 +52,7 @@ class Network:
 
     @property
     def instances(self) -> t.AbstractSet[Instance]:
-        return frozenset(
-            instance for link in self._links for instance in link.vector.keys()
-        )
+        return self._instances
 
     @property
     def initial_restriction(self) -> t.Optional[Expression]:
@@ -70,6 +70,9 @@ class Network:
             )
         self._initial_restriction = initial_restriction
 
+    def add_instance(self, instance: Instance) -> None:
+        self._instances.add(instance)
+
     def create_link(
         self,
         vector: t.Mapping[Instance, ActionPattern],
@@ -78,5 +81,7 @@ class Network:
         condition: t.Optional[Expression] = None
     ) -> Link:
         link = Link(vector, result=result, condition=condition)
+        for instance in vector.keys():
+            self.add_instance(instance)
         self._links.add(link)
         return link

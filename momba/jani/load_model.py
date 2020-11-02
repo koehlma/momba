@@ -649,6 +649,37 @@ def load_model(source: JANIModel) -> model.Network:
             automaton.add_edge(_edge(network.ctx, locations, jani_edge))
         for jani_location in jani_automaton["initial-locations"]:
             automaton.add_initial_location(locations[jani_location])
+    jani_system = jani_model["system"]
+    instances: t.List[model.Instance] = []
+    _check_fields(jani_system, required={"elements"}, optional={"syncs", "comment"})
+    for element in jani_system["elements"]:
+        _check_fields(
+            element, required={"automaton"}, optional={"input-enable", "comment"}
+        )
+        automaton = network.ctx.get_automaton_by_name(element["automaton"])
+        input_enable = element.get("input-enable", None)
+        instances.append(
+            automaton.create_instance(
+                input_enable=frozenset()
+                if input_enable is None
+                else frozenset(input_enable)
+            )
+        )
+    if "syncs" in jani_system:
+        for jani_vector in jani_system["syncs"]:
+            vector: t.Dict[model.Instance, model.ActionPattern] = {}
+            for index, action_name in enumerate(jani_vector["synchronise"]):
+                if action_name is None:
+                    continue
+                instance = instances[index]
+                action_type = network.ctx.get_action_type_by_name(action_name)
+                vector[instance] = action_type.create_pattern()
+            result_pattern = None
+            if "result" in jani_vector:
+                result_pattern = network.ctx.get_action_type_by_name(
+                    jani_vector["result"]
+                ).create_pattern()
+            network.create_link(vector, result=result_pattern)
     for jani_prop in jani_model["properties"]:
         _check_fields(
             jani_prop,
