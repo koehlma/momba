@@ -538,12 +538,12 @@
     <span class="n">condition</span><span class="p">:</span> <span class="n">Expression</span>
 
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
-        <span class="n">condition_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+        <span class="n">condition_scope</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">create_child_scope</span><span class="p">()</span>
+        <span class="n">condition_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">)</span>
+        <span class="n">condition_type</span> <span class="o">=</span> <span class="n">condition_scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">condition_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;condition must have type `types.BOOL`&quot;</span><span class="p">)</span>
-        <span class="n">declaration</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">declaration</span><span class="o">.</span><span class="n">typ</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
 
     <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -566,6 +566,80 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">()</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ArrayAccess</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">array</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">index</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">is_constant_in</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">array_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ArrayType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">array_type</span><span class="o">.</span><span class="n">element</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;array of array access must have array type&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ArrayValue</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">elements</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidOperationError</span><span class="p">(</span>
+                <span class="s2">&quot;array value expression needs to have elements&quot;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">is_constant</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="n">common_type</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+            <span class="n">element_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">common_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">common_type</span> <span class="o">=</span> <span class="n">element_type</span>
+            <span class="k">elif</span> <span class="n">element_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">common_type</span><span class="p">):</span>
+                <span class="n">common_type</span> <span class="o">=</span> <span class="n">element_type</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">common_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">element_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                    <span class="s2">&quot;element types are not assignable to a common type&quot;</span>
+                <span class="p">)</span>
+        <span class="k">assert</span> <span class="n">common_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">common_type</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ArrayConstructor</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">length</span><span class="p">:</span> <span class="n">Expression</span>
+    <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">expression</span>
+
+    <span class="k">def</span> <span class="nf">is_constant_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="s2">&quot;length of array constructor has to be an integer&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">array_of</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expression</span><span class="p">))</span>
 
 
 <span class="n">RealValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;π&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">]</span>

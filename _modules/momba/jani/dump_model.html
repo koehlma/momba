@@ -412,6 +412,38 @@
 
 
 <span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_array_access</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ArrayAccess</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">ARRAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;aa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+        <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_array_value</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ArrayValue</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">ARRAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;av&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;elements&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">_dump_prop</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">elements</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dump_array_constructor</span><span class="p">(</span>
+    <span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ArrayConstructor</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">ARRAYS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;av&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">variable</span><span class="p">,</span>
+        <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">length</span><span class="p">),</span>
+        <span class="s2">&quot;exp&quot;</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">expression</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
 <span class="k">def</span> <span class="nf">_dump_sample</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Sample</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;distribution&quot;</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">jani_name</span><span class="p">,</span>
