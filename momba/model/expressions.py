@@ -489,6 +489,18 @@ class ArrayConstructor(Expression):
         return types.array_of(scope.get_type(self.expression))
 
 
+class Trigonometric(UnaryExpression):
+    operator: operators.TrigonometricFunction
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        operand_type = scope.get_type(self.operand)
+        if not operand_type.is_numeric:
+            raise errors.InvalidTypeError(
+                "expected numeric type for operand of trigonometric function"
+            )
+        return types.REAL
+
+
 RealValue = t.Union[t.Literal["π", "e"], float, fractions.Fraction, decimal.Decimal]
 NumericValue = t.Union[int, RealValue]
 Value = t.Union[bool, NumericValue]

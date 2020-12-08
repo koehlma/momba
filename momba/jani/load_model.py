@@ -114,6 +114,10 @@ _UNARY_PATH_OPERATORS: t.Mapping[str, operators.UnaryPathOperator] = {
     "G": operators.UnaryPathOperator.GLOBALLY,
 }
 
+_TRIGONOMETRIC_FUNCTIONS: t.Mapping[str, operators.TrigonometricFunction] = {
+    function.value: function for function in operators.TrigonometricFunction
+}
+
 
 def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
@@ -134,6 +138,10 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                 _check_fields(jani_expression, required={"op", "exp"})
                 operand = _expression(jani_expression["exp"])
                 return _UNARY_OP_MAP[op](operand)
+            elif op in _TRIGONOMETRIC_FUNCTIONS:
+                _check_fields(jani_expression, required={"op", "exp"})
+                operand = _expression(jani_expression["exp"])
+                return expressions.Trigonometric(_TRIGONOMETRIC_FUNCTIONS[op], operand)
             elif op == "aa":
                 _check_fields(jani_expression, required={"op", "exp", "index"})
                 return expressions.ArrayAccess(

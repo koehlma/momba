@@ -234,3 +234,19 @@ class AggregationFunction(enum.Enum):
         self.symbol = symbol
         self.allowed_values_type = allowed_values_type
         self.infer_result_type = infer_result_type
+
+
+class TrigonometricFunction(UnaryOperator, enum.Enum):
+    SIN = "sin"
+    COS = "cos"
+    TAN = "tan"
+    COT = "cot"
+    SEC = "sec"
+    CSC = "csc"
+
+    ASIN = "asin"
+    ACOS = "acos"
+    ATAN = "atan"
+    ACOT = "acot"
+    ASEC = "asec"
+    ACSC = "acsc"
