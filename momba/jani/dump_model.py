@@ -259,6 +259,38 @@ def _dump_derivative(expr: expressions.Derivative, ctx: JANIContext) -> JSON:
 
 
 @_dump_prop.register
+def _dump_array_access(expr: expressions.ArrayAccess, ctx: JANIContext) -> JSON:
+    ctx.require(ModelFeature.ARRAYS)
+    return {
+        "op": "aa",
+        "exp": _dump_prop(expr.array, ctx),
+        "index": _dump_prop(expr.index, ctx),
+    }
+
+
+@_dump_prop.register
+def _dump_array_value(expr: expressions.ArrayValue, ctx: JANIContext) -> JSON:
+    ctx.require(ModelFeature.ARRAYS)
+    return {
+        "op": "av",
+        "elements": list(_dump_prop(element, ctx) for element in expr.elements),
+    }
+
+
+@_dump_prop.register
+def _dump_array_constructor(
+    expr: expressions.ArrayConstructor, ctx: JANIContext
+) -> JSON:
+    ctx.require(ModelFeature.ARRAYS)
+    return {
+        "op": "av",
+        "var": expr.variable,
+        "length": _dump_prop(expr.length),
+        "exp": _dump_prop(expr.expression),
+    }
+
+
+@_dump_prop.register
 def _dump_sample(expr: expressions.Sample, ctx: JANIContext) -> JSON:
     return {
         "distribution": expr.distribution.jani_name,

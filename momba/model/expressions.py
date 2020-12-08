@@ -385,12 +385,12 @@ class Selection(Expression):
     condition: Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
-        condition_type = scope.get_type(self.condition)
+        condition_scope = scope.create_child_scope()
+        condition_scope.declare_variable(self.name, typ=types.REAL)
+        condition_type = condition_scope.get_type(self.condition)
         if condition_type != types.BOOL:
             raise errors.InvalidTypeError("condition must have type `types.BOOL`")
-        declaration = scope.lookup(self.name)
-        assert isinstance(declaration, context.VariableDeclaration)
-        return declaration.typ
+        return types.REAL
 
     def is_constant_in(self, scope: context.Scope) -> bool:
         return False
@@ -413,6 +413,80 @@ class Derivative(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return ()
+
+
+@d.dataclass(frozen=True)
+class ArrayAccess(Expression):
+    array: Expression
+    index: Expression
+
+    @property
+    def children(self) -> t.Sequence[Expression]:
+        return self.array, self.index
+
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return self.array.is_constant_in(scope) and self.index.is_constant_in(scope)
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        array_type = scope.get_type(self.array)
+        if isinstance(array_type, types.ArrayType):
+            return array_type.element
+        else:
+            raise errors.InvalidTypeError("array of array access must have array type")
+
+
+@d.dataclass(frozen=True)
+class ArrayValue(Expression):
+    elements: t.Tuple[Expression, ...]
+
+    def __post_init__(self) -> None:
+        if not self.elements:
+            raise errors.InvalidOperationError(
+                "array value expression needs to have elements"
+            )
+
+    @property
+    def children(self) -> t.Sequence[Expression]:
+        return self.elements
+
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return all(scope.is_constant(element) for element in self.elements)
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        common_type: t.Optional[types.Type] = None
+        for element in self.elements:
+            element_type = scope.get_type(element)
+            if common_type is None:
+                common_type = element_type
+            elif element_type.is_assignable_from(common_type):
+                common_type = element_type
+            elif not common_type.is_assignable_from(element_type):
+                raise errors.InvalidTypeError(
+                    "element types are not assignable to a common type"
+                )
+        assert common_type is not None
+        return common_type
+
+
+@d.dataclass(frozen=True)
+class ArrayConstructor(Expression):
+    variable: str
+    length: Expression
+    expression: Expression
+
+    @property
+    def children(self) -> t.Sequence[Expression]:
+        return self.length, self.expression
+
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return False
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        if not types.INT.is_assignable_from(scope.get_type(self.length)):
+            raise errors.InvalidTypeError(
+                "length of array constructor has to be an integer"
+            )
+        return types.array_of(scope.get_type(self.expression))
 
 
 RealValue = t.Union[t.Literal["π", "e"], float, fractions.Fraction, decimal.Decimal]

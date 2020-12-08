@@ -134,6 +134,24 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                 _check_fields(jani_expression, required={"op", "exp"})
                 operand = _expression(jani_expression["exp"])
                 return _UNARY_OP_MAP[op](operand)
+            elif op == "aa":
+                _check_fields(jani_expression, required={"op", "exp", "index"})
+                return expressions.ArrayAccess(
+                    array=_expression(jani_expression["exp"]),
+                    index=_expression(jani_expression["index"]),
+                )
+            elif op == "av":
+                _check_fields(jani_expression, required={"op", "elements"})
+                return expressions.ArrayValue(
+                    tuple(map(_expression, jani_expression["elements"]))
+                )
+            elif op == "ac":
+                _check_fields(jani_expression, required={"op", "var", "length", "exp"})
+                return expressions.ArrayConstructor(
+                    variable=jani_expression["var"],
+                    length=_expression(jani_expression["length"]),
+                    expression=_expression(jani_expression["exp"]),
+                )
             elif op == "ite":
                 _check_fields(jani_expression, required={"op", "if", "then", "else"})
                 condition = _expression(jani_expression["if"])
