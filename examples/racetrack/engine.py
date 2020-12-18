@@ -81,7 +81,16 @@ def main(
 
     print("Compiling model...")
     compiled = engine.compile_network(network)
-    print(compiled.count_states())
+    # print(compiled.count_states())
+
+    initial_states = compiled.initial_states
+
+    print("Initial States:", len(initial_states))
+
+    for state in initial_states:
+        print("State:", state._as_json)
+        for successor in state.successors:
+            print("Successor:", successor._as_json)
 
 
 if __name__ == "__main__":

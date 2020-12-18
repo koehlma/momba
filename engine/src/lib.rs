@@ -1,15 +1,46 @@
+use momba_explore::explore::initial_states;
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
+use std::borrow::Borrow;
 use std::collections::HashSet;
+use std::sync::Arc;
 use std::time::Instant;
 
 use momba_explore::compiled;
+use momba_explore::explore;
 use momba_explore::model;
 use momba_explore::values;
 
 #[pyclass]
 struct CompiledModel {
-    network: compiled::CompiledNetwork,
+    network: Arc<compiled::CompiledNetwork>,
+}
+
+#[pyclass]
+struct State {
+    network: Arc<compiled::CompiledNetwork>,
+    bare_state: explore::BareState,
+}
+
+#[pymethods]
+impl State {
+    pub fn as_json(&self) -> String {
+        serde_json::to_string(&self.bare_state.state(&self.network.network)).unwrap()
+    }
+
+    pub fn successors(&self) -> Vec<State> {
+        let compiled_state = self.bare_state.clone().into_compiled(self.network.borrow());
+        let mut successors = Vec::new();
+        for transition in compiled_state.transitions() {
+            for destination in compiled_state.execute(transition) {
+                successors.push(State {
+                    network: self.network.clone(),
+                    bare_state: destination.state.into(),
+                })
+            }
+        }
+        successors
+    }
 }
 
 #[pymethods]
@@ -20,8 +51,19 @@ impl CompiledModel {
             serde_json::from_str(json_representation).expect("Error while reading model file!");
 
         CompiledModel {
-            network: network.compile(),
+            network: Arc::new(network.compile()),
         }
+    }
+
+    fn initial_states(&self) -> Vec<State> {
+        initial_states(self.network.borrow())
+            .unwrap()
+            .into_iter()
+            .map(|bare_state| State {
+                network: self.network.clone(),
+                bare_state: bare_state,
+            })
+            .collect()
     }
 
     fn count_states(&self) -> usize {
@@ -88,13 +130,13 @@ impl CompiledModel {
 
         let duration = start.elapsed();
 
-        println!("Time elapsed is: {:?}", duration);
-        println!("States: {}", visited.len());
-        println!("Transitions: {}", count_transitions);
-        println!(
-            "{:.2} [states/s]",
-            (visited.len() as f64) / duration.as_secs_f64()
-        );
+        // println!("Time elapsed is: {:?}", duration);
+        // println!("States: {}", visited.len());
+        // println!("Transitions: {}", count_transitions);
+        // println!(
+        //     "{:.2} [states/s]",
+        //     (visited.len() as f64) / duration.as_secs_f64()
+        // );
 
         visited.len()
     }

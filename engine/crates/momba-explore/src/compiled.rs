@@ -41,7 +41,7 @@ impl<'e> LValue<'e> {
     }
 }
 
-type LEvaluateClosure = Box<dyn Send + Fn(&mut EvaluationContext) -> LValue>;
+type LEvaluateClosure = Box<dyn Send + Sync + Fn(&mut EvaluationContext) -> LValue>;
 
 pub struct CompiledTarget {
     closure: LEvaluateClosure,
@@ -102,7 +102,7 @@ impl Expression {
     }
 }
 
-type EvaluateClosure = Box<dyn Send + Fn(&EvaluationContext) -> Value>;
+type EvaluateClosure = Box<dyn Send + Sync + Fn(&EvaluationContext) -> Value>;
 
 pub struct CompiledExpression {
     closure: EvaluateClosure,
@@ -536,8 +536,8 @@ impl ActionPattern {
 }
 
 pub struct CompiledNetwork {
-    pub(crate) network: Network,
-    pub(crate) automata: Box<[CompiledAutomaton]>,
+    pub network: Network,
+    pub automata: Box<[CompiledAutomaton]>,
 }
 
 impl CompiledNetwork {
