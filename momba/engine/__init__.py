@@ -9,7 +9,7 @@ Interfaces to `momba_engine` hiding away complexity.
 import dataclasses as d
 import typing as t
 
-import momba_engine
+from ._engine import engine
 
 from .. import model
 from ..explore import compiler
@@ -24,6 +24,4 @@ class CompiledNetwork:
 
 
 def compile_network(network: model.Network) -> CompiledNetwork:
-    return CompiledNetwork(
-        momba_engine.CompiledModel(compiler.compile_network(network))
-    )
+    return CompiledNetwork(engine.CompiledModel(compiler.compile_network(network)))
