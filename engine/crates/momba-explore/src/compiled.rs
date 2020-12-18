@@ -1,3 +1,4 @@
+use core::fmt::Debug;
 use std::collections::HashMap;
 
 use ordered_float::NotNan;
@@ -25,62 +26,63 @@ pub struct EvaluationContext {
     values: Box<[Value]>,
 }
 
-pub struct LValue<'c> {
-    storage: &'c mut [Value],
+pub struct LValue<'e> {
+    storage: &'e mut [Value],
     index: usize,
 }
 
-impl<'c> LValue<'c> {
+impl<'e> LValue<'e> {
     pub fn store(&mut self, value: Value) {
         self.storage[self.index] = value
     }
 
-    pub fn resolve(self) -> &'c mut Value {
+    pub fn resolve(self) -> &'e mut Value {
         &mut self.storage[self.index]
     }
 }
 
-pub struct CompiledTarget<'c> {
-    closure: Box<dyn 'c + Fn(&mut EvaluationContext) -> LValue>,
+type LEvaluateClosure = Box<dyn Send + Fn(&mut EvaluationContext) -> LValue>;
+
+pub struct CompiledTarget {
+    closure: LEvaluateClosure,
     expression: Expression,
 }
 
-impl<'c> CompiledTarget<'c> {
-    pub fn new(
-        closure: impl 'c + Fn(&mut EvaluationContext) -> LValue,
-        expression: Expression,
-    ) -> Self {
-        CompiledTarget {
-            closure: Box::new(closure),
-            expression: expression,
-        }
-    }
-
+impl CompiledTarget {
     pub fn evaluate<'e>(&self, ctx: &'e mut EvaluationContext) -> LValue<'e> {
         (self.closure)(ctx)
     }
 }
 
+macro_rules! compiled_target {
+    ($closure:expr, $expression:expr) => {
+        CompiledTarget {
+            closure: Box::new($closure),
+            expression: $expression.clone(),
+        }
+    };
+}
+
 impl Expression {
-    pub fn compile_target<'c>(&self, network: &Network) -> CompiledTarget<'c> {
+    pub fn compile_target<'c>(&self, network: &Network) -> CompiledTarget {
         match self {
             Expression::Name(NameExpression { identifier }) => {
                 let index = network
                     .variables
                     .get_index_of(identifier)
                     .expect(identifier);
-                CompiledTarget::new(
+                compiled_target!(
                     move |ctx| LValue {
                         storage: &mut ctx.values,
                         index: index,
                     },
-                    self.clone(),
+                    self
                 )
             }
             Expression::Index(expression) => {
                 let index = expression.index.compile(network);
                 let vector = expression.vector.compile_target(network);
-                CompiledTarget::new(
+                compiled_target!(
                     move |ctx| {
                         let index = index.evaluate(ctx);
                         let vector = vector.evaluate(ctx);
@@ -92,7 +94,7 @@ impl Expression {
                             _ => panic!("error"),
                         }
                     },
-                    self.clone(),
+                    self.clone()
                 )
             }
             _ => panic!("compile not implemented for expression"),
@@ -100,48 +102,62 @@ impl Expression {
     }
 }
 
-pub struct CompiledExpression<'c> {
-    closure: Box<dyn 'c + Fn(&EvaluationContext) -> Value>,
+type EvaluateClosure = Box<dyn Send + Fn(&EvaluationContext) -> Value>;
+
+pub struct CompiledExpression {
+    closure: EvaluateClosure,
     expression: Expression,
 }
 
-impl<'c> CompiledExpression<'c> {
-    pub fn new(closure: impl 'c + Fn(&EvaluationContext) -> Value, expression: Expression) -> Self {
-        CompiledExpression {
-            closure: Box::new(closure),
-            expression: expression,
-        }
-    }
-
-    pub fn evaluate(&self, ctx: &EvaluationContext) -> Value {
-        let result = (self.closure)(ctx);
-        //println!("{:?} => {:?}", self.expression, result);
-        result
+impl Debug for CompiledExpression {
+    fn fmt(
+        &self,
+        formatter: &mut std::fmt::Formatter<'_>,
+    ) -> std::result::Result<(), std::fmt::Error> {
+        formatter
+            .debug_struct("CompiledExpression")
+            .field("expression", &self.expression)
+            .finish()
     }
 }
 
+impl CompiledExpression {
+    pub fn evaluate(&self, ctx: &EvaluationContext) -> Value {
+        (self.closure)(ctx)
+    }
+}
+
+macro_rules! compiled_expression {
+    ($closure:expr, $expression:expr) => {
+        CompiledExpression {
+            closure: Box::new($closure),
+            expression: $expression.clone(),
+        }
+    };
+}
+
 impl Expression {
-    pub fn compile<'c>(&self, network: &Network) -> CompiledExpression<'c> {
+    pub fn compile(&self, network: &Network) -> CompiledExpression {
         match self {
             Expression::Name(NameExpression { identifier }) => {
                 let index = network
                     .variables
                     .get_index_of(identifier)
                     .expect(identifier);
-                CompiledExpression::new(move |ctx| ctx.values[index].clone(), self.clone())
+                compiled_expression!(move |ctx| ctx.values[index].clone(), self)
             }
             Expression::Constant(ConstantExpression { value }) => {
                 let value = value.clone();
-                CompiledExpression::new(move |_| value.clone(), self.clone())
+                compiled_expression!(move |_| value.clone(), self)
             }
             Expression::Unary(expression) => {
                 let operand = expression.operand.compile(network);
 
                 macro_rules! compile_unary {
                     ($function:ident) => {
-                        CompiledExpression::new(
+                        compiled_expression!(
                             move |ctx| operand.evaluate(ctx).$function(),
-                            self.clone(),
+                            self.clone()
                         )
                     };
                 }
@@ -162,9 +178,9 @@ impl Expression {
 
                 macro_rules! compile_binary {
                     ($function:ident) => {
-                        CompiledExpression::new(
+                        compiled_expression!(
                             move |ctx| left.evaluate(ctx).$function(right.evaluate(ctx)),
-                            self.clone(),
+                            self
                         )
                     };
                 }
@@ -188,9 +204,9 @@ impl Expression {
 
                 macro_rules! compile_comparison {
                     ($function:ident) => {
-                        CompiledExpression::new(
+                        compiled_expression!(
                             move |ctx| left.evaluate(ctx).$function(right.evaluate(ctx)),
-                            self.clone(),
+                            self.clone()
                         )
                     };
                 }
@@ -205,7 +221,7 @@ impl Expression {
                 }
             }
             Expression::Boolean(expression) => {
-                let operands: Box<[CompiledExpression<'c>]> = expression
+                let operands: Box<[CompiledExpression]> = expression
                     .operands
                     .iter()
                     .map(|operand| operand.compile(network))
@@ -213,7 +229,7 @@ impl Expression {
 
                 macro_rules! compile_comparison {
                     ($function:ident) => {
-                        CompiledExpression::new(
+                        compiled_expression!(
                             move |ctx| {
                                 Value::Bool(
                                     operands
@@ -221,7 +237,7 @@ impl Expression {
                                         .$function(|operand| operand.evaluate(ctx).unwrap_bool()),
                                 )
                             },
-                            self.clone(),
+                            self.clone()
                         )
                     };
                 }
@@ -237,14 +253,14 @@ impl Expression {
     }
 }
 
-pub struct CompiledAssignment<'c> {
-    pub(crate) target: CompiledTarget<'c>,
-    pub(crate) value: CompiledExpression<'c>,
+pub struct CompiledAssignment {
+    pub(crate) target: CompiledTarget,
+    pub(crate) value: CompiledExpression,
     pub(crate) index: usize,
 }
 
 impl Assignment {
-    pub fn compile<'c>(&self, network: &Network) -> CompiledAssignment<'c> {
+    pub fn compile(&self, network: &Network) -> CompiledAssignment {
         CompiledAssignment {
             target: self.target.compile_target(network),
             value: self.value.compile(network),
@@ -253,28 +269,28 @@ impl Assignment {
     }
 }
 
-pub struct CompiledEdge<'c> {
-    pub(crate) guard: CompiledExpression<'c>,
-    pub(crate) action: CompiledAction<'c>,
-    pub(crate) destinations: Box<[CompiledDestination<'c>]>,
+pub struct CompiledEdge {
+    pub(crate) guard: CompiledExpression,
+    pub(crate) action: CompiledAction,
+    pub(crate) destinations: Box<[CompiledDestination]>,
 }
 
-pub struct CompiledDestination<'c> {
+pub struct CompiledDestination {
     pub(crate) location: usize,
-    pub(crate) probability: CompiledExpression<'c>,
-    pub(crate) assignments: Box<[CompiledAssignment<'c>]>,
+    pub(crate) probability: CompiledExpression,
+    pub(crate) assignments: Box<[CompiledAssignment]>,
 }
 
-pub struct CompiledLocation<'c> {
-    pub(crate) edges: Box<[CompiledEdge<'c>]>,
+pub struct CompiledLocation {
+    pub(crate) edges: Box<[CompiledEdge]>,
 }
 
-pub struct CompiledAutomaton<'c> {
-    pub(crate) locations: Box<[CompiledLocation<'c>]>,
+pub struct CompiledAutomaton {
+    pub(crate) locations: Box<[CompiledLocation]>,
 }
 
 impl Automaton {
-    pub fn compile<'c>(&self, network: &Network) -> CompiledAutomaton<'_> {
+    pub fn compile(&self, network: &Network) -> CompiledAutomaton {
         CompiledAutomaton {
             locations: self
                 .locations
@@ -315,21 +331,21 @@ impl Automaton {
 }
 
 #[derive(Clone)]
-pub struct CompiledState<'c, 's> {
-    pub(crate) network: &'s CompiledNetwork<'c>,
-    pub(crate) values: Box<[Value]>,
-    pub(crate) locations: Box<[usize]>,
+pub struct CompiledState<'s> {
+    pub network: &'s CompiledNetwork,
+    pub values: Box<[Value]>,
+    pub locations: Box<[usize]>,
 }
 
 #[derive(Clone)]
-pub struct InstanceTransition<'c, 't> {
+pub struct InstanceTransition<'t> {
     automaton: usize,
-    edge: &'t CompiledEdge<'c>,
+    edge: &'t CompiledEdge,
     arguments: Box<[Value]>,
 }
 
-pub struct NetworkTransition<'c, 't> {
-    instance_transitions: Vec<InstanceTransition<'c, 't>>,
+pub struct NetworkTransition<'t> {
+    instance_transitions: Vec<InstanceTransition<'t>>,
     result_action: ResultAction,
 }
 
@@ -338,16 +354,13 @@ pub enum ResultAction {
     Visible(usize, Box<[Value]>),
 }
 
-pub struct ComputedDestination<'c, 's> {
-    pub(crate) probability: Value,
-    pub(crate) state: CompiledState<'c, 's>,
+pub struct ComputedDestination<'s> {
+    pub probability: Value,
+    pub state: CompiledState<'s>,
 }
 
-impl<'c, 's> CompiledState<'c, 's> {
-    pub fn execute<'t>(
-        &self,
-        transition: NetworkTransition<'c, 't>,
-    ) -> Vec<ComputedDestination<'c, '_>> {
+impl<'s> CompiledState<'s> {
+    pub fn execute<'t>(&self, transition: NetworkTransition<'t>) -> Vec<ComputedDestination<'_>> {
         let destinations = transition
             .instance_transitions
             .iter()
@@ -390,7 +403,7 @@ impl<'c, 's> CompiledState<'c, 's> {
         result
     }
 
-    pub fn transitions(&self) -> Vec<NetworkTransition<'c, '_>> {
+    pub fn transitions(&self) -> Vec<NetworkTransition<'_>> {
         let ctx = EvaluationContext {
             values: self.values.clone(),
         };
@@ -474,12 +487,12 @@ impl<'c, 's> CompiledState<'c, 's> {
     }
 }
 
-pub struct CompiledActionPattern<'c> {
+pub struct CompiledActionPattern {
     pub(crate) action: usize,
-    pub(crate) write: Box<[Option<CompiledExpression<'c>>]>,
+    pub(crate) write: Box<[Option<CompiledExpression>]>,
 }
 
-impl<'c> CompiledActionPattern<'c> {
+impl CompiledActionPattern {
     pub fn apply(&self, ctx: &EvaluationContext) -> Box<[Option<Value>]> {
         self.write
             .iter()
@@ -488,13 +501,13 @@ impl<'c> CompiledActionPattern<'c> {
     }
 }
 
-pub enum CompiledAction<'c> {
+pub enum CompiledAction {
     Internal,
-    Pattern(CompiledActionPattern<'c>),
+    Pattern(CompiledActionPattern),
 }
 
 impl Action {
-    pub fn compile<'c>(&self, network: &Network) -> CompiledAction {
+    pub fn compile(&self, network: &Network) -> CompiledAction {
         match self {
             Action::Internal => CompiledAction::Internal,
             Action::Pattern(pattern) => CompiledAction::Pattern(pattern.compile(network)),
@@ -503,7 +516,7 @@ impl Action {
 }
 
 impl ActionPattern {
-    pub fn compile<'c>(&self, network: &Network) -> CompiledActionPattern<'c> {
+    pub fn compile<'c>(&self, network: &Network) -> CompiledActionPattern {
         let parameter_types = network.actions.get(&self.name).unwrap();
         if parameter_types.len() != self.arguments.len() {
             panic!("Arity of action pattern does not match arity of action type.")
@@ -522,13 +535,13 @@ impl ActionPattern {
     }
 }
 
-pub struct CompiledNetwork<'c> {
-    pub(crate) network: &'c Network,
-    pub(crate) automata: Box<[CompiledAutomaton<'c>]>,
+pub struct CompiledNetwork {
+    pub(crate) network: Network,
+    pub(crate) automata: Box<[CompiledAutomaton]>,
 }
 
-impl<'c> CompiledNetwork<'c> {
-    pub fn initial_states(&self) -> Box<[CompiledState<'c, '_>]> {
+impl CompiledNetwork {
+    pub fn initial_states(&self) -> Box<[CompiledState<'_>]> {
         self.network
             .initial
             .iter()
@@ -557,14 +570,15 @@ impl<'c> CompiledNetwork<'c> {
 }
 
 impl Network {
-    pub fn compile(&self) -> CompiledNetwork {
+    pub fn compile(self) -> CompiledNetwork {
+        let automata = (&self)
+            .automata
+            .values()
+            .map(|automaton| automaton.compile(&self))
+            .collect();
         CompiledNetwork {
             network: self,
-            automata: self
-                .automata
-                .values()
-                .map(|automaton| automaton.compile(self))
-                .collect(),
+            automata: automata,
         }
     }
 }

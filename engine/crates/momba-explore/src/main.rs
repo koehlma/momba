@@ -3,6 +3,7 @@
 use fnv::FnvHashSet;
 use std::collections::HashSet;
 use std::fs::File;
+use std::io::BufReader;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
@@ -46,8 +47,8 @@ fn main() {
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     println!("Reading...");
-    let network: Network =
-        serde_json::from_reader(model_file).expect("Error while reading model file!");
+    let network: Network = serde_json::from_reader(BufReader::new(model_file))
+        .expect("Error while reading model file!");
 
     println!("Compiling...");
     let compiled = network.compile();

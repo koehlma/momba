@@ -1,0 +1,22 @@
+[package]
+name = "python-momba-engine"
+version = "0.1.0"
+authors = ["Maximilian Köhl <koehl@cs.uni-saarland.de>"]
+edition = "2018"
+description = "Python extension for Momba."
+repository = "https://github.com/koehlma/momba"
+license = "MIT"
+categories = ["algorithms", "data-structures", "science"]
+publish = false
+
+[lib]
+name = "momba_engine"
+crate-type = ["cdylib"]
+
+[dependencies]
+momba-explore = { path = "./crates/momba-explore", version = "^0.1.0" }
+serde_json = "^1.0.60"
+
+[dependencies.pyo3]
+version = "0.12.4"
+features = ["extension-module"]

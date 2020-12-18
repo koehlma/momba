@@ -10,7 +10,7 @@ import click
 
 import racetrack
 
-from momba.explore import compiler
+from momba import engine
 
 
 FUEL_MODELS = {
@@ -23,7 +23,6 @@ FUEL_MODELS = {
 @click.command()
 @click.argument("track_file", type=pathlib.Path)
 @click.argument("start_cell", type=int)
-@click.argument("output", type=pathlib.Path)
 @click.option(
     "--underground",
     "underground_name",
@@ -47,7 +46,6 @@ FUEL_MODELS = {
 def main(
     track_file: pathlib.Path,
     start_cell: int,
-    output: pathlib.Path,
     underground_name: str,
     tank_type_name: str,
     max_speed: int,
@@ -82,7 +80,8 @@ def main(
     network = racetrack.construct_model(scenario)
 
     print("Compiling model...")
-    output.write_text(compiler.compile_network(network), encoding="utf-8")
+    compiled = engine.compile_network(network)
+    print(compiled.count_states())
 
 
 if __name__ == "__main__":
