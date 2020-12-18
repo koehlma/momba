@@ -9,10 +9,11 @@ Interfaces to `momba_engine` hiding away complexity.
 import dataclasses as d
 import typing as t
 
+from . import compiler
+
 from ._engine import engine
 
 from .. import model
-from ..explore import compiler
 
 
 @d.dataclass(frozen=True)
