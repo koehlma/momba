@@ -14,7 +14,8 @@ impl BareState {
     pub fn new(network: &Network, state: &State) -> Result<Self, String> {
         Ok(BareState {
             values: network
-                .variables
+                .declarations
+                .global_variables
                 .keys()
                 .map(|identifier| {
                     state
@@ -54,7 +55,13 @@ impl BareState {
                 .enumerate()
                 .map(|(index, value)| {
                     (
-                        network.variables.get_index(index).unwrap().0.clone(),
+                        network
+                            .declarations
+                            .global_variables
+                            .get_index(index)
+                            .unwrap()
+                            .0
+                            .clone(),
                         value.clone(),
                     )
                 })
@@ -100,7 +107,7 @@ impl Into<BareState> for CompiledState<'_> {
 pub fn initial_states(compiled_network: &CompiledNetwork) -> Result<Vec<BareState>, String> {
     compiled_network
         .network
-        .initial
+        .initial_states
         .iter()
         .map(|state| BareState::new(&compiled_network.network, state))
         .collect()

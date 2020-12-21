@@ -6,7 +6,6 @@ use ordered_float::NotNan;
 use itertools::Itertools;
 
 use crate::model::*;
-use crate::types::*;
 use crate::values::*;
 
 #[derive(Debug)]
@@ -68,7 +67,8 @@ impl Expression {
         match self {
             Expression::Name(NameExpression { identifier }) => {
                 let index = network
-                    .variables
+                    .declarations
+                    .global_variables
                     .get_index_of(identifier)
                     .expect(identifier);
                 compiled_target!(
@@ -141,7 +141,8 @@ impl Expression {
         match self {
             Expression::Name(NameExpression { identifier }) => {
                 let index = network
-                    .variables
+                    .declarations
+                    .global_variables
                     .get_index_of(identifier)
                     .expect(identifier);
                 compiled_expression!(move |ctx| ctx.values[index].clone(), self)
@@ -300,7 +301,7 @@ impl Automaton {
                         .edges
                         .iter()
                         .map(|edge| CompiledEdge {
-                            guard: edge.guard.compile(network),
+                            guard: edge.guard.boolean_condition.compile(network),
                             action: edge.action.compile(network),
                             destinations: edge
                                 .destinations
@@ -420,9 +421,9 @@ impl<'s> CompiledState<'s> {
 
         for (index, location) in locations.enumerate() {
             let mut active_edges: Vec<Vec<&CompiledEdge>> =
-                Vec::with_capacity(self.network.network.actions.len());
+                Vec::with_capacity(self.network.network.declarations.action_types.len());
 
-            for _ in 0..self.network.network.actions.len() {
+            for _ in 0..self.network.network.declarations.action_types.len() {
                 active_edges.push(Vec::new());
             }
 
@@ -453,7 +454,8 @@ impl<'s> CompiledState<'s> {
                     let action_index = self
                         .network
                         .network
-                        .actions
+                        .declarations
+                        .action_types
                         .get_index_of(&link_pattern.name)
                         .unwrap();
                     automata_active_edges[automaton_index][action_index]
@@ -473,7 +475,8 @@ impl<'s> CompiledState<'s> {
                         LinkResult::Pattern(pattern) => ResultAction::Visible(
                             self.network
                                 .network
-                                .actions
+                                .declarations
+                                .action_types
                                 .get_index_of(&pattern.name)
                                 .unwrap(),
                             Box::new([]),
@@ -517,18 +520,22 @@ impl Action {
 
 impl ActionPattern {
     pub fn compile<'c>(&self, network: &Network) -> CompiledActionPattern {
-        let parameter_types = network.actions.get(&self.name).unwrap();
+        let parameter_types = network.declarations.action_types.get(&self.name).unwrap();
         if parameter_types.len() != self.arguments.len() {
             panic!("Arity of action pattern does not match arity of action type.")
         }
         CompiledActionPattern {
-            action: network.actions.get_index_of(&self.name).unwrap(),
+            action: network
+                .declarations
+                .action_types
+                .get_index_of(&self.name)
+                .unwrap(),
             write: self
                 .arguments
                 .iter()
                 .map(|argument| match argument {
-                    PatternArgument::Write { value } => Some(value.compile(network)),
-                    PatternArgument::Read { identifier: _ } => None,
+                    PatternArgument::Write(WriteArgument { value }) => Some(value.compile(network)),
+                    PatternArgument::Read(_) => None,
                 })
                 .collect(),
         }
@@ -543,13 +550,14 @@ pub struct CompiledNetwork {
 impl CompiledNetwork {
     pub fn initial_states(&self) -> Box<[CompiledState<'_>]> {
         self.network
-            .initial
+            .initial_states
             .iter()
             .map(|state| CompiledState {
                 network: self,
                 values: self
                     .network
-                    .variables
+                    .declarations
+                    .global_variables
                     .keys()
                     .map(|identifier| state.values.get(identifier).unwrap().clone())
                     .collect(),

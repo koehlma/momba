@@ -13,7 +13,7 @@ import typing as t
 
 import functools
 
-from . import compiler
+from . import translator
 
 from ._engine import engine
 
@@ -35,6 +35,7 @@ class State:
 
 @d.dataclass(frozen=True)
 class CompiledNetwork:
+    translation: translator.Translation
     _compiled: t.Any
 
     def count_states(self) -> int:
@@ -53,4 +54,5 @@ class CompiledNetwork:
 
 
 def compile_network(network: model.Network) -> CompiledNetwork:
-    return CompiledNetwork(engine.CompiledModel(compiler.compile_network(network)))
+    translation = translator.translate_network(network)
+    return CompiledNetwork(translation, engine.CompiledModel(translation.json_network))

@@ -1,3 +1,17 @@
+//! Momba's intermediate representation for PTAs and MDPs.
+//!
+//! This module define the structure of *Momba's Intermediate Representation* (MombaIR).
+//! The structure is defined directly in Rust using [Serde](https://serde.rs) and `derive`.
+//! As a result, any format supported by Serde can be used to store MombaIR models.
+//! Usually, however, MombaIR models are stored using the JSON format.
+//!
+//! MombaIR has been inspired by the [JANI](https://jani-spec.org) model interchange format.
+//! In comparison to JANI, it gives up some convenient higher-level modeling features in favor of
+//! simplicity and being more low-level.
+//! MombaIR is not intended to be used directly for modeling.
+//! Instead a higher-level modeling formalism such as JANI should be used which is then
+//! translated to MombaIR.
+
 use std::collections::{HashMap, HashSet};
 
 use indexmap::{IndexMap, IndexSet};
@@ -11,24 +25,25 @@ use crate::values::*;
 pub enum Expression {
     Name(NameExpression),
     Constant(ConstantExpression),
-    Unary(Box<UnaryExpression>),
-    Binary(Box<BinaryExpression>),
-    Boolean(Box<BooleanExpression>),
-    Comparison(Box<ComparisonExpression>),
-    Trigonometric(Box<TrigonometricExpression>),
-    Index(Box<IndexExpression>),
-    Comprehension(Box<ComprehensionExpression>),
-    Vector(Box<VectorExpression>),
+    Unary(UnaryExpression),
+    Binary(BinaryExpression),
+    Boolean(BooleanExpression),
+    Comparison(ComparisonExpression),
+    Conditional(ConditionalExpression),
+    Trigonometric(TrigonometricExpression),
+    Index(IndexExpression),
+    Comprehension(ComprehensionExpression),
+    Vector(VectorExpression),
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct NameExpression {
-    pub(crate) identifier: String,
+    pub identifier: String,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct ConstantExpression {
-    pub(crate) value: Value,
+    pub value: Value,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
@@ -45,8 +60,8 @@ pub enum UnaryOperator {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct UnaryExpression {
-    pub(crate) operator: UnaryOperator,
-    pub(crate) operand: Expression,
+    pub operator: UnaryOperator,
+    pub operand: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
@@ -66,9 +81,9 @@ pub enum BinaryOperator {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct BinaryExpression {
-    pub(crate) operator: BinaryOperator,
-    pub(crate) left: Expression,
-    pub(crate) right: Expression,
+    pub operator: BinaryOperator,
+    pub left: Box<Expression>,
+    pub right: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
@@ -80,8 +95,8 @@ pub enum BooleanOperator {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct BooleanExpression {
-    pub(crate) operator: BooleanOperator,
-    pub(crate) operands: Vec<Expression>,
+    pub operator: BooleanOperator,
+    pub operands: Vec<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
@@ -97,9 +112,16 @@ pub enum ComparisonOperator {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct ComparisonExpression {
-    pub(crate) operator: ComparisonOperator,
-    pub(crate) left: Expression,
-    pub(crate) right: Expression,
+    pub operator: ComparisonOperator,
+    pub left: Box<Expression>,
+    pub right: Box<Expression>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
+pub struct ConditionalExpression {
+    pub condition: Box<Expression>,
+    pub consequence: Box<Expression>,
+    pub alternative: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
@@ -121,59 +143,91 @@ pub enum TrigonometricFunction {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct TrigonometricExpression {
-    pub(crate) function: TrigonometricFunction,
-    pub(crate) operand: Expression,
+    pub function: TrigonometricFunction,
+    pub operand: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct IndexExpression {
-    pub(crate) vector: Expression,
-    pub(crate) index: Expression,
+    pub vector: Box<Expression>,
+    pub index: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct ComprehensionExpression {
-    pub(crate) variable: String,
-    pub(crate) length: Expression,
-    pub(crate) element: Expression,
+    pub variable: String,
+    pub length: Box<Expression>,
+    pub element: Box<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct VectorExpression {
-    pub(crate) elements: Vec<Expression>,
+    pub elements: Vec<Expression>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Network {
-    pub(crate) variables: IndexMap<String, Type>,
-    pub(crate) clocks: IndexSet<String>,
-    pub(crate) actions: IndexMap<String, Vec<Type>>,
-    pub(crate) automata: IndexMap<String, Automaton>,
-    pub(crate) initial: Vec<State>,
-    pub(crate) links: Vec<Link>,
+    pub declarations: Declarations,
+    pub automata: IndexMap<String, Automaton>,
+    pub links: Vec<Link>,
+    pub initial_states: Vec<State>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct Declarations {
+    pub global_variables: IndexMap<String, Type>,
+    pub transient_variables: HashMap<String, Expression>,
+    pub clock_variables: IndexSet<String>,
+    pub action_types: IndexMap<String, Vec<Type>>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Automaton {
-    pub(crate) locations: IndexMap<String, Location>,
-}
-
-#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
-pub struct ClockConstraint {
-    // TODO: implement clock constraints
+    pub locations: IndexMap<String, Location>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Location {
-    pub(crate) invariant: HashSet<ClockConstraint>,
-    pub(crate) edges: Vec<Edge>,
+    pub invariant: HashSet<ClockConstraint>,
+    pub edges: Vec<Edge>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
+pub struct ClockConstraint {
+    pub left: Clock,
+    pub right: Clock,
+    pub bound: Bound,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind")]
+pub enum Clock {
+    Zero,
+    Variable(ClockVariable),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
+pub struct ClockVariable {
+    pub identifier: String,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
+pub struct Bound {
+    pub is_strict: bool,
+    pub constant: Expression,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Edge {
-    pub(crate) action: Action,
-    pub(crate) guard: Expression,
-    pub(crate) destinations: Vec<Destination>,
+    pub action: Action,
+    pub guard: Guard,
+    pub destinations: Vec<Destination>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct Guard {
+    pub boolean_condition: Expression,
+    pub clock_constraints: HashSet<ClockConstraint>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
@@ -185,48 +239,59 @@ pub enum Action {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct ActionPattern {
-    pub(crate) name: String,
-    pub(crate) arguments: Vec<PatternArgument>,
+    pub name: String,
+    pub arguments: Vec<PatternArgument>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "direction")]
 pub enum PatternArgument {
-    Write { value: Expression },
-    Read { identifier: String },
+    Write(WriteArgument),
+    Read(ReadArgument),
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct WriteArgument {
+    pub value: Expression,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct ReadArgument {
+    pub identifier: String,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Destination {
-    pub(crate) location: String,
-    pub(crate) probability: Expression,
-    pub(crate) assignments: Vec<Assignment>,
+    pub location: String,
+    pub probability: Expression,
+    pub assignments: Vec<Assignment>,
+    pub reset: HashSet<Clock>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Assignment {
-    pub(crate) target: Expression,
-    pub(crate) value: Expression,
-    pub(crate) index: usize,
+    pub target: Expression,
+    pub value: Expression,
+    pub index: usize,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct State {
-    pub(crate) values: HashMap<String, Value>,
-    pub(crate) locations: HashMap<String, String>,
+    pub values: HashMap<String, Value>,
+    pub locations: HashMap<String, String>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Link {
-    pub(crate) slots: IndexSet<String>,
-    pub(crate) vector: IndexMap<String, LinkPattern>,
-    pub(crate) result: LinkResult,
+    pub slots: IndexSet<String>,
+    pub vector: IndexMap<String, LinkPattern>,
+    pub result: LinkResult,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct LinkPattern {
-    pub(crate) name: String,
-    pub(crate) arguments: Vec<String>,
+    pub name: String,
+    pub arguments: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]

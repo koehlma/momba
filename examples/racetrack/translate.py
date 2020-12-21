@@ -10,7 +10,7 @@ import click
 
 import racetrack
 
-from momba.explore import compiler
+from momba.engine import translator
 
 
 FUEL_MODELS = {
@@ -81,8 +81,10 @@ def main(
     print("Building model...")
     network = racetrack.construct_model(scenario)
 
-    print("Compiling model...")
-    output.write_text(compiler.compile_network(network), encoding="utf-8")
+    print("Translating model...")
+    output.write_text(
+        translator.translate_network(network).json_network, encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":
