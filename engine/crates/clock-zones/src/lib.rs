@@ -1,4 +1,5 @@
-//! A library for handling clock zones.
+//! A library for handling clock zones as they appear in the context of
+//! [*Timed Automata*](https://link.springer.com/chapter/10.1007/BFb0031987).
 
 pub mod zones;
 pub use zones::*;

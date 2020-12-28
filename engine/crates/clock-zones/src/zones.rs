@@ -306,16 +306,10 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
     }
 
     fn get_upper_bound(&self, clock: Clock) -> Option<B::Constant> {
-        self.layout.get(clock, 0).get_constant()
+        self.layout.get(clock, 0).constant()
     }
     fn get_lower_bound(&self, clock: Clock) -> Option<B::Constant> {
-        Some(
-            self.layout
-                .get(0, clock)
-                .get_constant()?
-                .checked_neg()
-                .unwrap(),
-        )
+        Some(self.layout.get(0, clock).constant()?.checked_neg().unwrap())
     }
 
     fn is_satisfied(&self, constraint: Constraint<B>) -> bool {

@@ -380,8 +380,8 @@ def _translate_action_pattern(
             not action_pattern.arguments
         ), "Arguments for action patterns not implemented!"
         return {
-            "kind": "PATTERN",
-            "name": action_pattern.action_type.name,
+            "kind": "LINK",
+            "action_type": action_pattern.action_type.name,
             "arguments": [],  # TODO: implement arguments for action patterns
         }
 
@@ -460,7 +460,7 @@ def _translate_instance(
 
         outgoing.append(
             {
-                "action": action,
+                "pattern": action,
                 "guard": guard,
                 "destinations": destinations,
             }
@@ -491,13 +491,13 @@ def _translate_link(
     else:
         result = {
             "kind": "PATTERN",
-            "name": link.result.action_type.name,
+            "action_type": link.result.action_type.name,
             "arguments": _translate_arguments(link.result.arguments),
         }
     vector: _JSONObject = {}
     for instance, pattern in link.vector.items():
         vector[instance_names[instance]] = {
-            "name": pattern.action_type.name,
+            "action_type": pattern.action_type.name,
             "arguments": _translate_arguments(pattern.arguments),
         }
 
@@ -543,7 +543,7 @@ def _translate_initial_states(
     _update_initial_values(initial_values, declarations.globals_table.values())
     for variable_declarations in declarations.locals_table.values():
         _update_initial_values(initial_values, variable_declarations.values())
-    return [{"locations": initial_locations, "values": initial_values}]
+    return [{"locations": initial_locations, "values": initial_values, "zone": []}]
 
 
 def _translate_network(

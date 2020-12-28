@@ -1,10 +1,14 @@
+//! Data structures for representing values.
+
 use std::cmp;
+
+use std::convert::TryInto;
 
 use serde::{Deserialize, Serialize};
 
 use ordered_float::NotNan;
 
-use crate::types::*;
+use super::types::*;
 
 use self::Value::*;
 
@@ -16,6 +20,51 @@ pub enum Value {
     Float64(NotNan<f64>),
     Bool(bool),
     Vector(Vec<Value>),
+}
+
+impl From<bool> for Value {
+    fn from(value: bool) -> Self {
+        Value::Bool(value)
+    }
+}
+
+impl TryInto<bool> for Value {
+    type Error = String;
+
+    fn try_into(self) -> Result<bool, Self::Error> {
+        match self {
+            Value::Bool(value) => Ok(value),
+            _ => Err(format!("Unable to convert {:?} to boolean.", self)),
+        }
+    }
+}
+
+impl From<i64> for Value {
+    fn from(value: i64) -> Self {
+        Value::Int64(value)
+    }
+}
+
+impl TryInto<i64> for Value {
+    type Error = String;
+
+    fn try_into(self) -> Result<i64, Self::Error> {
+        match self {
+            Value::Int64(value) => Ok(value),
+            _ => Err(format!("Unable to convert {:?} to integer.", self)),
+        }
+    }
+}
+
+impl TryInto<f64> for Value {
+    type Error = String;
+
+    fn try_into(self) -> Result<f64, Self::Error> {
+        match self {
+            Value::Float64(value) => Ok(value.into_inner()),
+            _ => Err(format!("Unable to convert {:?} to float.", self)),
+        }
+    }
 }
 
 impl Value {

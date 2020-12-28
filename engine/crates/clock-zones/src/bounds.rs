@@ -1,5 +1,6 @@
 use crate::constants::*;
 
+/// Represents a bound on the difference of two clocks.
 pub trait Bound: Clone {
     type Constant: Constant;
 
@@ -17,7 +18,7 @@ pub trait Bound: Clone {
     fn is_strict(&self) -> bool;
     fn is_unbounded(&self) -> bool;
 
-    fn get_constant(&self) -> Option<Self::Constant>;
+    fn constant(&self) -> Option<Self::Constant>;
 
     fn add(&self, other: &Self) -> Option<Self>;
 
@@ -71,7 +72,7 @@ macro_rules! int_bound_impl {
             }
 
             #[inline(always)]
-            fn get_constant(&self) -> Option<Self::Constant> {
+            fn constant(&self) -> Option<Self::Constant> {
                 if *self == Self::unbounded() {
                     None
                 } else {
@@ -173,7 +174,7 @@ impl<C: Constant> Bound for ConstantBound<C> {
     }
 
     #[inline(always)]
-    fn get_constant(&self) -> Option<Self::Constant> {
+    fn constant(&self) -> Option<Self::Constant> {
         self.constant.clone()
     }
 
@@ -214,11 +215,11 @@ mod tests {
             let le = <$bound_type>::new_le($constant.clone());
             assert!(!le.is_strict());
             assert!(!le.is_unbounded());
-            assert_eq!(le.get_constant(), Some($constant.clone()));
+            assert_eq!(le.constant(), Some($constant.clone()));
             let lt = <$bound_type>::new_lt($constant.clone());
             assert!(lt.is_strict());
             assert!(!lt.is_unbounded());
-            assert_eq!(lt.get_constant(), Some($constant.clone()));
+            assert_eq!(lt.constant(), Some($constant.clone()));
             assert!(lt.is_tighter_than(&le));
             assert!(!le.is_tighter_than(&lt));
         }};
@@ -231,20 +232,20 @@ mod tests {
                 let le_zero = <$bound_type>::le_zero();
                 assert!(!le_zero.is_strict());
                 assert_eq!(
-                    le_zero.get_constant(),
+                    le_zero.constant(),
                     Some(<$bound_type as Bound>::Constant::zero())
                 );
 
                 let lt_zero = <$bound_type>::lt_zero();
                 assert!(lt_zero.is_strict());
                 assert_eq!(
-                    lt_zero.get_constant(),
+                    lt_zero.constant(),
                     Some(<$bound_type as Bound>::Constant::zero())
                 );
 
                 let unbounded = <$bound_type>::unbounded();
                 assert!(unbounded.is_strict());
-                assert_eq!(unbounded.get_constant(), None);
+                assert_eq!(unbounded.constant(), None);
 
                 assert!(le_zero.is_tighter_than(&unbounded));
                 assert!(lt_zero.is_tighter_than(&unbounded));

@@ -269,7 +269,7 @@ def _construct_globally(
     return properties.globally(arguments[0])
 
 
-_BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinExpressionConstructor] = {
+_BUILTIN_FUNCTIONS: t.Dict[str, _BuiltinExpressionConstructor] = {
     "floor": _construct_floor,
     "ceil": _construct_ceil,
     "abs": _construct_abs,
@@ -278,6 +278,30 @@ _BUILTIN_FUNCTIONS: t.Mapping[str, _BuiltinExpressionConstructor] = {
     "min": _construct_min,
     "max": _construct_max,
 }
+
+
+def _update_builtin_functions() -> None:
+    for trigonometric_function in operators.TrigonometricFunction:
+
+        def _make_constructor(
+            function: operators.TrigonometricFunction,
+        ) -> _BuiltinExpressionConstructor:
+            def construct(arguments: t.List[model.Expression]) -> model.Expression:
+                if len(arguments) != 1:
+                    symbol = function.symbol
+                    raise Exception(
+                        f"{symbol} takes exactly 1 argument but {len(arguments)} are given"
+                    )
+                return expressions.Trigonometric(function, arguments[0])
+
+            return construct
+
+        construct = _make_constructor(trigonometric_function)
+        _BUILTIN_FUNCTIONS[trigonometric_function.symbol] = construct
+
+
+_update_builtin_functions()
+
 
 _PROPERTY_FUNCTIONS: t.Mapping[str, _BuiltinPropertyConstructor] = {
     "Pmin": _construct_probability_min,
