@@ -1,0 +1,441 @@
+use std::convert::TryInto;
+
+use indexmap::IndexSet;
+
+use crate::model;
+use crate::time;
+
+use super::evaluate;
+use super::*;
+
+pub type ActionLabelIndex = usize;
+
+pub type LocationIndex = usize;
+
+pub type EdgeIndex = usize;
+
+pub type DestinationIndex = usize;
+
+/// Uniquely identifies an automaton of the model.
+pub type AutomatonReference = usize;
+
+/// Uniquely identifies a location of the model.
+#[derive(Clone)]
+pub struct LocationReference {
+    pub automaton: AutomatonReference,
+    pub index: LocationIndex,
+}
+
+/// Uniquely identifies an edge of the model.
+#[derive(Clone)]
+pub struct EdgeReference {
+    pub location: LocationReference,
+    pub index: EdgeIndex,
+}
+
+/// Uniquely identifies a destination of the model.
+#[derive(Clone)]
+pub struct DestinationReference {
+    pub edge: EdgeReference,
+    pub index: DestinationIndex,
+}
+
+pub type GlobalEnvironment<'s> = evaluate::Environment<'s, 2>;
+pub type EdgeEnvironment<'s> = evaluate::Environment<'s, 3>;
+
+pub struct CompiledAssignment {
+    pub target: evaluate::CompiledTargetExpression<3>,
+    pub value: evaluate::CompiledExpression<3>,
+}
+
+pub struct CompiledAutomaton<Z: time::TimeType> {
+    pub reference: AutomatonReference,
+    pub locations: Vec<CompiledLocation<Z>>,
+}
+
+pub struct CompiledLocation<Z: time::TimeType> {
+    pub reference: LocationReference,
+    pub invariant: Z::CompiledClockConstraints,
+    pub internal_edges: Vec<CompiledEdge<Z>>,
+    pub visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>>,
+}
+
+impl<Z: time::TimeType> CompiledLocation<Z> {
+    fn new(
+        network: &model::Network,
+        zone_compiler: &Z,
+        automaton: &model::Automaton,
+        location: &model::Location,
+        reference: LocationReference,
+        assignment_groups: &IndexSet<usize>,
+    ) -> Self {
+        let invariant = zone_compiler.compile_constraints(&location.invariant);
+        let mut internal_edges = Vec::new();
+        let mut visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>> =
+            (0..network.declarations.action_labels.len())
+                .map(|_| Vec::new())
+                .collect();
+        for (edge_index, edge) in location.edges.iter().enumerate() {
+            let edge_reference = EdgeReference {
+                location: reference.clone(),
+                index: edge_index,
+            };
+            let compiled_edge = CompiledEdge::new(
+                network,
+                zone_compiler,
+                automaton,
+                edge,
+                edge_reference,
+                assignment_groups,
+            );
+            match &edge.pattern {
+                model::ActionPattern::Silent => internal_edges.push(compiled_edge),
+                model::ActionPattern::Labeled(model::LabeledPattern { label, arguments }) => {
+                    let action_type_index = network
+                        .declarations
+                        .action_labels
+                        .get_index_of(label)
+                        .unwrap();
+                    visible_edges[action_type_index].push(CompiledVisibleEdge {
+                        base: compiled_edge,
+                        write_arguments: arguments
+                            .iter()
+                            .enumerate()
+                            .filter_map(|(_argument_index, argument)| match argument {
+                                model::PatternArgument::Write { value: _ } => todo!(),
+                                _ => None,
+                            })
+                            .collect(),
+                    })
+                }
+            }
+        }
+        CompiledLocation {
+            reference,
+            invariant,
+            internal_edges: internal_edges,
+            visible_edges: visible_edges,
+        }
+    }
+}
+
+pub struct CompiledEdge<Z: time::TimeType> {
+    pub reference: EdgeReference,
+    pub guard: CompiledGuard<Z>,
+    pub destinations: Vec<CompiledDestination<Z>>,
+}
+
+pub struct CompiledVisibleEdge<Z: time::TimeType> {
+    pub base: CompiledEdge<Z>,
+    pub write_arguments: Box<[(usize, evaluate::CompiledExpression<2>)]>,
+}
+
+impl<Z: time::TimeType> CompiledEdge<Z> {
+    pub fn new(
+        network: &model::Network,
+        zone_compiler: &Z,
+        automaton: &model::Automaton,
+        edge: &model::Edge,
+        reference: EdgeReference,
+        assignment_groups: &IndexSet<usize>,
+    ) -> Self {
+        let global_scope = network.global_scope();
+        let edge_scope = edge.edge_scope(network);
+        let guard = CompiledGuard {
+            boolean_condition: global_scope.compile(&edge.guard.boolean_condition),
+            clock_constraints: zone_compiler.compile_constraints(&edge.guard.clock_constraints),
+        };
+        let destinations = edge
+            .destinations
+            .iter()
+            .enumerate()
+            .map(|(destination_index, destination)| CompiledDestination {
+                reference: DestinationReference {
+                    edge: reference.clone(),
+                    index: destination_index,
+                },
+                location: automaton
+                    .locations
+                    .get_index_of(&destination.location)
+                    .unwrap(),
+                probability: edge_scope.compile(&destination.probability),
+                reset: zone_compiler.compile_clock_set(&destination.reset),
+                assignments: assignment_groups
+                    .iter()
+                    .map(|index| {
+                        destination
+                            .assignments
+                            .iter()
+                            .filter(|assignment| assignment.index == *index)
+                            .map(|assignment| CompiledAssignment {
+                                target: edge_scope.compile_target(&assignment.target),
+                                value: edge_scope.compile(&assignment.value),
+                            })
+                            .collect()
+                    })
+                    .collect(),
+            })
+            .collect();
+        CompiledEdge {
+            reference,
+            guard,
+            destinations,
+        }
+    }
+
+    pub fn is_enabled(&self, global_env: &evaluate::Environment<2>) -> bool {
+        self.guard
+            .boolean_condition
+            .evaluate(global_env)
+            .try_into()
+            .unwrap()
+    }
+}
+
+pub struct CompiledGuard<Z: time::TimeType> {
+    pub boolean_condition: evaluate::CompiledExpression<2>,
+    pub clock_constraints: Z::CompiledClockConstraints,
+}
+
+pub struct CompiledDestination<Z: time::TimeType> {
+    pub reference: DestinationReference,
+    pub location: LocationIndex,
+    pub probability: evaluate::CompiledExpression<3>,
+    pub reset: Z::CompiledClockSet,
+    pub assignments: Box<[Box<[CompiledAssignment]>]>,
+}
+
+pub struct SyncVectorItem {
+    pub automaton: AutomatonReference,
+    pub action_type: model::LabelIndex,
+    pub slot_mapping: Box<[usize]>,
+}
+
+impl SyncVectorItem {
+    pub fn argument_to_slot_index(&self, argument_index: usize) -> usize {
+        self.slot_mapping[argument_index]
+    }
+
+    pub fn compute_link_edges<'c, Z: time::TimeType>(
+        &'c self,
+        global_env: &evaluate::Environment<2>,
+        enabled_edges: &Box<[Box<[Box<[&'c CompiledVisibleEdge<Z>]>]>]>,
+    ) -> Vec<LinkEdge<Z>> {
+        enabled_edges[self.automaton][self.action_type]
+            .iter()
+            .map(|edge| LinkEdge {
+                compiled: edge,
+                write_slots: edge
+                    .write_arguments
+                    .iter()
+                    .map(|(argument_index, expression)| {
+                        let slot_index = self.argument_to_slot_index(*argument_index);
+                        let value = expression.evaluate(global_env);
+                        (slot_index, value)
+                    })
+                    .collect(),
+            })
+            .collect()
+    }
+}
+
+pub struct LinkEdge<'c, Z: time::TimeType> {
+    pub compiled: &'c CompiledVisibleEdge<Z>,
+    pub write_slots: Box<[(usize, model::Value)]>,
+}
+
+pub struct CompiledLink {
+    pub slots_template: Vec<Option<model::Value>>,
+    pub sync_vector: Box<[SyncVectorItem]>,
+    pub result: CompiledLinkResult,
+}
+
+pub enum CompiledLinkResult {
+    Silent,
+    Labeled {
+        action_label: model::LabelIndex,
+        slot_mapping: Box<[usize]>,
+    },
+}
+
+pub struct CompiledNetwork<Z: time::TimeType> {
+    pub zone_compiler: Z,
+    pub automata: Box<[CompiledAutomaton<Z>]>,
+    pub links: Box<[CompiledLink]>,
+    pub transient_values: Box<[evaluate::CompiledExpression<1>]>,
+    pub assignment_groups: IndexSet<usize>,
+}
+
+impl<Z: time::TimeType> CompiledNetwork<Z> {
+    pub fn new(network: &model::Network) -> Self {
+        let zone_compiler = Z::new(network);
+        let mut assignment_groups: IndexSet<usize> = network
+            .automata
+            .values()
+            .map(|automaton| automaton.locations.values())
+            .flatten()
+            .map(|location| location.edges.iter())
+            .flatten()
+            .map(|edge| edge.destinations.iter())
+            .flatten()
+            .map(|destination| destination.assignments.iter())
+            .flatten()
+            .map(|assignment| assignment.index)
+            .collect();
+        assignment_groups.sort();
+        let automata = network
+            .automata
+            .values()
+            .enumerate()
+            .map(|(automaton_reference, automaton)| CompiledAutomaton {
+                reference: automaton_reference,
+                locations: automaton
+                    .locations
+                    .values()
+                    .enumerate()
+                    .map(|(location_index, location)| {
+                        CompiledLocation::new(
+                            network,
+                            &zone_compiler,
+                            automaton,
+                            location,
+                            LocationReference {
+                                automaton: automaton_reference,
+                                index: location_index,
+                            },
+                            &assignment_groups,
+                        )
+                    })
+                    .collect(),
+            })
+            .collect();
+        let links = network
+            .links
+            .iter()
+            .map(|link| CompiledLink {
+                slots_template: vec![None; link.slots.len()],
+                sync_vector: link
+                    .vector
+                    .iter()
+                    .map(|(automaton_name, link_pattern)| SyncVectorItem {
+                        automaton: network.automata.get_index_of(automaton_name).unwrap(),
+                        action_type: network
+                            .declarations
+                            .action_labels
+                            .get_index_of(&link_pattern.action_type)
+                            .unwrap(),
+                        slot_mapping: link_pattern
+                            .arguments
+                            .iter()
+                            .map(|slot_name| link.slots.get_index_of(slot_name).unwrap())
+                            .collect(),
+                    })
+                    .collect(),
+                result: match &link.result {
+                    model::LinkResult::Silent => CompiledLinkResult::Silent,
+                    model::LinkResult::Labeled(model::LinkPattern {
+                        action_type,
+                        arguments,
+                    }) => CompiledLinkResult::Labeled {
+                        action_label: network
+                            .declarations
+                            .action_labels
+                            .get_index_of(action_type)
+                            .unwrap(),
+                        slot_mapping: arguments
+                            .iter()
+                            .map(|slot_name| link.slots.get_index_of(slot_name).unwrap())
+                            .collect(),
+                    },
+                },
+            })
+            .collect();
+        let transient_scope = network.transient_scope();
+        let transient_values = network
+            .declarations
+            .transient_variables
+            .values()
+            .map(|expr| transient_scope.compile(expr))
+            .collect();
+        CompiledNetwork {
+            zone_compiler,
+            automata,
+            links,
+            transient_values,
+            assignment_groups,
+        }
+    }
+
+    pub fn compute_transition<'c>(
+        &self,
+        zone: &Z::Valuations,
+        link: &'c CompiledLink,
+        link_edges: &[&LinkEdge<'c, Z>],
+    ) -> Option<Transition<'c, Z>> {
+        debug_assert_eq!(link.sync_vector.len(), link_edges.len());
+        let mut slots = link.slots_template.clone();
+        let mut zone = zone.clone();
+        for (link_edge, _vector_item) in link_edges.iter().zip(link.sync_vector.iter()) {
+            for (slot_index, value) in link_edge.write_slots.iter() {
+                match &slots[*slot_index] {
+                    None => slots[*slot_index] = Some(value.clone()),
+                    Some(other_value) => {
+                        if value != other_value {
+                            return None;
+                        }
+                    }
+                }
+            }
+            // TODO: Extract constraints from `link_edge` and apply to `zone`.
+            // TODO: Check whether `zone` is empty and return `None` if this is the case.
+        }
+        slots
+            .into_iter()
+            .collect::<Option<Box<[_]>>>()
+            .map(|slots| {
+                let actions = link
+                    .sync_vector
+                    .iter()
+                    .map(|vector_item| {
+                        Action::new(
+                            vector_item.action_type,
+                            vector_item
+                                .slot_mapping
+                                .iter()
+                                .map(|slot_index| slots[*slot_index].clone())
+                                .collect(),
+                        )
+                    })
+                    .collect();
+                Transition {
+                    edges: link_edges
+                        .iter()
+                        .map(|link_edge| &link_edge.compiled.base)
+                        .collect(),
+                    zone,
+                    actions,
+                    action: match &link.result {
+                        CompiledLinkResult::Silent => Action::Silent,
+                        CompiledLinkResult::Labeled {
+                            action_label,
+                            slot_mapping,
+                        } => Action::new(
+                            *action_label,
+                            slot_mapping
+                                .iter()
+                                .map(|slot_index| slots[*slot_index].clone())
+                                .collect(),
+                        ),
+                    },
+                }
+            })
+    }
+
+    pub fn compute_transient_values(&self, global_store: &[model::Value]) -> Box<[model::Value]> {
+        let env = evaluate::Environment::new([global_store]);
+        self.transient_values
+            .iter()
+            .map(|expr| expr.evaluate(&env))
+            .collect()
+    }
+}

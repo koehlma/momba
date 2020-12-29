@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use super::values::*;
 
+/// Represents an expression.
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind")]
 pub enum Expression {
@@ -20,6 +21,7 @@ pub enum Expression {
     Vector(VectorExpression),
 }
 
+/// Represents a name expression.
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 pub struct NameExpression {
     pub identifier: String,
@@ -48,6 +50,7 @@ pub struct UnaryExpression {
     pub operand: Box<Expression>,
 }
 
+/// Operators for binary expressions.
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum BinaryOperator {
@@ -70,6 +73,7 @@ pub struct BinaryExpression {
     pub right: Box<Expression>,
 }
 
+/// Operators for boolean expressions.
 #[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum BooleanOperator {

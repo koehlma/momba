@@ -80,17 +80,19 @@ def main(
     network = racetrack.construct_model(scenario)
 
     print("Compiling model...")
-    compiled = engine.compile_network(network)
-    # print(compiled.count_states())
+    compiled = engine.compile_mdp(network)
 
     initial_states = compiled.initial_states
 
     print("Initial States:", len(initial_states))
 
     for state in initial_states:
-        print("State:", state._as_json)
-        for successor in state.successors:
-            print("Successor:", successor._as_json)
+        print(state.global_env)
+        print(state.locations)
+        for transition in state.transitions:
+            print(transition)
+            for destination in transition.destinations:
+                print(destination, destination.probability)
 
 
 if __name__ == "__main__":

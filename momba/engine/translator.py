@@ -374,14 +374,14 @@ def _translate_action_pattern(
     action_pattern: t.Optional[model.ActionPattern],
 ) -> _JSONObject:
     if action_pattern is None:
-        return {"kind": "INTERNAL"}
+        return {"kind": "SILENT"}
     else:
         assert (
             not action_pattern.arguments
         ), "Arguments for action patterns not implemented!"
         return {
-            "kind": "LINK",
-            "action_type": action_pattern.action_type.name,
+            "kind": "LABELED",
+            "label": action_pattern.action_type.name,
             "arguments": [],  # TODO: implement arguments for action patterns
         }
 
@@ -487,10 +487,10 @@ def _translate_link(
     assert link.condition is None
     result: _JSONObject
     if link.result is None:
-        result = {"kind": "INTERNAL"}
+        result = {"kind": "SILENT"}
     else:
         result = {
-            "kind": "PATTERN",
+            "kind": "LABELED",
             "action_type": link.result.action_type.name,
             "arguments": _translate_arguments(link.result.arguments),
         }
@@ -549,19 +549,19 @@ def _translate_initial_states(
 def _translate_network(
     network: model.Network,
     instance_names: t.Mapping[model.Instance, str],
+    instance_to_location_names: t.Mapping[
+        model.Instance, t.Mapping[model.Location, str]
+    ],
     declarations: Declarations,
     parameters: t.Mapping[str, model.Expression],
 ) -> str:
-    instance_to_location_names = {
-        instance: _compute_location_names(instance) for instance in network.instances
-    }
     return json.dumps(
         {
             "declarations": {
                 "global_variables": _compute_global_variables(declarations),
                 "transient_variables": {},  # TODO: implement transient variables
                 "clock_variables": [],  # TODO: implement clock variables
-                "action_types": _compute_action_types(network),
+                "action_labels": _compute_action_types(network),
             },
             "automata": {
                 instance_name: _translate_instance(
@@ -590,6 +590,18 @@ class Translation:
     json_network: str
     instance_names: t.Mapping[model.Instance, str]
     declarations: Declarations
+    instance_to_location_names: t.Mapping[
+        model.Instance, t.Mapping[model.Location, str]
+    ]
+
+    @functools.cached_property
+    def reversed_instance_to_location_names(
+        self,
+    ) -> t.Mapping[model.Instance, t.Mapping[str, model.Location]]:
+        return {
+            instance: {name: location for location, name in mapping.items()}
+            for instance, mapping in self.instance_to_location_names.items()
+        }
 
 
 _NO_PARAMETERS: t.Mapping[str, model.Expression] = {}
@@ -602,8 +614,18 @@ def translate_network(
 ) -> Translation:
     instance_names = _compute_instance_names(network)
     declarations = _compute_declarations(network, instance_names)
+    instance_to_location_names = {
+        instance: _compute_location_names(instance) for instance in network.instances
+    }
     return Translation(
-        _translate_network(network, instance_names, declarations, parameters),
+        _translate_network(
+            network,
+            instance_names,
+            instance_to_location_names,
+            declarations,
+            parameters,
+        ),
         instance_names,
         declarations,
+        instance_to_location_names,
     )

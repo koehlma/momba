@@ -5,6 +5,7 @@ use std::collections::{HashMap, HashSet};
 use indexmap::{IndexMap, IndexSet};
 use serde::{Deserialize, Serialize};
 
+use super::actions::*;
 use super::expressions::*;
 use super::types::*;
 use super::values::*;
@@ -30,12 +31,15 @@ impl Network {
     }
 }
 
+/// The index of an action label relative to [Declarations].
+pub type LabelIndex = usize;
+
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Declarations {
     pub global_variables: IndexMap<String, Type>,
     pub transient_variables: IndexMap<String, Expression>,
     pub clock_variables: IndexSet<String>,
-    pub action_types: IndexMap<String, Vec<Type>>,
+    pub action_labels: IndexMap<String, Vec<Type>>,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
@@ -69,23 +73,6 @@ pub struct Edge {
     pub pattern: ActionPattern,
     pub guard: Guard,
     pub destinations: Vec<Destination>,
-}
-
-#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind")]
-pub enum ActionPattern {
-    Internal,
-    Link {
-        action_type: String,
-        arguments: Vec<PatternArgument>,
-    },
-}
-
-#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "direction")]
-pub enum PatternArgument {
-    Write { value: Expression },
-    Read { identifier: String },
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
@@ -124,14 +111,14 @@ pub struct Link {
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
-pub struct LinkPattern {
-    pub action_type: String,
-    pub arguments: Vec<String>,
+#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind")]
+pub enum LinkResult {
+    Silent,
+    Labeled(LinkPattern),
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE", tag = "kind")]
-pub enum LinkResult {
-    Internal,
-    Pattern(LinkPattern),
+pub struct LinkPattern {
+    pub action_type: String,
+    pub arguments: Vec<String>,
 }

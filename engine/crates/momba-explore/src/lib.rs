@@ -6,16 +6,15 @@
 //! state space of *Probabilistic Timed Automata* (PTAs) and *Markov Decision Processes*
 //! (MDPs) augmented with variables.
 //!
-//!
-//!  represented in *Momba's Intermediate Representation* (MombaIR).
-//! MombaIR models are automata networks of the respective type of automata running
-//! in parallel.
-//!
-//! For the purpose of state space exploration, a model is compiled into a more efficient
-//! internal representation.
+//! *Momba Explore* uses its own model representation defined in the module [model][model]
+//! leveraging [Serde](https://serde.rs).
+//! Hence, models can be loaded from any format supported by Serde.
+//! [JANI models](https://jani-spec.org) can be loaded by first translating them using
+//! [Momba](https://github.com/koehlma/momba).
 
-mod evaluate;
+mod explore;
 
-pub mod explore;
 pub mod model;
 pub mod time;
+
+pub use explore::*;

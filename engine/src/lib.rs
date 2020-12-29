@@ -1,148 +1,163 @@
+use std::mem;
+use std::sync::Arc;
+
+use pyo3::conversion::IntoPy;
 use pyo3::prelude::*;
 
-// use pyo3::wrap_pyfunction;
-// use std::borrow::Borrow;
-// use std::collections::HashSet;
-// use std::sync::Arc;
-// use std::time::Instant;
+use momba_explore;
 
+#[pyclass]
+struct MDPState {
+    explorer: Arc<momba_explore::MDPExplorer>,
+    state: momba_explore::State<momba_explore::time::NoClocks>,
+}
 
-// #[pyclass]
-// struct CompiledModel {
-//     network: Arc<explore::CompiledNetwork<()>>,
-// }
+struct Value(momba_explore::model::Value);
 
-// #[pyclass]
-// struct State {
-//     network: Arc<explore::CompiledNetwork<()>>,
-//     state: explore::State<()>,
-// }
+impl IntoPy<PyObject> for Value {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+        match self.0 {
+            momba_explore::model::Value::Int64(value) => value.into_py(py),
+            momba_explore::model::Value::Float64(value) => value.into_py(py),
+            momba_explore::model::Value::Bool(value) => value.into_py(py),
+            momba_explore::model::Value::Vector(value) => value
+                .into_iter()
+                .map(|value| Value(value))
+                .collect::<Vec<_>>()
+                .into_py(py),
+        }
+    }
+}
 
-// #[pymethods]
-// impl State {
-//     pub fn as_json(&self) -> String {
-//         serde_json::to_string(&self.bare_state.state(&self.network.network)).unwrap()
-//     }
+#[pymethods]
+impl MDPState {
+    fn transitions(&self) -> Vec<MDPTransition> {
+        self.explorer
+            .transitions(&self.state)
+            .into_iter()
+            .map(|transition| unsafe {
+                // This is safe because `transition` borrows from `self.explorer`.
+                MDPTransition::new(self.explorer.clone(), transition)
+            })
+            .collect()
+    }
 
-//     pub fn successors(&self) -> Vec<State> {
-//         let compiled_state = self.bare_state.clone().into_compiled(self.network.borrow());
-//         let mut successors = Vec::new();
-//         for transition in compiled_state.transitions() {
-//             for destination in compiled_state.execute(&transition) {
-//                 successors.push(State {
-//                     network: self.network.clone(),
-//                     bare_state: destination.state.into(),
-//                 })
-//             }
-//         }
-//         successors
-//     }
-// }
+    fn get_global_value(&self, identifier: &str) -> Option<Value> {
+        self.state
+            .get_global_value(&self.explorer.network, identifier)
+            .map(|value| Value(value.clone()))
+    }
 
-// #[pymethods]
-// impl CompiledModel {
-    // #[new]
-    // fn new(json_representation: &str) -> Self {
-    //     let network: model::Network =
-    //         serde_json::from_str(json_representation).expect("Error while reading model file!");
+    fn get_location_of(&self, automaton_name: &str) -> Option<&String> {
+        self.state
+            .get_location_of(&self.explorer.network, automaton_name)
+    }
+}
 
-    //     CompiledModel {
-    //         network: Arc::new(network.compile()),
-    //     }
-    // }
+#[pyclass]
+struct MDPTransition {
+    /// In lack of a better alternative, we use 'static here. The transition actually
+    /// borrows from the `MDPExplorer` owned by the `Arc` stored in `explorer`.
+    ///
+    /// The order of the fields is important for safety on dropping!
+    unsafe_transition: momba_explore::Transition<'static, momba_explore::time::NoClocks>,
+    explorer: Arc<momba_explore::MDPExplorer>,
+}
 
-    // fn initial_states(&self) -> Vec<State> {
-    //     initial_states(self.network.borrow())
-    //         .unwrap()
-    //         .into_iter()
-    //         .map(|state| State {
-    //             network: self.network.clone(),
-    //             state: state,
-    //         })
-    //         .collect()
-    // }
+impl MDPTransition {
+    /// Constructs a new transition.
+    ///
+    /// # Safety
+    /// The transition has to borrow from the MDPExplorer owned by the `Arc`.
+    unsafe fn new<'e>(
+        explorer: Arc<momba_explore::MDPExplorer>,
+        transition: momba_explore::Transition<'e, momba_explore::time::NoClocks>,
+    ) -> Self {
+        MDPTransition {
+            unsafe_transition: mem::transmute(transition),
+            explorer: explorer.clone(),
+        }
+    }
+}
 
-    // fn count_states(&self) -> usize {
-    //     42
-    //     // let start = Instant::now();
+impl MDPTransition {
+    fn transition<'t>(
+        &'t self,
+    ) -> &'t momba_explore::Transition<'t, momba_explore::time::NoClocks> {
+        &self.unsafe_transition
+    }
+}
 
-    //     // println!("Exploring...");
+#[pymethods]
+impl MDPTransition {
+    fn destinations(&self, state: &MDPState) -> Vec<MDPDestination> {
+        self.explorer
+            .destinations(&state.state, self.transition())
+            .into_iter()
+            .map(|destination| MDPDestination::new(&self.explorer, destination))
+            .collect()
+    }
+}
 
-    //     // let mut visited: HashSet<(Box<[model::Value]>, Box<[usize]>)> = HashSet::new();
-    //     // let mut pending: Vec<compiled::CompiledState> = self.network.initial_states().into();
+#[pyclass]
+struct MDPDestination {
+    explorer: Arc<momba_explore::MDPExplorer>,
+    destination: momba_explore::Destination<'static, momba_explore::time::NoClocks>,
+}
 
-    //     // for state in pending.iter() {
-    //     //     visited.insert((state.values.clone(), state.locations.clone()));
-    //     // }
+impl MDPDestination {
+    fn new<'e>(
+        explorer: &'e Arc<momba_explore::MDPExplorer>,
+        destination: momba_explore::Destination<'e, momba_explore::time::NoClocks>,
+    ) -> Self {
+        MDPDestination {
+            explorer: explorer.clone(),
+            destination: unsafe { mem::transmute(destination) },
+        }
+    }
+}
 
-    //     // let mut count_transitions = 0;
+#[pymethods]
+impl MDPDestination {
+    fn probability(&self) -> f64 {
+        self.destination.probability()
+    }
+}
 
-    //     // let mut processed = 0;
+#[pyclass]
+struct MDPExplorer {
+    explorer: Arc<momba_explore::MDPExplorer>,
+}
 
-    //     // while pending.len() != 0 {
-    //     //     let state = pending.pop().unwrap();
-    //     //     processed += 1;
+#[pymethods]
+impl MDPExplorer {
+    #[new]
+    fn new(json_representation: &str) -> Self {
+        MDPExplorer {
+            explorer: Arc::new(momba_explore::MDPExplorer::new(
+                serde_json::from_str(json_representation).expect("Error while reading model file!"),
+            )),
+        }
+    }
 
-    //     //     if processed % 5000 == 0 {
-    //     //         let duration = start.elapsed();
-    //     //         println!(
-    //     //             "{:.2} [states/s]",
-    //     //             (processed as f64) / duration.as_secs_f64()
-    //     //         )
-    //     //     }
-    //     //     let transitions = state.transitions();
-
-    //     //     for transition in transitions {
-    //     //         count_transitions += 1;
-    //     //         let destinations = state.execute(&transition);
-    //     //         for destination in destinations {
-    //     //             let compiled::ComputedDestination { probability, state } = destination;
-    //     //             let compiled::CompiledState {
-    //     //                 network: _,
-    //     //                 values,
-    //     //                 locations,
-    //     //             } = state;
-    //     //             let index_tuple = (values, locations);
-    //     //             if !visited.contains(&index_tuple) {
-    //     //                 visited.insert(index_tuple.clone());
-    //     //                 pending.push(compiled::CompiledState {
-    //     //                     network: &self.network,
-    //     //                     values: index_tuple.0,
-    //     //                     locations: index_tuple.1,
-    //     //                 })
-    //     //             }
-    //     //         }
-    //     //         // for destination in  {
-    //     //         //     let values_locations = (
-    //     //         //         destination.state.values.clone(),
-    //     //         //         destination.state.locations.clone(),
-    //     //         //     );
-    //     //         //     if !visited.contains(&values_locations) {
-    //     //         //         visited.insert(values_locations.clone());
-    //     //         //         pending.push(destination.state.clone());
-    //     //         //     }
-    //     //         // }
-    //     //     }
-    //     // }
-
-    //     // let duration = start.elapsed();
-
-    //     // // println!("Time elapsed is: {:?}", duration);
-    //     // // println!("States: {}", visited.len());
-    //     // // println!("Transitions: {}", count_transitions);
-    //     // // println!(
-    //     // //     "{:.2} [states/s]",
-    //     // //     (visited.len() as f64) / duration.as_secs_f64()
-    //     // // );
-
-    //     // visited.len()
-    // }
-// }
+    fn initial_states(&self) -> Vec<MDPState> {
+        self.explorer
+            .initial_states()
+            .into_iter()
+            .map(|state| MDPState {
+                explorer: self.explorer.clone(),
+                state: state,
+            })
+            .collect()
+    }
+}
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn momba_engine(py: Python, m: &PyModule) -> PyResult<()> {
-    //m.add_class::<CompiledModel>()?;
+fn momba_engine(_py: Python, module: &PyModule) -> PyResult<()> {
+    module.add_class::<MDPExplorer>()?;
+    module.add_class::<MDPState>()?;
+    module.add_class::<MDPTransition>()?;
 
     Ok(())
 }

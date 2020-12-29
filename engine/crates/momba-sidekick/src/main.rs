@@ -6,10 +6,7 @@ use std::time::Instant;
 
 use clap::Clap;
 
-use momba_explore::explore;
-use momba_explore::model;
-
-use model::*;
+use momba_explore::*;
 
 #[derive(Clap)]
 #[clap(version = "0.1.0", about = "A VM for MombaCR.")]
@@ -37,17 +34,16 @@ fn main() {
     });
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    println!("Reading...");
-    let network: Network = serde_json::from_reader(BufReader::new(model_file))
-        .expect("Error while reading model file!");
-
-    let explorer: explore::Explorer<()> = explore::Explorer::new(&network);
+    let explorer: MDPExplorer = MDPExplorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
     let start = Instant::now();
 
     println!("Exploring...");
 
-    let mut visited: HashSet<explore::State<_>> = HashSet::new();
-    let mut pending: Vec<_> = explorer.initial_states(&network);
+    let mut visited: HashSet<State<_>> = HashSet::new();
+    let mut pending: Vec<_> = explorer.initial_states();
 
     for state in pending.iter() {
         visited.insert(state.clone());

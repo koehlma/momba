@@ -1,4 +1,4 @@
-//! Data structures for *Momba's Intermediate Representation* (MombaIR).
+//! Data structures for representing automata networks.
 //!
 //! This module define the structure of *Momba Intermediate Representation* (MombaIR) models.
 //! The structure is defined directly in Rust using [Serde](https://serde.rs) and `derive`.
@@ -12,11 +12,13 @@
 //! Instead a higher-level modeling formalism such as JANI should be used which is then
 //! translated to MombaIR.
 
-pub mod expressions;
-pub mod network;
-pub mod types;
-pub mod values;
+mod actions;
+mod expressions;
+mod network;
+mod types;
+mod values;
 
+pub use actions::*;
 pub use expressions::*;
 pub use network::*;
 pub use types::*;
