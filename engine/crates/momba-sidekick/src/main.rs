@@ -6,6 +6,11 @@ use std::time::Instant;
 
 use clap::Clap;
 
+use clock_zones::Zone;
+
+use rand::seq::IteratorRandom;
+use rand::Rng;
+
 use momba_explore::*;
 
 #[derive(Clap)]
@@ -19,6 +24,8 @@ struct Arguments {
 enum Command {
     #[clap(about = "Counts the number of states of the model")]
     Count(Count),
+    #[clap(about = "Simulates a random walk trough the zone graph")]
+    Walk(Walk),
 }
 
 #[derive(Clap)]
@@ -27,14 +34,17 @@ struct Count {
     model: String,
 }
 
-fn main() {
-    let arguments = Arguments::parse();
-    let model_path = Path::new(match &arguments.command {
-        Command::Count(count) => &count.model,
-    });
+#[derive(Clap)]
+struct Walk {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+}
+
+fn count_states(count: Count) {
+    let model_path = Path::new(&count.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    let explorer: MDPExplorer = MDPExplorer::new(
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
@@ -46,6 +56,11 @@ fn main() {
     let mut pending: Vec<_> = explorer.initial_states();
 
     for state in pending.iter() {
+        println!("{:?}", state);
+        let mut valuations = state.valuations().clone();
+        println!("{:?}", valuations);
+        valuations.future();
+        println!("{:?}", valuations);
         visited.insert(state.clone());
     }
 
@@ -53,8 +68,7 @@ fn main() {
 
     let mut processed = 0;
 
-    while pending.len() != 0 {
-        let state = pending.pop().unwrap();
+    while let Some(state) = pending.pop() {
         processed += 1;
 
         if processed % 5000 == 0 {
@@ -73,6 +87,7 @@ fn main() {
             let destinations = explorer.destinations(&state, &transition);
             for destination in destinations {
                 let successor = explorer.successor(&state, &transition, &destination);
+                //pending.push(successor);
                 if visited.insert(successor.clone()) {
                     pending.push(successor);
                 }
@@ -89,4 +104,59 @@ fn main() {
         "{:.2} [states/s]",
         (visited.len() as f64) / duration.as_secs_f64()
     )
+}
+
+fn random_walk(walk: Walk) {
+    let model_path = Path::new(&walk.model);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
+
+    let mut rng = rand::thread_rng();
+    let mut state = explorer
+        .initial_states()
+        .into_iter()
+        .choose(&mut rng)
+        .unwrap();
+
+    for _ in 0..100 {
+        let transition = explorer
+            .transitions(&state)
+            .into_iter()
+            .choose(&mut rng)
+            .unwrap();
+
+        match transition.result_action() {
+            Action::Silent => println!("τ"),
+            Action::Labeled(labeled) => println!(
+                "{} {:?}",
+                labeled.label(&explorer.network).unwrap(),
+                labeled.arguments()
+            ),
+        }
+
+        let destinations = explorer.destinations(&state, &transition);
+
+        let threshold: f64 = rng.gen();
+        let mut accumulated = 0.0;
+
+        for destination in destinations {
+            accumulated += destination.probability();
+            if accumulated >= threshold {
+                state = explorer.successor(&state, &transition, &destination);
+            }
+        }
+    }
+}
+
+fn main() {
+    let arguments = Arguments::parse();
+
+    match arguments.command {
+        Command::Count(count) => count_states(count),
+        Command::Walk(walk) => random_walk(walk),
+    }
 }

@@ -559,8 +559,20 @@ def _boolean_binary_expression(
     return result
 
 
+def logic_any(*expressions: ValueOrExpression) -> Expression:
+    if len(expressions) == 0:
+        return BooleanConstant(False)
+    return logic_or(*expressions)
+
+
 def logic_or(*expressions: ValueOrExpression) -> Expression:
     return _boolean_binary_expression(operators.BooleanOperator.OR, expressions)
+
+
+def logic_all(*expressions: ValueOrExpression) -> Expression:
+    if len(expressions) == 0:
+        return BooleanConstant(True)
+    return logic_and(*expressions)
 
 
 def logic_and(*expressions: ValueOrExpression) -> Expression:

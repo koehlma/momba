@@ -61,6 +61,7 @@ class VariableDeclaration:
     identifier: str
     typ: model.types.Type
     initial_value: model.Expression
+    is_transient: bool
 
 
 GlobalsTable = t.Mapping[str, VariableDeclaration]
@@ -71,6 +72,13 @@ LocalsTable = t.Mapping[model.Instance, t.Mapping[str, VariableDeclaration]]
 class Declarations:
     globals_table: GlobalsTable = d.field(default_factory=dict)
     locals_table: LocalsTable = d.field(default_factory=dict)
+
+    @property
+    def all_declarations(self) -> t.AbstractSet[VariableDeclaration]:
+        all_declarations = set(self.globals_table.values())
+        for local_declarations in self.locals_table.values():
+            all_declarations |= set(local_declarations.values())
+        return all_declarations
 
 
 @d.dataclass
@@ -228,9 +236,9 @@ def _translate_conditional_expr(
 ) -> _JSONObject:
     return {
         "kind": "CONDITIONAL",
-        "condition": _translate_expr(expr.condition),
-        "consequence": _translate_expr(expr.consequence),
-        "alternative": _translate_expr(expr.alternative),
+        "condition": _translate_expr(expr.condition, ctx),
+        "consequence": _translate_expr(expr.consequence, ctx),
+        "alternative": _translate_expr(expr.alternative, ctx),
     }
 
 
@@ -301,7 +309,7 @@ def _translate_trigonometric_expr(
 def _compute_instance_names(network: model.Network) -> t.Mapping[model.Instance, str]:
     instance_names: t.Dict[model.Instance, str] = {}
     for number, instance in enumerate(network.instances):
-        instance_names[instance] = f"_{number}_{instance.automaton.name}"
+        instance_names[instance] = f"{number}_{instance.automaton.name}"
     return instance_names
 
 
@@ -321,6 +329,7 @@ def _compute_declarations_with_prefix(
             f"{prefix}{declaration.identifier}",
             declaration.typ,
             _extract_initial_value(declaration),
+            declaration.is_transient or False,
         )
         for declaration in declarations
     }
@@ -354,9 +363,17 @@ def _insert_variable_declaration(
 def _compute_global_variables(declarations: Declarations) -> _JSONObject:
     global_variables: _JSONObject = {}
     for variable_declaration in declarations.globals_table.values():
+        if variable_declaration.is_transient:
+            continue
+        elif variable_declaration.typ == model.types.CLOCK:
+            continue
         _insert_variable_declaration(global_variables, variable_declaration)
-    for instance_declrations in declarations.locals_table.values():
-        for variable_declaration in instance_declrations.values():
+    for instance_declarations in declarations.locals_table.values():
+        for variable_declaration in instance_declarations.values():
+            if variable_declaration.is_transient:
+                continue
+            elif variable_declaration.typ == model.types.CLOCK:
+                continue
             _insert_variable_declaration(global_variables, variable_declaration)
     return global_variables
 
@@ -370,27 +387,157 @@ def _compute_action_types(network: model.Network) -> _JSONObject:
     }
 
 
+def _translate_pattern_argument(
+    argument: model.ActionArgument, ctx: _TranslationContext
+) -> _JSONObject:
+    if isinstance(argument, model.ReadArgument):
+        return {"direction": "READ", "identifier": argument.identifier}
+    else:
+        assert isinstance(
+            argument, model.WriteArgument
+        ), "guard arguments are not supported"
+        return {
+            "direction": "WRITE",
+            "value": _translate_expr(argument.expression, ctx),
+        }
+
+
 def _translate_action_pattern(
     action_pattern: t.Optional[model.ActionPattern],
+    ctx: _TranslationContext,
 ) -> _JSONObject:
     if action_pattern is None:
         return {"kind": "SILENT"}
     else:
-        assert (
-            not action_pattern.arguments
-        ), "Arguments for action patterns not implemented!"
         return {
             "kind": "LABELED",
             "label": action_pattern.action_type.name,
-            "arguments": [],  # TODO: implement arguments for action patterns
+            "arguments": [
+                _translate_pattern_argument(argument, ctx)
+                for argument in action_pattern.arguments
+            ],
         }
+
+
+def _contains_clock_identifier(
+    expression: expressions.Expression, scope: model.Scope
+) -> bool:
+    for used_name in expression.used_names:
+        if scope.lookup(used_name.identifier).typ == model.types.CLOCK:
+            return True
+    return False
+
+
+@d.dataclass(frozen=True)
+class ExtractedConstraints:
+    conjuncts: t.List[expressions.Expression]
+    constraints: t.List[_JSONObject]
+
+
+def _extract_constraints(
+    expr: model.Expression,
+    ctx: _TranslationContext,
+) -> ExtractedConstraints:
+    constraints: t.List[_JSONObject] = []
+    conjuncts: t.List[expressions.Expression] = []
+    pending: t.List[expressions.Expression] = [expr]
+    while pending:
+        head = pending.pop()
+        if isinstance(head, expressions.Boolean):
+            if head.operator is operators.BooleanOperator.AND:
+                pending.append(head.left)
+                pending.append(head.right)
+            else:
+                conjuncts.append(head)
+        elif isinstance(head, expressions.Comparison):
+            if _contains_clock_identifier(head.left, ctx.scope):
+                difference = head.left
+                operator = head.operator
+                bound_expression = head.right
+            elif _contains_clock_identifier(head.right, ctx.scope):
+                difference = head.right
+                operator = head.operator.swap()
+                bound_expression = head.left
+            else:
+                conjuncts.append(head)
+                continue
+            assert not _contains_clock_identifier(bound_expression, ctx.scope)
+            left: _JSONObject
+            right: _JSONObject
+            if isinstance(difference, expressions.Name):
+                left = {
+                    "kind": "VARIABLE",
+                    "identifier": _translate_identifier(difference.identifier, ctx)[
+                        "identifier"
+                    ],
+                }
+                right = {"kind": "ZERO"}
+            else:
+                assert (
+                    isinstance(difference, expressions.ArithmeticBinary)
+                    and difference.operator is operators.ArithmeticBinaryOperator.SUB
+                    and isinstance(difference.left, expressions.Name)
+                    and isinstance(difference.right, expressions.Name)
+                )
+                left = {
+                    "kind": "VARIABLE",
+                    "identifier": _translate_identifier(
+                        difference.left.identifier, ctx
+                    )["identifier"],
+                }
+                right = {
+                    "kind": "VARIABLE",
+                    "identifier": _translate_identifier(
+                        difference.right.identifier, ctx
+                    )["identifier"],
+                }
+            bound = _translate_expr(bound_expression, ctx)
+            if operator.is_less:
+                constraints.append(
+                    {
+                        "left": left,
+                        "right": right,
+                        "is_strict": operator.is_strict,
+                        "bound": bound,
+                    }
+                )
+            else:
+                assert operator.is_greater
+                constraints.append(
+                    {
+                        "left": right,
+                        "right": left,
+                        "is_strict": operator.is_strict,
+                        "bound": {
+                            "kind": "BINARY",
+                            "operator": "SUB",
+                            "left": {"kind": "CONSTANT", "value": 0},
+                            "right": bound,
+                        },
+                    }
+                )
+        else:
+            conjuncts.append(head)
+    return ExtractedConstraints(conjuncts, constraints)
 
 
 def _compute_location_names(instance: model.Instance) -> t.Mapping[model.Location, str]:
     return {
-        location: f"_{location_index}_{location.name or ''}"
+        location: f"{location_index}_{location.name or ''}"
         for location_index, location in enumerate(instance.automaton.locations)
     }
+
+
+def _extract_invariant(
+    location: model.Location, ctx: _TranslationContext
+) -> t.List[_JSONObject]:
+    if location.progress_invariant is None:
+        return []
+    extracted_constraints = _extract_constraints(location.progress_invariant, ctx)
+    assert (
+        not extracted_constraints.conjuncts
+    ), "invariant must be a conjunction of clock constraints"
+    return extracted_constraints.constraints
 
 
 def _translate_instance(
@@ -399,20 +546,27 @@ def _translate_instance(
     location_names: t.Mapping[model.Location, str],
     parameters: t.Mapping[str, model.Expression],
 ) -> _JSONObject:
+    parameters = dict(parameters)
+
+    for parameter_name, parameter_value in zip(
+        instance.automaton.parameters, instance.arguments
+    ):
+        parameters[parameter_name] = parameter_value
+
     ctx = _TranslationContext(
         parameters, declarations, instance.automaton.scope, instance
     )
     locations: t.Mapping[str, _JSONObject] = {
         location_name: {
-            "invariant": [],  # TODO: implement location invariants
+            "invariant": _extract_invariant(location, ctx),
             "edges": [],
         }
-        for location_name in location_names.values()
+        for location, location_name in location_names.items()
     }
 
     for edge in instance.automaton.edges:
         outgoing = locations[location_names[edge.location]]["edges"]
-        action = _translate_action_pattern(edge.action_pattern)
+        action = _translate_action_pattern(edge.action_pattern, ctx)
 
         guard: _JSONObject
         if edge.guard is None:
@@ -421,40 +575,65 @@ def _translate_instance(
                 "clock_constraints": [],
             }
         else:
+            extracted_constraints = _extract_constraints(edge.guard, ctx)
             guard = {
-                "boolean_condition": _translate_expr(edge.guard, ctx),
-                "clock_constraints": [],  # TODO: implement clock constraints
+                "boolean_condition": _translate_expr(
+                    expressions.logic_all(*extracted_constraints.conjuncts), ctx
+                ),
+                "clock_constraints": extracted_constraints.constraints,
             }
 
         destinations: t.List[_JSONObject] = []
+
+        edge_ctx = _TranslationContext(
+            parameters,
+            declarations,
+            edge.create_edge_scope(instance.automaton.scope),
+            instance,
+        )
 
         for destination in edge.destinations:
             probability: _JSONObject
             if destination.probability is None:
                 probability = {"kind": "CONSTANT", "value": 1.0}
             else:
-                probability = _translate_expr(destination.probability, ctx)
+                probability = _translate_expr(destination.probability, edge_ctx)
 
             assignments: t.List[_JSONObject] = []
 
+            reset_clocks: t.List[_JSONObject] = []
+
             for assignment in destination.assignments:
                 assert isinstance(assignment.target, effects.Name)
-                assignments.append(
-                    {
-                        "target": _translate_identifier(
-                            assignment.target.identifier, ctx
-                        ),
-                        "value": _translate_expr(assignment.value, ctx),
-                        "index": assignment.index,
-                    }
-                )
+                declaration = edge_ctx.scope.lookup(assignment.target.identifier)
+                if declaration.typ == model.types.CLOCK:
+                    assert assignment.index == 0
+                    assert isinstance(assignment.value, expressions.IntegerConstant)
+                    reset_clocks.append(
+                        {
+                            "kind": "VARIABLE",
+                            "identifier": _translate_identifier(
+                                assignment.target.identifier, ctx
+                            )["identifier"],
+                        }
+                    )
+                else:
+                    assignments.append(
+                        {
+                            "target": _translate_identifier(
+                                assignment.target.identifier, edge_ctx
+                            ),
+                            "value": _translate_expr(assignment.value, edge_ctx),
+                            "index": assignment.index,
+                        }
+                    )
 
             destinations.append(
                 {
                     "location": location_names[destination.location],
                     "probability": probability,
                     "assignments": assignments,
-                    "reset": [],  # TODO: implement clocks to reset
+                    "reset": reset_clocks,
                 }
             )
 
@@ -506,22 +685,47 @@ def _translate_link(
 
 def _update_initial_values(
     initial_values: _JSONObject,
+    clock_constraints: t.List[_JSONObject],
     declarations: t.Iterable[VariableDeclaration],
 ) -> None:
     for declaration in declarations:
         initial_value = declaration.initial_value
         assert initial_value is not None
+        value: t.Union[int, bool, float]
         if isinstance(initial_value, expressions.IntegerConstant):
-            initial_values[declaration.identifier] = initial_value.integer
+            value = initial_value.integer
         elif isinstance(initial_value, expressions.BooleanConstant):
-            initial_values[declaration.identifier] = initial_value.boolean
+            value = initial_value.boolean
         elif isinstance(initial_value, expressions.RealConstant):
-            initial_values[declaration.identifier] = initial_value.as_float
+            value = initial_value.as_float
         else:
             raise CompileError(
                 f"Invalid initial value {initial_value!r} for "
                 f"variable {declaration.identifier!r}."
             )
+
+        if declaration.is_transient:
+            continue
+        elif declaration.typ == model.types.CLOCK:
+            assert isinstance(value, (int, float))
+            clock_constraints.append(
+                {
+                    "left": {"kind": "VARIABLE", "identifier": declaration.identifier},
+                    "right": {"kind": "ZERO"},
+                    "is_strict": False,
+                    "bound": {"kind": "CONSTANT", "value": value},
+                }
+            )
+            clock_constraints.append(
+                {
+                    "left": {"kind": "ZERO"},
+                    "right": {"kind": "VARIABLE", "identifier": declaration.identifier},
+                    "is_strict": False,
+                    "bound": {"kind": "CONSTANT", "value": -value},
+                }
+            )
+        else:
+            initial_values[declaration.identifier] = value
 
 
 def _translate_initial_states(
@@ -540,10 +744,38 @@ def _translate_initial_states(
         location_name = instance_to_location_names[instance][initial_location]
         initial_locations[instance_name] = location_name
     initial_values: _JSONObject = {}
-    _update_initial_values(initial_values, declarations.globals_table.values())
+    clock_constraints: t.List[_JSONObject] = []
+    _update_initial_values(
+        initial_values, clock_constraints, declarations.globals_table.values()
+    )
     for variable_declarations in declarations.locals_table.values():
-        _update_initial_values(initial_values, variable_declarations.values())
-    return [{"locations": initial_locations, "values": initial_values, "zone": []}]
+        _update_initial_values(
+            initial_values, clock_constraints, variable_declarations.values()
+        )
+    # for declaration in declarations.all_declarations:
+    #     if declaration.typ != model.types.CLOCK:
+    #         continue
+    #     for other_declaration in declarations.all_declarations:
+    #         if (
+    #             declaration == other_declaration
+    #             or other_declaration.typ != model.types.CLOCK
+    #         ):
+    #             continue
+    #         clock_constraints.append(
+    #             {
+    #                 "left": {"kind": "VARIABLE", "identifier": declaration.identifier},
+    #                 "right": {"kind": "VARIABLE", "identifier": other_declaration.identifier},
+    #                 "is_strict": False,
+    #                 "bound": {"kind": "CONSTANT", "value": },
+    #             }
+    #         )
+    return [
+        {
+            "locations": initial_locations,
+            "values": initial_values,
+            "zone": clock_constraints,
+        }
+    ]
 
 
 def _translate_network(
@@ -555,12 +787,23 @@ def _translate_network(
     declarations: Declarations,
     parameters: t.Mapping[str, model.Expression],
 ) -> str:
+    ctx = _TranslationContext(parameters, declarations, network.ctx.global_scope, None)
     return json.dumps(
         {
             "declarations": {
                 "global_variables": _compute_global_variables(declarations),
-                "transient_variables": {},  # TODO: implement transient variables
-                "clock_variables": [],  # TODO: implement clock variables
+                "transient_variables": {
+                    declaration.identifier: _translate_expr(
+                        declaration.initial_value, ctx
+                    )
+                    for declaration in declarations.all_declarations
+                    if declaration.is_transient
+                },
+                "clock_variables": [
+                    declaration.identifier
+                    for declaration in declarations.all_declarations
+                    if declaration.typ == model.types.CLOCK
+                ],
                 "action_labels": _compute_action_types(network),
             },
             "automata": {

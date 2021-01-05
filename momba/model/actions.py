@@ -54,7 +54,7 @@ class WriteArgument(ActionArgument):
 
 @d.dataclass(frozen=True)
 class ReadArgument(ActionArgument):
-    # has to be declared in the automata's scope, may be transient
+    # gets declared in the edge scope
     identifier: str
 
 
@@ -90,7 +90,6 @@ class ActionPattern:
                         argument.identifier, parameter.typ, is_transient=True
                     )
             elif isinstance(argument, ReadArgument):
-                assert scope.is_declared(argument.identifier)
-                assert scope.lookup(argument.identifier).typ.is_assignable_from(
-                    parameter.typ
+                scope.declare_variable(
+                    argument.identifier, parameter.typ, is_transient=True
                 )

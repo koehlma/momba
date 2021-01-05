@@ -8,8 +8,10 @@ use super::model::*;
 /// a sequence of values coined *arguments*.
 /// While action labels are generally represented as strings, we internally store
 /// the index into the [action label declarations][Declarations] of the [Network].
-/// Hence, the index is only meaningful with respect to a particular instance of
-/// a loaded [Network].
+/// Hence, the [label index][Action::label_index] is only meaningful with respect to
+/// a particular instance of [Network].
+/// The string action label can be retrieved via [LabeledAction::label] providing
+/// the network the action belongs to.
 #[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Debug)]
 pub enum Action {
     /// The silent action.
@@ -68,6 +70,17 @@ impl LabeledAction {
     /// Crates a new labeled action.
     pub(crate) fn new(label: LabelIndex, arguments: Box<[Value]>) -> Self {
         LabeledAction { label, arguments }
+    }
+
+    pub fn new_with_network(network: &Network, label: &str, arguments: Box<[Value]>) -> Self {
+        LabeledAction {
+            label: network
+                .declarations
+                .action_labels
+                .get_index_of(label)
+                .unwrap(),
+            arguments,
+        }
     }
 
     /// Returns the index of the action's label.

@@ -223,7 +223,7 @@ impl Value {
     #[inline(always)]
     pub fn apply_floor_div(self, other: Value) -> Value {
         match (self, other) {
-            (Int64(left), Int64(right)) => Int64(left / right),
+            (Int64(left), Int64(right)) => Int64(left.div_euclid(right)),
             (Float64(left), Float64(right)) => Int64((left / right).floor() as i64),
             (Int64(left), Float64(right)) => {
                 Int64((NotNan::new(left as f64).unwrap() / right).floor() as i64)
@@ -252,7 +252,7 @@ impl Value {
     #[inline(always)]
     pub fn apply_mod(self, other: Value) -> Value {
         match (self, other) {
-            (Int64(left), Int64(right)) => Int64(left % right),
+            (Int64(left), Int64(right)) => Int64(left.rem_euclid(right)),
             (Float64(left), Float64(right)) => Float64(left % right),
             (left, right) => panic!("Invalid operands in expression ({:?} % {:?}).", left, right),
         }

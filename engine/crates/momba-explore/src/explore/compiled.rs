@@ -55,7 +55,7 @@ pub struct CompiledAutomaton<Z: time::TimeType> {
 
 pub struct CompiledLocation<Z: time::TimeType> {
     pub reference: LocationReference,
-    pub invariant: Z::CompiledClockConstraints,
+    pub invariant: Vec<CompiledClockConstraint<Z>>,
     pub internal_edges: Vec<CompiledEdge<Z>>,
     pub visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>>,
 }
@@ -63,13 +63,13 @@ pub struct CompiledLocation<Z: time::TimeType> {
 impl<Z: time::TimeType> CompiledLocation<Z> {
     fn new(
         network: &model::Network,
+        global_scope: &evaluate::Scope<2>,
         zone_compiler: &Z,
         automaton: &model::Automaton,
         location: &model::Location,
         reference: LocationReference,
         assignment_groups: &IndexSet<usize>,
     ) -> Self {
-        let invariant = zone_compiler.compile_constraints(&location.invariant);
         let mut internal_edges = Vec::new();
         let mut visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>> =
             (0..network.declarations.action_labels.len())
@@ -101,8 +101,10 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
                         write_arguments: arguments
                             .iter()
                             .enumerate()
-                            .filter_map(|(_argument_index, argument)| match argument {
-                                model::PatternArgument::Write { value: _ } => todo!(),
+                            .filter_map(|(argument_index, argument)| match argument {
+                                model::PatternArgument::Write { value } => {
+                                    Some((argument_index, global_scope.compile(value)))
+                                }
                                 _ => None,
                             })
                             .collect(),
@@ -112,7 +114,17 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
         }
         CompiledLocation {
             reference,
-            invariant,
+            invariant: location
+                .invariant
+                .iter()
+                .map(|constraint| {
+                    CompiledClockConstraint::compile(
+                        zone_compiler,
+                        constraint,
+                        &network.global_scope(),
+                    )
+                })
+                .collect(),
             internal_edges: internal_edges,
             visible_edges: visible_edges,
         }
@@ -133,17 +145,24 @@ pub struct CompiledVisibleEdge<Z: time::TimeType> {
 impl<Z: time::TimeType> CompiledEdge<Z> {
     pub fn new(
         network: &model::Network,
-        zone_compiler: &Z,
+        time_type: &Z,
         automaton: &model::Automaton,
         edge: &model::Edge,
         reference: EdgeReference,
         assignment_groups: &IndexSet<usize>,
     ) -> Self {
         let global_scope = network.global_scope();
-        let edge_scope = edge.edge_scope(network);
+        let edge_scope = edge.edge_scope(network, edge);
         let guard = CompiledGuard {
             boolean_condition: global_scope.compile(&edge.guard.boolean_condition),
-            clock_constraints: zone_compiler.compile_constraints(&edge.guard.clock_constraints),
+            clock_constraints: edge
+                .guard
+                .clock_constraints
+                .iter()
+                .map(|constraint| {
+                    CompiledClockConstraint::compile(time_type, constraint, &global_scope)
+                })
+                .collect(),
         };
         let destinations = edge
             .destinations
@@ -159,7 +178,7 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
                     .get_index_of(&destination.location)
                     .unwrap(),
                 probability: edge_scope.compile(&destination.probability),
-                reset: zone_compiler.compile_clock_set(&destination.reset),
+                reset: time_type.compile_clocks(&destination.reset),
                 assignments: assignment_groups
                     .iter()
                     .map(|index| {
@@ -194,14 +213,42 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
 
 pub struct CompiledGuard<Z: time::TimeType> {
     pub boolean_condition: evaluate::CompiledExpression<2>,
-    pub clock_constraints: Z::CompiledClockConstraints,
+    pub clock_constraints: Vec<CompiledClockConstraint<Z>>,
+}
+
+pub struct CompiledClockConstraint<T: time::TimeType> {
+    pub difference: T::CompiledDifference,
+    pub is_strict: bool,
+    pub bound: evaluate::CompiledExpression<2>,
+}
+
+impl<T: time::TimeType> CompiledClockConstraint<T> {
+    pub fn compile(
+        time_type: &T,
+        constraint: &model::ClockConstraint,
+        global_scope: &evaluate::Scope<2>,
+    ) -> Self {
+        CompiledClockConstraint {
+            difference: time_type.compile_difference(&constraint.left, &constraint.right),
+            is_strict: constraint.is_strict,
+            bound: global_scope.compile(&constraint.bound),
+        }
+    }
+
+    pub fn evaluate(&self, global_env: &GlobalEnvironment) -> time::Constraint<T> {
+        time::Constraint {
+            difference: self.difference.clone(),
+            is_strict: self.is_strict,
+            bound: self.bound.evaluate(global_env),
+        }
+    }
 }
 
 pub struct CompiledDestination<Z: time::TimeType> {
     pub reference: DestinationReference,
     pub location: LocationIndex,
     pub probability: evaluate::CompiledExpression<3>,
-    pub reset: Z::CompiledClockSet,
+    pub reset: Z::CompiledClocks,
     pub assignments: Box<[Box<[CompiledAssignment]>]>,
 }
 
@@ -268,7 +315,8 @@ pub struct CompiledNetwork<Z: time::TimeType> {
 
 impl<Z: time::TimeType> CompiledNetwork<Z> {
     pub fn new(network: &model::Network) -> Self {
-        let zone_compiler = Z::new(network);
+        let zone_compiler = Z::new(network).unwrap();
+        let global_scope = network.global_scope();
         let mut assignment_groups: IndexSet<usize> = network
             .automata
             .values()
@@ -296,6 +344,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                     .map(|(location_index, location)| {
                         CompiledLocation::new(
                             network,
+                            &global_scope,
                             &zone_compiler,
                             automaton,
                             location,
@@ -369,13 +418,14 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
     pub fn compute_transition<'c>(
         &self,
         zone: &Z::Valuations,
+        global_env: &GlobalEnvironment,
         link: &'c CompiledLink,
         link_edges: &[&LinkEdge<'c, Z>],
     ) -> Option<Transition<'c, Z>> {
         debug_assert_eq!(link.sync_vector.len(), link_edges.len());
         let mut slots = link.slots_template.clone();
-        let mut zone = zone.clone();
-        for (link_edge, _vector_item) in link_edges.iter().zip(link.sync_vector.iter()) {
+        let mut valuations = zone.clone();
+        for (link_edge, _) in link_edges.iter().zip(link.sync_vector.iter()) {
             for (slot_index, value) in link_edge.write_slots.iter() {
                 match &slots[*slot_index] {
                     None => slots[*slot_index] = Some(value.clone()),
@@ -386,8 +436,24 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                     }
                 }
             }
-            // TODO: Extract constraints from `link_edge` and apply to `zone`.
-            // TODO: Check whether `zone` is empty and return `None` if this is the case.
+            // We may want to improve the efficiency of this function in the future.
+            //
+            // Instead of applying each constraint individually applying them in bulk
+            // makes canonicalization more efficient for clock zones.
+            valuations = link_edge.compiled.base.guard.clock_constraints.iter().fold(
+                valuations,
+                |valuations, constraint| {
+                    self.zone_compiler.constrain(
+                        valuations,
+                        &constraint.difference,
+                        constraint.is_strict,
+                        constraint.bound.evaluate(&global_env),
+                    )
+                },
+            );
+            if self.zone_compiler.is_empty(&valuations) {
+                return None;
+            }
         }
         slots
             .into_iter()
@@ -412,7 +478,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                         .iter()
                         .map(|link_edge| &link_edge.compiled.base)
                         .collect(),
-                    zone,
+                    valuations,
                     actions,
                     action: match &link.result {
                         CompiledLinkResult::Silent => Action::Silent,

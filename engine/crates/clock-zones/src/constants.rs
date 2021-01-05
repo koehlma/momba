@@ -45,24 +45,24 @@ int_constant_impl!(i128);
 
 macro_rules! float_constant_impl {
     ($float_type:ty) => {
-        impl Constant for $float_type {
+        impl Constant for ordered_float::NotNan<$float_type> {
             #[inline(always)]
             fn max_value() -> Option<Self> {
-                Some(<$float_type>::MAX)
+                Some(ordered_float::NotNan::new(<$float_type>::MAX).unwrap())
             }
             #[inline(always)]
             fn min_value() -> Option<Self> {
-                Some(<$float_type>::MIN)
+                Some(ordered_float::NotNan::new(<$float_type>::MIN).unwrap())
             }
 
             #[inline(always)]
             fn zero() -> Self {
-                0.0
+                ordered_float::NotNan::new(0.0).unwrap()
             }
 
             #[inline(always)]
             fn checked_add(&self, other: &Self) -> Option<Self> {
-                let result = self + other;
+                let result = *self + *other;
                 if result.is_infinite() {
                     None
                 } else {
@@ -71,7 +71,7 @@ macro_rules! float_constant_impl {
             }
             #[inline(always)]
             fn checked_neg(&self) -> Option<Self> {
-                Some(-self)
+                Some(-*self)
             }
         }
     };

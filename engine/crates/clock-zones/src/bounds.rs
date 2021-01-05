@@ -108,7 +108,7 @@ int_bound_impl!(i32);
 int_bound_impl!(i64);
 int_bound_impl!(i128);
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct ConstantBound<C: Constant> {
     constant: Option<C>,
     is_strict: bool,
@@ -287,8 +287,22 @@ mod tests {
     bound_test!(ConstantBound<i64>, test_bound_i64_wrapped, [-13, 42]);
     bound_test!(ConstantBound<i128>, test_bound_i128_wrapped, [-13, 42]);
 
-    bound_test!(ConstantBound<f32>, test_bound_f32, [-13.0, 42.0]);
-    bound_test!(ConstantBound<f64>, test_bound_f64, [-13.0, 42.0]);
+    bound_test!(
+        ConstantBound<ordered_float::NotNan<f32>>,
+        test_bound_f32,
+        [
+            ordered_float::NotNan::new(-13.0).unwrap(),
+            ordered_float::NotNan::new(42.0).unwrap()
+        ]
+    );
+    bound_test!(
+        ConstantBound<ordered_float::NotNan<f64>>,
+        test_bound_f64,
+        [
+            ordered_float::NotNan::new(-13.0).unwrap(),
+            ordered_float::NotNan::new(42.0).unwrap()
+        ]
+    );
 
     #[cfg(feature = "bigint")]
     mod bigint {

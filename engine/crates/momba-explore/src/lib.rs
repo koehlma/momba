@@ -1,6 +1,6 @@
 #![feature(min_const_generics)]
 
-//! State space exploration engine for PTAs and MDPs with variables.
+//! State space exploration engine for PTAs and MDPs augmented with variables.
 //!
 //! This crate provides the necessary functionality for efficiently exploring the
 //! state space of *Probabilistic Timed Automata* (PTAs) and *Markov Decision Processes*

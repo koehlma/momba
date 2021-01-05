@@ -142,7 +142,7 @@ impl<B: Bound> DBMLayout<B> for Vec<Vec<B>> {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct DBM<B: Bound, L: DBMLayout<B> = Vec<Vec<B>>> {
     dimension: usize,
     layout: L,

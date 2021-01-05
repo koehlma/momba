@@ -1,4 +1,5 @@
 use std::cmp::max;
+use std::collections::HashMap;
 use std::convert::TryInto;
 
 use indexmap::IndexSet;
@@ -149,7 +150,7 @@ impl CompileContext {
 }
 
 pub struct Scope<const BANKS: usize> {
-    banks: [IndexSet<String>; BANKS],
+    banks: [HashMap<String, usize>; BANKS],
 }
 
 impl<const BANKS: usize> Scope<BANKS> {
@@ -159,9 +160,10 @@ impl<const BANKS: usize> Scope<BANKS> {
             .enumerate()
             .rev()
             .filter_map(|(bank, identifiers)| {
-                identifiers
-                    .get_index_of(identifier)
-                    .map(|register| RegisterAddress { bank, register })
+                identifiers.get(identifier).map(|register| RegisterAddress {
+                    bank,
+                    register: *register,
+                })
             })
             .next()
     }
@@ -324,7 +326,24 @@ impl<const BANKS: usize> Scope<BANKS> {
                     )
                 })
             }
-            _ => panic!("not implemented"),
+            Expression::Conditional(ConditionalExpression {
+                condition,
+                consequence,
+                alternative,
+            }) => {
+                let condition = compile!(condition);
+                let consequence = compile!(consequence);
+                let alternative = compile!(alternative);
+
+                construct!(move |env, stack| {
+                    if evaluate!(condition, env, stack).try_into().unwrap() {
+                        evaluate!(consequence, env, stack)
+                    } else {
+                        evaluate!(alternative, env, stack)
+                    }
+                })
+            }
+            _ => panic!("not implemented {:?}", expression),
         }
     }
 
@@ -380,12 +399,14 @@ impl Network {
                 self.declarations
                     .global_variables
                     .keys()
-                    .map(|identifier| identifier.clone())
+                    .enumerate()
+                    .map(|(index, identifier)| (identifier.clone(), index))
                     .collect(),
                 self.declarations
                     .transient_variables
                     .keys()
-                    .map(|identifier| identifier.clone())
+                    .enumerate()
+                    .map(|(index, identifier)| (identifier.clone(), index))
                     .collect(),
             ],
         }
@@ -397,20 +418,34 @@ impl Network {
                 .declarations
                 .global_variables
                 .keys()
-                .map(|identifier| identifier.clone())
+                .enumerate()
+                .map(|(index, identifier)| (identifier.clone(), index))
                 .collect()],
         }
     }
 }
 
 impl Edge {
-    pub fn edge_scope(&self, network: &Network) -> Scope<3> {
+    pub fn edge_scope(&self, network: &Network, edge: &Edge) -> Scope<3> {
         let global_scope = network.global_scope();
         Scope {
             banks: [
                 global_scope.banks[0].clone(),
                 global_scope.banks[1].clone(),
-                IndexSet::new(),
+                match &edge.pattern {
+                    ActionPattern::Silent => HashMap::new(),
+                    ActionPattern::Labeled(labeled) => labeled
+                        .arguments
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(index, argument)| match argument {
+                            PatternArgument::Read { identifier } => {
+                                Some((identifier.clone(), index))
+                            }
+                            _ => None,
+                        })
+                        .collect(),
+                },
             ],
         }
     }
