@@ -1,10 +1,16 @@
+/// Represents a constant.
 pub trait Constant: Clone + PartialEq + PartialOrd {
+    /// The maximal value by which the difference can be bounded.
     fn max_value() -> Option<Self>;
+    /// The minimal value by which the difference can be bounded.
     fn min_value() -> Option<Self>;
 
+    /// The constant being equivalent to `0`.
     fn zero() -> Self;
 
+    /// Overflow checked addition of two constants.
     fn checked_add(&self, other: &Self) -> Option<Self>;
+    /// Overflow checked negation of a constant.
     fn checked_neg(&self) -> Option<Self>;
 }
 
@@ -43,117 +49,49 @@ int_constant_impl!(i32);
 int_constant_impl!(i64);
 int_constant_impl!(i128);
 
-macro_rules! float_constant_impl {
-    ($float_type:ty) => {
-        impl Constant for ordered_float::NotNan<$float_type> {
-            #[inline(always)]
-            fn max_value() -> Option<Self> {
-                Some(ordered_float::NotNan::new(<$float_type>::MAX).unwrap())
-            }
-            #[inline(always)]
-            fn min_value() -> Option<Self> {
-                Some(ordered_float::NotNan::new(<$float_type>::MIN).unwrap())
-            }
+#[cfg(feature = "float")]
+mod float {
+    use ordered_float::NotNan;
 
-            #[inline(always)]
-            fn zero() -> Self {
-                ordered_float::NotNan::new(0.0).unwrap()
-            }
+    use super::*;
 
-            #[inline(always)]
-            fn checked_add(&self, other: &Self) -> Option<Self> {
-                let result = *self + *other;
-                if result.is_infinite() {
-                    None
-                } else {
-                    Some(result)
+    macro_rules! float_constant_impl {
+        ($float_type:ty) => {
+            impl Constant for NotNan<$float_type> {
+                #[inline(always)]
+                fn max_value() -> Option<Self> {
+                    Some(NotNan::new(<$float_type>::MAX).unwrap())
+                }
+                #[inline(always)]
+                fn min_value() -> Option<Self> {
+                    Some(NotNan::new(<$float_type>::MIN).unwrap())
+                }
+
+                #[inline(always)]
+                fn zero() -> Self {
+                    NotNan::new(0.0).unwrap()
+                }
+
+                #[inline(always)]
+                fn checked_add(&self, other: &Self) -> Option<Self> {
+                    let result = *self + *other;
+                    if result.is_infinite() {
+                        None
+                    } else {
+                        Some(result)
+                    }
+                }
+                #[inline(always)]
+                fn checked_neg(&self) -> Option<Self> {
+                    Some(-*self)
                 }
             }
-            #[inline(always)]
-            fn checked_neg(&self) -> Option<Self> {
-                Some(-*self)
-            }
-        }
-    };
-}
-
-float_constant_impl!(f32);
-float_constant_impl!(f64);
-
-#[cfg(feature = "bigint")]
-pub mod bigint {
-    use std::borrow::Borrow;
-    use std::rc::Rc;
-
-    use num_bigint::BigInt;
-    use num_traits::Zero;
-
-    use super::*;
-
-    impl Constant for Rc<BigInt> {
-        #[inline(always)]
-        fn max_value() -> Option<Self> {
-            None
-        }
-        #[inline(always)]
-        fn min_value() -> Option<Self> {
-            None
-        }
-
-        #[inline(always)]
-        fn zero() -> Self {
-            Rc::new(BigInt::zero())
-        }
-
-        #[inline(always)]
-        fn checked_add(&self, other: &Self) -> Option<Self> {
-            let left: &BigInt = self.borrow();
-            let right: &BigInt = other.borrow();
-            Some(Rc::new(left + right))
-        }
-        #[inline(always)]
-        fn checked_neg(&self) -> Option<Self> {
-            let value: &BigInt = self.borrow();
-            Some(Rc::new(-value))
-        }
+        };
     }
+
+    float_constant_impl!(f32);
+    float_constant_impl!(f64);
 }
 
-#[cfg(feature = "rational")]
-pub mod rational {
-    use std::borrow::Borrow;
-    use std::rc::Rc;
-
-    use num_rational::BigRational;
-    use num_traits::Zero;
-
-    use super::*;
-
-    impl Constant for Rc<BigRational> {
-        #[inline(always)]
-        fn max_value() -> Option<Self> {
-            None
-        }
-        #[inline(always)]
-        fn min_value() -> Option<Self> {
-            None
-        }
-
-        #[inline(always)]
-        fn zero() -> Self {
-            Rc::new(BigRational::zero())
-        }
-
-        #[inline(always)]
-        fn checked_add(&self, other: &Self) -> Option<Self> {
-            let left: &BigRational = self.borrow();
-            let right: &BigRational = other.borrow();
-            Some(Rc::new(left + right))
-        }
-        #[inline(always)]
-        fn checked_neg(&self) -> Option<Self> {
-            let value: &BigRational = self.borrow();
-            Some(Rc::new(-value))
-        }
-    }
-}
+#[cfg(feature = "float")]
+pub use float::*;
