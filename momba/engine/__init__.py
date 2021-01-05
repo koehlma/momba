@@ -28,6 +28,7 @@ class Action:
 
 @d.dataclass(frozen=True, repr=False)
 class MDPDestination:
+    _explorer: MDPExplorer
     _state: t.Any
     _transition: t.Any
     _destination: t.Any
@@ -39,20 +40,21 @@ class MDPDestination:
     @functools.cached_property
     def successor(self) -> MDPState:
         return MDPState(
-            self._state._explorer,
+            self._explorer,
             self._destination.successor(self._state, self._transition),
         )
 
 
 @d.dataclass(frozen=True, repr=False)
 class MDPTransition:
+    _explorer: MDPExplorer
     _state: t.Any
     _transition: t.Any
 
     @functools.cached_property
     def destinations(self) -> t.Sequence[MDPDestination]:
         return tuple(
-            MDPDestination(self._state, self._transition, transition)
+            MDPDestination(self._explorer, self._state, self._transition, transition)
             for transition in self._transition.destinations(self._state)
         )
 
@@ -65,7 +67,7 @@ class MDPTransition:
         assert isinstance(label, str)
         arguments = rust_action.arguments()
         return Action(
-            self._transition._explorer.network.ctx.get_action_type_by_name(label),
+            self._explorer.network.ctx.get_action_type_by_name(label),
             tuple(arguments),
         )
 
@@ -78,7 +80,7 @@ class MDPState:
     @functools.cached_property
     def transitions(self) -> t.Sequence[MDPTransition]:
         return tuple(
-            MDPTransition(self._state, transition)
+            MDPTransition(self._explorer, self._state, transition)
             for transition in self._state.transitions()
         )
 
