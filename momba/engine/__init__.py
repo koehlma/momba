@@ -13,11 +13,17 @@ import typing as t
 
 import functools
 
-from . import translator
-
 from momba_engine import momba_engine as _engine
 
+from . import translator
+
 from .. import model
+
+
+@d.dataclass(frozen=True, repr=False)
+class Action:
+    action_type: model.ActionType
+    arguments: t.Tuple[t.Union[int, float, bool], ...]
 
 
 @d.dataclass(frozen=True, repr=False)
@@ -29,6 +35,13 @@ class MDPDestination:
     @property
     def probability(self) -> float:
         return self._destination.probability()
+
+    @functools.cached_property
+    def successor(self) -> MDPState:
+        return MDPState(
+            self._state._explorer,
+            self._destination.successor(self._state, self._transition),
+        )
 
 
 @d.dataclass(frozen=True, repr=False)
@@ -43,10 +56,23 @@ class MDPTransition:
             for transition in self._transition.destinations(self._state)
         )
 
+    @functools.cached_property
+    def action(self) -> t.Optional[Action]:
+        rust_action = self._transition.result_action()
+        if rust_action.is_silent():
+            return None
+        label = rust_action.label()
+        assert isinstance(label, str)
+        arguments = rust_action.arguments()
+        return Action(
+            self._transition._explorer.network.ctx.get_action_type_by_name(label),
+            tuple(arguments),
+        )
+
 
 @d.dataclass(frozen=True, repr=False)
 class MDPState:
-    _translation: translator.Translation
+    _explorer: MDPExplorer
     _state: t.Any
 
     @functools.cached_property
@@ -60,13 +86,13 @@ class MDPState:
     def global_env(self) -> t.Mapping[str, t.Any]:
         return {
             name: self._state.get_global_value(declaration.identifier)
-            for name, declaration in self._translation.declarations.globals_table.items()
+            for name, declaration in self._explorer.translation.declarations.globals_table.items()
         }
 
     def get_local_env(self, instance: model.Instance) -> t.Mapping[str, t.Any]:
         return {
             name: self._state.get_global_value(declaration.identifier)
-            for name, declaration in self._translation.declarations.locals_table[
+            for name, declaration in self._explorer.translation.declarations.locals_table[
                 instance
             ].items()
         }
@@ -74,28 +100,26 @@ class MDPState:
     @functools.cached_property
     def locations(self) -> t.Mapping[model.Instance, model.Location]:
         return {
-            instance: self._translation.reversed_instance_to_location_names[instance][
-                self._state.get_location_of(name)
-            ]
-            for instance, name in self._translation.instance_names.items()
+            instance: self._explorer.translation.reversed_instance_to_location_names[
+                instance
+            ][self._state.get_location_of(name)]
+            for instance, name in self._explorer.translation.instance_names.items()
         }
 
 
 @d.dataclass(frozen=True, repr=False)
 class MDPExplorer:
     translation: translator.Translation
+    network: model.Network
     _compiled: t.Any
 
     @functools.cached_property
     def initial_states(self) -> t.Sequence[MDPState]:
-        return tuple(
-            MDPState(self.translation, state)
-            for state in self._compiled.initial_states()
-        )
+        return tuple(MDPState(self, state) for state in self._compiled.initial_states())
 
 
 def compile_mdp(network: model.Network) -> MDPExplorer:
     translation = translator.translate_network(network)
     return MDPExplorer(
-        translation, _engine.MDPExplorer(translation.json_network)  # type: ignore
+        translation, network, _engine.MDPExplorer(translation.json_network)  # type: ignore
     )

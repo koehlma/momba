@@ -6,12 +6,6 @@ use pyo3::prelude::*;
 
 use momba_explore;
 
-#[pyclass]
-struct MDPState {
-    explorer: Arc<momba_explore::MDPExplorer>,
-    state: momba_explore::State<momba_explore::time::NoClocks>,
-}
-
 struct Value(momba_explore::model::Value);
 
 impl IntoPy<PyObject> for Value {
@@ -29,6 +23,51 @@ impl IntoPy<PyObject> for Value {
     }
 }
 
+#[pyclass]
+struct Action {
+    explorer: Arc<momba_explore::MDPExplorer>,
+    action: momba_explore::Action,
+}
+
+#[pymethods]
+impl Action {
+    fn is_silent(&self) -> bool {
+        matches!(self.action, momba_explore::Action::Silent)
+    }
+
+    fn is_labeled(&self) -> bool {
+        matches!(self.action, momba_explore::Action::Labeled(_))
+    }
+
+    fn label(&self) -> Option<&str> {
+        match &self.action {
+            momba_explore::Action::Labeled(labeled) => {
+                Some(labeled.label(&self.explorer.network).unwrap())
+            }
+            _ => None,
+        }
+    }
+
+    fn arguments(&self) -> Vec<Value> {
+        match &self.action {
+            momba_explore::Action::Labeled(labeled) => labeled
+                .arguments()
+                .iter()
+                .map(|value| Value(value.clone()))
+                .collect(),
+            _ => Vec::new(),
+        }
+    }
+}
+
+#[pyclass]
+struct MDPState {
+    explorer: Arc<momba_explore::MDPExplorer>,
+    state: momba_explore::State<
+        <momba_explore::time::NoClocks as momba_explore::time::TimeType>::Valuations,
+    >,
+}
+
 #[pymethods]
 impl MDPState {
     fn transitions(&self) -> Vec<MDPTransition> {
@@ -43,14 +82,25 @@ impl MDPState {
     }
 
     fn get_global_value(&self, identifier: &str) -> Option<Value> {
-        self.state
-            .get_global_value(&self.explorer.network, identifier)
-            .map(|value| Value(value.clone()))
+        if !self
+            .explorer
+            .network
+            .declarations
+            .global_variables
+            .contains_key(identifier)
+        {
+            None
+        } else {
+            Some(Value(
+                self.state
+                    .get_global_value(&self.explorer, identifier)
+                    .clone(),
+            ))
+        }
     }
 
     fn get_location_of(&self, automaton_name: &str) -> Option<&String> {
-        self.state
-            .get_location_of(&self.explorer.network, automaton_name)
+        Some(self.state.get_location_of(&self.explorer, automaton_name))
     }
 }
 
@@ -94,33 +144,57 @@ impl MDPTransition {
         self.explorer
             .destinations(&state.state, self.transition())
             .into_iter()
-            .map(|destination| MDPDestination::new(&self.explorer, destination))
+            .map(|destination| unsafe { MDPDestination::new(&self.explorer, destination) })
             .collect()
+    }
+
+    fn result_action(&self) -> Action {
+        Action {
+            explorer: self.explorer.clone(),
+            action: self.transition().result_action().clone(),
+        }
     }
 }
 
 #[pyclass]
 struct MDPDestination {
+    unsafe_destination: momba_explore::Destination<'static, momba_explore::time::NoClocks>,
     explorer: Arc<momba_explore::MDPExplorer>,
-    destination: momba_explore::Destination<'static, momba_explore::time::NoClocks>,
 }
 
 impl MDPDestination {
-    fn new<'e>(
+    unsafe fn new<'e>(
         explorer: &'e Arc<momba_explore::MDPExplorer>,
         destination: momba_explore::Destination<'e, momba_explore::time::NoClocks>,
     ) -> Self {
         MDPDestination {
             explorer: explorer.clone(),
-            destination: unsafe { mem::transmute(destination) },
+            unsafe_destination: mem::transmute(destination),
         }
+    }
+
+    fn destination<'d>(
+        &'d self,
+    ) -> &'d momba_explore::Destination<'d, momba_explore::time::NoClocks> {
+        &self.unsafe_destination
     }
 }
 
 #[pymethods]
 impl MDPDestination {
     fn probability(&self) -> f64 {
-        self.destination.probability()
+        self.destination().probability()
+    }
+
+    fn successor(&self, state: &MDPState, transition: &MDPTransition) -> MDPState {
+        MDPState {
+            explorer: self.explorer.clone(),
+            state: self.explorer.successor(
+                &state.state,
+                transition.transition(),
+                self.destination(),
+            ),
+        }
     }
 }
 
@@ -158,6 +232,9 @@ fn momba_engine(_py: Python, module: &PyModule) -> PyResult<()> {
     module.add_class::<MDPExplorer>()?;
     module.add_class::<MDPState>()?;
     module.add_class::<MDPTransition>()?;
+    module.add_class::<MDPDestination>()?;
+
+    module.add_class::<Action>()?;
 
     Ok(())
 }
