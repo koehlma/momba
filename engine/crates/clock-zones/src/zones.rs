@@ -144,7 +144,7 @@ pub trait Zone<B: Bound> {
         U: IntoIterator<Item = Constraint<B>>;
 
     /// Returns the number of clocks of this zone.
-    fn num_clocks(self) -> usize;
+    fn num_clocks(&self) -> usize;
 
     /// Retrieves the difference bound for `left - right`.
     fn get_bound(&self, left: Clock, right: Clock) -> &B;
@@ -268,7 +268,7 @@ impl<B: Bound, L: Layout<B>> Zone<B> for DBM<B, L> {
     }
 
     #[inline(always)]
-    fn num_clocks(self) -> usize {
+    fn num_clocks(&self) -> usize {
         self.dimension - 1
     }
 
