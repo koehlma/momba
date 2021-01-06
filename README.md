@@ -48,10 +48,7 @@ The APIs of `momba.explore` are unstable and will change in the future as we are
 In case you are using `momba.explore`, we recommend depending on a precise version of Momba.
 
 
-
-
-
-## Why?
+## Rationale
 
 The idea to harvest a general purpose programming environment for formal modelling is not new at all.
 For instance, the [SVL language](https://link.springer.com/chapter/10.1007/0-306-47003-9_24) combines the power of process algebraic modelling with the power of the bourne shell.
