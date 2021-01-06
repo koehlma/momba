@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::iter::IntoIterator;
 
 use crate::bounds::*;
@@ -186,6 +187,11 @@ pub trait Zone<B: Bound> {
 
     /// Checks whether the zone includes the other zone.
     fn includes(&self, other: &Self) -> bool;
+
+    /// Creates a resized copy of the zone by adding or removing clocks.
+    ///
+    /// Added clocks will be unconstrained.
+    fn resize(&self, num_clocks: usize) -> Self;
 }
 
 /// An implementation of [Zone] as *difference bound matrix*.
@@ -382,6 +388,18 @@ impl<B: Bound, L: Layout<B>> Zone<B> for DBM<B, L> {
             }
         }
         true
+    }
+
+    fn resize(&self, num_clocks: usize) -> Self {
+        let mut other = Self::new_unconstrained(num_clocks);
+        for left in 0..min(self.dimension, other.dimension) {
+            for right in 0..min(self.dimension, other.dimension) {
+                let bound = self.layout.get(left, right);
+                other.layout.set(left, right, bound.clone());
+            }
+        }
+        other.canonicalize();
+        other
     }
 }
 
