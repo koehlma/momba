@@ -14,7 +14,11 @@ use rand::Rng;
 use momba_explore::*;
 
 #[derive(Clap)]
-#[clap(version = "0.1.0", about = "A VM for MombaCR.")]
+#[clap(
+    version = "0.1.0",
+    about = "A command line tool directly exposing some model related functionality."
+)]
+
 struct Arguments {
     #[clap(subcommand)]
     command: Command,
@@ -22,10 +26,10 @@ struct Arguments {
 
 #[derive(Clap)]
 enum Command {
-    #[clap(about = "Counts the number of states of the model")]
+    #[clap(about = "Counts the number of states/zones of the model")]
     Count(Count),
-    #[clap(about = "Simulates a random walk trough the zone graph")]
-    Walk(Walk),
+    #[clap(about = "Simulates a random run of the model")]
+    Simulate(Simulate),
 }
 
 #[derive(Clap)]
@@ -35,7 +39,7 @@ struct Count {
 }
 
 #[derive(Clap)]
-struct Walk {
+struct Simulate {
     #[clap(about = "A MombaCR model")]
     model: String,
 }
@@ -106,7 +110,7 @@ fn count_states(count: Count) {
     )
 }
 
-fn random_walk(walk: Walk) {
+fn random_walk(walk: Simulate) {
     let model_path = Path::new(&walk.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
@@ -157,6 +161,6 @@ fn main() {
 
     match arguments.command {
         Command::Count(count) => count_states(count),
-        Command::Walk(walk) => random_walk(walk),
+        Command::Simulate(walk) => random_walk(walk),
     }
 }
