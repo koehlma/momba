@@ -22,6 +22,13 @@ Finally, thanks to the JANI-model interchange format, several state-of-the-art m
 * pythonic and **statically typed** APIs to thinker with formal models
 
 
+## Rust Crates
+
+The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
+In case you are a Rust developer you might find some of the crates in [engine/crates](engine/crates) useful.
+In particular, the crate [momba-explore](https://crates.io/crates/momba-explore) allows develping high-performance model analysis tools with JANI support in Rust based on Momba's explicit state space exploration engine.
+
+
 ## Stability
 
 The packages `momba.model` and `momba.jani` are stable and backwards incompatible changes will be introduced according to [Semantic Versioning](https://semver.org/), i.e., with Momba version 1.0 at the earliest.
