@@ -22,6 +22,15 @@ Finally, thanks to the JANI-model interchange format, several state-of-the-art m
 * pythonic and **statically typed** APIs to thinker with formal models
 
 
+## Getting Started
+
+Momba is available from the [Python Package Index](https://pypi.org/):
+```sh
+pip install momba
+```
+Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
+
+
 ## Rust Crates
 
 The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
@@ -39,13 +48,7 @@ The APIs of `momba.explore` are unstable and will change in the future as we are
 In case you are using `momba.explore`, we recommend depending on a precise version of Momba.
 
 
-## Getting Started
 
-Momba is available from the [Python Package Index](https://pypi.org/):
-```sh
-pip install momba
-```
-Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
 
 
 ## Why?
