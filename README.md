@@ -26,7 +26,7 @@ Finally, thanks to the JANI-model interchange format, several state-of-the-art m
 
 Momba is available from the [Python Package Index](https://pypi.org/):
 ```sh
-pip install momba
+pip install momba[all]
 ```
 Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
 
