@@ -36,7 +36,7 @@ Check out the [examples](./examples) or read the [documentation](https://koehlma
 The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
 In case you are a Rust developer you might find some of the crates in [engine/crates](engine/crates) useful.
 In particular, the crate [momba-explore](https://crates.io/crates/momba-explore) allows developing high-performance model analysis tools with JANI support in Rust based on Momba's explicit state space exploration engine.
-The Rust command line tool [`momba-sidekick`](engine/crates/momba-sidekick) directly exposes some of this functionality.
+The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sidekick) directly exposes some of this functionality.
 
 
 ## Stability
