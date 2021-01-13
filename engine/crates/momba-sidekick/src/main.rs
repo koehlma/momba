@@ -8,9 +8,6 @@ use clap::Clap;
 
 use clock_zones::Zone;
 
-use rand::seq::IteratorRandom;
-use rand::Rng;
-
 use momba_explore::*;
 
 #[derive(Clap)]
@@ -119,41 +116,9 @@ fn random_walk(walk: Simulate) {
             .expect("Error while reading model file!"),
     );
 
-    let mut rng = rand::thread_rng();
-    let mut state = explorer
-        .initial_states()
-        .into_iter()
-        .choose(&mut rng)
-        .unwrap();
+    let simulator = simulate::Simulator::new(simulate::UniformOracle::new());
 
-    for _ in 0..100 {
-        let transition = explorer
-            .transitions(&state)
-            .into_iter()
-            .choose(&mut rng)
-            .unwrap();
-
-        match transition.result_action() {
-            Action::Silent => println!("τ"),
-            Action::Labeled(labeled) => println!(
-                "{} {:?}",
-                labeled.label(&explorer.network).unwrap(),
-                labeled.arguments()
-            ),
-        }
-
-        let destinations = explorer.destinations(&state, &transition);
-
-        let threshold: f64 = rng.gen();
-        let mut accumulated = 0.0;
-
-        for destination in destinations {
-            accumulated += destination.probability();
-            if accumulated >= threshold {
-                state = explorer.successor(&state, &transition, &destination);
-            }
-        }
-    }
+    simulator.simulate(&explorer, 100);
 }
 
 fn main() {
