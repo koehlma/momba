@@ -5,21 +5,39 @@
 [![Tests](https://img.shields.io/github/workflow/status/koehlma/momba/Run%20Tests?label=tests)](https://github.com/koehlma/momba/actions)
 [![Docs](https://img.shields.io/static/v1?label=docs&message=master&color=blue)](https://koehlma.github.io/momba/)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Gitter](https://badges.gitter.im/koehlma/momba.svg)](https://gitter.im/koehlma/momba?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 *Momba* is a Python framework for dealing with quantitative models centered around the [JANI-model](http://www.jani-spec.org/) interchange format.
 Momba strives to deliver an integrated and intuitive experience to aid the process of model construction, validation, and analysis.
 It provides convenience functions for the modular constructions of models effectively turning Python into a syntax-aware macro language for quantitative models.
-Momba's built-in simulator allows gaining confidence in a model, for instance, by rapidly prototyping a tool for interactive model exploration and visualization, or by connecting it to a testing framework.
-Finally, thanks to the JANI-model interchange format, several state-of-the-art model checkers and other tools are readily available for analysis.
+Momba's built-in simulation engine allows gaining confidence in a model, for instance, by rapidly prototyping a tool for interactive model exploration and visualization, or by connecting it to a testing framework.
+Finally, thanks to the JANI-model interchange format, several state-of-the-art model checkers and other tools are readily available for model analysis.
 
 
 ## Features
 
 * first-class **import and export** of **JANI models**
 * **syntax-aware macros** for the modular constructions of models with Python code
-* **built-in simulator** for PTAs, MDPs and other model types
+* **built-in simulation engine** for PTAs, MDPs and other model types
 * interfaces to state-of-the-art model checkers, e.g., [The Modest Toolset](http://www.modestchecker.net/) and [Storm](https://www.stormchecker.org/)
-* pythonic and statically typed APIs to thinker with formal models
+* pythonic and **statically typed** APIs to thinker with formal models
+
+
+## Getting Started
+
+Momba is available from the [Python Package Index](https://pypi.org/):
+```sh
+pip install momba[all]
+```
+Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
+
+
+## Rust Crates
+
+The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
+In case you are a Rust developer you might find some of the crates in [engine/crates](engine/crates) useful.
+In particular, the crate [momba-explore](https://crates.io/crates/momba-explore) allows developing high-performance model analysis tools with JANI support in Rust based on Momba's explicit state space exploration engine.
+The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sidekick) directly exposes some of this functionality.
 
 
 ## Stability
@@ -31,16 +49,7 @@ The APIs of `momba.explore` are unstable and will change in the future as we are
 In case you are using `momba.explore`, we recommend depending on a precise version of Momba.
 
 
-## Getting Started
-
-Momba is available from the [Python Package Index](https://pypi.org/):
-```sh
-pip install momba
-```
-Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
-
-
-## Why?
+## Rationale
 
 The idea to harvest a general purpose programming environment for formal modelling is not new at all.
 For instance, the [SVL language](https://link.springer.com/chapter/10.1007/0-306-47003-9_24) combines the power of process algebraic modelling with the power of the bourne shell.

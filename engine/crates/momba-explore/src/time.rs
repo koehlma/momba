@@ -264,3 +264,164 @@ impl TimeType for Float64Zone {
         valuations
     }
 }
+
+/// A time representation using [f64] clock zones.
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct GlobalTime {
+    clock_variables: IndexSet<String>,
+    global_clock: usize,
+}
+
+impl GlobalTime {
+    fn clock_to_index(&self, clock: &model::Clock) -> usize {
+        match clock {
+            model::Clock::Zero => 0,
+            model::Clock::Variable { identifier } => {
+                self.clock_variables.get_index_of(identifier).unwrap() + 1
+            }
+        }
+    }
+
+    fn apply_constraint(
+        &self,
+        valuations: &mut <Self as TimeType>::Valuations,
+        constraint: Constraint<Self>,
+    ) {
+        let bound = match constraint.bound {
+            model::Value::Int64(value) => ordered_float::NotNan::from_i64(value).unwrap(),
+            model::Value::Float64(value) => value,
+            _ => panic!("unable to convert {:?} to clock bound", constraint.bound),
+        };
+        if constraint.is_strict {
+            valuations
+                .zone
+                .add_constraint(clock_zones::Constraint::new_diff_lt(
+                    constraint.difference.0,
+                    constraint.difference.1,
+                    bound,
+                ));
+        } else {
+            valuations
+                .zone
+                .add_constraint(clock_zones::Constraint::new_diff_le(
+                    constraint.difference.0,
+                    constraint.difference.1,
+                    bound,
+                ));
+        }
+    }
+}
+#[derive(Eq, PartialEq, Hash, Clone, Debug)]
+pub struct GlobalValuations {
+    zone: clock_zones::DBM<clock_zones::ConstantBound<ordered_float::NotNan<f64>>>,
+    global_clock: usize,
+}
+
+impl GlobalValuations {
+    fn new_unconstrained(num_clocks: usize) -> Self {
+        GlobalValuations {
+            zone: clock_zones::DBM::new_unconstrained(num_clocks),
+            global_clock: num_clocks,
+        }
+    }
+
+    pub fn global_time_lower_bound(&self) -> Option<ordered_float::NotNan<f64>> {
+        self.zone.get_lower_bound(self.global_clock)
+    }
+
+    pub fn global_time_upper_bound(&self) -> Option<ordered_float::NotNan<f64>> {
+        self.zone.get_upper_bound(self.global_clock)
+    }
+
+    pub fn set_global_time(&mut self, value: ordered_float::NotNan<f64>) {
+        self.zone
+            .add_constraint(clock_zones::Constraint::new_le(self.global_clock, value));
+        self.zone
+            .add_constraint(clock_zones::Constraint::new_ge(self.global_clock, value));
+    }
+}
+
+impl TimeType for GlobalTime {
+    type Valuations = GlobalValuations;
+
+    type CompiledDifference = (usize, usize);
+
+    type CompiledClocks = Vec<usize>;
+
+    fn new(network: &model::Network) -> Result<Self, String> {
+        Ok(GlobalTime {
+            clock_variables: network.declarations.clock_variables.clone(),
+            global_clock: network.declarations.clock_variables.len() + 1,
+        })
+    }
+
+    fn compile_difference(
+        &self,
+        left: &model::Clock,
+        right: &model::Clock,
+    ) -> Self::CompiledDifference {
+        (self.clock_to_index(left), self.clock_to_index(right))
+    }
+
+    fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks {
+        clocks
+            .iter()
+            .map(|clock| self.clock_to_index(clock))
+            .collect()
+    }
+
+    fn is_empty(&self, valuations: &Self::Valuations) -> bool {
+        valuations.zone.is_empty()
+    }
+
+    fn create_valuations(
+        &self,
+        constraints: Vec<Constraint<Self>>,
+    ) -> Result<Self::Valuations, String> {
+        let mut valuations = Self::Valuations::new_unconstrained(self.clock_variables.len() + 1);
+        for constraint in constraints {
+            self.apply_constraint(&mut valuations, constraint);
+        }
+        valuations
+            .zone
+            .reset(self.global_clock, ordered_float::NotNan::new(0.0).unwrap());
+        Ok(valuations)
+    }
+
+    fn constrain(
+        &self,
+        mut valuations: Self::Valuations,
+        difference: &Self::CompiledDifference,
+        is_strict: bool,
+        bound: model::Value,
+    ) -> Self::Valuations {
+        self.apply_constraint(
+            &mut valuations,
+            Constraint {
+                difference: difference.clone(),
+                is_strict,
+                bound,
+            },
+        );
+        valuations
+    }
+
+    fn reset(
+        &self,
+        mut valuations: Self::Valuations,
+        clocks: &Self::CompiledClocks,
+    ) -> Self::Valuations {
+        for clock in clocks {
+            valuations
+                .zone
+                .reset(*clock, ordered_float::NotNan::new(0.0).unwrap());
+        }
+        valuations
+    }
+
+    /// Extrapolates the future of the given valuations.
+    fn future(&self, mut valuations: Self::Valuations) -> Self::Valuations {
+        valuations.zone.future();
+        valuations
+    }
+}

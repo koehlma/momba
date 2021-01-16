@@ -1,17 +1,39 @@
+use std::cmp::min;
 use std::iter::IntoIterator;
 
 use crate::bounds::*;
 use crate::constants::*;
+use crate::storage::*;
 
-type Clock = usize;
+/// Represents a *clock*.
+///
+/// Note that `0` is the designated *zero clock* whose value is always `0`.
+pub type Clock = usize;
 
+/// A *clock constraint* bounding the difference of two clocks.
 pub struct Constraint<B: Bound> {
-    pub left: Clock,
-    pub right: Clock,
-    pub bound: B,
+    pub(crate) left: Clock,
+    pub(crate) right: Clock,
+    pub(crate) bound: B,
 }
 
 impl<B: Bound> Constraint<B> {
+    /// Returns the left-hand side of the difference.
+    pub fn left(&self) -> Clock {
+        self.left
+    }
+
+    /// Returns the right-hand side of the difference.
+    pub fn right(&self) -> Clock {
+        self.right
+    }
+
+    /// Returns the bound.
+    pub fn bound(&self) -> &B {
+        &self.bound
+    }
+
+    /// Constructs a new constraint of the form `clock ≤ constant`.
     pub fn new_le(clock: Clock, constant: B::Constant) -> Self {
         Constraint {
             left: clock,
@@ -20,6 +42,7 @@ impl<B: Bound> Constraint<B> {
         }
     }
 
+    /// Constructs a new constraint of the form `clock < constant`.
     pub fn new_lt(clock: Clock, constant: B::Constant) -> Self {
         Constraint {
             left: clock,
@@ -28,22 +51,36 @@ impl<B: Bound> Constraint<B> {
         }
     }
 
+    /// Constructs a new constraint of the form `clock ≥ constant`.
+    ///
+    /// Panics in case the constant cannot be negated without an overflow.
     pub fn new_ge(clock: Clock, constant: B::Constant) -> Self {
         Constraint {
             left: 0,
             right: clock,
-            bound: B::new_le(constant.checked_neg().unwrap()),
+            bound: B::new_le(
+                constant
+                    .checked_neg()
+                    .expect("overflow while negating constant"),
+            ),
         }
     }
 
+    /// Constructs a new constraint of the form `clock > constant`.
+    ///
+    /// Panics in case the constant cannot be negated without an overflow.
     pub fn new_gt(clock: Clock, constant: B::Constant) -> Self {
         Constraint {
             left: 0,
             right: clock,
-            bound: B::new_lt(constant.checked_neg().unwrap()),
+            bound: B::new_lt(
+                constant
+                    .checked_neg()
+                    .expect("overflow while negating constant"),
+            ),
         }
     }
-
+    /// Constructs a new constraint of the form `left - right ≤ constant`.
     pub fn new_diff_le(left: Clock, right: Clock, constant: B::Constant) -> Self {
         Constraint {
             left,
@@ -52,6 +89,7 @@ impl<B: Bound> Constraint<B> {
         }
     }
 
+    /// Constructs a new constraint of the form `left - right < constant`.
     pub fn new_diff_lt(left: Clock, right: Clock, constant: B::Constant) -> Self {
         Constraint {
             left,
@@ -60,111 +98,128 @@ impl<B: Bound> Constraint<B> {
         }
     }
 
+    /// Constructs a new constraint of the form `left - right ≥ constant`.
+    ///
+    /// Panics in case the constant cannot be negated without an overflow.
     pub fn new_diff_ge(left: Clock, right: Clock, constant: B::Constant) -> Self {
         Constraint {
+            // the swapped order is intentional
             left: right,
             right: left,
-            bound: B::new_le(constant.checked_neg().unwrap()),
+            bound: B::new_le(
+                constant
+                    .checked_neg()
+                    .expect("overflow while negating constant"),
+            ),
         }
     }
 
+    /// Constructs a new constraint of the form `left - right > constant`.
+    ///
+    /// Panics in case the constant cannot be negated without an overflow.
     pub fn new_diff_gt(left: Clock, right: Clock, constant: B::Constant) -> Self {
         Constraint {
+            // the swapped order is intentional
             left: right,
             right: left,
-            bound: B::new_lt(constant.checked_neg().unwrap()),
+            bound: B::new_lt(
+                constant
+                    .checked_neg()
+                    .expect("overflow while negating constant"),
+            ),
         }
     }
 }
 
+/// Represents a zone with a specific *[bound type][Bound]*.
 pub trait Zone<B: Bound> {
+    /// Constructs a new zone without any constraints besides clocks being positive.
     fn new_unconstrained(num_clocks: usize) -> Self;
+    /// Constructs a new zone where all clocks are set to zero.
     fn new_zero(num_clocks: usize) -> Self;
 
+    /// Constructs a new zone from the given iterable of [constraints][Constraint].
     fn with_constraints<U>(num_clocks: usize, constraints: U) -> Self
     where
         U: IntoIterator<Item = Constraint<B>>;
 
-    fn num_clocks(self) -> usize;
+    /// Returns the number of clocks of this zone.
+    fn num_clocks(&self) -> usize;
 
+    /// Retrieves the difference bound for `left - right`.
     fn get_bound(&self, left: Clock, right: Clock) -> &B;
 
+    /// Checks whether the zone is empty.
     fn is_empty(&self) -> bool;
 
+    /// Adds a [constraint][Constraint] to the zone.
     fn add_constraint(&mut self, constraint: Constraint<B>);
+    /// Adds all [constraints][Constraint] from the given iterable to the zone.
     fn add_constraints<U>(&mut self, constraints: U)
     where
         U: IntoIterator<Item = Constraint<B>>;
 
+    /// Intersects two zones.
     fn intersect(&mut self, other: &Self);
 
+    /// Computes the *future* of the zone by removing all upper bounds.
+    ///
+    /// This operation is sometimes also known as *up*.
     fn future(&mut self);
+    /// Computes the *past* of the zone by removing all lower bounds.
+    ///
+    /// This operation is sometimes also known as *down*.
     fn past(&mut self);
 
+    /// Resets the given clock to the specified constant.
     fn reset(&mut self, clock: Clock, value: B::Constant);
 
+    /// Checks whether the value of the given clock is unbounded.
     fn is_unbounded(&self, clock: Clock) -> bool;
 
+    /// Returns the upper bound for the value of the given clock.
     fn get_upper_bound(&self, clock: Clock) -> Option<B::Constant>;
+    /// Returns the lower bound for the value of the given clock.
     fn get_lower_bound(&self, clock: Clock) -> Option<B::Constant>;
 
+    /// Checks whether the given constraint is satisfied by the zone.
     fn is_satisfied(&self, constraint: Constraint<B>) -> bool;
 
+    /// Checks whether the zone includes the other zone.
     fn includes(&self, other: &Self) -> bool;
+
+    /// Creates a resized copy of the zone by adding or removing clocks.
+    ///
+    /// Added clocks will be unconstrained.
+    fn resize(&self, num_clocks: usize) -> Self;
 }
 
-pub trait DBMLayout<B: Bound> {
-    fn new(num_clocks: usize, default: B) -> Self;
-
-    fn set(&mut self, left: Clock, right: Clock, bound: B);
-    fn get(&self, left: Clock, right: Clock) -> &B;
-}
-
-impl<B: Bound> DBMLayout<B> for Vec<Vec<B>> {
-    #[inline(always)]
-    fn new(num_clocks: usize, default: B) -> Self {
-        let dimension = num_clocks + 1;
-        let mut matrix = Vec::with_capacity(dimension);
-        for row in 0..dimension {
-            matrix.push(Vec::with_capacity(dimension));
-            matrix[row].resize(dimension, default.clone());
-        }
-        matrix
-    }
-
-    #[inline(always)]
-    fn set(&mut self, left: Clock, right: Clock, bound: B) {
-        self[left][right] = bound;
-    }
-    #[inline(always)]
-    fn get(&self, left: Clock, right: Clock) -> &B {
-        &self[left][right]
-    }
-}
-
+/// An implementation of [Zone] as *difference bound matrix*.
+///
+/// Uses [LinearLayout] as the default [storage layout][Layout].
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
-pub struct DBM<B: Bound, L: DBMLayout<B> = Vec<Vec<B>>> {
+pub struct DBM<B: Bound, L: Layout<B> = LinearLayout<B>> {
+    /// The dimension of the matrix.
     dimension: usize,
+    /// The internal representation using the given layout.
     layout: L,
-    le_zero: B,
-    unbounded: B,
+
+    _phantom_bound: std::marker::PhantomData<B>,
 }
 
-impl<B: Bound, L: DBMLayout<B>> DBM<B, L> {
+impl<B: Bound, L: Layout<B>> DBM<B, L> {
     fn new(num_clocks: usize, default: B) -> Self {
         let dimension = num_clocks + 1;
         let mut layout = L::new(num_clocks, default);
-        let le_zero = B::le_zero();
-        layout.set(0, 0, le_zero.clone());
+        layout.set(0, 0, B::le_zero());
         for clock in 1..dimension {
-            layout.set(0, clock, le_zero.clone());
-            layout.set(clock, clock, le_zero.clone());
+            layout.set(0, clock, B::le_zero());
+            layout.set(clock, clock, B::le_zero());
         }
         DBM {
             dimension,
             layout,
-            le_zero,
-            unbounded: B::unbounded(),
+            _phantom_bound: std::marker::PhantomData,
         }
     }
 
@@ -191,7 +246,7 @@ impl<B: Bound, L: DBMLayout<B>> DBM<B, L> {
     }
 }
 
-impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
+impl<B: Bound, L: Layout<B>> Zone<B> for DBM<B, L> {
     fn new_unconstrained(num_clocks: usize) -> Self {
         DBM::new(num_clocks, B::unbounded())
     }
@@ -213,7 +268,7 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
     }
 
     #[inline(always)]
-    fn num_clocks(self) -> usize {
+    fn num_clocks(&self) -> usize {
         self.dimension - 1
     }
 
@@ -224,7 +279,7 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
 
     #[inline(always)]
     fn is_empty(&self) -> bool {
-        self.layout.get(0, 0).is_tighter_than(&self.le_zero)
+        self.layout.get(0, 0).is_tighter_than(&B::le_zero())
     }
 
     fn add_constraint(&mut self, constraint: Constraint<B>) {
@@ -236,6 +291,7 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
             self.canonicalize_touched(constraint.right);
         }
     }
+
     fn add_constraints<U>(&mut self, constraints: U)
     where
         U: IntoIterator<Item = Constraint<B>>,
@@ -264,12 +320,12 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
 
     fn future(&mut self) {
         for left in 1..self.dimension {
-            self.layout.set(left, 0, self.unbounded.clone());
+            self.layout.set(left, 0, B::unbounded());
         }
     }
     fn past(&mut self) {
         for right in 1..self.dimension {
-            self.layout.set(0, right, self.le_zero.clone());
+            self.layout.set(0, right, B::le_zero());
             for row in 1..self.dimension {
                 if self
                     .layout
@@ -308,6 +364,7 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
     fn get_upper_bound(&self, clock: Clock) -> Option<B::Constant> {
         self.layout.get(clock, 0).constant()
     }
+
     fn get_lower_bound(&self, clock: Clock) -> Option<B::Constant> {
         Some(self.layout.get(0, clock).constant()?.checked_neg().unwrap())
     }
@@ -331,6 +388,18 @@ impl<B: Bound, L: DBMLayout<B>> Zone<B> for DBM<B, L> {
             }
         }
         true
+    }
+
+    fn resize(&self, num_clocks: usize) -> Self {
+        let mut other = Self::new_unconstrained(num_clocks);
+        for left in 0..min(self.dimension, other.dimension) {
+            for right in 0..min(self.dimension, other.dimension) {
+                let bound = self.layout.get(left, right);
+                other.layout.set(left, right, bound.clone());
+            }
+        }
+        other.canonicalize();
+        other
     }
 }
 

@@ -1,32 +1,52 @@
 use crate::constants::*;
 
-/// Represents a bound on the difference of two clocks.
+/// Represents a bound.
 pub trait Bound: Clone {
+    /// The type of the bounding constant.
     type Constant: Constant;
 
+    /// The maximal value of the bounding constant if it exists.
     fn max_constant() -> Option<Self::Constant>;
+    /// The minimal value of the bounding constant if it exists.
     fn min_constant() -> Option<Self::Constant>;
 
+    /// Returns the *unbounded bound*, i.e., `< ∞`.
     fn unbounded() -> Self;
 
+    /// Returns the bound for `≤ 0`.
     fn le_zero() -> Self;
+    /// Returns the bound for `< 0`.
     fn lt_zero() -> Self;
 
+    /// Constructs a new bound `≤ constant`.
     fn new_le(constant: Self::Constant) -> Self;
+    /// Constructs a new bound `< constant`.
     fn new_lt(constant: Self::Constant) -> Self;
 
+    /// Returns whether the bound is strict.
     fn is_strict(&self) -> bool;
+    /// Returns whether the bound is the *unbounded bound*.
     fn is_unbounded(&self) -> bool;
 
+    /// Retrieves the constant associated with the bound.
+    ///
+    /// If the bound is the *unbounded bound*, [None] will be returned.
     fn constant(&self) -> Option<Self::Constant>;
 
+    /// Constructs a new bound by adding the constants of both bounds.
+    ///
+    /// Returns [None] if adding the constants will lead to an overflow.
     fn add(&self, other: &Self) -> Option<Self>;
 
+    /// Returns whether `self` is a tighter bound than `other`.
     fn is_tighter_than(&self, other: &Self) -> bool;
 }
 
 macro_rules! int_bound_impl {
     ($int_type:ty) => {
+        /// Implementation of [Bound] for primitive integers.
+        ///
+        /// Encodes strictness and boundedness within individual bits.
         impl Bound for $int_type {
             type Constant = $int_type;
 
@@ -108,9 +128,14 @@ int_bound_impl!(i32);
 int_bound_impl!(i64);
 int_bound_impl!(i128);
 
+/// A bound for a generic [Constant].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct ConstantBound<C: Constant> {
+    /// The constant associated with the bound.
+    ///
+    /// Is [None] in case the bound is the *unbounded bound*.
     constant: Option<C>,
+    /// Indicates whether the bound is strict or not.
     is_strict: bool,
 }
 
@@ -287,53 +312,26 @@ mod tests {
     bound_test!(ConstantBound<i64>, test_bound_i64_wrapped, [-13, 42]);
     bound_test!(ConstantBound<i128>, test_bound_i128_wrapped, [-13, 42]);
 
-    bound_test!(
-        ConstantBound<ordered_float::NotNan<f32>>,
-        test_bound_f32,
-        [
-            ordered_float::NotNan::new(-13.0).unwrap(),
-            ordered_float::NotNan::new(42.0).unwrap()
-        ]
-    );
-    bound_test!(
-        ConstantBound<ordered_float::NotNan<f64>>,
-        test_bound_f64,
-        [
-            ordered_float::NotNan::new(-13.0).unwrap(),
-            ordered_float::NotNan::new(42.0).unwrap()
-        ]
-    );
-
-    #[cfg(feature = "bigint")]
-    mod bigint {
-        use std::rc::Rc;
-
-        use num_bigint::BigInt;
+    #[cfg(feature = "float")]
+    mod float {
+        use ordered_float::NotNan;
 
         use super::*;
 
         bound_test!(
-            ConstantBound::<Rc<BigInt>>,
-            test_bound_bigint,
-            [Rc::new(BigInt::from(-13)), Rc::new(BigInt::from(42))]
-        );
-    }
-
-    #[cfg(feature = "rational")]
-    mod rational {
-        use std::rc::Rc;
-        use std::str::FromStr;
-
-        use num_rational::BigRational;
-
-        use super::*;
-
-        bound_test!(
-            ConstantBound::<Rc<BigRational>>,
-            test_bound_bigint,
+            ConstantBound<NotNan<f32>>,
+            test_bound_f32,
             [
-                Rc::new(BigRational::from_str("-13/2").unwrap()),
-                Rc::new(BigRational::from_str("1337/3").unwrap())
+                ordered_float::NotNan::new(-13.0).unwrap(),
+                ordered_float::NotNan::new(42.0).unwrap()
+            ]
+        );
+        bound_test!(
+            ConstantBound<NotNan<f64>>,
+            test_bound_f64,
+            [
+                ordered_float::NotNan::new(-13.0).unwrap(),
+                ordered_float::NotNan::new(42.0).unwrap()
             ]
         );
     }
