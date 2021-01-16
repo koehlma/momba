@@ -268,8 +268,8 @@ def _translate_array_access_expr(
 ) -> _JSONObject:
     return {
         "kind": "INDEX",
-        "vector": _translate_expr(expr.array),
-        "index": _translate_expr(expr.index),
+        "vector": _translate_expr(expr.array, ctx),
+        "index": _translate_expr(expr.index, ctx),
     }
 
 
@@ -279,7 +279,7 @@ def _translate_array_value_expr(
 ) -> _JSONObject:
     return {
         "kind": "VECTOR",
-        "elements": [_translate_expr(element) for element in expr.elements],
+        "elements": [_translate_expr(element, ctx) for element in expr.elements],
     }
 
 
@@ -290,8 +290,8 @@ def _translate_array_constructor_expr(
     return {
         "kind": "COMPREHENSION",
         "variable": expr.variable,
-        "length": _translate_expr(expr.length),
-        "element": _translate_expr(expr.expression),
+        "length": _translate_expr(expr.length, ctx),
+        "element": _translate_expr(expr.expression, ctx),
     }
 
 
@@ -403,8 +403,7 @@ def _translate_pattern_argument(
 
 
 def _translate_action_pattern(
-    action_pattern: t.Optional[model.ActionPattern],
-    ctx: _TranslationContext,
+    action_pattern: t.Optional[model.ActionPattern], ctx: _TranslationContext,
 ) -> _JSONObject:
     if action_pattern is None:
         return {"kind": "SILENT"}
@@ -435,8 +434,7 @@ class ExtractedConstraints:
 
 
 def _extract_constraints(
-    expr: model.Expression,
-    ctx: _TranslationContext,
+    expr: model.Expression, ctx: _TranslationContext,
 ) -> ExtractedConstraints:
     constraints: t.List[_JSONObject] = []
     conjuncts: t.List[expressions.Expression] = []
@@ -557,10 +555,7 @@ def _translate_instance(
         parameters, declarations, instance.automaton.scope, instance
     )
     locations: t.Mapping[str, _JSONObject] = {
-        location_name: {
-            "invariant": _extract_invariant(location, ctx),
-            "edges": [],
-        }
+        location_name: {"invariant": _extract_invariant(location, ctx), "edges": [],}
         for location, location_name in location_names.items()
     }
 
@@ -638,11 +633,7 @@ def _translate_instance(
             )
 
         outgoing.append(
-            {
-                "pattern": action,
-                "guard": guard,
-                "destinations": destinations,
-            }
+            {"pattern": action, "guard": guard, "destinations": destinations,}
         )
 
     return {"locations": locations}

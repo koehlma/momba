@@ -343,6 +343,18 @@ impl<const BANKS: usize> Scope<BANKS> {
                     }
                 })
             }
+            Expression::Vector(VectorExpression { elements }) => {
+                let elements: Vec<_> = elements.iter().map(|element| compile!(element)).collect();
+
+                construct!(move |env, stack| {
+                    Value::Vector(
+                        elements
+                            .iter()
+                            .map(|element| evaluate!(element, env, stack))
+                            .collect(),
+                    )
+                })
+            }
             _ => panic!("not implemented {:?}", expression),
         }
     }
