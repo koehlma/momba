@@ -465,7 +465,7 @@ class ArrayValue(Expression):
                     "element types are not assignable to a common type"
                 )
         assert common_type is not None
-        return common_type
+        return types.array_of(common_type)
 
 
 @d.dataclass(frozen=True)
@@ -478,15 +478,22 @@ class ArrayConstructor(Expression):
     def children(self) -> t.Sequence[Expression]:
         return self.length, self.expression
 
+    def _create_scope(self, scope: context.Scope) -> context.Scope:
+        child_scope = scope.create_child_scope()
+        child_scope.declare_constant(self.variable, types.INT)
+        return child_scope
+
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
+        return self.length.is_constant_in(scope) and self.expression.is_constant_in(
+            self._create_scope(scope)
+        )
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         if not types.INT.is_assignable_from(scope.get_type(self.length)):
             raise errors.InvalidTypeError(
                 "length of array constructor has to be an integer"
             )
-        return types.array_of(scope.get_type(self.expression))
+        return types.array_of(self._create_scope(scope).get_type(self.expression))
 
 
 class Trigonometric(UnaryExpression):

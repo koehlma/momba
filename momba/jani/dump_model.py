@@ -32,7 +32,7 @@ class ModelFeature(enum.Enum):
     FUNCTIONS = "functions"
     HYPERBOLIC_FUNCTIONS = "hyperbolic-functions"
     NAMED_EXPRESSIONS = "named-expressions"
-    NONDET_EXPRESSIONS = "nondet-expressions"
+    NONDET_SELECTION = "nondet-selection"
     STATE_EXIT_REWARDS = "state-exit-rewards"
     TRADEOFF_PROPERTIES = "tradeoff-properties"
     TRIGONOMETRIC_FUNCTIONS = "trigonometric-functions"
@@ -300,7 +300,7 @@ def _dump_sample(expr: expressions.Sample, ctx: JANIContext) -> JSON:
 
 @_dump_prop.register
 def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
-    ctx.require(ModelFeature.NONDET_EXPRESSIONS)
+    ctx.require(ModelFeature.NONDET_SELECTION)
     return {
         "op": "nondet",
         "var": expr.name,
@@ -448,6 +448,16 @@ def _dump_target(target: effects.Target, ctx: JANIContext) -> JSON:
 @_dump_target.register
 def _dump_target_identifier(target: effects.Name, ctx: JANIContext) -> JSON:
     return target.identifier
+
+
+@_dump_target.register
+def _dump_target_index(target: effects.Index, ctx: JANIContext) -> JSON:
+    ctx.require(ModelFeature.ARRAYS)
+    return {
+        "op": "aa",
+        "exp": _dump_prop(target.array, ctx),
+        "index": _dump_prop(target.index, ctx),
+    }
 
 
 checks.check_singledispatch(_dump_target, effects.Target)

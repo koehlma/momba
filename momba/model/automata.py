@@ -64,10 +64,10 @@ class Location:
                     f"type of invariant in location {self} is not `types.BOOL`"
                 )
         if self.transient_values:
-            if not scope.ctx.model_type.is_timed:
-                raise errors.ModelingError(
-                    f"transient values are not allowed for model type {scope.ctx.model_type}"
-                )
+            # if not scope.ctx.model_type.is_timed:
+            #     raise errors.ModelingError(
+            #         f"transient values are not allowed for model type {scope.ctx.model_type}"
+            #     )
             if not effects.are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
                     "incompatible assignments for transient values"

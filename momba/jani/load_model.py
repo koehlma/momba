@@ -131,6 +131,11 @@ _TRIGONOMETRIC_FUNCTIONS: t.Mapping[str, operators.TrigonometricFunction] = {
 
 def _expression(jani_expression: t.Any) -> expressions.Expression:
     if isinstance(jani_expression, (float, bool, int)):
+        if (
+            isinstance(jani_expression, float)
+            and int(jani_expression) == jani_expression
+        ):
+            jani_expression = int(jani_expression)
         return expressions.ensure_expr(jani_expression)
     elif isinstance(jani_expression, str):
         return expressions.name(jani_expression)
@@ -181,8 +186,8 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                 variable = jani_expression["var"]
                 return expressions.Derivative(variable)
         elif "distribution" in jani_expression:
-            _check_fields(jani_expression, required={"op", "args", "distribution"})
-            arguments = list(map(_expression, jani_expression["args"]))
+            _check_fields(jani_expression, required={"args", "distribution"})
+            arguments = tuple(map(_expression, jani_expression["args"]))
             distribution = distributions.DistributionType.by_name(
                 jani_expression["distribution"]
             )
@@ -400,6 +405,9 @@ def _type(typ: t.Any) -> types.Type:
         lower_bound = _expression(typ["lower-bound"]) if "lower-bound" in typ else None
         upper_bound = _expression(typ["upper-bound"]) if "upper-bound" in typ else None
         return base.bound(lower_bound, upper_bound)
+    elif typ["kind"] == "array":
+        _check_fields(typ, required={"kind", "base"})
+        return types.array_of(_type(typ["base"]))
     raise InvalidJANIError(f"{typ!r} is not a valid JANI type")
 
 
@@ -427,7 +435,7 @@ def _check_fields(
     jani_structure: t.Any,
     required: _Fields = frozenset(),
     optional: _Fields = frozenset(),
-    unsupported: _Fields = frozenset({"comment"}),
+    unsupported: _Fields = frozenset(),
 ) -> None:
     if not isinstance(jani_structure, dict):
         raise InvalidJANIError(f"expected map but found {jani_structure!r}")
@@ -524,6 +532,13 @@ _Locations = t.Dict[str, automata.Location]
 def _target(jani_target: t.Any) -> effects.Target:
     if isinstance(jani_target, str):
         return effects.Name(jani_target)
+    _check_fields(jani_target, required={"op"}, optional={"exp", "index"})
+    if jani_target["op"] == "aa":
+        _check_fields(jani_target, required={"op", "exp", "index"})
+        return effects.Index(
+            array=_expression(jani_target["exp"]),
+            index=_expression(jani_target["index"]),
+        )
     raise InvalidJANIError(f"{jani_target!r} is not a valid lvalue")
 
 
@@ -565,7 +580,7 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
                     value=_expression(jani_assignment["value"]),
                     index=jani_assignment.get("index", 0),
                 )
-                for jani_assignment in jani_destination["assignments"]
+                for jani_assignment in jani_destination.get("assignments", ())
             ),
         )
         for jani_destination in jani_edge["destinations"]
@@ -604,7 +619,7 @@ def _action(jani_action: t.Any) -> model.ActionType:
 JANIModel = t.Union[bytes, str]
 
 
-def load_model(source: JANIModel) -> model.Network:
+def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.Network:
     """
     Constructs a Momba automata network based on the provided JANI model.
 
@@ -622,7 +637,7 @@ def load_model(source: JANIModel) -> model.Network:
         {
             ModelFeature.ARRAYS,
             ModelFeature.DERIVED_OPERATORS,
-            ModelFeature.NONDET_EXPRESSIONS,
+            # ModelFeature.NONDET_SELECTION,
             ModelFeature.TRIGONOMETRIC_FUNCTIONS,
         }
     )
@@ -729,12 +744,13 @@ def load_model(source: JANIModel) -> model.Network:
                     jani_vector["result"]
                 ).create_pattern()
             network.create_link(vector, result=result_pattern)
-    for jani_prop in jani_model["properties"]:
-        _check_fields(
-            jani_prop,
-            required={"expression", "name"},
-        )
-        network.ctx.define_property(
-            jani_prop["name"], _property(jani_prop["expression"])
-        )
+    if not ignore_properties:
+        for jani_prop in jani_model["properties"]:
+            _check_fields(
+                jani_prop,
+                required={"expression", "name"},
+            )
+            network.ctx.define_property(
+                jani_prop["name"], _property(jani_prop["expression"])
+            )
     return network

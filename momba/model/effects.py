@@ -11,10 +11,10 @@ import abc
 import collections
 import dataclasses
 
-from . import context, errors
+from . import context, errors, types
 
 if t.TYPE_CHECKING:
-    from . import expressions, types
+    from . import expressions
 
 
 class Target(abc.ABC):
@@ -41,6 +41,23 @@ class Name(Target):
 
     def is_local_in(self, scope: context.Scope) -> bool:
         return scope.is_local(self.identifier)
+
+
+@d.dataclass(frozen=True)
+class Index(Target):
+    array: expressions.Expression
+    index: expressions.Expression
+
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        array_type = scope.get_type(self.array)
+        if not isinstance(array_type, types.ArrayType):
+            raise errors.InvalidTypeError(
+                f"array of index target has non-array type {array_type}"
+            )
+        return array_type.element
+
+    def is_local_in(self, scope: context.Scope) -> bool:
+        return False
 
 
 @d.dataclass(frozen=True)

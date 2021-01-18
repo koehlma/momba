@@ -81,13 +81,15 @@ class VariableDeclaration(Declaration):
 
     def validate(self, scope: Scope) -> None:
         if self.initial_value is not None:
-            if not self.typ.is_assignable_from(scope.get_type(self.initial_value)):
+            value_type = scope.get_type(self.initial_value)
+            if not self.typ.is_assignable_from(value_type):
                 raise errors.InvalidTypeError(
-                    "type of initial value is not assignable to variable type"
+                    f"type of initial value {value_type} is not "
+                    f"assignable to variable type {self.typ}"
                 )
             if not self.initial_value.is_constant_in(scope):
                 raise errors.NotAConstantError(
-                    "initial value is required to be a constant"
+                    f"initial value {self.initial_value} is required to be a constant"
                 )
         # FIXME: check whether wether an initial value is provided if the
         # variable is transient and not provided via value passing
@@ -103,13 +105,15 @@ class ConstantDeclaration(Declaration):
 
     def validate(self, scope: Scope) -> None:
         if self.value is not None:
+            value_type = scope.get_type(self.value)
             if not self.value.is_constant_in(scope):
                 raise errors.NotAConstantError(
                     f"value {self.value} of constant declaration is not a constant"
                 )
-            if not self.typ.is_assignable_from(scope.get_type(self.value)):
+            if not self.typ.is_assignable_from(value_type):
                 raise errors.InvalidTypeError(
-                    "type of constant value is not assignable to constant type"
+                    f"type of constant value {value_type} is not "
+                    f"assignable to constant type {self.typ}"
                 )
 
     def is_constant_in(self, scope: Scope) -> bool:
