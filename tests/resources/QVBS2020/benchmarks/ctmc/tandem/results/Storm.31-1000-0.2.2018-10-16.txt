@@ -1,0 +1,47 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:25:04 2018
+Command line arguments: --jani tandem.jani --janiproperty --constants 'c=31,T=1000,t=0.2' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/tandem
+
+Time for model construction: 0.047s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	2016
+Transitions: 	6819
+Reward Models:  customers
+State Labels: 	6 labels
+   * deadlock -> 0 item(s)
+   * (sm = 31) -> 63 item(s)
+   * (sm < 31) -> 1953 item(s)
+   * (ph = 2) -> 992 item(s)
+   * init -> 1 item(s)
+   * (sc = 31) -> 64 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "customers": R[exp]{"customers"}min=? [LRA] ...
+Result (for initial states): 31.81304663
+Time for model checking: 0.009s.
+
+Model checking property "customers_T": R[exp]{"customers"}min=? [I=1/5] ...
+Result (for initial states): 24.44505
+Time for model checking: 0.020s.
+
+Model checking property "first_queue": Pmin=? [true U<=1/5 (sc = 31)] ...
+Result (for initial states): 0.1164415719
+Time for model checking: 0.021s.
+
+Model checking property "network": Pmin=? [true U<=1000 (((sc = 31) & (sm = 31)) & (ph = 2))] ...
+Result (for initial states): 2.061396509e-09
+Time for model checking: 3.731s.
+
+Model checking property "second_queue": Pmin=? [(sm = 31) U<=1/5 (sm < 31)] ...
+Result (for initial states): 1
+Time for model checking: 0.001s.
+
+Performance statistics:
+  * peak memory usage: 45MB
+  * CPU time: 3.876s
+  * wallclock time: 3.837s

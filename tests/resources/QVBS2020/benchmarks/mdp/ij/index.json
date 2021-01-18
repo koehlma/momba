@@ -1,0 +1,257 @@
+{
+	"name": "Israeli Jalfon Randomized Self-Stabilizing",
+	"short": "ij",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-11-12",
+	"version-history": [
+		{
+			"date": "2018-11-12",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Amos Israeli <amos@netanya.ac.il>",
+		"Marc Jalfon <>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1145/93385.93409",
+	"part-of": {
+		"name": "the PRISM Case Studies",
+		"url": "http://www.prismmodelchecker.org/casestudies/"
+	},
+	"description": "This is a PRISM case study [1]. A self-stabilizing protocol for a network of processes is a protocol which, when started from some possibly illegal start configuration, returns to a legal/stable configuration without any outside intervention within some finite number of steps. In this randomized self-stabilizing algorithm, the configuration is stable when there is exactly one process designated as privileged, i.e., which has a token. This token should be passed around the ring forever in a fair manner. See [2] for more details.",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"https://www.prismmodelchecker.org/casestudies/self-stabilisation.php"
+	],
+	"notes": "PRISM case study",
+	"parameters": [
+		{
+			"name": "num_tokens_var",
+			"kind": "file",
+			"description": "Number of tokens and processes",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "stable",
+			"description": "The maximal probability to finally reach a stable state.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "ij.3.jani",
+			"original-file": [
+				"ij.3.prism",
+				"ij.3.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.3.prism --prop ij.3.props --prism2jani --jani-output ij.3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 7
+						}
+					],
+					"results": [
+						{
+							"property": "stable",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "ij.10.jani",
+			"original-file": [
+				"ij.10.prism",
+				"ij.10.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.10.prism --prop ij.10.props --prism2jani --jani-output ij.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 10
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 1023
+						}
+					],
+					"results": [
+						{
+							"property": "stable",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "ij.20.jani",
+			"original-file": [
+				"ij.20.prism",
+				"ij.20.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.20.prism --prop ij.20.props --prism2jani --jani-output ij.20.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 20
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 1048575
+						}
+					],
+					"results": [
+						{
+							"property": "stable",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "ij.30.jani",
+			"original-file": [
+				"ij.30.prism",
+				"ij.30.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.30.prism --prop ij.30.props --prism2jani --jani-output ij.30.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 30
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "ij.40.jani",
+			"original-file": [
+				"ij.40.prism",
+				"ij.40.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.40.prism --prop ij.40.props --prism2jani --jani-output ij.40.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 40
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "ij.50.jani",
+			"original-file": [
+				"ij.50.prism",
+				"ij.50.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism ij.50.prism --prop ij.50.props --prism2jani --jani-output ij.50.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "num_tokens_var",
+					"value": 50
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": false,
+			"file": "results/mcsta.3.2018-11-13.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.10.2018-11-13.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.20.2018-11-13.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.10.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.20.2018-11-22.json"
+		}
+	]
+}

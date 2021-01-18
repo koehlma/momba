@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Readers & Writers model from Ajmone Marsan et al.: Modelling with Generalized Stochastic Petri Nets, 1995-->
+<project name="ReadersWriters" version="1">
+	<gspn name="ReadersWriters">
+		<nodes>
+			<template x="1.0" y="20.0" type="INTEGER" name="K"/>
+			<constant x="1.0" y="19.0" consttype="REAL" name="lambda" value="1.0"/>
+			<constant x="1.0" y="18.0" consttype="REAL" name="mu_w" value="7.0"/>
+			<constant x="1.0" y="17.0" consttype="REAL" name="mu_r" value="10.0"/>
+			<constant x="1.0" y="16.0" consttype="REAL" name="rho_r" value="8.0"/>
+			<constant x="1.0" y="15.0" consttype="REAL" name="rho_w" value="7.0"/>
+			<place x="1.0" y="7.0" name="p_reaccess"/>
+			<place x="7.0" y="7.0" name="p_think" marking="K"/>
+			<place x="13.0" y="7.0" name="p_request"/>
+			<place x="19.0" y="13.0" name="p_r"/>
+			<place x="19.0" y="7.0" name="p_db" marking="1"/>
+			<place x="19.0" y="1.0" name="p_w"/>
+			<place x="25.0" y="13.0" name="p_read"/>
+			<place x="25.0" y="1.0" name="p_write"/>
+			<place x="31.0" y="13.0" name="p_lan_r"/>
+			<place x="31.0" y="1.0" name="p_lan_w"/>
+			<place x="37.0" y="13.0" name="p_start_lan_r"/>
+			<place x="37.0" y="7.0" name="p_start_lan_w"/>
+			<place x="37.0" y="1.0" name="p_lan" marking="1"/>
+			<transition x="4.0" y="7.0" name="t_think" type="IMM" priority="1" weight="9"/>
+			<transition x="4.0" y="1.0" name="t_reaccess" type="IMM" priority="1" weight="1"/>
+			<transition x="10.0" y="7.0" delay="lambda" name="T_exec" type="EXP" nservers="Infinite"/> 
+			<transition x="16.0" y="13.0" name="t_read" type="IMM" priority="2" weight="8"/>
+			<transition x="16.0" y="1.0" name="t_write" type="IMM" priority="2" weight="2"/>
+			<transition x="22.0" y="13.0" name="t_start_r" type="IMM" priority="3" weight="1"/>
+			<transition x="22.0" y="1.0" name="t_start_w" type="IMM" priority="4" weight="1"/>
+			<transition x="28.0" y="13.0" delay="mu_r" name="T_read" type="EXP" nservers="Infinite"/> 
+			<transition x="28.0" y="1.0" delay="mu_w" name="T_write" type="EXP" nservers="1"/> 
+			<transition x="34.0" y="13.0" name="t_start_lan_r" type="IMM" priority="1" weight="1"/>
+			<transition x="34.0" y="1.0" name="t_start_lan_w" type="IMM" priority="1" weight="1"/>
+			<transition x="40.0" y="13.0" delay="rho_r" name="T_lan_r" type="EXP" nservers="1"/> 
+			<transition x="40.0" y="1.0" delay="rho_w" name="T_lan_w" type="EXP" nservers="1"/>
+		</nodes>
+		<edges>
+			<arc head="t_think" type="INPUT" tail="p_reaccess"/>
+			<arc head="p_think" type="OUTPUT" tail="t_think"/>
+			<arc head="T_exec" type="INPUT" tail="p_think"/>
+			<arc head="p_request" type="OUTPUT" tail="T_exec"/>
+			<arc head="t_reaccess" type="INPUT" tail="p_reaccess"/>
+			<arc head="p_request" type="OUTPUT" tail="t_reaccess"/>
+			<arc head="t_read" type="INPUT" tail="p_request"/>
+			<arc head="p_r" type="OUTPUT" tail="t_read"/>
+			<arc head="t_write" type="INPUT" tail="p_request"/>
+			<arc head="p_w" type="OUTPUT" tail="t_write"/>
+			<arc head="t_start_r" type="INPUT" tail="p_r"/>
+			<arc head="t_start_r" type="INPUT" tail="p_db"/>
+			<arc head="p_read" type="OUTPUT" tail="t_start_r"/>
+			<arc head="p_db" type="OUTPUT" tail="t_start_r"/>
+			<arc head="t_start_w" type="INPUT" tail="p_w"/>
+			<arc head="t_start_w" type="INPUT" tail="p_db"/>
+			<arc head="p_write" type="OUTPUT" tail="t_start_w"/>
+			<arc head="t_start_w" type="INHIBITOR" tail="p_read"/>
+			<arc head="T_read" type="INPUT" tail="p_read"/>
+			<arc head="p_lan_r" type="OUTPUT" tail="T_read"/>
+			<arc head="T_write" type="INPUT" tail="p_write"/>
+			<arc head="p_lan_w" type="OUTPUT" tail="T_write"/>
+			<arc head="p_db" type="OUTPUT" tail="T_write"/>
+			<arc head="t_start_lan_r" type="INPUT" tail="p_lan_r"/>
+			<arc head="t_start_lan_r" type="INPUT" tail="p_lan"/>
+			<arc head="p_start_lan_r" type="OUTPUT" tail="t_start_lan_r"/>
+			<arc head="t_start_lan_w" type="INPUT" tail="p_lan_w"/>
+			<arc head="t_start_lan_w" type="INPUT" tail="p_lan"/>
+			<arc head="p_start_lan_w" type="OUTPUT" tail="t_start_lan_w"/>
+			<arc head="T_lan_r" type="INPUT" tail="p_start_lan_r"/>
+			<arc head="p_lan" type="OUTPUT" tail="T_lan_r"/>
+			<arc head="p_reaccess" type="OUTPUT" tail="T_lan_r"/>
+			<arc head="T_lan_w" type="INPUT" tail="p_start_lan_w"/>
+			<arc head="p_lan" type="OUTPUT" tail="T_lan_w"/>
+			<arc head="p_reaccess" type="OUTPUT" tail="T_lan_w"/>
+		</edges>
+	</gspn>
+</project>

@@ -1,0 +1,71 @@
+{
+	"file": "../sms.3-true.jani",
+	"version": 1,
+	"date": "2018-12-03",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact-vi.3-true.2018-12-03.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact",
+			"vi"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani sms.3-true.jani --janiproperty Unavailability  --timemem --exact --lramethod vi --precision 1e-10",
+	"time": 95.12107157707214,
+	"memory": 1650458624,
+	"property-times": [
+		{
+			"name": "Unavailability",
+			"time": 14.812
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"value": 79.705,
+					"unit": "s",
+					"name": "time"
+				},
+				{
+					"value": 1486857,
+					"name": "states"
+				},
+				{
+					"value": 1486857,
+					"name": "transitions"
+				},
+				{
+					"value": 2437116,
+					"name": "branches"
+				},
+				{
+					"value": 131071,
+					"name": "Markovian-states"
+				}
+			]
+		},
+		{
+			"property": "Unavailability",
+			"value": 1,
+			"values": [
+				{
+					"value": 14.812,
+					"unit": "s",
+					"name": "time"
+				}
+			]
+		}
+	]
+}

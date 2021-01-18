@@ -1,0 +1,18 @@
+toplevel "Filter_1";
+"Filter_1" or "fault_cfg_4_1" "fault_cfg_3_1" "E2_1" "fault_cfg_1_1";
+"fault_cfg_3_1" pand "EC1_1" "E3_1";
+"fault_cfg_1_1" pand "E1_1" "E4_1";
+"E1_1" lambda=0.25 dorm=0;
+"E2_1" lambda=0.3 dorm=0;
+"E3_1" lambda=0.2 dorm=0;
+"E4_1" lambda=0.2 dorm=0;
+"EC1_1" lambda=0.2 dorm=0;
+"fault_cfg_4_1" and "gate_1_1" "gate_2_1" "gate_3_1" "gate_4_1";
+"gate_1_1" pand "EC1_1" "EC2_1";
+"gate_2_1" pand "EC2_1" "EC3_1";
+"gate_3_1" pand "EC3_1" "EC4_1";
+"gate_4_1" pand "EC4_1" "EC5_1";
+"EC2_1" lambda=0.2 dorm=0;
+"EC3_1" lambda=0.2 dorm=0;
+"EC4_1" lambda=0.2 dorm=0;
+"EC5_1" lambda=0.2 dorm=0;

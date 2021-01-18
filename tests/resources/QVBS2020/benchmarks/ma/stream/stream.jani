@@ -1,0 +1,734 @@
+{
+	"actions": [
+		{
+			"name": "buffer"
+		},
+		{
+			"name": "start"
+		}
+	],
+	"automata": [
+		{
+			"edges": [
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 0
+								},
+								{
+									"ref": "n",
+									"value": {
+										"left": "n",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / 4)",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 4
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(s = 1)",
+						"exp": {
+							"left": "s",
+							"op": "=",
+							"right": 1
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "4",
+						"exp": 4
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "n",
+									"value": {
+										"left": "n",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / (4 + 4))",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 8
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "k",
+									"value": {
+										"left": "k",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / (4 + 4))",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 8
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((s = 2) & (n < N)) & (k < n))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 2
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "<",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "<",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "(4 + 4)",
+						"exp": 8
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "n",
+									"value": {
+										"left": "n",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / (4 + 4))",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 8
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 0
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / (4 + 4))",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 8
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((s = 2) & (n < N)) & (k = n))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 2
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "<",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "=",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "(4 + 4)",
+						"exp": 8
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "k",
+									"value": {
+										"left": "k",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / 4)",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 4
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((s = 2) & (n = N)) & (k < n))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 2
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "=",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "<",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "4",
+						"exp": 4
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 3
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "(4 / 4)",
+								"exp": {
+									"left": 4,
+									"op": "/",
+									"right": 4
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((s = 2) & (n = N)) & (k = N))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 2
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "=",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "=",
+								"right": "N"
+							}
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "4",
+						"exp": 4
+					}
+				},
+				{
+					"destinations": [
+						{
+							"location": "l",
+							"probability": {
+								"comment": "(1 / 1)",
+								"exp": {
+									"left": 1,
+									"op": "/",
+									"right": 1
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(s = 3)",
+						"exp": {
+							"left": "s",
+							"op": "=",
+							"right": 3
+						}
+					},
+					"location": "l",
+					"rate": {
+						"comment": "1",
+						"exp": 1
+					}
+				},
+				{
+					"action": "buffer",
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 1
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "99/100",
+								"exp": 0.99
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 2
+								},
+								{
+									"ref": "k",
+									"value": {
+										"left": "k",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "l",
+							"probability": {
+								"comment": "1/100",
+								"exp": 0.01
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((s = 0) & (n < N)) & (k < n))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 0
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "<",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "<",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l"
+				},
+				{
+					"action": "buffer",
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 1
+								}
+							],
+							"location": "l"
+						}
+					],
+					"guard": {
+						"comment": "(((s = 0) & (n < N)) & (k = n))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 0
+								},
+								"op": "∧",
+								"right": {
+									"left": "n",
+									"op": "<",
+									"right": "N"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "=",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l"
+				},
+				{
+					"action": "start",
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "s",
+									"value": 2
+								},
+								{
+									"ref": "k",
+									"value": {
+										"left": "k",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "numrestarts",
+									"value": {
+										"else": 0.0,
+										"if": {
+											"left": "k",
+											"op": ">",
+											"right": 0
+										},
+										"op": "ite",
+										"then": 1
+									}
+								}
+							],
+							"location": "l"
+						}
+					],
+					"guard": {
+						"comment": "((s = 0) & (k < n))",
+						"exp": {
+							"left": {
+								"left": "s",
+								"op": "=",
+								"right": 0
+							},
+							"op": "∧",
+							"right": {
+								"left": "k",
+								"op": "<",
+								"right": "n"
+							}
+						}
+					},
+					"location": "l"
+				}
+			],
+			"initial-locations": [
+				"l"
+			],
+			"locations": [
+				{
+					"name": "l",
+					"transient-values": [
+						{
+							"ref": "underrun",
+							"value": {
+								"left": {
+									"left": "s",
+									"op": "=",
+									"right": 0
+								},
+								"op": "∧",
+								"right": {
+									"left": "k",
+									"op": ">",
+									"right": 0
+								}
+							}
+						},
+						{
+							"ref": "running",
+							"value": {
+								"left": "s",
+								"op": "=",
+								"right": 2
+							}
+						},
+						{
+							"ref": "done",
+							"value": {
+								"left": "s",
+								"op": "=",
+								"right": 3
+							}
+						},
+						{
+							"ref": "buffering",
+							"value": {
+								"else": 0.0,
+								"if": {
+									"left": "s",
+									"op": "=",
+									"right": 1
+								},
+								"op": "ite",
+								"then": 1
+							}
+						}
+					]
+				}
+			],
+			"name": "streamingclient",
+			"variables": []
+		}
+	],
+	"constants": [
+		{
+			"name": "N",
+			"type": "int"
+		},
+		{
+			"name": "inRate",
+			"type": "real",
+			"value": 4
+		},
+		{
+			"name": "processingRate",
+			"type": "real",
+			"value": 4
+		}
+	],
+	"features": [
+		"derived-operators"
+	],
+	"jani-version": 1,
+	"name": "stream",
+	"properties": [
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"accumulate": [
+						"time"
+					],
+					"exp": "buffering",
+					"op": "Emin",
+					"reach": "done"
+				}
+			},
+			"name": "exp_buffertime"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"accumulate": [
+						"steps"
+					],
+					"exp": "numrestarts",
+					"op": "Emax",
+					"reach": "done"
+				}
+			},
+			"name": "exp_restarts"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"exp": {
+						"left": true,
+						"op": "U",
+						"right": "underrun"
+					},
+					"op": "Pmin"
+				}
+			},
+			"name": "pr_underrun"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"exp": {
+						"left": true,
+						"op": "U",
+						"right": "underrun",
+						"time-bounds": {
+							"upper": 2,
+							"upper-exclusive": false
+						}
+					},
+					"op": "Pmin"
+				}
+			},
+			"name": "pr_underrun_tb"
+		}
+	],
+	"restrict-initial": {
+		"exp": true
+	},
+	"system": {
+		"elements": [
+			{
+				"automaton": "streamingclient"
+			}
+		],
+		"syncs": [
+			{
+				"result": "buffer",
+				"synchronise": [
+					"buffer"
+				]
+			},
+			{
+				"result": "start",
+				"synchronise": [
+					"start"
+				]
+			}
+		]
+	},
+	"type": "ma",
+	"variables": [
+		{
+			"initial-value": false,
+			"name": "underrun",
+			"transient": true,
+			"type": "bool"
+		},
+		{
+			"initial-value": false,
+			"name": "running",
+			"transient": true,
+			"type": "bool"
+		},
+		{
+			"initial-value": false,
+			"name": "done",
+			"transient": true,
+			"type": "bool"
+		},
+		{
+			"initial-value": 0.0,
+			"name": "buffering",
+			"transient": true,
+			"type": "real"
+		},
+		{
+			"initial-value": 0.0,
+			"name": "numrestarts",
+			"transient": true,
+			"type": "real"
+		},
+		{
+			"initial-value": 0,
+			"name": "s",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 3
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "n",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": "N"
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "k",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": "N"
+			}
+		}
+	]
+}

@@ -1,0 +1,101 @@
+const int N; // number of different types of tasks, maximum 10
+const int C; // queue size
+const real TIME_BOUND;
+
+int(0..C) items1 = 0;
+int(0..C) items2 = 0;
+int(0..C) items3 = 0;
+int(0..C) items4 = 0;
+int(0..C) items5 = 0;
+int(0..C) items6 = 0;
+int(0..C) items7 = 0;
+int(0..C) items8 = 0;
+int(0..C) items9 = 0;
+int(0..C) items10 = 0;
+
+binary action sleep, standby, idle;
+
+property PminQueuesFull = Pmin(<> ((N < 1 || items1 == C) && (N < 2 || items2 == C) && (N < 3 || items3 == C) && (N < 4 || items4 == C) && (N < 5 || items5 == C) && (N < 6 || items6 == C) && (N < 7 || items7 == C) && (N < 8 || items8 == C) && (N < 9 || items9 == C) && (N < 10 || items10 == C)));
+property PmaxQueuesFull = Pmax(<> ((N < 1 || items1 == C) && (N < 2 || items2 == C) && (N < 3 || items3 == C) && (N < 4 || items4 == C) && (N < 5 || items5 == C) && (N < 6 || items6 == C) && (N < 7 || items7 == C) && (N < 8 || items8 == C) && (N < 9 || items9 == C) && (N < 10 || items10 == C)));
+
+property PminQueue1Full = Pmin(<> (items1 == C));
+property PmaxQueue1Full = Pmax(<> (items1 == C));
+
+property TminQueuesFull = Xmin(T, (N < 1 || items1 == C) && (N < 2 || items2 == C) && (N < 3 || items3 == C) && (N < 4 || items4 == C) && (N < 5 || items5 == C) && (N < 6 || items6 == C) && (N < 7 || items7 == C) && (N < 8 || items8 == C) && (N < 9 || items9 == C) && (N < 10 || items10 == C));
+
+property PmaxQueuesFullBound = Pmax(<>[T<=TIME_BOUND] ((N < 1 || items1 == C) && (N < 2 || items2 == C) && (N < 3 || items3 == C) && (N < 4 || items4 == C) && (N < 5 || items5 == C) && (N < 6 || items6 == C) && (N < 7 || items7 == C) && (N < 8 || items8 == C) && (N < 9 || items9 == C) && (N < 10 || items10 == C)));
+
+property SmaxQueuesFull = Smax((N < 1 || items1 == C) && (N < 2 || items2 == C) && (N < 3 || items3 == C) && (N < 4 || items4 == C) && (N < 5 || items5 == C) && (N < 6 || items6 == C) && (N < 7 || items7 == C) && (N < 8 || items8 == C) && (N < 9 || items9 == C) && (N < 10 || items10 == C));
+
+const int SP_IDLE = 1;
+const int SP_SLEEP = 2;
+const int SP_STANDBY = 3;
+
+process ServiceProvider(int(1..3) pmode)
+{
+   int(1..N) t;
+   alt {
+   :: when(pmode == SP_IDLE)
+      alt {
+      :: sleep?; rate(0.5) tau; ServiceProvider(SP_SLEEP)
+      :: standby?; rate(1) tau; ServiceProvider(SP_STANDBY)
+      :: alt {
+         :: when(N >= 1 && items1 > 0) tau {= t = 1, items1-- =} 
+         :: when(N >= 2 && items2 > 0) tau {= t = 2, items2-- =} 
+         :: when(N >= 3 && items3 > 0) tau {= t = 3, items3-- =} 
+         :: when(N >= 4 && items4 > 0) tau {= t = 4, items4-- =} 
+         :: when(N >= 5 && items5 > 0) tau {= t = 5, items5-- =} 
+         :: when(N >= 6 && items6 > 0) tau {= t = 6, items6-- =} 
+         :: when(N >= 7 && items7 > 0) tau {= t = 7, items7-- =} 
+         :: when(N >= 8 && items8 > 0) tau {= t = 8, items8-- =} 
+         :: when(N >= 9 && items9 > 0) tau {= t = 9, items9-- =} 
+         :: when(N >= 10 && items10 > 0) tau {= t = 10, items10-- =} 
+         };
+         rate(0.2 * t) tau; ServiceProvider(SP_IDLE)
+      }
+   :: when(pmode == SP_SLEEP) alt {
+      :: idle?; rate(0.166) tau; ServiceProvider(SP_IDLE)
+      :: standby?; rate(1.5) tau; ServiceProvider(SP_STANDBY)
+      }
+   :: when(pmode == SP_STANDBY) alt {
+      :: idle?; rate(0.454) tau; ServiceProvider(SP_IDLE)
+      :: sleep?; rate(1.5) tau; ServiceProvider(SP_SLEEP)
+      }
+   }
+}
+
+process PowerManager()
+{
+   alt {
+   :: standby!
+   :: sleep!
+   :: idle!
+   };
+   PowerManager()
+}
+
+process ServiceRequester()
+{
+   alt {
+   :: when(N >= 1) rate(0.1 * 1 + 0.4) tau; when(items1 < C) {= items1++ =}
+   :: when(N >= 2) rate(0.1 * 2 + 0.4) tau; when(items2 < C) {= items2++ =}
+   :: when(N >= 3) rate(0.1 * 3 + 0.4) tau; when(items3 < C) {= items3++ =}
+   :: when(N >= 4) rate(0.1 * 4 + 0.4) tau; when(items4 < C) {= items4++ =}
+   :: when(N >= 5) rate(0.1 * 5 + 0.4) tau; when(items5 < C) {= items5++ =}
+   :: when(N >= 6) rate(0.1 * 6 + 0.4) tau; when(items6 < C) {= items6++ =}
+   :: when(N >= 7) rate(0.1 * 7 + 0.4) tau; when(items7 < C) {= items7++ =}
+   :: when(N >= 8) rate(0.1 * 8 + 0.4) tau; when(items8 < C) {= items8++ =}
+   :: when(N >= 9) rate(0.1 * 9 + 0.4) tau; when(items9 < C) {= items9++ =}
+   :: when(N >= 10) rate(0.1 * 10 + 0.4) tau; when(items10 < C) {= items10++ =}
+   };
+   ServiceRequester()
+}
+
+restrict { sleep!, sleep?, standby!, standby?, idle!, idle? }
+{
+   par {
+   :: ServiceRequester()
+   :: ServiceProvider(SP_SLEEP)
+   :: PowerManager()
+   }
+}

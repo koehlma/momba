@@ -1,0 +1,168 @@
+﻿{
+	"file": "../dpm.jani",
+	"version": 2,
+	"date": "2018-10-24",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 4 },
+		{ "name": "C", "value": 4 },
+		{ "name": "TIME_BOUND", "value": 5.0 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.90",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-7500U",
+		"ram": 16,
+		"os": "Windows 10 Home 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta dpm.jani -E \"N=4, C=4, TIME_BOUND=5\" -O mcsta.4-4-5.2018-24-10.json JSON",
+	"time": 344.378,
+	"memory": 50872320,
+	"property-times": [
+		{ "name": "PminQueuesFull", "time": 0.078 },
+		{ "name": "PmaxQueuesFull", "time": 0.269 },
+		{ "name": "PminQueue1Full", "time": 0.041 },
+		{ "name": "PmaxQueue1Full", "time": 0.199 },
+		{ "name": "TminQueuesFull", "time": 0.455 },
+		{ "name": "PmaxQueuesFullBound", "time": 342.069 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 16, "unit": "B" },
+				{ "name": "States", "value": 34570 },
+				{ "name": "Transitions", "value": 41610 },
+				{ "name": "Branches", "value": 66570 },
+				{ "name": "Rate", "value": 213395.06172839506 },
+				{ "name": "Time", "value": 0.205, "unit": "s" }
+			]
+		},
+		{
+			"property": "PminQueuesFull",
+			"value": 0.0043227715735177086,
+			"values": [
+				{ "name": "Bounds", "value": "[0.00432277157351771, 1]" },
+				{ "name": "Time", "value": 0.078, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 4.8882718557365965E-07 },
+						{ "name": "Iterations", "value": 23 },
+						{ "name": "Time", "value": 0.065, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "PmaxQueuesFull",
+			"value": 0.99999970448838194,
+			"values": [
+				{ "name": "Bounds", "value": "[0.999999704488382, 1]" },
+				{ "name": "Time", "value": 0.269, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.8530673385179474E-07 },
+						{ "name": "Iterations", "value": 96 },
+						{ "name": "Time", "value": 0.259, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "PminQueue1Full",
+			"value": 0.12917046951351024,
+			"values": [
+				{ "name": "Bounds", "value": "[0.12917046951351, 1]" },
+				{ "name": "Time", "value": 0.041, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 4.8234641695449342E-07 },
+						{ "name": "Iterations", "value": 18 },
+						{ "name": "Time", "value": 0.038, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "PmaxQueue1Full",
+			"value": 0.99999971115488684,
+			"values": [
+				{ "name": "Bounds", "value": "[0.999999711154887, 1]" },
+				{ "name": "Time", "value": 0.199, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.0969896100285364E-07 },
+						{ "name": "Iterations", "value": 93 },
+						{ "name": "Time", "value": 0.196, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "TminQueuesFull",
+			"value": 29.699055178713948,
+			"values": [
+				{ "name": "Bounds", "value": "[29.6990551787139, ∞)" },
+				{ "name": "Time", "value": 0.455, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 0 states", "value": 0 },
+						{ "name": "Time for max. prob. 0 states", "value": 0.013, "unit": "s" },
+						{ "name": "Max. prob. 1 states", "value": 34570 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.169, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.7860697110311909E-07 },
+						{ "name": "Iterations", "value": 99 },
+						{ "name": "Time", "value": 0.259, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "PmaxQueuesFullBound",
+			"value": 0.0039454939099182653,
+			"values": [
+				{ "name": "Bounds", "value": "[0.00394506028088408, 0.00394592753895245]" },
+				{ "name": "Time", "value": 342.069, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Unif+",
+					"values": [
+						{ "name": "Time", "value": 342.066, "unit": "s" },
+						{ "name": "Max. exit rate", "value": 4.1 },
+						{ "name": "Iterations (lower bound)", "value": 9 },
+						{ "name": "Final unif. rate (lower bound)", "value": 1049.6 },
+						{ "name": "Iterations (upper bound)", "value": 8 },
+						{ "name": "Final unif. rate (upper bound)", "value": 524.8 }
+					]
+				}
+			]
+		}
+	]
+}

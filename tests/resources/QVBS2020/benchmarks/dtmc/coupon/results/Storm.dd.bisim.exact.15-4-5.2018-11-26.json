@@ -1,0 +1,125 @@
+{
+	"file": "../coupon.15-4.jani",
+	"version": 1,
+	"date": "2018-11-26",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd.bisim.exact.15-4-5.2018-11-26.txt",
+	"open-parameter-values": [
+		{
+			"name": "B",
+			"value": 5
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"bisim",
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani coupon.15-4.jani --janiproperty  --constants B=5 --engine dd --ddlib sylvan --bisimulation --bisimulation:quot sparse --exact --timemem",
+	"time": 176.95939826965332,
+	"memory": 4599054336,
+	"property-times": [
+		{
+			"name": "collect_all",
+			"time": 0.001
+		},
+		{
+			"name": "exp_draws",
+			"time": 0.045
+		},
+		{
+			"name": "collect_all_bounded",
+			"time": 0.012
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 3.062,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 17486977236
+				},
+				{
+					"name": "branches",
+					"value": 40823774300
+				}
+			]
+		},
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 173.539
+				},
+				{
+					"name": "states",
+					"value": 451
+				},
+				{
+					"name": "branches",
+					"value": 625
+				}
+			],
+			"group": "Strong bisimulation"
+		},
+		{
+			"property": "collect_all",
+			"value": 1,
+			"values": [
+				{
+					"name": "time",
+					"value": 0.001,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "exp_draws",
+			"value": {
+				"den": 5306811483744700661842810539840,
+				"approx": 12.818358616251643,
+				"num": 68024612707482047949451796497199
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 0.045,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "collect_all_bounded",
+			"value": {
+				"den": 16218292236328125,
+				"approx": 0.0017788079199640542,
+				"num": 28849226678272
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 0.012,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}

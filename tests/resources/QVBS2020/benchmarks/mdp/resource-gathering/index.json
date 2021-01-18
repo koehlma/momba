@@ -1,0 +1,300 @@
+{
+	"name": "Resource Gathering",
+	"short": "resource-gathering",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 2,
+	"date": "2018-08-13",
+	"version-history": [
+		{
+			"version": 2,
+			"date": "2018-11-22",
+			"notes": "Fixed an issue in the PRISM-to-JANI conversion and tweaked the properties for better compatibility with PRISM."
+		},
+		{
+			"version": 1,
+			"date": "2018-08-13",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1145/1390156.1390162",
+	"description": "A 5x5 grid world where an agent has to collect gold and gem and bring it to the home location. On certain grid coordinates there is a 10% chance that the agent gets attacked. When the agent gets attacked, it has to restart at the home location. This model is part of the benchmark suite from [1] for multiobjective reinforcement learning algorithms.",
+	"references": [
+		"https://doi.org/10.1007/s10994-010-5232-5"
+	],
+	"challenge": "reward-bounded properties",
+	"parameters": [
+		{
+			"name": "B",
+			"kind": "open",
+			"description": "Step bound",
+			"type": "positive integer"
+		},
+		{
+			"name": "GOLD_TO_COLLECT",
+			"kind": "open",
+			"description": "Required gold",
+			"type": "positive integer"
+		},
+		{
+			"name": "GEM_TO_COLLECT",
+			"kind": "open",
+			"description": "Required gem",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "expgold",
+			"description": "The maximal expected amount of gold that can be collected in `B´ steps.",
+			"type": "exp-reward-step-bounded"
+		},
+		{
+			"name": "expsteps",
+			"description": "The minimal expected number of steps to collect at least `GOLD_TO_COLLECT´ gold and at least `GEM_TO_COLLECT´ gem.",
+			"type": "exp-steps"
+		},
+		{
+			"name": "prgoldgem",
+			"description": "The maximal probability that at least `GOLD_TO_COLLECT´ gold and at least `GEM_TO_COLLECT´ gem is collected within at most `B´ steps.",
+			"type": "prob-reach-step-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "resource-gathering.jani",
+			"original-file": [
+				"resource-gathering.pm",
+				"resource-gathering.prctl"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism resource-gathering.pm --tojani resource-gathering.jani --prop resource-gathering.prctl --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 200
+						},
+						{
+							"name": "GOLD_TO_COLLECT",
+							"value": 15
+						},
+						{
+							"name": "GEM_TO_COLLECT",
+							"value": 15
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 24064
+						}
+					],
+					"results": [
+						{
+							"property": "expgold",
+							"value": {
+								"num": 11035720796404235335994649651502414237338159020136208652188263161012127018127703,
+								"den": 500000000000000000000000000000000000000000000000000000000000000000000000000000,
+								"approx": 22.07144159280847
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "expsteps",
+							"value": {
+								"num": 1745,
+								"den": 9,
+								"approx": 193.88888888888889
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "prgoldgem",
+							"value": {
+								"num": 40402280165576036172779067978949245387,
+								"den": 50000000000000000000000000000000000000,
+								"approx": 0.8080456033115208
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 400
+						},
+						{
+							"name": "GOLD_TO_COLLECT",
+							"value": 30
+						},
+						{
+							"name": "GEM_TO_COLLECT",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 90334
+						}
+					],
+					"results": [
+						{
+							"property": "expgold",
+							"value": {
+								"num": 2223069286897035336984392597056847016890586783579314864269796120502251854579941477462685566055157610998958027136282413703655174244046896796834763279969733490943,
+								"den": 50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+								"approx": 44.46138573794071
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "expsteps",
+							"value": {
+								"num": 3490,
+								"den": 9,
+								"approx": 387.77777777777777
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "prgoldgem",
+							"value": {
+								"num": 8647565951595304254437539859537432101902224915260115854978175107719078553743,
+								"den": 10000000000000000000000000000000000000000000000000000000000000000000000000000,
+								"approx": 0.8647565951595304
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 1300
+						},
+						{
+							"name": "GOLD_TO_COLLECT",
+							"value": 100
+						},
+						{
+							"name": "GEM_TO_COLLECT",
+							"value": 100
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 958894
+						}
+					],
+					"results": [
+						{
+							"property": "expgold",
+							"value": {
+								"num": 7264375073375469449618662501504506678375777124927245092599053231644666673941583976542615859048918385259998596551162129780592651767368178605021823732691181739093434372876661819379530098728785208625449275851305168448843422855426191245955422855359777679433560585821178640509935448362824311419877551701852565468365094137568009239488438953915241479675300431961216164884100235312283881934829831139437172624278957867401478674253410714641886233847003233839053435926819958776138488683426285264386342945460271627777638712613161323,
+								"den": 50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+								"approx": 145.2875014675094
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "expsteps",
+							"value": {
+								"num": 34900,
+								"den": 27,
+								"approx": 1292.5925925925926
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "prgoldgem",
+							"value": {
+								"num": 663060852524178402183203507211353729666956663727350680069210275332115007280621137868004961937357709723179891739352387145366201684190399713388720604667954409751611188058893055489955897549953315586276348761790028621965783364895926897299241911,
+								"den": 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+								"approx": 0.6630608525
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 1000000
+						},
+						{
+							"name": "GOLD_TO_COLLECT",
+							"value": 0
+						},
+						{
+							"name": "GEM_TO_COLLECT",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 94
+						}
+					],
+					"results": [
+						{
+							"property": "expgold",
+							"value": 112032.8394,
+							"note": "Storm"
+						},
+						{
+							"property": "expsteps",
+							"value": 0,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "prgoldgem",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.200-15-15.2018-11-22.json",
+		"results/Storm.400-30-30.2018-11-22.json",
+		"results/Storm.1300-100-100.2018-11-22.json",
+		{
+			"reference": true,
+			"file": "results/Storm.1000000-0-0.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.200-15-15.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.400-30-30.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1300-100-100.2018-11-23.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1000000-0-0.2018-11-22.json"
+		}
+	]
+}

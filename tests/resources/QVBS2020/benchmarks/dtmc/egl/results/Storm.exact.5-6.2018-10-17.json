@@ -1,0 +1,132 @@
+{
+	"file": "../egl.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.5-6.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 5
+		},
+		{
+			"name": "L",
+			"value": 6
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani egl.jani --janiproperty --constants N=5,L=6 --exact --timemem",
+	"time": 89.82,
+	"memory": 156237824,
+	"property-times": [
+		{
+			"name": "messagesA",
+			"time": 0.546
+		},
+		{
+			"name": "messagesB",
+			"time": 0.499
+		},
+		{
+			"name": "unfairA",
+			"time": 0.132
+		},
+		{
+			"name": "unfairB",
+			"time": 0.136
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 88.335
+				},
+				{
+					"name": "states",
+					"value": 115710
+				},
+				{
+					"name": "branches",
+					"value": 116733
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "messagesA",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.546
+				}
+			],
+			"value": {
+				"approx": 1.7568359375,
+				"num": 1799,
+				"den": 1024
+			}
+		},
+		{
+			"property": "messagesB",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.499
+				}
+			],
+			"value": {
+				"approx": 2.2880859375,
+				"num": 2343,
+				"den": 1024
+			}
+		},
+		{
+			"property": "unfairA",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.132
+				}
+			],
+			"value": {
+				"approx": 0.515625,
+				"num": 33,
+				"den": 64
+			}
+		},
+		{
+			"property": "unfairB",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.136
+				}
+			],
+			"value": {
+				"approx": 0.484375,
+				"num": 31,
+				"den": 64
+			}
+		}
+	]
+}

@@ -1,0 +1,230 @@
+{
+	"name": "Tireworld",
+	"short": "tireworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://users.cecs.anu.edu.au/~iain/icaps07.pdf",
+	"part-of": {
+		"name": "the IPPC 2006 Benchmark Set",
+		"url": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/"
+	},
+	"description": "An IPPC 2006 [1] model of the tireworld domain described in detail in [2]. A car has to move between two of the `n´ locations. When the car drives a segment of the route, there is the chance of getting a flat tire. But only in some locations there are spare tires available.",
+	"references": [
+		"http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/",
+		"https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume24/younes05a-html/node18.html"
+	],
+	"notes": "IPPC 2006 benchmark",
+	"parameters": [
+		{
+			"name": "n",
+			"kind": "file",
+			"description": "Number of locations",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "tireworld.17.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01.pddl --jani tireworld.17.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 17
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 8670,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 8670
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.23328,
+								"num": 729,
+								"den": 3125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "tireworld.25.jani",
+			"original-file": [
+				"domain.pddl",
+				"p05.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p05.pddl --jani tireworld.25.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 25
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 196560,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 196560
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "tireworld.35.jani",
+			"original-file": [
+				"domain.pddl",
+				"p10.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p10.pddl --jani tireworld.35.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 35
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 9174970,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 9174970
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "tireworld.45.jani",
+			"original-file": [
+				"domain.pddl",
+				"p15.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p15.pddl --jani tireworld.45.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 45
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 94371750,
+							"note": "Storm/dd"
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"lower": 0.9359999999999999,
+								"upper": 0.9360000000000105
+							},
+							"note": "mcsta"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the destination location."
+		}
+	],
+	"results": [
+		"results/mcsta.17.json",
+		"results/mcsta.25.json",
+		"results/mcsta.35.json",
+		"results/mcsta.45.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.17.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.25.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.35.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/mcsta.45.2020-03-11.json"
+		}
+	]
+}

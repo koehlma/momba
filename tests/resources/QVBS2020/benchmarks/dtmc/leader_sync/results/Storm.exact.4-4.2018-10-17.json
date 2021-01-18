@@ -1,0 +1,81 @@
+{
+	"file": "../leader_sync.4-4.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.4-4.2018-10-17.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani leader_sync.4-4.jani --janiproperty --exact --timemem",
+	"time": 0.083,
+	"memory": 48234496,
+	"property-times": [
+		{
+			"name": "eventually_elected",
+			"time": 0.001
+		},
+		{
+			"name": "time",
+			"time": 0.01
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.062
+				},
+				{
+					"name": "states",
+					"value": 812
+				},
+				{
+					"name": "branches",
+					"value": 1067
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "eventually_elected",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "time",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.01
+				}
+			],
+			"value": {
+				"approx": 1.1851851851851851,
+				"num": 32,
+				"den": 27
+			}
+		}
+	]
+}

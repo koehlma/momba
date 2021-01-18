@@ -1,0 +1,86 @@
+{
+	"file": "../wlan-large.jani",
+	"version": 1,
+	"date": "2018-12-03",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact-ViToPi.2.2018-12-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact",
+			"ViToPi"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani converted_wlan-large.jani --janiproperty E_or  --timemem --exact --topological:minmax vi-to-pi",
+	"time": 210.76880264282227,
+	"memory": 4469030912,
+	"property-times": [
+		{
+			"name": "E_or",
+			"time": 33.134
+		}
+	],
+	"preprocessing": [
+		{
+			"tool": "moconv",
+			"version": "3.0.86",
+			"url": "http://www.modestchecker.net/",
+			"note": "Converted STA to its digital clock semantics and unrolled finite-support probability distributions",
+			"command": "moconv.exe wlan-large.jani -O converted_wlan-large.jani --overwrite --digital-clocks --unroll-distrs -E K=2",
+			"time": 1.1482045650482178
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"value": 171.52,
+					"unit": "s",
+					"name": "time"
+				},
+				{
+					"value": 3283371,
+					"name": "states"
+				},
+				{
+					"value": 6200795,
+					"name": "transitions"
+				},
+				{
+					"value": 6221633,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "E_or",
+			"value": {
+				"approx": 33692.457341269845,
+				"num": 33961997,
+				"den": 1008
+			},
+			"values": [
+				{
+					"value": 33.134,
+					"unit": "s",
+					"name": "time"
+				}
+			]
+		}
+	]
+}

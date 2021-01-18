@@ -1,0 +1,33 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Dec  3 20:49:01 2018
+Command line arguments: --jani converted_wlan-large.jani --janiproperty E_or --timemem --exact '--topological:minmax' vi-to-pi
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.159s.
+
+Time for model construction: 171.520s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	3283371
+Transitions: 	6221633
+Choices: 	6200795
+Reward Models:  E_and_rate_reward
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * success1_seen -> 46878 item(s)
+   * success2_seen -> 46878 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "E_or": R[exp]{"E_and_rate_reward"}max=? [F (success1_seen | success2_seen)] ...
+Result (for initial states): 33961997/1008 (approx. 33692.45734)
+Time for model checking: 33.134s.
+
+Performance statistics:
+  * peak memory usage: 4262MB
+  * CPU time: 207.491s
+  * wallclock time: 209.358s
+

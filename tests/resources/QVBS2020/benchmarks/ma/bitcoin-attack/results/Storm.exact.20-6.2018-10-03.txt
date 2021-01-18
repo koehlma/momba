@@ -1,0 +1,51 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:17 2018
+Command line arguments: --jani bitcoin-attack.jani --janiproperty --constants 'MALICIOUS=20,CD=6' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/bitcoin-attack
+
+Time for model construction: 0.028s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	252
+Transitions: 	553
+Choices: 	490
+Markovian St.: 	189
+Max. Rate.: 	1/12
+Reward Models:  none
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * ((m_len >= 6) & (m_diff > 0)) -> 22 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	189
+Transitions: 	308
+Choices: 	245
+Markovian St.: 	63
+Max. Rate.: 	1/12
+Reward Models:  none
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * ((m_len >= 6) & (m_diff > 0)) -> 17 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "T_MWinMin": T[exp]min=? [F ((m_len >= 6) & (m_diff > 0))] ...
+Result (for initial states): 4194984840/1122677 (approx. 3736.591059)
+Time for model checking: 0.020s.
+
+Model checking property "P_MWinMax": Pmax=? [true U<=2880 ((m_len >= 6) & (m_diff > 0))] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 45MB
+  * CPU time: 0.088s
+  * wallclock time: 0.053s

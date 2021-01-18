@@ -1,0 +1,36 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:25:07 2018
+Command line arguments: --jani mapk_cascade.jani --janiproperty --constants 'N=3,T=30' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/mapk_cascade
+
+Time for model construction: 0.937s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	18292
+Transitions: 	144630
+Reward Models:  time, activated, reactions
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * (kpp = 3) -> 520 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "activated_T": R[exp]{"activated"}min=? [I=30] ...
+Result (for initial states): 1.145640698
+Time for model checking: 33.131s.
+
+Model checking property "activated_time": R[exp]{"time"}min=? [F (kpp = 3)] ...
+Result (for initial states): 46.887248
+Time for model checking: 0.180s.
+
+Model checking property "reactions": R[exp]{"reactions"}min=? [C<=30] ...
+Result (for initial states): 36.61456209
+Time for model checking: 41.191s.
+
+Performance statistics:
+  * peak memory usage: 68MB
+  * CPU time: 75.426s
+  * wallclock time: 75.453s

@@ -1,0 +1,276 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q1",
+                                    "value": 0
+                                },
+                                {
+                                    "ref": "q3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q1",
+                                    "value": 0
+                                },
+                                {
+                                    "ref": "q2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "exp": {
+                            "left": "q1",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q1",
+                                    "value": 1
+                                },
+                                {
+                                    "ref": "q2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q2",
+                                    "value": 0
+                                },
+                                {
+                                    "ref": "q3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "exp": {
+                            "left": "q2",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process2",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q2",
+                                    "value": 1
+                                },
+                                {
+                                    "ref": "q3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "ref": "q1",
+                                    "value": 1
+                                },
+                                {
+                                    "ref": "q3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "exp": {
+                            "left": "q3",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process3",
+            "variables": []
+        }
+    ],
+    "constants": [],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "ij.3",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": {
+                                "left": {
+                                    "left": "q1",
+                                    "op": "+",
+                                    "right": "q2"
+                                },
+                                "op": "+",
+                                "right": "q3"
+                            },
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "op": "Pmax"
+                }
+            },
+            "name": "stable"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "process1"
+            },
+            {
+                "automaton": "process2"
+            },
+            {
+                "automaton": "process3"
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": 1,
+            "name": "q1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "q2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "q3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "num_tokens_var",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        }
+    ]
+}

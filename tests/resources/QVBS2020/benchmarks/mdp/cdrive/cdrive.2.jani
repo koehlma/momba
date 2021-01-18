@@ -1,0 +1,1471 @@
+{
+"jani-version": 1,
+"name": "jani_from_ppddl",
+"type": "mdp",
+"features": ["derived-operators"],
+"variables": [
+  {
+    "name": "var0",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var1",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 1
+  },
+  {
+    "name": "var2",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 4
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var3",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 1
+  },
+  {
+    "name": "var4",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 4
+    },
+    "initial-value": 2
+  },
+  {
+    "name": "var5",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 1
+  },
+  {
+    "name": "var6",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  }],
+"automata": [
+  {
+    "name": "aut",
+    "locations": [{"name": "loc0"}],
+    "initial-locations": ["loc0"],
+    "edges": [
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 2}
+          },
+        "right": {"op": "=", "left": "var2", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 1}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 1}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 2}
+          },
+        "right": {"op": "=", "left": "var2", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 2}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 2}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 2}
+          },
+        "right": {"op": "=", "left": "var2", "right": 2}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 2}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 3 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 3}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var2", "right": 3}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 2}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 2},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var4", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 3}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 2 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 2 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 2}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var2", "value": 1 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var2", "value": 1 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var2", "value": 2 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var2", "value": 2 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 3}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 2 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 2 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 1}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var2", "value": 1 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var2", "value": 1 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 2}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var2", "value": 2 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var2", "value": 2 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 2}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 1}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var2", "value": 0 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 2}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var2", "value": 3 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 1}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var1", "value": 0 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 2}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var1", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var1", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var5", "right": 0},
+          "right": {"op": "=", "left": "var4", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 2}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.1},
+        "assignments": [
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.9},
+        "assignments": [
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var2", "right": 0}
+          },
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var3", "value": 0 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {
+          "op": "∧",
+          "left":             {"op": "=", "left": "var4", "right": 0},
+          "right": {"op": "=", "left": "var3", "right": 0}
+          },
+        "right": {"op": "=", "left": "var2", "right": 3}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.02},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.98},
+        "assignments": [
+          { "ref": "var0", "value": 0 },
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var4", "right": 1},
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.001},
+        "assignments": [
+          { "ref": "var4", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.099},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.009},
+        "assignments": [
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.891},
+        "assignments": [
+]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var4", "right": 1},
+        "right": {"op": "=", "left": "var3", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.001},
+        "assignments": [
+          { "ref": "var4", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.099},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.009},
+        "assignments": [
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.891},
+        "assignments": [
+]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 0},
+        "right": {"op": "=", "left": "var4", "right": 1}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.002},
+        "assignments": [
+          { "ref": "var4", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.198},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.008},
+        "assignments": [
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.792},
+        "assignments": [
+]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var4", "right": 1},
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.005},
+        "assignments": [
+          { "ref": "var4", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.495},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.005},
+        "assignments": [
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.495},
+        "assignments": [
+]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var4", "right": 1},
+        "right": {"op": "=", "left": "var3", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.005},
+        "assignments": [
+          { "ref": "var4", "value": 0 },
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.495},
+        "assignments": [
+          { "ref": "var4", "value": 0 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.005},
+        "assignments": [
+          { "ref": "var6", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.495},
+        "assignments": [
+]
+        }]
+      }]
+  }],
+"system": { "elements": [ { "automaton": "aut" }], "syncs": [ ] },
+"properties": [ { "name": "goal", "expression": {
+  "op": "filter",
+  "fun": "min",
+  "values": {
+    "op": "Pmax",
+    "exp": {
+      "op": "U",
+      "left": true,
+      "right":
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var6", "right": 0},
+        "right": {"op": "=", "left": "var5", "right": 0}
+        }
+    }
+  },
+  "states": { "op": "initial" }
+  }
+}]
+}

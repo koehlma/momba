@@ -1,0 +1,2705 @@
+{
+    "actions": [
+        {
+            "name": "done"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 1",
+                                    "ref": "pc1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin1 <- 0",
+                                    "ref": "coin1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 1",
+                                    "ref": "pc1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin1 <- 1",
+                                    "ref": "coin1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc1 = 0)",
+                        "exp": {
+                            "left": "pc1",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc1 <- 2",
+                                    "ref": "pc1",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin1 <- 0",
+                                    "ref": "coin1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc1 = 1) & (coin1 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc1 <- 2",
+                                    "ref": "pc1",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin1 <- 0",
+                                    "ref": "coin1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc1 = 1) & (coin1 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 3",
+                                    "ref": "pc1",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin1 <- 0",
+                                    "ref": "coin1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc1 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc1",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 3",
+                                    "ref": "pc1",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin1 <- 1",
+                                    "ref": "coin1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc1 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc1",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 0",
+                                    "ref": "pc1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc1 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc1 <- 3",
+                                    "ref": "pc1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc1 = 3)",
+                        "exp": {
+                            "left": "pc1",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "finished <- ((((((pc1 = 3) & (pc2 = 3)) & (pc3 = 3)) & (pc4 = 3)) & (pc5 = 3)) & (pc6 = 3))",
+                            "ref": "finished",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "pc6",
+                                            "op": "=",
+                                            "right": 3
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "pc2",
+                                            "op": "=",
+                                            "right": 3
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "pc4",
+                                            "op": "=",
+                                            "right": 3
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "pc3",
+                                            "op": "=",
+                                            "right": 3
+                                        }
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "pc5",
+                                        "op": "=",
+                                        "right": 3
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "pc1",
+                                        "op": "=",
+                                        "right": 3
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "all_coins_equal_0 <- ((((((coin1 = 0) & (coin2 = 0)) & (coin3 = 0)) & (coin4 = 0)) & (coin5 = 0)) & (coin6 = 0))",
+                            "ref": "all_coins_equal_0",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "coin6",
+                                            "op": "=",
+                                            "right": 0
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "coin2",
+                                            "op": "=",
+                                            "right": 0
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "coin4",
+                                            "op": "=",
+                                            "right": 0
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "coin3",
+                                            "op": "=",
+                                            "right": 0
+                                        }
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "coin5",
+                                        "op": "=",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "coin1",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "all_coins_equal_1 <- ((((((coin1 = 1) & (coin2 = 1)) & (coin3 = 1)) & (coin4 = 1)) & (coin5 = 1)) & (coin6 = 1))",
+                            "ref": "all_coins_equal_1",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "coin6",
+                                            "op": "=",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "coin2",
+                                            "op": "=",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "coin4",
+                                            "op": "=",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "coin3",
+                                            "op": "=",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "coin5",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "coin1",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "agree <- (((((coin1 = coin2) & (coin2 = coin3)) & (coin3 = coin4)) & (coin4 = coin5)) & (coin5 = coin6))",
+                            "ref": "agree",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "coin5",
+                                            "op": "=",
+                                            "right": "coin6"
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "coin2",
+                                            "op": "=",
+                                            "right": "coin3"
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "coin3",
+                                        "op": "=",
+                                        "right": "coin4"
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "coin4",
+                                        "op": "=",
+                                        "right": "coin5"
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "coin1",
+                                        "op": "=",
+                                        "right": "coin2"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "steps <- 1",
+                            "ref": "steps",
+                            "value": 1
+                        }
+                    ]
+                }
+            ],
+            "name": "process1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 1",
+                                    "ref": "pc2",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin2 <- 0",
+                                    "ref": "coin2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 1",
+                                    "ref": "pc2",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin2 <- 1",
+                                    "ref": "coin2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc2 = 0)",
+                        "exp": {
+                            "left": "pc2",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc2 <- 2",
+                                    "ref": "pc2",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin2 <- 0",
+                                    "ref": "coin2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc2 = 1) & (coin2 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc2",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc2 <- 2",
+                                    "ref": "pc2",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin2 <- 0",
+                                    "ref": "coin2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc2 = 1) & (coin2 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc2",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 3",
+                                    "ref": "pc2",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin2 <- 0",
+                                    "ref": "coin2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc2 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc2",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 3",
+                                    "ref": "pc2",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin2 <- 1",
+                                    "ref": "coin2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc2 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc2",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 0",
+                                    "ref": "pc2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc2 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc2",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc2 <- 3",
+                                    "ref": "pc2",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc2 = 3)",
+                        "exp": {
+                            "left": "pc2",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process2",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 1",
+                                    "ref": "pc3",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin3 <- 0",
+                                    "ref": "coin3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 1",
+                                    "ref": "pc3",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin3 <- 1",
+                                    "ref": "coin3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc3 = 0)",
+                        "exp": {
+                            "left": "pc3",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc3 <- 2",
+                                    "ref": "pc3",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin3 <- 0",
+                                    "ref": "coin3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc3 = 1) & (coin3 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc3",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc3 <- 2",
+                                    "ref": "pc3",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin3 <- 0",
+                                    "ref": "coin3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc3 = 1) & (coin3 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc3",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 3",
+                                    "ref": "pc3",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin3 <- 0",
+                                    "ref": "coin3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc3 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc3",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 3",
+                                    "ref": "pc3",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin3 <- 1",
+                                    "ref": "coin3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc3 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc3",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 0",
+                                    "ref": "pc3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc3 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc3",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc3 <- 3",
+                                    "ref": "pc3",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc3 = 3)",
+                        "exp": {
+                            "left": "pc3",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process3",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 1",
+                                    "ref": "pc4",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin4 <- 0",
+                                    "ref": "coin4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 1",
+                                    "ref": "pc4",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin4 <- 1",
+                                    "ref": "coin4",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc4 = 0)",
+                        "exp": {
+                            "left": "pc4",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc4 <- 2",
+                                    "ref": "pc4",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin4 <- 0",
+                                    "ref": "coin4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc4 = 1) & (coin4 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc4",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc4 <- 2",
+                                    "ref": "pc4",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin4 <- 0",
+                                    "ref": "coin4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc4 = 1) & (coin4 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc4",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 3",
+                                    "ref": "pc4",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin4 <- 0",
+                                    "ref": "coin4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc4 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc4",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 3",
+                                    "ref": "pc4",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin4 <- 1",
+                                    "ref": "coin4",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc4 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc4",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 0",
+                                    "ref": "pc4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc4 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc4",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc4 <- 3",
+                                    "ref": "pc4",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc4 = 3)",
+                        "exp": {
+                            "left": "pc4",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process4",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 1",
+                                    "ref": "pc5",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin5 <- 0",
+                                    "ref": "coin5",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 1",
+                                    "ref": "pc5",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin5 <- 1",
+                                    "ref": "coin5",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc5 = 0)",
+                        "exp": {
+                            "left": "pc5",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc5 <- 2",
+                                    "ref": "pc5",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin5 <- 0",
+                                    "ref": "coin5",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc5 = 1) & (coin5 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc5",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin5",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc5 <- 2",
+                                    "ref": "pc5",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin5 <- 0",
+                                    "ref": "coin5",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc5 = 1) & (coin5 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc5",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin5",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 3",
+                                    "ref": "pc5",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin5 <- 0",
+                                    "ref": "coin5",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc5 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc5",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 3",
+                                    "ref": "pc5",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin5 <- 1",
+                                    "ref": "coin5",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc5 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc5",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 0",
+                                    "ref": "pc5",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc5 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc5",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc5 <- 3",
+                                    "ref": "pc5",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc5 = 3)",
+                        "exp": {
+                            "left": "pc5",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process5",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 1",
+                                    "ref": "pc6",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin6 <- 0",
+                                    "ref": "coin6",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 1",
+                                    "ref": "pc6",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "coin6 <- 1",
+                                    "ref": "coin6",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc6 = 0)",
+                        "exp": {
+                            "left": "pc6",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter - 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc6 <- 2",
+                                    "ref": "pc6",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin6 <- 0",
+                                    "ref": "coin6",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc6 = 1) & (coin6 = 0)) & (counter > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc6",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin6",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "counter <- (counter + 1)",
+                                    "ref": "counter",
+                                    "value": {
+                                        "left": "counter",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "pc6 <- 2",
+                                    "ref": "pc6",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "coin6 <- 0",
+                                    "ref": "coin6",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc6 = 1) & (coin6 = 1)) & (counter < ((2 * (K + 1)) * 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc6",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coin6",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": {
+                                            "left": "K",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "*",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 3",
+                                    "ref": "pc6",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin6 <- 0",
+                                    "ref": "coin6",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc6 = 2) & (counter <= 6))",
+                        "exp": {
+                            "left": {
+                                "left": "pc6",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≤",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 3",
+                                    "ref": "pc6",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "coin6 <- 1",
+                                    "ref": "coin6",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((pc6 = 2) & (counter >= (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": "pc6",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "≥",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 0",
+                                    "ref": "pc6",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((pc6 = 2) & (counter > 6)) & (counter < (((2 * (K + 1)) * 6) - 6)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "pc6",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "counter",
+                                    "op": ">",
+                                    "right": 6
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "counter",
+                                "op": "<",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": 2,
+                                            "op": "*",
+                                            "right": {
+                                                "left": "K",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": 6
+                                    },
+                                    "op": "-",
+                                    "right": 6
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pc6 <- 3",
+                                    "ref": "pc6",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pc6 = 3)",
+                        "exp": {
+                            "left": "pc6",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process6",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "N",
+            "type": "int",
+            "value": 6
+        },
+        {
+            "name": "K",
+            "type": "int"
+        },
+        {
+            "name": "range",
+            "type": "int",
+            "value": {
+                "left": {
+                    "left": 2,
+                    "op": "*",
+                    "right": {
+                        "left": "K",
+                        "op": "+",
+                        "right": 1
+                    }
+                },
+                "op": "*",
+                "right": 6
+            }
+        },
+        {
+            "name": "counter_init",
+            "type": "int",
+            "value": {
+                "left": {
+                    "left": "K",
+                    "op": "+",
+                    "right": 1
+                },
+                "op": "*",
+                "right": 6
+            }
+        },
+        {
+            "name": "left",
+            "type": "int",
+            "value": 6
+        },
+        {
+            "name": "right",
+            "type": "int",
+            "value": {
+                "left": {
+                    "left": {
+                        "left": 2,
+                        "op": "*",
+                        "right": {
+                            "left": "K",
+                            "op": "+",
+                            "right": 1
+                        }
+                    },
+                    "op": "*",
+                    "right": 6
+                },
+                "op": "-",
+                "right": 6
+            }
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "state-exit-rewards"
+    ],
+    "jani-version": 1,
+    "name": "consensus.6",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "left": {
+                        "exp": {
+                            "left": true,
+                            "op": "U",
+                            "right": "finished"
+                        },
+                        "op": "Pmin"
+                    },
+                    "op": "≥",
+                    "right": 1
+                }
+            },
+            "name": "c1"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "finished",
+                            "op": "∧",
+                            "right": "all_coins_equal_1"
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "c2"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "finished",
+                            "op": "∧",
+                            "right": {
+                                "exp": "agree",
+                                "op": "¬"
+                            }
+                        }
+                    },
+                    "op": "Pmax"
+                }
+            },
+            "name": "disagree"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "exit"
+                    ],
+                    "exp": "steps",
+                    "op": "Emax",
+                    "reach": "finished"
+                }
+            },
+            "name": "steps_max"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "exit"
+                    ],
+                    "exp": "steps",
+                    "op": "Emin",
+                    "reach": "finished"
+                }
+            },
+            "name": "steps_min"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "process1"
+            },
+            {
+                "automaton": "process2"
+            },
+            {
+                "automaton": "process3"
+            },
+            {
+                "automaton": "process4"
+            },
+            {
+                "automaton": "process5"
+            },
+            {
+                "automaton": "process6"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "done",
+                "synchronise": [
+                    "done",
+                    "done",
+                    "done",
+                    "done",
+                    "done",
+                    "done"
+                ]
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": {
+                "left": {
+                    "left": "K",
+                    "op": "+",
+                    "right": 1
+                },
+                "op": "*",
+                "right": 6
+            },
+            "name": "counter",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": {
+                    "left": {
+                        "left": 2,
+                        "op": "*",
+                        "right": {
+                            "left": "K",
+                            "op": "+",
+                            "right": 1
+                        }
+                    },
+                    "op": "*",
+                    "right": 6
+                }
+            }
+        },
+        {
+            "initial-value": false,
+            "name": "finished",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "all_coins_equal_0",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "all_coins_equal_1",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "agree",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "steps",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0,
+            "name": "pc1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "pc2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "pc3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "pc4",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin4",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "pc5",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin5",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "pc6",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coin6",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        }
+    ]
+}

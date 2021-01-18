@@ -1,0 +1,3342 @@
+﻿{
+	"jani-version": 1,
+	"name": "dpm",
+	"type": "ma",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "sleep?"
+		},
+		{
+			"name": "standby?"
+		},
+		{
+			"name": "idle?"
+		},
+		{
+			"name": "standby!"
+		},
+		{
+			"name": "sleep!"
+		},
+		{
+			"name": "idle!"
+		},
+		{
+			"name": "sleep"
+		},
+		{
+			"name": "standby"
+		},
+		{
+			"name": "idle"
+		}
+	],
+	"constants": [
+		{
+			"name": "N",
+			"type": "int"
+		},
+		{
+			"name": "C",
+			"type": "int"
+		},
+		{
+			"name": "TIME_BOUND",
+			"type": "real"
+		}
+	],
+	"variables": [
+		{
+			"name": "items1",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items2",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items3",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items4",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items5",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items6",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items7",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items8",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items9",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "items10",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "C"
+			},
+			"initial-value": 0
+		}
+	],
+	"properties": [
+		{
+			"name": "PminQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": {
+										"op": "∧",
+										"left": {
+											"op": "∧",
+											"left": {
+												"op": "∧",
+												"left": {
+													"op": "∧",
+													"left": {
+														"op": "∧",
+														"left": {
+															"op": "∧",
+															"left": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 1
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items1",
+																	"right": "C"
+																}
+															},
+															"right": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 2
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items2",
+																	"right": "C"
+																}
+															}
+														},
+														"right": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 3
+															},
+															"right": {
+																"op": "=",
+																"left": "items3",
+																"right": "C"
+															}
+														}
+													},
+													"right": {
+														"op": "∨",
+														"left": {
+															"op": "<",
+															"left": "N",
+															"right": 4
+														},
+														"right": {
+															"op": "=",
+															"left": "items4",
+															"right": "C"
+														}
+													}
+												},
+												"right": {
+													"op": "∨",
+													"left": {
+														"op": "<",
+														"left": "N",
+														"right": 5
+													},
+													"right": {
+														"op": "=",
+														"left": "items5",
+														"right": "C"
+													}
+												}
+											},
+											"right": {
+												"op": "∨",
+												"left": {
+													"op": "<",
+													"left": "N",
+													"right": 6
+												},
+												"right": {
+													"op": "=",
+													"left": "items6",
+													"right": "C"
+												}
+											}
+										},
+										"right": {
+											"op": "∨",
+											"left": {
+												"op": "<",
+												"left": "N",
+												"right": 7
+											},
+											"right": {
+												"op": "=",
+												"left": "items7",
+												"right": "C"
+											}
+										}
+									},
+									"right": {
+										"op": "∨",
+										"left": {
+											"op": "<",
+											"left": "N",
+											"right": 8
+										},
+										"right": {
+											"op": "=",
+											"left": "items8",
+											"right": "C"
+										}
+									}
+								},
+								"right": {
+									"op": "∨",
+									"left": {
+										"op": "<",
+										"left": "N",
+										"right": 9
+									},
+									"right": {
+										"op": "=",
+										"left": "items9",
+										"right": "C"
+									}
+								}
+							},
+							"right": {
+								"op": "∨",
+								"left": {
+									"op": "<",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": "=",
+									"left": "items10",
+									"right": "C"
+								}
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": {
+										"op": "∧",
+										"left": {
+											"op": "∧",
+											"left": {
+												"op": "∧",
+												"left": {
+													"op": "∧",
+													"left": {
+														"op": "∧",
+														"left": {
+															"op": "∧",
+															"left": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 1
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items1",
+																	"right": "C"
+																}
+															},
+															"right": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 2
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items2",
+																	"right": "C"
+																}
+															}
+														},
+														"right": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 3
+															},
+															"right": {
+																"op": "=",
+																"left": "items3",
+																"right": "C"
+															}
+														}
+													},
+													"right": {
+														"op": "∨",
+														"left": {
+															"op": "<",
+															"left": "N",
+															"right": 4
+														},
+														"right": {
+															"op": "=",
+															"left": "items4",
+															"right": "C"
+														}
+													}
+												},
+												"right": {
+													"op": "∨",
+													"left": {
+														"op": "<",
+														"left": "N",
+														"right": 5
+													},
+													"right": {
+														"op": "=",
+														"left": "items5",
+														"right": "C"
+													}
+												}
+											},
+											"right": {
+												"op": "∨",
+												"left": {
+													"op": "<",
+													"left": "N",
+													"right": 6
+												},
+												"right": {
+													"op": "=",
+													"left": "items6",
+													"right": "C"
+												}
+											}
+										},
+										"right": {
+											"op": "∨",
+											"left": {
+												"op": "<",
+												"left": "N",
+												"right": 7
+											},
+											"right": {
+												"op": "=",
+												"left": "items7",
+												"right": "C"
+											}
+										}
+									},
+									"right": {
+										"op": "∨",
+										"left": {
+											"op": "<",
+											"left": "N",
+											"right": 8
+										},
+										"right": {
+											"op": "=",
+											"left": "items8",
+											"right": "C"
+										}
+									}
+								},
+								"right": {
+									"op": "∨",
+									"left": {
+										"op": "<",
+										"left": "N",
+										"right": 9
+									},
+									"right": {
+										"op": "=",
+										"left": "items9",
+										"right": "C"
+									}
+								}
+							},
+							"right": {
+								"op": "∨",
+								"left": {
+									"op": "<",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": "=",
+									"left": "items10",
+									"right": "C"
+								}
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PminQueue1Full",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "=",
+							"left": "items1",
+							"right": "C"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxQueue1Full",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "=",
+							"left": "items1",
+							"right": "C"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TminQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": {
+										"op": "∧",
+										"left": {
+											"op": "∧",
+											"left": {
+												"op": "∧",
+												"left": {
+													"op": "∧",
+													"left": {
+														"op": "∧",
+														"left": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 1
+															},
+															"right": {
+																"op": "=",
+																"left": "items1",
+																"right": "C"
+															}
+														},
+														"right": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 2
+															},
+															"right": {
+																"op": "=",
+																"left": "items2",
+																"right": "C"
+															}
+														}
+													},
+													"right": {
+														"op": "∨",
+														"left": {
+															"op": "<",
+															"left": "N",
+															"right": 3
+														},
+														"right": {
+															"op": "=",
+															"left": "items3",
+															"right": "C"
+														}
+													}
+												},
+												"right": {
+													"op": "∨",
+													"left": {
+														"op": "<",
+														"left": "N",
+														"right": 4
+													},
+													"right": {
+														"op": "=",
+														"left": "items4",
+														"right": "C"
+													}
+												}
+											},
+											"right": {
+												"op": "∨",
+												"left": {
+													"op": "<",
+													"left": "N",
+													"right": 5
+												},
+												"right": {
+													"op": "=",
+													"left": "items5",
+													"right": "C"
+												}
+											}
+										},
+										"right": {
+											"op": "∨",
+											"left": {
+												"op": "<",
+												"left": "N",
+												"right": 6
+											},
+											"right": {
+												"op": "=",
+												"left": "items6",
+												"right": "C"
+											}
+										}
+									},
+									"right": {
+										"op": "∨",
+										"left": {
+											"op": "<",
+											"left": "N",
+											"right": 7
+										},
+										"right": {
+											"op": "=",
+											"left": "items7",
+											"right": "C"
+										}
+									}
+								},
+								"right": {
+									"op": "∨",
+									"left": {
+										"op": "<",
+										"left": "N",
+										"right": 8
+									},
+									"right": {
+										"op": "=",
+										"left": "items8",
+										"right": "C"
+									}
+								}
+							},
+							"right": {
+								"op": "∨",
+								"left": {
+									"op": "<",
+									"left": "N",
+									"right": 9
+								},
+								"right": {
+									"op": "=",
+									"left": "items9",
+									"right": "C"
+								}
+							}
+						},
+						"right": {
+							"op": "∨",
+							"left": {
+								"op": "<",
+								"left": "N",
+								"right": 10
+							},
+							"right": {
+								"op": "=",
+								"left": "items10",
+								"right": "C"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxQueuesFullBound",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": {
+										"op": "∧",
+										"left": {
+											"op": "∧",
+											"left": {
+												"op": "∧",
+												"left": {
+													"op": "∧",
+													"left": {
+														"op": "∧",
+														"left": {
+															"op": "∧",
+															"left": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 1
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items1",
+																	"right": "C"
+																}
+															},
+															"right": {
+																"op": "∨",
+																"left": {
+																	"op": "<",
+																	"left": "N",
+																	"right": 2
+																},
+																"right": {
+																	"op": "=",
+																	"left": "items2",
+																	"right": "C"
+																}
+															}
+														},
+														"right": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 3
+															},
+															"right": {
+																"op": "=",
+																"left": "items3",
+																"right": "C"
+															}
+														}
+													},
+													"right": {
+														"op": "∨",
+														"left": {
+															"op": "<",
+															"left": "N",
+															"right": 4
+														},
+														"right": {
+															"op": "=",
+															"left": "items4",
+															"right": "C"
+														}
+													}
+												},
+												"right": {
+													"op": "∨",
+													"left": {
+														"op": "<",
+														"left": "N",
+														"right": 5
+													},
+													"right": {
+														"op": "=",
+														"left": "items5",
+														"right": "C"
+													}
+												}
+											},
+											"right": {
+												"op": "∨",
+												"left": {
+													"op": "<",
+													"left": "N",
+													"right": 6
+												},
+												"right": {
+													"op": "=",
+													"left": "items6",
+													"right": "C"
+												}
+											}
+										},
+										"right": {
+											"op": "∨",
+											"left": {
+												"op": "<",
+												"left": "N",
+												"right": 7
+											},
+											"right": {
+												"op": "=",
+												"left": "items7",
+												"right": "C"
+											}
+										}
+									},
+									"right": {
+										"op": "∨",
+										"left": {
+											"op": "<",
+											"left": "N",
+											"right": 8
+										},
+										"right": {
+											"op": "=",
+											"left": "items8",
+											"right": "C"
+										}
+									}
+								},
+								"right": {
+									"op": "∨",
+									"left": {
+										"op": "<",
+										"left": "N",
+										"right": 9
+									},
+									"right": {
+										"op": "=",
+										"left": "items9",
+										"right": "C"
+									}
+								}
+							},
+							"right": {
+								"op": "∨",
+								"left": {
+									"op": "<",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": "=",
+									"left": "items10",
+									"right": "C"
+								}
+							}
+						},
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "SmaxQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Smax",
+					"exp": {
+						"op": "∧",
+						"left": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": {
+										"op": "∧",
+										"left": {
+											"op": "∧",
+											"left": {
+												"op": "∧",
+												"left": {
+													"op": "∧",
+													"left": {
+														"op": "∧",
+														"left": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 1
+															},
+															"right": {
+																"op": "=",
+																"left": "items1",
+																"right": "C"
+															}
+														},
+														"right": {
+															"op": "∨",
+															"left": {
+																"op": "<",
+																"left": "N",
+																"right": 2
+															},
+															"right": {
+																"op": "=",
+																"left": "items2",
+																"right": "C"
+															}
+														}
+													},
+													"right": {
+														"op": "∨",
+														"left": {
+															"op": "<",
+															"left": "N",
+															"right": 3
+														},
+														"right": {
+															"op": "=",
+															"left": "items3",
+															"right": "C"
+														}
+													}
+												},
+												"right": {
+													"op": "∨",
+													"left": {
+														"op": "<",
+														"left": "N",
+														"right": 4
+													},
+													"right": {
+														"op": "=",
+														"left": "items4",
+														"right": "C"
+													}
+												}
+											},
+											"right": {
+												"op": "∨",
+												"left": {
+													"op": "<",
+													"left": "N",
+													"right": 5
+												},
+												"right": {
+													"op": "=",
+													"left": "items5",
+													"right": "C"
+												}
+											}
+										},
+										"right": {
+											"op": "∨",
+											"left": {
+												"op": "<",
+												"left": "N",
+												"right": 6
+											},
+											"right": {
+												"op": "=",
+												"left": "items6",
+												"right": "C"
+											}
+										}
+									},
+									"right": {
+										"op": "∨",
+										"left": {
+											"op": "<",
+											"left": "N",
+											"right": 7
+										},
+										"right": {
+											"op": "=",
+											"left": "items7",
+											"right": "C"
+										}
+									}
+								},
+								"right": {
+									"op": "∨",
+									"left": {
+										"op": "<",
+										"left": "N",
+										"right": 8
+									},
+									"right": {
+										"op": "=",
+										"left": "items8",
+										"right": "C"
+									}
+								}
+							},
+							"right": {
+								"op": "∨",
+								"left": {
+									"op": "<",
+									"left": "N",
+									"right": 9
+								},
+								"right": {
+									"op": "=",
+									"left": "items9",
+									"right": "C"
+								}
+							}
+						},
+						"right": {
+							"op": "∨",
+							"left": {
+								"op": "<",
+								"left": "N",
+								"right": 10
+							},
+							"right": {
+								"op": "=",
+								"left": "items10",
+								"right": "C"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "ServiceRequester",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_54"
+				},
+				{
+					"name": "loc_53"
+				},
+				{
+					"name": "loc_52"
+				},
+				{
+					"name": "loc_51"
+				},
+				{
+					"name": "loc_50"
+				},
+				{
+					"name": "loc_49"
+				},
+				{
+					"name": "loc_48"
+				},
+				{
+					"name": "loc_47"
+				},
+				{
+					"name": "loc_46"
+				},
+				{
+					"name": "loc_45"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 1,
+							"right": 2
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 3,
+							"right": 5
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_46"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 7,
+							"right": 10
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_47"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 4,
+							"right": 5
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 4
+						}
+					},
+					"destinations": [ {
+						"location": "loc_48"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 9,
+							"right": 10
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 5
+						}
+					},
+					"destinations": [ {
+						"location": "loc_49"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": 1
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 6
+						}
+					},
+					"destinations": [ {
+						"location": "loc_50"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 11,
+							"right": 10
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 7
+						}
+					},
+					"destinations": [ {
+						"location": "loc_51"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 6,
+							"right": 5
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 8
+						}
+					},
+					"destinations": [ {
+						"location": "loc_52"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 13,
+							"right": 10
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 9
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 7,
+							"right": 5
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "N",
+							"right": 10
+						}
+					},
+					"destinations": [ {
+						"location": "loc_54"
+					} ]
+				},
+				{
+					"location": "loc_54",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items10",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items10",
+							"value": {
+								"op": "+",
+								"left": "items10",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_53",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items9",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items9",
+							"value": {
+								"op": "+",
+								"left": "items9",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items8",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items8",
+							"value": {
+								"op": "+",
+								"left": "items8",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_51",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items7",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items7",
+							"value": {
+								"op": "+",
+								"left": "items7",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items6",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items6",
+							"value": {
+								"op": "+",
+								"left": "items6",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_49",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items5",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items5",
+							"value": {
+								"op": "+",
+								"left": "items5",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_48",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items4",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items4",
+							"value": {
+								"op": "+",
+								"left": "items4",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_47",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items3",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items3",
+							"value": {
+								"op": "+",
+								"left": "items3",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_46",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items2",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items2",
+							"value": {
+								"op": "+",
+								"left": "items2",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "items1",
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "items1",
+							"value": {
+								"op": "+",
+								"left": "items1",
+								"right": 1
+							}
+						} ]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "ServiceProvider",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_47"
+				},
+				{
+					"name": "loc_45"
+				},
+				{
+					"name": "loc_52"
+				},
+				{
+					"name": "loc_41"
+				},
+				{
+					"name": "loc_50"
+				},
+				{
+					"name": "loc_39"
+				},
+				{
+					"name": "loc_34"
+				},
+				{
+					"name": "loc_10"
+				},
+				{
+					"name": "loc_7"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "t",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 1,
+						"upper-bound": "N"
+					},
+					"initial-value": 1
+				},
+				{
+					"name": "pmode",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 1,
+						"upper-bound": 3
+					},
+					"initial-value": 2
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_7"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 1
+								},
+								"right": {
+									"op": ">",
+									"left": "items1",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 1
+							},
+							{
+								"ref": "items1",
+								"value": {
+									"op": "-",
+									"left": "items1",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 2
+								},
+								"right": {
+									"op": ">",
+									"left": "items2",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 2
+							},
+							{
+								"ref": "items2",
+								"value": {
+									"op": "-",
+									"left": "items2",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 3
+								},
+								"right": {
+									"op": ">",
+									"left": "items3",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 3
+							},
+							{
+								"ref": "items3",
+								"value": {
+									"op": "-",
+									"left": "items3",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 4
+								},
+								"right": {
+									"op": ">",
+									"left": "items4",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 4
+							},
+							{
+								"ref": "items4",
+								"value": {
+									"op": "-",
+									"left": "items4",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 5
+								},
+								"right": {
+									"op": ">",
+									"left": "items5",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 5
+							},
+							{
+								"ref": "items5",
+								"value": {
+									"op": "-",
+									"left": "items5",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 6
+								},
+								"right": {
+									"op": ">",
+									"left": "items6",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 6
+							},
+							{
+								"ref": "items6",
+								"value": {
+									"op": "-",
+									"left": "items6",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 7
+								},
+								"right": {
+									"op": ">",
+									"left": "items7",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 7
+							},
+							{
+								"ref": "items7",
+								"value": {
+									"op": "-",
+									"left": "items7",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 8
+								},
+								"right": {
+									"op": ">",
+									"left": "items8",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 8
+							},
+							{
+								"ref": "items8",
+								"value": {
+									"op": "-",
+									"left": "items8",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 9
+								},
+								"right": {
+									"op": ">",
+									"left": "items9",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 9
+							},
+							{
+								"ref": "items9",
+								"value": {
+									"op": "-",
+									"left": "items9",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": ">",
+									"left": "items10",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 10
+							},
+							{
+								"ref": "items10",
+								"value": {
+									"op": "-",
+									"left": "items10",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_39"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_41"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_47"
+					} ]
+				},
+				{
+					"location": "loc_47",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 3,
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 2
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 227,
+							"right": 500
+						}
+					},
+					"destinations": [ {
+						"location": "loc_52",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 1
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_7"
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 1
+								},
+								"right": {
+									"op": ">",
+									"left": "items1",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 1
+							},
+							{
+								"ref": "items1",
+								"value": {
+									"op": "-",
+									"left": "items1",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 2
+								},
+								"right": {
+									"op": ">",
+									"left": "items2",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 2
+							},
+							{
+								"ref": "items2",
+								"value": {
+									"op": "-",
+									"left": "items2",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 3
+								},
+								"right": {
+									"op": ">",
+									"left": "items3",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 3
+							},
+							{
+								"ref": "items3",
+								"value": {
+									"op": "-",
+									"left": "items3",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 4
+								},
+								"right": {
+									"op": ">",
+									"left": "items4",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 4
+							},
+							{
+								"ref": "items4",
+								"value": {
+									"op": "-",
+									"left": "items4",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 5
+								},
+								"right": {
+									"op": ">",
+									"left": "items5",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 5
+							},
+							{
+								"ref": "items5",
+								"value": {
+									"op": "-",
+									"left": "items5",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 6
+								},
+								"right": {
+									"op": ">",
+									"left": "items6",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 6
+							},
+							{
+								"ref": "items6",
+								"value": {
+									"op": "-",
+									"left": "items6",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 7
+								},
+								"right": {
+									"op": ">",
+									"left": "items7",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 7
+							},
+							{
+								"ref": "items7",
+								"value": {
+									"op": "-",
+									"left": "items7",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 8
+								},
+								"right": {
+									"op": ">",
+									"left": "items8",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 8
+							},
+							{
+								"ref": "items8",
+								"value": {
+									"op": "-",
+									"left": "items8",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 9
+								},
+								"right": {
+									"op": ">",
+									"left": "items9",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 9
+							},
+							{
+								"ref": "items9",
+								"value": {
+									"op": "-",
+									"left": "items9",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": ">",
+									"left": "items10",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 10
+							},
+							{
+								"ref": "items10",
+								"value": {
+									"op": "-",
+									"left": "items10",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_39"
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_41"
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45"
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_47"
+					} ]
+				},
+				{
+					"location": "loc_41",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 3,
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_50",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 3
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_7"
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 1
+								},
+								"right": {
+									"op": ">",
+									"left": "items1",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 1
+							},
+							{
+								"ref": "items1",
+								"value": {
+									"op": "-",
+									"left": "items1",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 2
+								},
+								"right": {
+									"op": ">",
+									"left": "items2",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 2
+							},
+							{
+								"ref": "items2",
+								"value": {
+									"op": "-",
+									"left": "items2",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 3
+								},
+								"right": {
+									"op": ">",
+									"left": "items3",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 3
+							},
+							{
+								"ref": "items3",
+								"value": {
+									"op": "-",
+									"left": "items3",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 4
+								},
+								"right": {
+									"op": ">",
+									"left": "items4",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 4
+							},
+							{
+								"ref": "items4",
+								"value": {
+									"op": "-",
+									"left": "items4",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 5
+								},
+								"right": {
+									"op": ">",
+									"left": "items5",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 5
+							},
+							{
+								"ref": "items5",
+								"value": {
+									"op": "-",
+									"left": "items5",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 6
+								},
+								"right": {
+									"op": ">",
+									"left": "items6",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 6
+							},
+							{
+								"ref": "items6",
+								"value": {
+									"op": "-",
+									"left": "items6",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 7
+								},
+								"right": {
+									"op": ">",
+									"left": "items7",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 7
+							},
+							{
+								"ref": "items7",
+								"value": {
+									"op": "-",
+									"left": "items7",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 8
+								},
+								"right": {
+									"op": ">",
+									"left": "items8",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 8
+							},
+							{
+								"ref": "items8",
+								"value": {
+									"op": "-",
+									"left": "items8",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 9
+								},
+								"right": {
+									"op": ">",
+									"left": "items9",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 9
+							},
+							{
+								"ref": "items9",
+								"value": {
+									"op": "-",
+									"left": "items9",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "N",
+									"right": 10
+								},
+								"right": {
+									"op": ">",
+									"left": "items10",
+									"right": 0
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "pmode",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_34",
+						"assignments": [
+							{
+								"ref": "t",
+								"value": 10
+							},
+							{
+								"ref": "items10",
+								"value": {
+									"op": "-",
+									"left": "items10",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_39"
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "standby?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_41"
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "idle?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45"
+					} ]
+				},
+				{
+					"location": "loc_50",
+					"action": "sleep?",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "pmode",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_47"
+					} ]
+				},
+				{
+					"location": "loc_39",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 83,
+							"right": 500
+						}
+					},
+					"destinations": [ {
+						"location": "loc_52",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 1
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_34",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": {
+								"op": "/",
+								"left": 1,
+								"right": 5
+							},
+							"right": "t"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_52",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 1
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_10",
+					"rate": {
+						"exp": 1
+					},
+					"destinations": [ {
+						"location": "loc_50",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 3
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_7",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 1,
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "pmode",
+								"value": 2
+							},
+							{
+								"ref": "t",
+								"value": 1
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "PowerManager",
+			"locations": [ {
+				"name": "loc_1"
+			} ],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "standby!",
+					"destinations": [ {
+						"location": "loc_1"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "sleep!",
+					"destinations": [ {
+						"location": "loc_1"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "idle!",
+					"destinations": [ {
+						"location": "loc_1"
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "ServiceRequester"
+			},
+			{
+				"automaton": "ServiceProvider"
+			},
+			{
+				"automaton": "PowerManager"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					null,
+					"sleep?",
+					"sleep!"
+				],
+				"result": "sleep"
+			},
+			{
+				"synchronise": [
+					null,
+					"standby?",
+					"standby!"
+				],
+				"result": "standby"
+			},
+			{
+				"synchronise": [
+					null,
+					"idle?",
+					"idle!"
+				],
+				"result": "idle"
+			}
+		]
+	}
+}

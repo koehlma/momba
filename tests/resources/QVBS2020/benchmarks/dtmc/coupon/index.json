@@ -1,0 +1,344 @@
+{
+	"name": "Coupon Collectors",
+	"short": "coupon",
+	"type": "dtmc",
+	"original": "PGCL",
+	"version": 1,
+	"date": "2018-11-12",
+	"version-history": [
+		{
+			"date": "2018-11-12",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Christian Hensel <dehnert@cs.rwth-aachen.de>",
+		"Sebastian Junges <sebastian.junges@cs.rwth-aachen.de>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/978-3-319-46520-3_5",
+	"description": "This model describes a contest where the goal is to collect all coupons from a given set. It can be abstracted as drawing from an urn of `N´ different coupons with replacement where drawing each coupon is equally likely as described in [1] and [2]. In our case, a certain number of coupons can be drawn at once.",
+	"references": [
+		"https://doi.org/10.1016%2F0166-218X%2892%2990177-C",
+		"https://en.wikipedia.org/wiki/Coupon_collector%27s_problem"
+	],
+	"notes": "classic probabilistic programming example",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of coupons to collect",
+			"type": "positive integer"
+		},
+		{
+			"name": "DRAWS",
+			"kind": "file",
+			"description": "Number of draws from the urn",
+			"type": "positive integer"
+		},
+		{
+			"name": "B",
+			"kind": "open",
+			"description": "Bound for the number of draws",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "collect_all",
+			"description": "The probability to eventually collect all coupons.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "exp_draws",
+			"description": "The expected number of draws until all coupons are collected.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "collect_all_bounded",
+			"description": "The probability to collect all coupons with at most `B´ draws.",
+			"type": "prob-reach-reward-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "coupon.5-2.jani",
+			"original-file": [
+				"coupon.5-2.pgcl",
+				"coupon.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-pgcl --pgclfile coupon.5-2.pgcl --to-jani coupon.5-2.jani --prop coupon.props",
+				"note": "manually changing the model type to DTMC"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "DRAWS",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 5397
+						}
+					],
+					"results": [
+						{
+							"property": "collect_all",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_draws",
+							"value": {
+								"den": 126,
+								"approx": 5.9603174603174605,
+								"num": 751
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "collect_all_bounded",
+							"value": {
+								"den": 78125,
+								"approx": 0.5225472,
+								"num": 40824
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "coupon.7-3.jani",
+			"original-file": [
+				"coupon.7-3.pgcl",
+				"coupon.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-pgcl --pgclfile coupon.7-3.pgcl --to-jani coupon.7-3.jani --prop coupon.props",
+				"note": "manually changing the model type to DTMC"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 7
+				},
+				{
+					"name": "DRAWS",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 337710
+						}
+					],
+					"results": [
+						{
+							"property": "collect_all",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_draws",
+							"value": {
+								"den": 2589397104660,
+								"approx": 6.383419614421544,
+								"num": 16529208267413
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "collect_all_bounded",
+							"value": {
+								"den": 96889010407,
+								"approx": 0.4339188263291682,
+								"num": 42041965680
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "coupon.9-4.jani",
+			"original-file": [
+				"coupon.9-4.pgcl",
+				"coupon.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-pgcl --pgclfile coupon.9-4.pgcl --to-jani coupon.9-4.jani --prop coupon.props",
+				"note": "manually changing the model type to DTMC"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 9
+				},
+				{
+					"name": "DRAWS",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 27642923
+						}
+					],
+					"results": [
+						{
+							"property": "collect_all",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_draws",
+							"value": {
+								"den": 16643031685280,
+								"approx": 6.74007249230144,
+								"num": 112175240050457
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "collect_all_bounded",
+							"value": {
+								"den": 5559060566555523,
+								"approx": 0.35851078982197204,
+								"num": 1992983194384000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "coupon.15-4.jani",
+			"original-file": [
+				"coupon.15-4.pgcl",
+				"coupon.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-pgcl --pgclfile coupon.15-4.pgcl --to-jani coupon.5-2.jani --prop coupon.props",
+				"note": "manually changing the model type to DTMC"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 15
+				},
+				{
+					"name": "DRAWS",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "B",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 17486977236
+						}
+					],
+					"results": [
+						{
+							"property": "collect_all",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_draws",
+							"value": {
+								"den": 5306811483744700661842810539840,
+								"approx": 12.818358616251643,
+								"num": 68024612707482047949451796497199
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "collect_all_bounded",
+							"value": {
+								"den": 16218292236328125,
+								"approx": 0.0017788079199640542,
+								"num": 28849226678272
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/Storm.dd.bisim.exact.5-2-5.2018-11-26.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd.bisim.exact.7-3-5.2018-11-26.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd.bisim.exact.9-4-5.2018-11-26.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd.bisim.exact.15-4-5.2018-11-26.json"
+		}
+	]
+}

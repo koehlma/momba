@@ -1,0 +1,59 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Aug 23 14:23:25 2018
+Command line arguments: --jani ../ma/readers-writers/readers-writers.35.jani -jprop -tm
+Current working directory: /Users/tim/git/qcomp/benchmarks/generate_Meta
+
+Time for model construction: 414.576s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	46490557
+Transitions: 	172930405
+Choices: 	92123640
+Markovian St.: 	45899784
+Max. Rate.: 	350
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (280 / 10)) -> 2083060 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 35)) -> 44407497 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 35)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 1130547 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 4.031s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	46490557
+Transitions: 	69412407
+Choices: 	46490557
+Markovian St.: 	266701
+Max. Rate.: 	350
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (280 / 10)) -> 2083060 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 35)) -> 44407497 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 35)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 1130547 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "exp_time_many_requests": T[exp]min=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (280 / 10))] ...
+Result (for initial states): 4.438260751
+Time for model checking: 930.786s.
+
+Model checking property "pr_many_requests": Pmax=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (280 / 10))] ...
+Result (for initial states): 1
+Time for model checking: 20.192s.
+
+Model checking property "pr_network": Pmax=? [(((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 35)) U ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 35)) & ((p_lan_r + p_lan_w) > (p_r + p_w)))] ...
+Result (for initial states): 0.9341340039
+Time for model checking: 708.453s.
+
+Model checking property "prtb_many_requests": Pmax=? [true U<=5 (((p_lan_w + p_w) + (p_lan_r + p_r)) > (280 / 10))] ...
+
+Memory Error after 2860.905 seconds.

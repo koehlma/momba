@@ -1,0 +1,200 @@
+{
+	"name": "Kanban Manufacturing System",
+	"short": "kanban",
+	"type": "ctmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Gianfranco Ciardo <ciardo@iastate.edu>",
+		"Marco Tilgner <marco@is.titech.ac.jp>"
+	],
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "http://www.dtic.mil/dtic/tr/fulltext/u2/a311983.pdf",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. Kanban is a scheduling system for lean manufacturing and just-in-time manufacturing which coordinates the transport of pallets and the job scheduling between machines with a ticket system. Each machine can process `t´ parts, i.e. there are `t´ tickets available. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/kanban.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "t",
+			"kind": "open",
+			"description": "Maximal number of jobs per machine",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "throughput",
+			"description": "The expected throughput of the system.",
+			"type": "steady-state-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "kanban.jani",
+			"original-file": [
+				"kanban.prism",
+				"kanban.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism kanban.prism --tojani kanban.jani --prop kanban.props --globalvars --prismcompat"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 160
+						}
+					],
+					"results": [
+						{
+							"property": "throughput",
+							"value": {
+								"approx": 0.0925846346333826,
+								"num": 113237255213395163953677015242972426399989689654967642609491830216061334090202313396984106738516704120069048184391587092670711590526535239899047608853509681914074220789038015289373871985431257486278,
+								"den": 1223067474012215838745994023624181143448435715858923491568712969277184634645504346456117443333632535902774869182827010789201972713368729205674432492059242349591780604188152950845769793378621446766887
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 4600
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 3
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 58400
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 454475
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2546432
+						}
+					],
+					"results": [
+						{
+							"property": "throughput",
+							"value": {
+								"lower": 0.3071247592692875,
+								"upper": 0.3071247593307125
+							},
+							"note": "Storm/sound"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 11261376
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "t",
+							"value": 7
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 41644800
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.1.2018-10-16.json",
+		"results/Storm.2.2018-10-16.json",
+		"results/Storm.3.2018-10-16.json",
+		"results/Storm.4.2018-10-16.json",
+		"results/Storm.5.2018-10-16.json",
+		"results/Storm.6.2018-10-16.json",
+		"results/Storm.7.2018-10-16.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.sound.5.2018-12-03.json"
+		}
+	]
+}

@@ -1,0 +1,107 @@
+{
+	"name": "Andresen Attack on Bitcoin",
+	"short": "bitcoin-attack",
+	"type": "ma",
+	"original": "Modest",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"source": "https://doi.org/10.1007/978-3-319-77935-5_11",
+	"description": "A Modest MA model to optimise the Andresen attack on Bitcoin as presented in [0]. A malicious mining pool that controls `MALICIOUS´ percent of the global Bitcoin hash rate tries to fork the blockchain (e.g. to double-spend). It succeeds if the length of its own fork is at least the confirmation depth `CD´ and higher than the length of the chain computed by the honest miners.",
+	"challenge": "optimal strategy over long time bound",
+	"parameters": [
+		{
+			"name": "MALICIOUS",
+			"kind": "open",
+			"description": "Percentage of hash rate in malicious pool",
+			"type": "positive integer"
+		},
+		{
+			"name": "CD",
+			"kind": "open",
+			"description": "Confirmation depth",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "bitcoin-attack.jani",
+			"original-file": "bitcoin-attack.modest",
+			"conversion": {
+				"tool": "moconv",
+				"version": "3.0.72",
+				"url": "http://www.modestchecker.net/",
+				"command": "moconv.exe bitcoin-attack.modest -O bitcoin-attack.jani"
+			},
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "MALICIOUS",
+							"value": 20
+						},
+						{
+							"name": "CD",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 252
+						}
+					],
+					"results": [
+						{
+							"property": "T_MWinMin",
+							"value": {
+								"approx": 3736.5910586927494,
+								"num": 4194984840,
+								"den": 1122677
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "P_MWinMax",
+							"value": {
+								"lower": 0.535059499611955,
+								"upper": 0.535060091243047
+							},
+							"note": "mcsta"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "T_MWinMin",
+			"type": "exp-time",
+			"description": "The minimum expected time until the malicious pool wins."
+		},
+		{
+			"name": "P_MWinMax",
+			"type": "prob-reach-time-bounded",
+			"description": "The maximum probability that the malicious pool wins within 2 days."
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/mcsta.20-6.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.20-6.2018-10-03.json"
+		}
+	]
+}

@@ -1,0 +1,341 @@
+{
+	"name": "IEEE 1394 FireWire Root Contention Protocol (abstract model, with timer)",
+	"short": "firewire_dl",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marielle Stoelinga <marielle@cs.kun.nl>",
+		"Frits Vaandrager <fvaan@cs.kun.nl>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/3-540-48778-6_4",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] concerns the Tree Identify Protocol of the IEEE 1394 High Performance Serial Bus, called \"FireWire\". The 1394 High Performance serial bus is used to transport video and audio signals within a network of multimedia devices. It is modeled as a leader election protocol which takes place after a bus reset in the network, that is, when a node is added or removed from the network. After such a reset all nodes in the network have equal status, and know only to which nodes they are directly connected. A leader needs to be chosen to act as the manager of the bus for subsequent phases of IEEE 1394. This is done by the nodes communicating \"be my parent\" messages, starting from the leaf nodes. The protocol is designed for use on connected networks and will correctly elect a leader if the network is acyclic. We consider an MPD model of the probabilistic timed automata models of the root contention part of the tree identify protocol, which are based on probabilistic I/O automata models presented in [3]. `delay´ is the maximum wire transmission delay in nano seconds. This models the distance between the two nodes, i.e. the length of the connecting wires. A delay of 360ns represents the assumption that the nodes are separated by a distance close to the maximum required for the correctness of the protocol. A delay of 30ns corresponds more closely to the maximum separation of nodes specified in the actual IEEE standard. The `_dl´ version includes a timer module to allow the verification of time-bounded properties. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/firewire.php",
+		"https://doi.org/10.1007/3-540-48778-6_4"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "delay",
+			"kind": "open",
+			"description": "Maximum wire transmission delay in units of 10ns",
+			"type": "positive integer"
+		},
+		{
+			"name": "deadline",
+			"kind": "open",
+			"description": "Timer deadline in units of 10 ns",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline",
+			"description": "Minimum probability of completing within `deadline´.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "firewire_dl.jani",
+			"original-file": [
+				"firewire_dl.prism",
+				"firewire_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism firewire_dl.prism --tojani firewire_dl.jani --prop firewire_dl.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 14824
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.5,
+								"num": 1,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 69683
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.78125,
+								"num": 25,
+								"den": 32
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 168411
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.931640625,
+								"num": 477,
+								"den": 512
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 290017
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.975494384765625,
+								"num": 31965,
+								"den": 32768
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 68056
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": 0,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 220565
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.625,
+								"num": 5,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 375765
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.8515625,
+								"num": 109,
+								"den": 128
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 530965
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.939453125,
+								"num": 481,
+								"den": 512
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3-200.2018-10-12.json",
+		"results/Storm.3-400.2018-10-12.json",
+		"results/Storm.3-600.2018-10-12.json",
+		"results/Storm.3-800.2018-10-12.json",
+		"results/Storm.36-200.2018-10-12.json",
+		"results/Storm.36-400.2018-10-12.json",
+		"results/Storm.36-600.2018-10-12.json",
+		"results/Storm.36-800.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-200.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-400.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-600.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-800.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.36-200.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.36-400.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.36-600.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.36-800.2018-10-17.json"
+		}
+	]
+}

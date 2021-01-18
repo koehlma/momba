@@ -1,0 +1,31 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 30 10:40:19 2018
+Command line arguments: --jani speed-ind.jani --janiproperty --constants T=2100 --timemem
+Current working directory: /Users/tim/git/qcomp/benchmarks/ctmc/speed-ind
+
+Time for model input parsing: 0.033s.
+
+Time for model construction: 9.171s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	743424
+Transitions: 	9518080
+Reward Models:  none
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * (S3 < 20) -> 135168 item(s)
+   * init -> 1 item(s)
+   * (S2 > 80) -> 135168 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "change_state": Pmin=? [true U[0, 2100] ((S2 > 80) & (S3 < 20))] ...
+Result (for initial states): 0.04229449798
+Time for model checking: 105.180s.
+
+Performance statistics:
+  * peak memory usage: 732MB
+  * CPU time: 111.320s
+  * wallclock time: 114.401s

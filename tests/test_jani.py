@@ -1,16 +1,23 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019–2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
 import pathlib
+
+import pytest
 
 from momba import jani
 from momba.model import types
 
 
 DIE_MODEL = pathlib.Path(__file__).parent / "resources" / "die.jani"
+
+QVBS_MODELS = list(
+    (pathlib.Path(__file__).parent / "resources" / "QVBS2020").glob("**/*.jani")
+)
 
 
 def test_basic_jani_import() -> None:
@@ -34,3 +41,12 @@ def test_basic_import_export() -> None:
     (automaton,) = network.ctx.automata
 
     assert len(automaton.locations) == 1
+
+
+@pytest.mark.xfail(reason="JANI support is not fully implemented yet")
+def test_load_qvbs_models() -> None:
+    for model in QVBS_MODELS:
+        try:
+            jani.load_model(model.read_text("utf-8"))
+        except jani.UnsupportedJANIError:
+            pass

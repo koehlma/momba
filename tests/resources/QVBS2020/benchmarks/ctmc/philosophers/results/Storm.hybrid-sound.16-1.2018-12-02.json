@@ -1,0 +1,68 @@
+{
+	"file": "../philosophers.16.jani",
+	"version": 1,
+	"date": "2018-12-02",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.hybrid-sound.16-1.2018-12-02.txt",
+	"open-parameter-values": [
+		{
+			"name": "TIME_BOUND",
+			"value": 1
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"hybrid",
+			"sound"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani philosophers.16.jani --janiproperty MinExpTimeDeadlock --constants TIME_BOUND=1  -e hybrid --sound --precision 1e-10 --timemem",
+	"time": 57.004470109939575,
+	"memory": 617611264,
+	"property-times": [
+		{
+			"name": "MinExpTimeDeadlock",
+			"time": 56.343
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 0.517,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 1331714
+				},
+				{
+					"name": "branches",
+					"value": 13774113
+				}
+			]
+		},
+		{
+			"property": "MinExpTimeDeadlock",
+			"value": 10.78297345,
+			"values": [
+				{
+					"name": "time",
+					"value": 56.343,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,173 @@
+{
+	"file": "../wlan.1.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.1-0.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "COL",
+			"value": 0
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani wlan.1.jani --janiproperty --constants COL=0 --exact --timemem",
+	"time": 2.139,
+	"memory": 67108864,
+	"property-times": [
+		{
+			"name": "collisions",
+			"time": 0.018
+		},
+		{
+			"name": "cost_max",
+			"time": 0.163
+		},
+		{
+			"name": "cost_min",
+			"time": 0.118
+		},
+		{
+			"name": "num_collisions",
+			"time": 0.125
+		},
+		{
+			"name": "sent",
+			"time": 0.018
+		},
+		{
+			"name": "time_max",
+			"time": 0.149
+		},
+		{
+			"name": "time_min",
+			"time": 0.112
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.391
+				},
+				{
+					"name": "states",
+					"value": 8625
+				},
+				{
+					"name": "branches",
+					"value": 16196
+				},
+				{
+					"name": "transitions",
+					"value": 11356
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "collisions",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.018
+				}
+			],
+			"value": 1
+		},
+		{
+			"property": "cost_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.163
+				}
+			],
+			"value": {
+				"approx": 228206.30718514533,
+				"num": 1696029275,
+				"den": 7432
+			}
+		},
+		{
+			"property": "cost_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.118
+				}
+			],
+			"value": 7625
+		},
+		{
+			"property": "num_collisions",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.125
+				}
+			],
+			"value": {
+				"approx": 1.202368137782562,
+				"num": 1117,
+				"den": 929
+			}
+		},
+		{
+			"property": "sent",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.018
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "time_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.149
+				}
+			],
+			"value": {
+				"approx": 3865.1377688172042,
+				"num": 5751325,
+				"den": 1488
+			}
+		},
+		{
+			"property": "time_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.112
+				}
+			],
+			"value": 1325
+		}
+	]
+}

@@ -1,0 +1,132 @@
+﻿{
+	"file": "../egl.jani",
+	"version": 1,
+	"date": "2018-11-21",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 5 },
+		{ "name": "L", "value": 4 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"variant": [],
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe egl.jani -S Memory -E \"N=5, L=4\" -O mcsta.5-4.2018-11-21.json Json",
+	"time": 1.492,
+	"memory": 72171520,
+	"property-times": [
+		{ "name": "messagesA", "time": 0.116 },
+		{ "name": "messagesB", "time": 0.068 },
+		{ "name": "unfairA", "time": 0.004 },
+		{ "name": "unfairB", "time": 0.002 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 88, "unit": "B" },
+				{ "name": "States", "value": 74750 },
+				{ "name": "Transitions", "value": 74750 },
+				{ "name": "Branches", "value": 75773 },
+				{ "name": "Rate", "value": 393421.05263157893 },
+				{ "name": "Time", "value": 0.212, "unit": "s" }
+			]
+		},
+		{
+			"property": "messagesA",
+			"value": 1.4541015625,
+			"values": [
+				{ "name": "Bounds", "value": "[1.4541015625, ∞)" },
+				{ "name": "Time", "value": 0.116, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 74750 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.076, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.011, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "messagesB",
+			"value": 1.9853515625,
+			"values": [
+				{ "name": "Bounds", "value": "[1.9853515625, ∞)" },
+				{ "name": "Time", "value": 0.068, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 74750 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.063, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.003, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "unfairA",
+			"value": 0.515625,
+			"values": [
+				{ "name": "Bounds", "value": "[0.515625, 0.515625]" },
+				{ "name": "Time", "value": 0.004, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.003, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "unfairB",
+			"value": 0.484375,
+			"values": [
+				{ "name": "Bounds", "value": "[0.484375, 0.484375]" },
+				{ "name": "Time", "value": 0.002, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.002, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

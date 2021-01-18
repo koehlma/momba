@@ -1,0 +1,86 @@
+{
+	"file": "../herman.15.jani",
+	"version": 1,
+	"date": "2018-11-26",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.hybrid-bisim-exact.15.2018-11-26.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"hybrid",
+			"bisim",
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani herman.15.jani --janiproperty --engine hybrid --ddlib sylvan --bisimulation --exact --timemem",
+	"time": 64.49123764038086,
+	"memory": 3363831808,
+	"property-times": [
+		{
+			"name": "steps",
+			"time": 62.282
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 0.934,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 32768
+				},
+				{
+					"name": "branches",
+					"value": 14348908
+				}
+			]
+		},
+		{
+			"group": "Strong bisimulation",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.140
+				},
+				{
+					"name": "states",
+					"value": 612
+				},
+				{
+					"name": "branches",
+					"value": 104721
+				}
+			]
+		},
+		{
+			"property": "steps",
+			"value": {
+				"num": 100,
+				"approx": 33.333333333333336,
+				"den": 3
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 62.282,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}

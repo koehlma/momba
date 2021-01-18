@@ -1,0 +1,55 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Aug 23 15:11:06 2018
+Command line arguments: --jani ../ma/readers-writers/readers-writers.40.jani -jprop -tm
+Current working directory: /Users/tim/git/qcomp/benchmarks/generate_Meta
+
+Time for model construction: 881.425s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	100949015
+Transitions: 	377447668
+Choices: 	200338760
+Markovian St.: 	99840746
+Max. Rate.: 	400
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (320 / 10)) -> 4588502 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 40)) -> 96360513 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 40)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 2492847 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 12.563s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	100949015
+Transitions: 	149644105
+Choices: 	100949015
+Markovian St.: 	451001
+Max. Rate.: 	400
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (320 / 10)) -> 4588502 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 40)) -> 96360513 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 40)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 2492847 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "exp_time_many_requests": T[exp]min=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (320 / 10))] ...
+Result (for initial states): 3.729313311
+Time for model checking: 2213.866s.
+
+Model checking property "pr_many_requests": Pmax=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (320 / 10))] ...
+Result (for initial states): 1
+Time for model checking: 57.267s.
+
+Model checking property "pr_network": Pmax=? [(((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 40)) U ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 40)) & ((p_lan_r + p_lan_w) > (p_r + p_w)))] ...
+
+Aborted after 3600 seconds.

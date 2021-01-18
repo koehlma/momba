@@ -1,0 +1,78 @@
+﻿{
+	"file": "../beb.4-8.jani",
+	"version": 1,
+	"date": "2018-08-30",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 7 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe beb.4-8.jani -S Memory -E \"N=7\" -O mcsta.4-8-7.json Json",
+	"time": 46.784,
+	"memory": 4398272512,
+	"property-times": [
+		{ "name": "LineSeized", "time": 10.008 },
+		{ "name": "GaveUp", "time": 11.524 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 20, "unit": "B" },
+				{ "name": "States", "value": 19401892 },
+				{ "name": "Transitions", "value": 20164086 },
+				{ "name": "Branches", "value": 34723782 },
+				{ "name": "Rate", "value": 814726.29545645416 },
+				{ "name": "Time", "value": 24.751, "unit": "s" }
+			]
+		},
+		{
+			"property": "LineSeized",
+			"value": 0.9998854980586982,
+			"values": [
+				{ "name": "Bounds", "value": "[0.999885498058698, 1]" },
+				{ "name": "Time", "value": 10.008, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 4.710021898426645E-07 },
+						{ "name": "Iterations", "value": 26 },
+						{ "name": "Time", "value": 9.985, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "GaveUp",
+			"value": 0.00011450154725775895,
+			"values": [
+				{ "name": "Bounds", "value": "[0.000114501547257759, 1]" },
+				{ "name": "Time", "value": 11.524, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 6.5617595656545155E-07 },
+						{ "name": "Iterations", "value": 31 },
+						{ "name": "Time", "value": 11.523, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

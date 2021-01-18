@@ -1,0 +1,124 @@
+{
+	"file": "../polling.11.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.11-16.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.11.jani --janiproperty --constants T=16  --timemem",
+	"time": 13.041,
+	"memory": 85983232,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 0.285
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 0.081
+		},
+		{
+			"name": "served",
+			"time": 4.27
+		},
+		{
+			"name": "station1_polled",
+			"time": 3.194
+		},
+		{
+			"name": "waiting",
+			"time": 4.283
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.913
+				},
+				{
+					"name": "states",
+					"value": 33792
+				},
+				{
+					"name": "branches",
+					"value": 214016
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.285
+				}
+			],
+			"value": 0.1387683166
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.081
+				}
+			],
+			"value": 0.5409707975
+		},
+		{
+			"property": "served",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 4.27
+				}
+			],
+			"value": 1.020537332
+		},
+		{
+			"property": "station1_polled",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.194
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "waiting",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 4.283
+				}
+			],
+			"value": 1.522947396
+		}
+	]
+}

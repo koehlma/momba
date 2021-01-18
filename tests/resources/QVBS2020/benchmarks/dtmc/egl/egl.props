@@ -1,0 +1,17 @@
+// Expected number of messages from B that A needs to knows a pair once B knows a pair
+"messagesA": R{"messages_A_needs"}=? [ F phase=4 ];
+// Expected number of messages from A that B needs to knows a pair once A knows a pair
+"messagesB": R{"messages_B_needs"}=? [ F phase=4 ];
+// Probability that party A is unfairly disadvantaged
+// RESULT (N=5): 0.515625
+// RESULT (N=10): 0.50048828125
+// RESULT (N=15): 0.5000152587890625
+// RESULT (N=20): 0.5000004768371582
+"unfairA": P=? [ F !"knowA" & "knowB" ];
+// Probability that party B is unfairly disadvantaged
+// RESULT (N=5): 0.484375
+// RESULT (N=10): 0.49951171875
+// RESULT (N=15): 0.4999847412109375
+// RESULT (N=20): 0.4999990463256836
+"unfairB": P=? [ F !"knowB" & "knowA" ];
+

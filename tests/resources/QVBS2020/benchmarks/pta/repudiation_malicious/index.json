@@ -1,0 +1,120 @@
+{
+	"name": "Non-Repudiation Protocol (with malicious recipient)",
+	"short": "repudiation_malicious",
+	"type": "pta",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Olivier Markowitch <omarkow@ulb.ac.be>",
+		"Yves Roggeman <yrogge@ulb.ac.be>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.93.9279&rep=rep1&type=pdf",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] describes the non-repudiation protocol with a malicious recipient as in [0].",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline",
+			"description": "The maximum probability that the malicious recipient gains information before time `T´.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "eventually",
+			"description": "The maximum probability that the malicious recipient eventually gains information.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "repudiation_malicious.jani",
+			"original-file": [
+				"repudiation_malicious.prism",
+				"repudiation_malicious.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism repudiation_malicious.prism --tojani repudiation_malicious.jani --prop repudiation_malicious.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 5
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 10
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 20
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"lower": 0.10565711626138749,
+								"upper": 0.10565796287519483
+							},
+							"note": "PRISM"
+						},
+						{
+							"property": "eventually",
+							"value": {
+								"lower": 0.001072402434,
+								"upper": 0.001072402634
+							},
+							"note": "PRISM"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/PRISM.20.deadline.2020-02-29.json"
+		},
+		{
+			"reference": true,
+			"file": "results/PRISM.20.eventually.2020-02-29.json"
+		}
+	]
+}

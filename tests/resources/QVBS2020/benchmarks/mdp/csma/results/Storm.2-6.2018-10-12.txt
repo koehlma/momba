@@ -1,0 +1,47 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:32:08 2018
+Command line arguments: --jani csma.2-6.jani --janiproperty --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/csma
+
+Time for model construction: 1.023s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	66718
+Transitions: 	93072
+Choices: 	66788
+Reward Models:  time
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * collision_max_backoff -> 2 item(s)
+   * deadlock -> 0 item(s)
+   * ((min(((s1 = 4) ? cd1 : 7), ((s2 = 4) ? cd2 : 7))) < 6) -> 3810 item(s)
+   * all_delivered -> 27 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "all_before_max": Pmax=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 0.9999995232
+Time for model checking: 0.127s.
+
+Model checking property "all_before_min": Pmin=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 0.9999995232
+Time for model checking: 0.116s.
+
+Model checking property "some_before": Pmin=? [F ((min(((s1 = 4) ? cd1 : 7), ((s2 = 4) ? cd2 : 7))) < 6)] ...
+Result (for initial states): 0.9999694824
+Time for model checking: 0.055s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "all_delivered"] ...
+Result (for initial states): 89.26394168
+Time for model checking: 0.084s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F "all_delivered"] ...
+Result (for initial states): 84.59041297
+Time for model checking: 0.160s.
+
+Performance statistics:
+  * peak memory usage: 61MB
+  * CPU time: 1.599s
+  * wallclock time: 1.598s

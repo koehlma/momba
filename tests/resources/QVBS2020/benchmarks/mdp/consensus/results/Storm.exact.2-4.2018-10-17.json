@@ -1,0 +1,139 @@
+{
+	"file": "../consensus.2.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.2-4.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 4
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani consensus.2.jani --janiproperty --constants K=4 --exact --timemem",
+	"time": 0.273,
+	"memory": 47185920,
+	"property-times": [
+		{
+			"name": "c1",
+			"time": 0.001
+		},
+		{
+			"name": "c2",
+			"time": 0.032
+		},
+		{
+			"name": "disagree",
+			"time": 0.127
+		},
+		{
+			"name": "steps_max",
+			"time": 0.036
+		},
+		{
+			"name": "steps_min",
+			"time": 0.035
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.035
+				},
+				{
+					"name": "states",
+					"value": 528
+				},
+				{
+					"name": "branches",
+					"value": 972
+				},
+				{
+					"name": "transitions",
+					"value": 784
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "c1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "c2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.032
+				}
+			],
+			"value": {
+				"approx": 0.437744140625,
+				"num": 1793,
+				"den": 4096
+			}
+		},
+		{
+			"property": "disagree",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.127
+				}
+			],
+			"value": {
+				"approx": 0.06151960784313725,
+				"num": 251,
+				"den": 4080
+			}
+		},
+		{
+			"property": "steps_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.036
+				}
+			],
+			"value": 243
+		},
+		{
+			"property": "steps_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.035
+				}
+			],
+			"value": 192
+		}
+	]
+}

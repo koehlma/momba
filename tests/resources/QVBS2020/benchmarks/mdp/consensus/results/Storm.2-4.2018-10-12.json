@@ -1,0 +1,128 @@
+{
+	"file": "../consensus.2.jani",
+	"version": 1,
+	"date": "2018-10-12",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.2-4.2018-10-12.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 4
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani consensus.2.jani --janiproperty --constants K=4  --timemem",
+	"time": 0.053,
+	"memory": 47185920,
+	"property-times": [
+		{
+			"name": "c1",
+			"time": 0.0
+		},
+		{
+			"name": "c2",
+			"time": 0.004
+		},
+		{
+			"name": "disagree",
+			"time": 0.003
+		},
+		{
+			"name": "steps_max",
+			"time": 0.004
+		},
+		{
+			"name": "steps_min",
+			"time": 0.004
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.029
+				},
+				{
+					"name": "states",
+					"value": 528
+				},
+				{
+					"name": "branches",
+					"value": 972
+				},
+				{
+					"name": "transitions",
+					"value": 784
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "c1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "c2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.004
+				}
+			],
+			"value": 0.4377374222
+		},
+		{
+			"property": "disagree",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.003
+				}
+			],
+			"value": 0.06151710197
+		},
+		{
+			"property": "steps_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.004
+				}
+			],
+			"value": 242.9927864
+		},
+		{
+			"property": "steps_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.004
+				}
+			],
+			"value": 192.0039926
+		}
+	]
+}

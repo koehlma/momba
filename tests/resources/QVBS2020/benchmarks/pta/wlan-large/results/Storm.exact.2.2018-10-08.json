@@ -1,0 +1,129 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-08",
+	"file": "../wlan-large.jani",
+	"version": 1,
+	"log": "Storm.exact.2.2018-10-08.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"preprocessing": [
+		{
+			"tool": "moconv",
+			"version": "3.0.86",
+			"url": "http://www.modestchecker.net/",
+			"note": "Converted STA to its digital clock semantics and unrolled finite-support probability distributions",
+			"command": "moconv.exe wlan-large.jani -O wlan-large.2_mdp.jani --overwrite --digital-clocks --unroll-distrs -E K=2",
+			"time": 1.0212230682373047
+		}
+	],
+	"command": "storm --jani wlan-large.2_mdp.jani --janiproperty --exact --timemem",
+	"time": 224.9842230682373,
+	"property-times": [
+		{
+			"name": "P_1",
+			"time": 10.507
+		},
+		{
+			"name": "P_min",
+			"time": 8.047
+		},
+		{
+			"name": "P_max",
+			"time": 8.29
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 186.633
+				},
+				{
+					"name": "states",
+					"value": 3283371
+				},
+				{
+					"name": "branches",
+					"value": 6221633
+				},
+				{
+					"name": "transitions",
+					"value": 6200795
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "P_1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 10.507
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "P_1_1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 10.486
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "P_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 8.047
+				}
+			],
+			"value": {
+				"approx": 0.0390625,
+				"num": 5,
+				"den": 128
+			}
+		},
+		{
+			"property": "P_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 8.29
+				}
+			],
+			"value": {
+				"approx": 0.0625,
+				"num": 1,
+				"den": 16
+			}
+		}
+	]
+}

@@ -1,0 +1,94 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../beb.4-8.jani",
+	"version": 1,
+	"log": "Storm.exact.4-8-7.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 7
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani beb.4-8.jani --janiproperty --constants N=7 --exact --timemem",
+	"time": 724.299,
+	"memory": 12310282240,
+	"property-times": [
+		{
+			"name": "LineSeized",
+			"time": 134.245
+		},
+		{
+			"name": "GaveUp",
+			"time": 80.474
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 507.488
+				},
+				{
+					"name": "states",
+					"value": 20186888
+				},
+				{
+					"name": "branches",
+					"value": 35508778
+				},
+				{
+					"name": "transitions",
+					"value": 20949082
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "LineSeized",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 134.245
+				}
+			],
+			"value": {
+				"approx": 0.999885498452205,
+				"num": 1180456441149525318505,
+				"den": 1180591620717411303424
+			}
+		},
+		{
+			"property": "GaveUp",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 80.474
+				}
+			],
+			"value": {
+				"approx": 0.00011450154779502857,
+				"num": 135179567885984919,
+				"den": 1180591620717411303424
+			}
+		}
+	]
+}

@@ -1,0 +1,143 @@
+{
+	"file": "../firewire.true.jani",
+	"version": 2,
+	"date": "2018-11-22",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.true-3-200.2018-11-22.txt",
+	"open-parameter-values": [
+		{
+			"name": "delay",
+			"value": 3
+		},
+		{
+			"name": "deadline",
+			"value": 200
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani firewire.true.jani --janiproperty  --constants delay=3,deadline=200 --exact --timemem",
+	"time": 8.573628664016724,
+	"memory": 147849216,
+	"property-times": [
+		{
+			"name": "elected",
+			"time": 0.188
+		},
+		{
+			"name": "time_max",
+			"time": 0.731
+		},
+		{
+			"name": "time_min",
+			"time": 0.643
+		},
+		{
+			"name": "time_sending",
+			"time": 0.564
+		},
+		{
+			"name": "deadline",
+			"time": 0.118
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 6.03
+				},
+				{
+					"name": "states",
+					"value": 83153
+				},
+				{
+					"name": "transitions",
+					"value": 113195
+				},
+				{
+					"name": "branches",
+					"value": 115467
+				}
+			]
+		},
+		{
+			"property": "elected",
+			"value": true,
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.188
+				}
+			]
+		},
+		{
+			"property": "time_max",
+			"value": 299,
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.731
+				}
+			]
+		},
+		{
+			"property": "time_min",
+			"value": {
+				"num": 553,
+				"approx": 138.25,
+				"den": 4
+			},
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.643
+				}
+			]
+		},
+		{
+			"property": "time_sending",
+			"value": 18,
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.564
+				}
+			]
+		},
+		{
+			"property": "deadline",
+			"value": {
+				"num": 1,
+				"approx": 0.5,
+				"den": 2
+			},
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.118
+				}
+			]
+		}
+	]
+}

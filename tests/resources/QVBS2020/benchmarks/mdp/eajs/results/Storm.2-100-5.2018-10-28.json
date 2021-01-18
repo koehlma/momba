@@ -1,0 +1,87 @@
+{
+	"file": "../eajs.2.jani",
+	"version": 1,
+	"date": "2018-10-28",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.2-100-5.2018-10-28.txt",
+	"open-parameter-values": [
+		{
+			"name": "energy_capacity",
+			"value": 100
+		},
+		{
+			"name": "B",
+			"value": 5
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani eajs.2.jani --janiproperty --constants energy_capacity=100,B=5  --timemem",
+	"time": 0.384,
+	"memory": 52428800,
+	"property-times": [
+		{
+			"name": "ExpUtil",
+			"time": 0.017
+		},
+		{
+			"name": "ProbUtil",
+			"time": 0.106
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.25
+				},
+				{
+					"name": "states",
+					"value": 12828
+				},
+				{
+					"name": "branches",
+					"value": 21795
+				},
+				{
+					"name": "transitions",
+					"value": 14649
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "ExpUtil",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.017
+				}
+			],
+			"value": 4.028044505
+		},
+		{
+			"property": "ProbUtil",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.106
+				}
+			],
+			"value": 0.02804450541
+		}
+	]
+}

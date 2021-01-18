@@ -1,0 +1,192 @@
+{
+	"name": "Zeno-Travel",
+	"short": "zenotravel",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.6.8853&rep=rep1&type=pdf",
+		"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 [1] model of the zenotravel domain described in detail in [2]. This domain has actions to embark and disembark `p´ passengers from one of the `a´ aircraft that can fly at two alternative speeds between `c´ cities. The actions have a probability of failing without causing any effects. So, actions must sometimes be repeated.",
+	"references": [
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html",
+		"https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume20/long03a-html/node40.html"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{
+			"name": "c",
+			"kind": "file",
+			"description": "Number of cities",
+			"type": "positive integer"
+		},
+		{
+			"name": "p",
+			"kind": "file",
+			"description": "Number of persons",
+			"type": "positive integer"
+		},
+		{
+			"name": "a",
+			"kind": "file",
+			"description": "Number of aircrafts",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "zenotravel.4-2-2.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01-c4-p2-a2-s3846.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01-c4-p2-a2-s3846.pddl --jani zenotravel.4-2-2.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 4
+				},
+				{
+					"name": "p",
+					"value": 2
+				},
+				{
+					"name": "a",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 462400
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "zenotravel.6-5-3.jani",
+			"original-file": [
+				"domain.pddl",
+				"p05-c6-p5-a3-s24056.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p05-c6-p5-a3-s24056.pddl --jani zenotravel.6-5-3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 6
+				},
+				{
+					"name": "p",
+					"value": 5
+				},
+				{
+					"name": "a",
+					"value": 3
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "zenotravel.10-5-3.jani",
+			"original-file": [
+				"domain.pddl",
+				"p10-c10-p5-a3-s15832.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p10-c10-p5-a3-s15832.pddl --jani zenotravel.10-5-3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 10
+				},
+				{
+					"name": "p",
+					"value": 5
+				},
+				{
+					"name": "a",
+					"value": 3
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "zenotravel.20-10-6.jani",
+			"original-file": [
+				"domain.pddl",
+				"p15-c20-p10-a6-s24164.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p15-c20-p10-a6-s24164.pddl --jani zenotravel.20-10-6.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 20
+				},
+				{
+					"name": "p",
+					"value": 10
+				},
+				{
+					"name": "a",
+					"value": 6
+				}
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach a state where every person is at the destination."
+		}
+	],
+	"results": [
+		"results/mcsta.4-2-2.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-2-2.2018-10-03.json"
+		}
+	]
+}

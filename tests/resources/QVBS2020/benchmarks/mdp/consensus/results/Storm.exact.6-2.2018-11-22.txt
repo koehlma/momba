@@ -1,0 +1,51 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Nov 21 17:14:32 2018
+Command line arguments: --jani consensus.6.jani --janiproperty --constants K=2 --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.008s.
+
+Time for model construction: 70.134s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	1258240
+Transitions: 	6236736
+Choices: 	5008128
+Reward Models:  steps
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * finished -> 384 item(s)
+   * agree -> 114258 item(s)
+   * all_coins_equal_1 -> 1641 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "c1": Pmin>=1 [F "finished"] ...
+Result (for initial states): true
+
+Time for model checking: 9.111s.
+
+Model checking property "c2": Pmin=? [F ("finished" & "all_coins_equal_1")] ...
+Result (for initial states): 462973/1572864 (approx. 0.2943503062)
+Time for model checking: 55.717s.
+
+Model checking property "disagree": Pmax=? [F ("finished" & !("agree"))] ...
+Result (for initial states): 37101798760906709/102027593703751680 (approx. 0.3636447496)
+Time for model checking: 17892.129s.
+
+Model checking property "steps_max": R[exp]{"steps"}max=? [F "finished"] ...
+Result (for initial states): 867 (approx. 867)
+Time for model checking: 144.438s.
+
+Model checking property "steps_min": R[exp]{"steps"}min=? [F "finished"] ...
+Result (for initial states): 432 (approx. 432)
+Time for model checking: 15669.674s.
+
+Performance statistics:
+  * peak memory usage: 4136MB
+  * CPU time: 33838.557s
+  * wallclock time: 33842.241s
+

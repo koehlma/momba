@@ -1,0 +1,124 @@
+{
+	"file": "../polling.9.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.9-16.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.9.jani --janiproperty --constants T=16  --timemem",
+	"time": 2.356,
+	"memory": 53477376,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 0.045
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 0.012
+		},
+		{
+			"name": "served",
+			"time": 0.776
+		},
+		{
+			"name": "station1_polled",
+			"time": 0.551
+		},
+		{
+			"name": "waiting",
+			"time": 0.774
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.183
+				},
+				{
+					"name": "states",
+					"value": 6912
+				},
+				{
+					"name": "branches",
+					"value": 36864
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.045
+				}
+			],
+			"value": 0.1420837585
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.012
+				}
+			],
+			"value": 0.5409171761
+		},
+		{
+			"property": "served",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.776
+				}
+			],
+			"value": 1.232959007
+		},
+		{
+			"property": "station1_polled",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.551
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "waiting",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.774
+				}
+			],
+			"value": 1.65755629
+		}
+	]
+}

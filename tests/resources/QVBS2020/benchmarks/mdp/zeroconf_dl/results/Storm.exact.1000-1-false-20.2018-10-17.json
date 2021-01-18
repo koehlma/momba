@@ -1,0 +1,106 @@
+{
+	"file": "../zeroconf_dl.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.1000-1-false-20.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 1000
+		},
+		{
+			"name": "K",
+			"value": 1
+		},
+		{
+			"name": "reset",
+			"value": false
+		},
+		{
+			"name": "deadline",
+			"value": 20
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani zeroconf_dl.jani --janiproperty --constants N=1000,K=1,reset=false,deadline=20 --exact --timemem",
+	"time": 2.359,
+	"memory": 80740352,
+	"property-times": [
+		{
+			"name": "deadline_max",
+			"time": 0.302
+		},
+		{
+			"name": "deadline_min",
+			"time": 0.233
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.805
+				},
+				{
+					"name": "states",
+					"value": 53620
+				},
+				{
+					"name": "branches",
+					"value": 113949
+				},
+				{
+					"name": "transitions",
+					"value": 87613
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "deadline_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.302
+				}
+			],
+			"value": {
+				"approx": 0.005401891691617551,
+				"num": 120712046557396950744463,
+				"den": 22346254506493214720000000
+			}
+		},
+		{
+			"property": "deadline_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.233
+				}
+			],
+			"value": {
+				"approx": 2.021342209573459e-15,
+				"num": 230737308859629730965570040881721410042241139649116564419305837472975167661338676375215701253718046888068698303314326295158355939221310184229310384539301450008622085691859832373925971464300241019335672233920097528776308263028770046470955743701931959655731817922839562040050514577207514172293177410068859375,
+				"den": 114150542034304826038067563738402399961881026979791929183232262068812584734278736108897308561790259515402991756137826504896772694590753615069428724843823618524850554855960018140114080290920128126352479877076808983268525791116496619377686868897511269597633120928327704887023451889234135397389875330289898465609135649980416
+			}
+		}
+	]
+}

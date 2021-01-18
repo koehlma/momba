@@ -1,0 +1,23 @@
+toplevel "System";
+"System" or "triadA";
+
+"triadA" 2of3 "aA" "bA" "cA";
+"aA" or "NEA" "aSA";
+"aSA" csp "TAA" "SA";
+"bA" or "NEB" "bSA";
+"bSA" csp "TAB" "SA";
+"cA" or "NEC" "cSA";
+"cSA" csp "TAC" "SA";
+"SA" or "TAS" "NED";
+
+"NEA" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NEB" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NEC" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NED" lambda=0.000017 dorm=1 phases=2 interval=1;
+
+"TAA" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAB" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAC" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAS" lambda=0.00011 dorm=0 phases=2 interval=1;
+
+"I" 2insp4 "NEA" "NEB" "NEC" "NED" "TAA" "TAB" "TAC" "TAS" "aSA" "bSA" "cSA";

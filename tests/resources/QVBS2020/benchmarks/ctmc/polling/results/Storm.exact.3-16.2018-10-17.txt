@@ -1,0 +1,45 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct 17 19:11:30 2018
+Command line arguments: --jani polling.3.jani --janiproperty --constants T=16 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/polling
+
+Time for model construction: 0.026s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	36
+Transitions: 	84
+Reward Models:  waiting, served
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (a = 1) -> 12 item(s)
+   * (s = 2) -> 12 item(s)
+   * (s1 = 1) -> 20 item(s)
+   * (a = 0) -> 24 item(s)
+   * init -> 1 item(s)
+   * (s = 1) -> 12 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "s1": LRAmin=? [((s1 = 1) & !(((s = 1) & (a = 1))))] ...
+Result (for initial states): 607039434066937513/4640902006747394313 (approx. 0.1308020366)
+Time for model checking: 0.005s.
+
+Model checking property "s1_before_s2": Pmin=? [!(((s = 2) & (a = 1))) U ((s = 1) & (a = 1))] ...
+Result (for initial states): 496393423829612101/951940370664692701 (approx. 0.5214543254)
+Time for model checking: 0.001s.
+
+Model checking property "served": R[exp]{"served"}min=? [C<=16] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "station1_polled": Pmin=? [true U<=16 ((s = 1) & (a = 0))] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "waiting": R[exp]{"waiting"}min=? [C<=16] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.072s
+  * wallclock time: 0.038s

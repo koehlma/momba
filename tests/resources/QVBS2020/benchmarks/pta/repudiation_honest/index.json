@@ -1,0 +1,93 @@
+{
+	"name": "Non-Repudiation Protocol (with honest recipient)",
+	"short": "repudiation_honest",
+	"type": "pta",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Olivier Markowitch <omarkow@ulb.ac.be>",
+		"Yves Roggeman <yrogge@ulb.ac.be>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.93.9279&rep=rep1&type=pdf",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] describes the non-repudiation protocol with an honest recipient as in [0].",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline",
+			"description": "The minimum probability that the protocol terminates successfully before time `T´.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "eventually",
+			"description": "The minimum probability that the protocol eventually terminates successfully.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "repudiation_honest.jani",
+			"original-file": [
+				"repudiation_honest.prism",
+				"repudiation_honest.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism repudiation_honest.prism --tojani repudiation_honest.jani --prop repudiation_honest.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 40
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 80
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 100
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": []
+}

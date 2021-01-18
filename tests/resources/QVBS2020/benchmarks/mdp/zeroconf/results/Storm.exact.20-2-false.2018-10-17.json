@@ -1,0 +1,102 @@
+{
+	"file": "../zeroconf.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.20-2-false.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 20
+		},
+		{
+			"name": "K",
+			"value": 2
+		},
+		{
+			"name": "reset",
+			"value": false
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani zeroconf.jani --janiproperty --constants N=20,K=2,reset=false --exact --timemem",
+	"time": 8.127,
+	"memory": 187695104,
+	"property-times": [
+		{
+			"name": "correct_max",
+			"time": 4.359
+		},
+		{
+			"name": "correct_min",
+			"time": 0.768
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 2.975
+				},
+				{
+					"name": "states",
+					"value": 89586
+				},
+				{
+					"name": "branches",
+					"value": 207825
+				},
+				{
+					"name": "transitions",
+					"value": 164169
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "correct_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 4.359
+				}
+			],
+			"value": {
+				"approx": 2.0119576888287857e-05,
+				"num": 186137901729174268511065209171497320718694252975935739961231141070383297312458181231689761539699331000803,
+				"den": 9251581321152439541256848521142356863865506387898411218420846883518125316026037895599741228066506366352800803
+			}
+		},
+		{
+			"property": "correct_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.768
+				}
+			],
+			"value": {
+				"approx": 2.110327218406747e-06,
+				"num": 6859,
+				"den": 3250206859
+			}
+		}
+	]
+}

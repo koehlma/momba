@@ -1,0 +1,113 @@
+{
+	"name": "Boxworld",
+	"short": "boxworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{ "version": 1, "date": "2018-08-01", "notes": "Initial version." }
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1609/aimag.v21i2.1506",
+	"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 [1] model of the box world. A set of `b´ boxes or packages is transported by trucks and planes between `c´ cities.",
+	"references": [
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{ "name": "b", "kind": "file", "description": "Number of boxes", "type": "positive integer" },
+		{ "name": "c", "kind": "file", "description": "Number of cities", "type": "positive integer" }
+	],
+	"files": [
+		{
+			"file": "boxworld.10-5.jani",
+			"original-file": ["p01-b10-c5-dc0-fc0-dr0-gr1-domain.pddl", "p01-b10-c5-dc0-fc0-dr0-gr1-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p01-b10-c5-dc0-fc0-dr0-gr1-domain.pddl p01-b10-c5-dc0-fc0-dr0-gr1-problem.pddl --jani boxworld.10-5.jani"
+			},
+			"file-parameter-values": [
+				{ "name": "b", "value": 10 },
+				{ "name": "c", "value": 5 }
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "boxworld.10-10.jani",
+			"original-file": ["p04-b10-c10-dc0-fc0-dr0-gr1-domain.pddl", "p04-b10-c10-dc0-fc0-dr0-gr1-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p04-b10-c10-dc0-fc0-dr0-gr1-domain.pddl p04-b10-c10-dc0-fc0-dr0-gr1-problem.pddl --jani boxworld.10-10.jani"
+			},
+			"file-parameter-values": [
+				{ "name": "b", "value": 10 },
+				{ "name": "c", "value": 10 }
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "boxworld.15-10.jani",
+			"original-file": ["p08-b15-c10-dc0-fc0-dr0-gr1-domain.pddl", "p08-b15-c10-dc0-fc0-dr0-gr1-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p08-b15-c10-dc0-fc0-dr0-gr1-domain.pddl p08-b15-c10-dc0-fc0-dr0-gr1-problem.pddl --jani boxworld.15-10.jani"
+			},
+			"file-parameter-values": [
+				{ "name": "b", "value": 15 },
+				{ "name": "c", "value": 10 }
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "boxworld.15-15.jani",
+			"original-file": ["p10-b15-c15-dc0-fc0-dr0-gr1-domain.pddl", "p10-b15-c15-dc0-fc0-dr0-gr1-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p10-b15-c15-dc0-fc0-dr0-gr1-domain.pddl p10-b15-c15-dc0-fc0-dr0-gr1-problem.pddl --jani boxworld.15-15.jani"
+			},
+			"file-parameter-values": [
+				{ "name": "b", "value": 15 },
+				{ "name": "c", "value": 15 }
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "boxworld.20-20.jani",
+			"original-file": ["p13-b20-c20-dc0-fc0-dr0-gr1-domain.pddl", "p13-b20-c20-dc0-fc0-dr0-gr1-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p13-b20-c20-dc0-fc0-dr0-gr1-domain.pddl p13-b20-c20-dc0-fc0-dr0-gr1-problem.pddl --jani boxworld.20-20.jani"
+			},
+			"file-parameter-values": [
+				{ "name": "b", "value": 20 },
+				{ "name": "c", "value": 20 }
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the desired distribution of the packages across the cities."
+		}
+	],
+	"results": [
+	]
+}

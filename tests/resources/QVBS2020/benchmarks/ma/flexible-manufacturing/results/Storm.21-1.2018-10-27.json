@@ -1,0 +1,86 @@
+{
+	"file": "../flexible-manufacturing.21.jani",
+	"version": 1,
+	"date": "2018-10-27",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.21-1.2018-10-27.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 1
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani flexible-manufacturing.21.jani --janiproperty --constants T=1  --timemem",
+	"time": 1285.649,
+	"property-times": [
+		{
+			"name": "M2Fail_S",
+			"time": 550.959
+		},
+		{
+			"name": "M3Fail_S",
+			"time": 678.884
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 53.761
+				},
+				{
+					"name": "states",
+					"value": 2695484
+				},
+				{
+					"name": "branches",
+					"value": 14385694
+				},
+				{
+					"name": "transitions",
+					"value": 5021430
+				},
+				{
+					"name": "markovian-states",
+					"value": 2691784
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "M2Fail_S",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 550.959
+				}
+			],
+			"value": 0.000246000292
+		},
+		{
+			"property": "M3Fail_S",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 678.884
+				}
+			],
+			"value": 0.3304155987
+		}
+	]
+}

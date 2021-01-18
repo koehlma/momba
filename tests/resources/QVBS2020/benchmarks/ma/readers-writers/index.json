@@ -1,0 +1,272 @@
+{
+	"name": "Readers and Writers System",
+	"short": "readers-writers",
+	"type": "ma",
+	"original": "GreatSPN",
+	"version": 1,
+	"date": "2018-08-23",
+	"version-history": [
+		{
+			"date": "2018-08-23",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://dl.acm.org/citation.cfm?id=561155",
+	"description": "GSPN Model of a readers and writers system based on the GSPN of [0], Figure 5.3. `K´ processes want to access a common resource either for reading of for writing. While writing requires exclusive access to the resource, reading can be done simultaneously. Each read or write access is followed by a network transfer phase. After completing the resource access, a process requests a new access either immediately or after an exponentially distributed delay.",
+	"notes": "standard GSPN example",
+	"parameters": [
+		{
+			"name": "K",
+			"kind": "file",
+			"description": "Number of processes",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "pr_many_requests",
+			"description": "The maximal probability that at some point more than 80% of the processes request either the resource or the network.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "exp_time_many_requests",
+			"description": "The minimal expected time until more than 80% of the processes request either the resource or the network.",
+			"type": "exp-time"
+		},
+		{
+			"name": "pr_network",
+			"description": "The maximal probability that more processes request the network than the resource when first reaching a state where more than 80% of the processes are requesting.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "prtb_many_requests",
+			"description": "The maximal probability that within 5 time units more than 80% of the processes request either the resource or the network.",
+			"type": "prob-reach-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "readers-writers.5.jani",
+			"original-file": [
+				"readers-writers.pnpro",
+				"readers-writers.csl",
+				"readers-writers.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile readers-writers.pnpro --to-jani readers-writers.5.jani --prop readers-writers.csl --capacitiesfile readers-writers.capacities --constants K=5 --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "K",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1609
+						}
+					],
+					"results": [
+						{
+							"property": "pr_many_requests",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_time_many_requests",
+							"value": {
+								"approx": 263.0295996778164,
+								"num": 957243805203889665971913968351286930584262258261937840396892673655347015541763074378053119970506483264608299408760626834162029985341958950793571079120856379188198522314600894348247547161760266979364315588767485863679454418542786352078834352737651231215658222861647,
+								"den": 3639300696105733895475396422590525469413281692684669636522983858982376303903906405959608743424708841082210676410520857771433992787975085184765941162603736347410512666347734109467311297041100895317051441617417355628596685681370084459269760924711958024459343380000
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "pr_network",
+							"value": {
+								"approx": 0.31626638866300993,
+								"num": 391492683134741004487826436814919764940155664069111182904512881333520891190917336158202972846366268688781241832590043113303805154763471672534706566483330743000715314474359539534727797465632922295966842479317916137965611995414377246598693913650606339862475,
+								"den": 1237857379627800644719522592717865805922884929484581509021423081286522552348267485020275082797520013973541046398136346180759861492508532375770728286599910322248473696036644254920854182667041120856139946128373250213808396490261933489547537729493863273625627
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "readers-writers.20.jani",
+			"original-file": [
+				"readers-writers.pnpro",
+				"readers-writers.csl",
+				"readers-writers.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile readers-writers.pnpro --to-jani readers-writers.20.jani --prop readers-writers.csl --capacitiesfile readers-writers.capacities --constants K=20 --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "K",
+					"value": 20
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1903108
+						}
+					],
+					"results": [
+						{
+							"property": "pr_many_requests",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "readers-writers.35.jani",
+			"original-file": [
+				"readers-writers.pnpro",
+				"readers-writers.csl",
+				"readers-writers.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile readers-writers.pnpro --to-jani readers-writers.35.jani --prop readers-writers.csl --capacitiesfile readers-writers.capacities --constants K=35 --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "K",
+					"value": 35
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 46490557
+						}
+					],
+					"results": [
+						{
+							"property": "pr_many_requests",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "readers-writers.40.jani",
+			"original-file": [
+				"readers-writers.pnpro",
+				"readers-writers.csl",
+				"readers-writers.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile readers-writers.pnpro --to-jani readers-writers.40.jani --prop readers-writers.csl --capacitiesfile readers-writers.capacities --constants K=40 --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "K",
+					"value": 40
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 100949015
+						}
+					],
+					"results": [
+						{
+							"property": "pr_many_requests",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_time_many_requests",
+							"value": {
+								"lower": 3.7292673366270734,
+								"upper": 3.7292673373729266
+							},
+							"note": "Storm/sound"
+						},
+						{
+							"property": "prtb_many_requests",
+							"value": {
+								"lower": 0.828884315310102,
+								"upper": 0.828884415310101
+							},
+							"note": "mcsta"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.5.json",
+		"results/Storm.5.json",
+		"results/mcsta.20.json",
+		"results/Storm.20.json",
+		"results/mcsta.35.json",
+		"results/Storm.35.json",
+		{
+			"reference": true,
+			"file": "results/mcsta.40.json"
+
+		},
+		"results/Storm.40.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.20.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.35.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.40.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.sound.40.2018-12-03.json"
+		}
+	]
+}

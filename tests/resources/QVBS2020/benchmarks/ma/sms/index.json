@@ -1,0 +1,741 @@
+{
+	"name": "Spread Mooring System",
+	"short": "sms",
+	"type": "ma",
+	"original": "Galileo",
+	"version": 1,
+	"date": "2018-10-29",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-10-29",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Carlos Budde <c.e.budde@utwente.nl>",
+	"submitter": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"source": "https://doi.org/10.1016/j.oceaneng.2010.11.003",
+	"part-of": {
+		"name": "the Twente Arberretum",
+		"url": "https://dftbenchmarks.utwente.nl/"
+	},
+	"description": "Fault tree model of a spread mooring system under extreme environmental conditions, for different tanker-buoy configurations of anchors and buoys available in the Marmara Sea near Yarimca. The failures rates provided in the models correspond to the outcomes of equation (13) in the [0], converting the fuzzy values into one crisp value. The original model was translated by the DFTRES tool [1] using the DFTCalc tool [2]. Note that the construction by DFTCalc introduces spurious nondeterminism, while the quotient of this model under weak bisimulation is a CTMC (i.e., has no nondeterminism).",
+	"challenge": "small weak bisimulation quotient",
+	"references": [
+		"https://github.com/utwente-fmt/DFTRES",
+		"https://research.utwente.nl/en/publications/dftcalc-a-tool-for-efficient-fault-tree-analysis-extended-version"
+	],
+	"parameters": [
+		{
+			"name": "A",
+			"kind": "file",
+			"description": "Configuration number as listed in [0]",
+			"type": "positive integer"
+		},
+		{
+			"name": "R",
+			"kind": "file",
+			"description": "Whether the model has repairs or not.",
+			"type": "Boolean"
+		}
+	],
+	"properties": [
+		{
+			"name": "Unreliability",
+			"type": "prob-reach-time-bounded",
+			"description": "Probability that a system failure occurs before time 1."
+		},
+		{
+			"name": "Unavailability",
+			"type": "steady-state-prob",
+			"description": "Steady state probability of being in a failed state (only useful for repairable instances)."
+		}
+	],
+	"files": [
+		{
+			"file": "sms.1-false.jani",
+			"original-file": "sms.1-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.1-false.jani -a -r 1 sms.1-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1063380
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.1-true.jani",
+			"original-file": "sms.1-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.1-true.jani -a -r 1 sms.1-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 4252496
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.10-false.jani",
+			"original-file": "sms.10-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.10-false.jani -a -r 1 sms.10-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1190028
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 10
+				},
+				{
+					"name": "R",
+					"value": "1false"
+				}
+			]
+		},
+		{
+			"file": "sms.10-true.jani",
+			"original-file": "sms.10-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.10-true.jani -a -r 1 sms.10-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 4759088
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 10
+				},
+				{
+					"name": "R",
+					"value": "1true"
+				}
+			]
+		},
+		{
+			"file": "sms.11-false.jani",
+			"original-file": "sms.11-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.11-false.jani -a -r 1 sms.11-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 836232
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 11
+				},
+				{
+					"name": "R",
+					"value": "1false"
+				}
+			]
+		},
+		{
+			"file": "sms.11-true.jani",
+			"original-file": "sms.11-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.11-true.jani -a -r 1 sms.11-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 3343904
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 11
+				},
+				{
+					"name": "R",
+					"value": "1true"
+				}
+			]
+		},
+		{
+			"file": "sms.12-false.jani",
+			"original-file": "sms.12-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.12-false.jani -a -r 1 sms.12-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 76488
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 12
+				},
+				{
+					"name": "R",
+					"value": "1false"
+				}
+			]
+		},
+		{
+			"file": "sms.12-true.jani",
+			"original-file": "sms.12-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.12-true.jani -a -r 1 sms.12-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 305696
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 12
+				},
+				{
+					"name": "R",
+					"value": "1true"
+				}
+			]
+		},
+		{
+			"file": "sms.2-false.jani",
+			"original-file": "sms.2-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.2-false.jani -a -r 1 sms.2-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 16265928
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.2-true.jani",
+			"original-file": "sms.2-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.2-true.jani -a -r 1 sms.2-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 65059616,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.3-false.jani",
+			"original-file": "sms.3-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.3-false.jani -a -r 1 sms.3-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.3-true.jani",
+			"original-file": "sms.3-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.3-true.jani -a -r 1 sms.3-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 1486857,
+							"note": "Storm"
+						}
+					],
+					"results": [
+						{
+							"property": "Unreliability",
+							"value": {
+								"lower": 0.02383490265,
+								"upper": 0.02383492265
+							},
+							"note": "Storm"
+						},
+						{
+							"property": "Unavailability",
+							"value": {
+								"lower": 0.9999999999,
+								"upper": 1.0000000001
+							},
+							"note": "Storm/exact/vi"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.4-false.jani",
+			"original-file": "sms.4-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.4-false.jani -a -r 1 sms.4-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 19623912
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 4
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.4-true.jani",
+			"original-file": "sms.4-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.4-true.jani -a -r 1 sms.4-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 78491552,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 4
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.5-false.jani",
+			"original-file": "sms.5-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.5-false.jani -a -r 1 sms.5-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 5
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.5-true.jani",
+			"original-file": "sms.5-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.5-true.jani -a -r 1 sms.5-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 5
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.6-false.jani",
+			"original-file": "sms.6-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.6-false.jani -a -r 1 sms.6-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 6
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.6-true.jani",
+			"original-file": "sms.6-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.6-true.jani -a -r 1 sms.6-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 6
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.7-false.jani",
+			"original-file": "sms.7-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.7-false.jani -a -r 1 sms.7-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 1444704,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 7
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.7-true.jani",
+			"original-file": "sms.7-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.7-true.jani -a -r 1 sms.7-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 5777792,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 7
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.8-false.jani",
+			"original-file": "sms.8-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.8-false.jani -a -r 1 sms.8-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 8
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.8-true.jani",
+			"original-file": "sms.8-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.8-true.jani -a -r 1 sms.8-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 8
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "sms.9-false.jani",
+			"original-file": "sms.9-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.9-false.jani -a -r 1 sms.9-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 1444704,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 9
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "sms.9-true.jani",
+			"original-file": "sms.9-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sms.9-true.jani -a -r 1 sms.9-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 5777792,
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "A",
+					"value": 9
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/Storm.3-true.2018-12-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact-vi.3-true.2018-12-03.json"
+		}
+	]
+}

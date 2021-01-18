@@ -1,0 +1,116 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Oct  8 14:01:08 2018
+Command line arguments: --jani brp-pta.16-2-1-64_mdp.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/pta/brp-pta
+
+Time for model construction: 0.208s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	3987
+Transitions: 	4621
+Choices: 	4272
+Reward Models:  global_time_reward, Emax_rate_reward
+State Labels: 	14 labels
+   * s_ok_seen -> 20 item(s)
+   * s_dk_seen -> 117 item(s)
+   * first_file_done -> 38 item(s)
+   * (s_ok_seen & !(r_ok_seen)) -> 0 item(s)
+   * init -> 1 item(s)
+   * (s_nok_seen | s_dk_seen) -> 1795 item(s)
+   * ((s_restart_seen & get_k_seen) & !(r_timeout_seen)) -> 0 item(s)
+   * deadlock -> 0 item(s)
+   * premature_timeout -> 0 item(s)
+   * (((s_ok_seen | s_nok_seen) | s_dk_seen) & !(get_k_seen)) -> 18 item(s)
+   * (channel_k_overflow | channel_l_overflow) -> 0 item(s)
+   * (s_nok_seen & (i > 8)) -> 784 item(s)
+   * (inTransitK & inTransitL) -> 0 item(s)
+   * (s_nok_seen & r_ok_seen) -> 0 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "T_1": Pmax<=0 [F (channel_k_overflow | channel_l_overflow)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_1_1": Pmax<=0 [F (channel_k_overflow | channel_l_overflow)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_2": Pmax<=0 [F (inTransitK & inTransitL)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_2_1": Pmax<=0 [F (inTransitK & inTransitL)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_A1": Pmax<=0 [F premature_timeout] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_A1_1": Pmax<=0 [F premature_timeout] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_A2": Pmax<=0 [F ((s_restart_seen & get_k_seen) & !(r_timeout_seen))] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "T_A2_1": Pmax<=0 [F ((s_restart_seen & get_k_seen) & !(r_timeout_seen))] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "P_A": Pmax<=0 [F (s_nok_seen & r_ok_seen)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "P_A_1": Pmax<=0 [F (s_nok_seen & r_ok_seen)] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "P_B": Pmax<=0 [F (s_ok_seen & !(r_ok_seen))] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "P_B_1": Pmax<=0 [F (s_ok_seen & !(r_ok_seen))] ...
+Result (for initial states): 1
+Time for model checking: 0.004s.
+
+Model checking property "P_1": Pmax=? [F (s_nok_seen | s_dk_seen)] ...
+Result (for initial states): 1503982516387544510687823213516750681753609533738014093985492327446021823341670745201522478360759626261166470522913554557570937367804047825330483938531949304640395637223627199/3552713678800500929355621337890625000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.0004233334438)
+Time for model checking: 0.021s.
+
+Model checking property "P_2": Pmax=? [F s_dk_seen] ...
+Result (for initial states): 93980251563940138172004311347458744568245436896169728942195995143526850352452762314901825488783622398799995909461351243179986910158596657499638600983972028048927012223627199/3552713678800500929355621337890625000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 2.645308912e-05)
+Time for model checking: 0.013s.
+
+Model checking property "P_3": Pmax=? [F (s_nok_seen & (i > 8))] ...
+Result (for initial states): 5263451232139693124411652758168998406810402644036857734408482594332276209225351083933896161696511155898931796907617626515127603661163609342646762700383818212731749/28421709430404007434844970703125000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.0001851912266)
+Time for model checking: 0.014s.
+
+Model checking property "P_4": Pmax=? [F (((s_ok_seen | s_nok_seen) | s_dk_seen) & !(get_k_seen))] ...
+Result (for initial states): 1/125000 (approx. 8e-06)
+Time for model checking: 0.004s.
+
+Model checking property "Dmax": Pmax=? [true Urew{"global_time_reward"}<=64 s_ok_seen] ...
+Result (for initial states): 4545548411243665132601514898018138520474742173349836519860900078934041030462312103128824074654421460280819705483992508766658070459290959/4547473508864641189575195312500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.9995766666)
+Time for model checking: 0.663s.
+
+Model checking property "Dmin": Pmin=? [true Urew{"global_time_reward"}<=64 s_ok_seen] ...
+Result (for initial states): 186185662921246128097317267510174568879752107169663603377820471499269922039547682837011063666727/186264514923095703125000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.9995766665)
+Time for model checking: 0.578s.
+
+Model checking property "Emax": R[exp]{"Emax_rate_reward"}max=? [F first_file_done] ...
+Result (for initial states): 14865067599840163886208051334205421258977180686104890894626719637828625475932103376730551785687107014755155357626550941794399703877647437138633245257828030371230992609723388725023/444089209850062616169452667236328125000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 33.47315645)
+Time for model checking: 0.018s.
+
+Model checking property "Emin": R[exp]{"Emax_rate_reward"}min=? [F first_file_done] ...
+Result (for initial states): 2629636235719691861746004063621129133353926540987091488337908075834485380721456055706849480337616318512869401681335391538650933076244150078223117074074667020880202303155778527291/1776356839400250464677810668945312500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 1.480353596)
+Time for model checking: 0.021s.
+
+Performance statistics:
+  * peak memory usage: 54MB
+  * CPU time: 1.655s
+  * wallclock time: 1.622s

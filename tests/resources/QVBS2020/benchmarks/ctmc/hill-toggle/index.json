@@ -1,0 +1,69 @@
+{
+	"name": "Hill Toggle",
+	"short": "hill-toggle",
+	"type": "ctmc",
+	"original": "PRISM-∞",
+	"version": 1,
+	"date": "2018-10-28",
+	"version-history": [
+		{
+			"date": "2018-10-28",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Timothy S. Gardner <timothyg@bu.edu>",
+		"Charles R. Cantor <crcantor@bu.edu>",
+		"James J. Collins <jimjc@mit.edu>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1038/35002131",
+	"description": "The toggle switch is a gene regulatory network, that models the interaction of two proteins. Protein 1 (`p1´) represses the expression of protein 2 (`p2´) and vice versa, leading to a bimodal steady-state distribution and a transient switching behavior.",
+	"references": [
+		"https://www.csb.pitt.edu/BBSI/2005/jc_talk/erramilli.pdf"
+	],
+	"notes": "infinite-state biological model",
+	"parameters": [],
+	"properties": [
+		{
+			"name": "Switching",
+			"description": "probability of protein 2 concentration being greater 10 after <= 10 steps",
+			"type": "prob-reach-step-bounded"
+		},
+		{
+			"name": "RareEvent",
+			"description": "probability of protein 1 and 2 concentration being greater 5 after <= 10 steps",
+			"type": "prob-reach-step-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "hill-toggle.jani",
+			"original-file": [
+				"hill-toggle.prism",
+				"hill-toggle.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism hill-toggle.prism --tojani hill-toggle.jani --prop hill-toggle.props --globalvars --prismcompat",
+				"note": "since PRISM files with unbounded integers can currently not be parsed, bounds have been introduced manually and removed afterwards"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"number": "∞"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+	]
+}

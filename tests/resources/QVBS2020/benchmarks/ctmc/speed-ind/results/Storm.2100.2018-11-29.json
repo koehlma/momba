@@ -1,0 +1,65 @@
+{
+	"file": "../speed-ind.jani",
+	"version": 1,
+	"date": "2018-11-29",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.2100.2018-11-29.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 2100
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani speed-ind.jani --janiproperty  --constants T=2100 --precision 1e-10 --timemem",
+	"time": 324.621963262558,
+	"memory": 692060160,
+	"property-times": [
+		{
+			"name": "change_state",
+			"time": 304.083
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"value": 20.345,
+					"name": "time"
+				},
+				{
+					"value": 743424,
+					"name": "states"
+				},
+				{
+					"value": 9518080,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "change_state",
+			"value": 0.04229449798,
+			"values": [
+				{
+					"unit": "s",
+					"value": 304.083,
+					"name": "time"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,138 @@
+{
+	"name": "IEEE 802.3 CSMA/CD Protocol PTA (abstract model)",
+	"short": "csma_abst-pta",
+	"type": "pta",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "IEEE",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://www.cs.bilkent.edu.tr/~tugrul/CS518/Papers/802.3-2000.pdf",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. The CSMA/CD (Carrier Sense, Multiple Access with Collision Detection) IEEE protocol is designed for networks with a single channel and specifies the behaviour of `N´ stations with the aim of minimising simultaneous use of the channel (data collision). When a station has data to send, it listens to the medium, after which, if the medium was free (no one transmitting), the station starts to send its data. On the other hand, if the medium was sensed busy, the station waits a random amount of time and then repeats this process. `K´ is the maximum backoff count. The model we consider here is a probabilistic extension of the timed automata model given in [3]. The `_abst´ version is an abstraction of the original full version of this model. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/csma.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "K",
+			"kind": "open",
+			"description": "Maximum backoff count",
+			"type": "positive integer"
+		},
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline_max",
+			"description": "The maximum probability that both stations have sent their packets within time `T´.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "deadline_min",
+			"description": "The minimum probability that both stations have sent their packets within time `T´.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "eventually",
+			"description": "The minimum probability that both stations eventually send their packets.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "csma_abst-pta.jani",
+			"original-file": [
+				"csma_abst-pta.prism",
+				"csma_abst-pta.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma_abst-pta.prism --tojani csma_abst-pta.jani --prop csma_abst-pta.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 1000
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 1750
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 1800
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 2000
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 3000
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": []
+}

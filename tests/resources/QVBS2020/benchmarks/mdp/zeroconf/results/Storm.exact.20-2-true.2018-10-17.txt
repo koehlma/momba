@@ -1,0 +1,34 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 07:20:25 2018
+Command line arguments: --jani zeroconf.jani --janiproperty --constants 'N=20,K=2,reset=true' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/zeroconf
+
+Time for model construction: 0.045s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	670
+Transitions: 	997
+Choices: 	827
+Reward Models:  none
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (ip = 1) -> 493 item(s)
+   * (l = 4) -> 23 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "correct_max": Pmax=? [F ((l = 4) & (ip = 1))] ...
+Result (for initial states): 65341/3250265341 (approx. 2.010328178e-05)
+Time for model checking: 0.024s.
+
+Model checking property "correct_min": Pmin=? [F ((l = 4) & (ip = 1))] ...
+Result (for initial states): 6859/3250206859 (approx. 2.110327218e-06)
+Time for model checking: 0.014s.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.123s
+  * wallclock time: 0.093s

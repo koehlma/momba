@@ -1,0 +1,86 @@
+{
+	"file": "../bluetooth.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd-bisim.1.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "mrec",
+			"value": 1
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"bisim"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani bluetooth.jani --janiproperty --constants mrec=1 --engine dd --bisimulation --bisimulation:quot sparse --timemem",
+	"time": 13.298,
+	"memory": 65011712,
+	"property-times": [
+		{
+			"name": "time",
+			"time": 0.0
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 12.816
+				},
+				{
+					"name": "states",
+					"value": 3411945339
+				},
+				{
+					"name": "branches",
+					"value": 5035263739
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.452
+				},
+				{
+					"name": "states",
+					"value": 372
+				},
+				{
+					"name": "branches",
+					"value": 372
+				}
+			],
+			"group": "Strong bisimulation"
+		},
+		{
+			"property": "time",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": 8229.0
+		}
+	]
+}

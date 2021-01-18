@@ -1,0 +1,16 @@
+(define (problem random-problem862) 
+ (:domain prob_domain) 
+ (:init 
+(not-clear)
+(OF OZ PO) (OF XQ EF) (OF OZ OZ) (OF PO EF) (OF FB AW) (IU ZO EF) (NH AW JU) (KI RA) (NH JU EF) (IU OZ XQ) (UV AW) (IU OZ VF) (OF OZ EF) (NH EF EF) (IU JU PO) (NH OZ ZO) (NH ZO FB) (KI EF) (NH XQ PO) (IU XQ VF)  
+)
+ (:goal (and 
+(UV OZ ) 
+(OF OZ  JU ) 
+(UV RA ) 
+(OF ZO  RA ) 
+(OF PO  RA ) 
+(OF XQ  RA ) 
+))
+(:metric minimize (total-cost))
+)

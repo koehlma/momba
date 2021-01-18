@@ -1,0 +1,182 @@
+{
+	"name": "Flexible Manufacturing System with Repair",
+	"short": "flexible-manufacturing",
+	"type": "ma",
+	"original": "GreatSPN",
+	"version": 1,
+	"date": "2018-10-19",
+	"version-history": [
+		{
+			"date": "2018-10-19",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "GreatSPN <greatspn@di.unito.it>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1007/978-3-642-02924-0_1",
+	"description": "This model represents a manufacturing system with three machines processing `N´ pallets. Machine 2 and 3 can fail during operation. In this case, a repairman repairs the failed machine. There are 3 spares for Machine 2, i.e., it only fails if the machine and all its spares have failed. This model is distributed with GreatSPN [1].",
+	"references": ["https://doi.org/10.1007/978-3-319-30599-8_9"],
+	"notes": "small symbolic representation",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "The number of pallets",
+			"type": "positive integer"
+		},
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive real"
+		}
+	],
+	"properties": [
+		{
+			"name": "M2Fail_S",
+			"description": "The average probability that machine 2 fails.",
+			"type": "steady-state-prob"
+		},
+		{
+			"name": "M3Fail_S",
+			"description": "The average probability that machine 3 fails.",
+			"type": "steady-state-prob"
+		},
+		{
+			"name": "M2Fail_E",
+			"description": "The expected time until machine 2 fails.",
+			"type": "exp-time"
+		},
+		{
+			"name": "M3Fail_E",
+			"description": "The expected time until machine 3 fails.",
+			"type": "exp-time"
+		},
+		{
+			"name": "M2Fail_Pb",
+			"description": "The probability that machine 2 fails within `T´ time units.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "M3Fail_Pb",
+			"description": "The probability that machine 3 fails within `T´ time units.",
+			"type": "prob-reach-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "flexible-manufacturing.3.jani",
+			"original-file": [
+				"flexible-manufacturing.PNPRO",
+				"flexible-manufacturing.props",
+				"flexible-manufacturing.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile flexible-manufacturing.PNPRO --to-jani flexible-manufacturing.3.jani --prop flexible-manufacturing.props --capacitiesfile flexible-manufacturing.capacities --constants N=3"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2438
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "flexible-manufacturing.9.jani",
+			"original-file": [
+				"flexible-manufacturing.PNPRO",
+				"flexible-manufacturing.props",
+				"flexible-manufacturing.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile flexible-manufacturing.PNPRO --to-jani flexible-manufacturing.9.jani --prop flexible-manufacturing.props --capacitiesfile flexible-manufacturing.capacities --constants N=9"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 9
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 315887
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "flexible-manufacturing.21.jani",
+			"original-file": [
+				"flexible-manufacturing.PNPRO",
+				"flexible-manufacturing.props",
+				"flexible-manufacturing.capacities"
+			],
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile flexible-manufacturing.PNPRO --to-jani flexible-manufacturing.21.jani --prop flexible-manufacturing.props --capacitiesfile flexible-manufacturing.capacities --constants N=21"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 21
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2695484
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3-1.2018-10-27.json",
+		"results/Storm.9-1.2018-10-27.json",
+		"results/Storm.21-1.2018-10-27.json"
+	]
+}

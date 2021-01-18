@@ -1,0 +1,61 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:28 2018
+Command line arguments: --jani stream.jani --janiproperty --constants N=100 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/stream
+
+Time for model construction: 0.767s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	15251
+Transitions: 	30101
+Choices: 	20201
+Markovian St.: 	10101
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * done -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * underrun -> 5049 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	15251
+Transitions: 	30101
+Choices: 	20201
+Markovian St.: 	10101
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * done -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * underrun -> 5049 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "exp_buffertime": R[exp]{"buffering"}min=? [F "done"] ...
+Result (for initial states): 282964108300322753641888053367138012107826842735666677629125/100433627766186892221372630771322662657637687111424552206336 (approx. 2.81742395)
+Time for model checking: 0.164s.
+
+Model checking property "exp_restarts": R[exp]{"numrestarts"}max=? [F "done"] ...
+Result (for initial states): 257855701358776030586544895674307346443417420957810539577541/25108406941546723055343157692830665664409421777856138051584 (approx. 10.2696958)
+Time for model checking: 0.135s.
+
+Model checking property "pr_underrun": Pmin=? [F "underrun"] ...
+Result (for initial states): 60412470676075640774367344581594222312481540342855647437437638370113756812513296522196190863476746873099961684606989357743184166961025273025055163284611494368410928758668105347706753250927914814719787326482664891456254129870101/633825300114114700748351602688000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.09531407261)
+Time for model checking: 0.160s.
+
+Model checking property "pr_underrun_tb": Pmin=? [true U<=2 "underrun"] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 69MB
+  * CPU time: 1.294s
+  * wallclock time: 1.290s

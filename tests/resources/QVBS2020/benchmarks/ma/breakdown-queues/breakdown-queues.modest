@@ -1,0 +1,130 @@
+/*
+ * Queueing system with breakdowns for the FIG tool
+ * Budde, Monti, D'Argenio 2016
+ *
+ * Translated to Modest
+ * Hartmanns 2017
+ *
+ * Extended with nondeterministic repairman
+ * Hartmanns 2018
+ *
+ * Concept of the queueing system with breakdowns:
+ *                        
+ * (Source1: on/off) --->||
+ *                       ||
+ * (Source2: on/off) --->||
+ *         .             ||        Buffer
+ *         .             ||---> [·····###]--(Server: on/off)---->
+ *         .             ||
+ * (SourceN: on/off) --->||
+ *                        
+ * Buffer has maximum capacity K.
+ * The single Server: attends     with rate mu,
+ *                    fails       with rate gamma,
+ *                    is repaired with rate delta.
+ * Sources can be of Type 1 or 2.
+ * Sources of Type i: produce       with rate lambdai,
+ *                    fail          with rate betai,
+ *                    are repaired  with rate alphai.
+ *
+ * Initial state: the buffer has a single customer, the server is down,
+ *                and all sources are also down except one of Type 2.
+ * Stopping event: empty buffer.
+ * Rare event: buffer reaching full capacity K.
+ *
+ */
+
+binary action produce, fail, r1, r2, rs;
+
+// The following values were extracted from Kroese & Nicola,
+// "Efficient estimation of overflow probabilities in queues
+// with breakdowns", Performance Evaluation, 36-37, 1999, pp. 471-484.
+// This model corresponds to the system described in Section 4.4,
+// with the exception of repairs being done by a centralised repairman
+// with a single repair rate.
+
+// Sources of Type 1
+const real lambda1 = 3;  // Production rate
+const real beta1   = 2;  // Fail       rate
+
+// Sources of Type 2
+const real lambda2 = 6;  // Production rate
+const real beta2   = 4;  // Fail       rate
+
+// Server
+const real mu = 100;   // Processing rate
+const real gamma = 3;  // Fail       rate
+
+// Repair rate of repairman
+const real repair = 2; // Repair rate 
+
+// Buffer capacity
+const int K;
+
+property Min = Pmin(<> (buf == K && !reset)); // Pmin((!reset) U (buf == K));
+property Max = Pmax(<> (buf == K && !reset)); // Pmax((!reset) U (buf == K));
+
+// Type 1 Sources
+// Total: 5, intially on: 0
+process TypeOneSources(int(0..5) on)
+{
+   do {
+   // Breakdown and repair
+   :: when(on > 0) rate(beta1 * on) {= on-- =}; fail!
+   :: when(on < 5) r1? {= on++ =}
+   // Production
+   :: when(on > 0) rate(lambda1 * on) tau; produce!
+   }
+}
+
+// Type 2 Sources
+// Total: 5, intially on: 1
+process TypeTwoSources(int(0..5) on)
+{
+   do {
+   // Breakdown and repair
+   :: when(on > 0) rate(beta2 * on) {= on-- =}; fail!
+   :: when(on < 5) r2? {= on++ =}
+   // Production
+   :: when(on > 0) rate(lambda2 * on) tau; produce!
+   }
+}
+
+int(0..K) buf = 1;
+bool reset;
+process BufferedServer()
+{
+   bool on; // -- Server on?
+   
+   do {
+   // Server failure and recovery
+   :: when(on) rate(gamma) {= on = false =}; fail!
+   :: when(!on) rs? {= on = true =}
+   // Buffer out (dequeueing by server processing)
+   :: when(on) rate(mu) {= buf = max(0, buf - 1), reset = reset || buf == 1 =}
+   // Buffer in (enqueueing by sources production)
+   :: produce? {= buf = min(K, buf + 1) =}
+   }
+}
+
+process Repair()
+{
+   int(0..11) down = 0;
+   par {
+   :: fail? {= down = max(down + 1, 11) =}
+   :: do {
+         when(down > 0) {= down-- =};
+         rate(repair) tau;
+         alt { :: r1! :: r2! :: rs! }
+      }
+   }
+}
+
+restrict { produce!, produce?, fail!, fail?, r1!, r1?, r2!, r2?, rs!, rs? } {
+   par {
+   :: BufferedServer()
+   :: TypeOneSources(0)
+   :: TypeTwoSources(1)
+   :: Repair()
+   }
+}

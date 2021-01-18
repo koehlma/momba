@@ -1,0 +1,31 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 30 10:40:18 2018
+Command line arguments: --jani toggle-switch.jani --janiproperty --constants T=2100 --timemem
+Current working directory: /Users/tim/git/qcomp/benchmarks/ctmc/toggle-switch
+
+Time for model input parsing: 0.012s.
+
+Time for model construction: 0.024s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	99
+Transitions: 	356
+Reward Models:  none
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (TetR > 40) -> 18 item(s)
+   * (LacI < 20) -> 22 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "change_state": Pmin=? [true U[0, 2100] ((TetR > 40) & (LacI < 20))] ...
+Result (for initial states): 0.01349121251
+Time for model checking: 0.002s.
+
+Performance statistics:
+  * peak memory usage: 31MB
+  * CPU time: 0.059s
+  * wallclock time: 0.042s

@@ -1,0 +1,754 @@
+{
+	"name": "Sensor filter",
+	"short": "sf",
+	"type": "ma",
+	"original": "Galileo",
+	"version": 1,
+	"date": "2018-10-29",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-10-29",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"submitter": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"source": "https://doi.org/10.1007/s00165-016-0412-0",
+	"part-of": {
+		"name": "the Twente Arberretum",
+		"url": "https://dftbenchmarks.utwente.nl/"
+	},
+	"description": "The Sensor filter (SF) benchmark is a DFT that is automatically generated from an AADL (Architecture Analysis & Design Language) system model [1]. The DFT is obtained by searching for combinations of basic faults which lead to the predefined configurations in the given system. The SF benchmark is a synthetic example which contains a number of sensors that are connected to some filters. The set contains a varying number of `S´ sensors and `F´ filters. The original model was translated by the DFTRES tool [2] using the DFTCalc tool [3]. Note that the construction by DFTCalc introduces spurious nondeterminism, while the quotient of this model under weak bisimulation is a CTMC (i.e., has no nondeterminism).",
+	"challenge": "small weak bisimulation quotient",
+	"references": [
+		"https://doi.org/10.1093/comjnl/bxq024",
+		"https://github.com/utwente-fmt/DFTRES",
+		"https://research.utwente.nl/en/publications/dftcalc-a-tool-for-efficient-fault-tree-analysis-extended-version"
+	],
+	"parameters": [
+		{
+			"name": "S",
+			"kind": "file",
+			"description": "Number of sensors",
+			"type": "positive integer"
+		},
+		{
+			"name": "F",
+			"kind": "file",
+			"description": "Number of filters",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "Unreliability",
+			"type": "prob-reach-time-bounded",
+			"description": "Probability that a system failure occurs before time 1."
+		}
+	],
+	"files": [
+		{
+			"file": "sf.1-10.jani",
+			"original-file": "sf.1-10.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-10.jani -r 1 sf.1-10.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 94619952
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 10
+				}
+			]
+		},
+		{
+			"file": "sf.1-12.jani",
+			"original-file": "sf.1-12.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-12.jani -r 1 sf.1-12.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 12
+				}
+			]
+		},
+		{
+			"file": "sf.1-2.jani",
+			"original-file": "sf.1-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-2.jani -r 1 sf.1-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.1-4.jani",
+			"original-file": "sf.1-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-4.jani -r 1 sf.1-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.1-6.jani",
+			"original-file": "sf.1-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-6.jani -r 1 sf.1-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.1-8.jani",
+			"original-file": "sf.1-8.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.1-8.jani -r 1 sf.1-8.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 1
+				},
+				{
+					"name": "F",
+					"value": 8
+				}
+			]
+		},
+		{
+			"file": "sf.2-10.jani",
+			"original-file": "sf.2-10.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-10.jani -r 1 sf.2-10.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 10
+				}
+			]
+		},
+		{
+			"file": "sf.2-12.jani",
+			"original-file": "sf.2-12.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-12.jani -r 1 sf.2-12.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 12
+				}
+			]
+		},
+		{
+			"file": "sf.2-2.jani",
+			"original-file": "sf.2-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-2.jani -r 1 sf.2-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.2-4.jani",
+			"original-file": "sf.2-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-4.jani -r 1 sf.2-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.2-6.jani",
+			"original-file": "sf.2-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-6.jani -r 1 sf.2-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.2-8.jani",
+			"original-file": "sf.2-8.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.2-8.jani -r 1 sf.2-8.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 2
+				},
+				{
+					"name": "F",
+					"value": 8
+				}
+			]
+		},
+		{
+			"file": "sf.3-2.jani",
+			"original-file": "sf.3-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.3-2.jani -r 1 sf.3-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 3
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.3-4.jani",
+			"original-file": "sf.3-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.3-4.jani -r 1 sf.3-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 3
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.3-6.jani",
+			"original-file": "sf.3-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.3-6.jani -r 1 sf.3-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 3
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.4-2.jani",
+			"original-file": "sf.4-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.4-2.jani -r 1 sf.4-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 4
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.4-4.jani",
+			"original-file": "sf.4-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.4-4.jani -r 1 sf.4-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 4
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.4-6.jani",
+			"original-file": "sf.4-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.4-6.jani -r 1 sf.4-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 4
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.5-2.jani",
+			"original-file": "sf.5-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.5-2.jani -r 1 sf.5-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 5
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.5-4.jani",
+			"original-file": "sf.5-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.5-4.jani -r 1 sf.5-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 5
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.5-6.jani",
+			"original-file": "sf.5-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.5-6.jani -r 1 sf.5-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 5
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.6-2.jani",
+			"original-file": "sf.6-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.6-2.jani -r 1 sf.6-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 6
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.6-4.jani",
+			"original-file": "sf.6-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.6-4.jani -r 1 sf.6-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 6
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.6-6.jani",
+			"original-file": "sf.6-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.6-6.jani -r 1 sf.6-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 6
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.7-2.jani",
+			"original-file": "sf.7-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.7-2.jani -r 1 sf.7-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 7
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.7-4.jani",
+			"original-file": "sf.7-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.7-4.jani -r 1 sf.7-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 7
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.7-6.jani",
+			"original-file": "sf.7-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.7-6.jani -r 1 sf.7-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 7
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.8-2.jani",
+			"original-file": "sf.8-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.8-2.jani -r 1 sf.8-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 8
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.8-4.jani",
+			"original-file": "sf.8-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.8-4.jani -r 1 sf.8-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 8
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.8-6.jani",
+			"original-file": "sf.8-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.8-6.jani -r 1 sf.8-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 8
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "sf.9-2.jani",
+			"original-file": "sf.9-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.9-2.jani -r 1 sf.9-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 9
+				},
+				{
+					"name": "F",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "sf.9-4.jani",
+			"original-file": "sf.9-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.9-4.jani -r 1 sf.9-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 9
+				},
+				{
+					"name": "F",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "sf.9-6.jani",
+			"original-file": "sf.9-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "090d00d4",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani sf.9-6.jani -r 1 sf.9-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "S",
+					"value": 9
+				},
+				{
+					"name": "F",
+					"value": 6
+				}
+			]
+		}
+	]
+}

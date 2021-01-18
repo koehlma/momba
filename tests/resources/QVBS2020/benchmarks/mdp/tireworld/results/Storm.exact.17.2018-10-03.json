@@ -1,0 +1,70 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../tireworld.17.jani",
+	"version": 1,
+	"log": "Storm.exact.17.2018-10-03.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani tireworld.17.jani --janiproperty --exact --timemem",
+	"time": 1.689,
+	"memory": 54525952,
+	"property-times": [
+		{
+			"name": "goal",
+			"time": 1.425
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.253
+				},
+				{
+					"name": "states",
+					"value": 8670
+				},
+				{
+					"name": "branches",
+					"value": 33436
+				},
+				{
+					"name": "transitions",
+					"value": 18662
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "goal",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.425
+				}
+			],
+			"value": {
+				"approx": 0.23328,
+				"num": 729,
+				"den": 3125
+			}
+		}
+	]
+}

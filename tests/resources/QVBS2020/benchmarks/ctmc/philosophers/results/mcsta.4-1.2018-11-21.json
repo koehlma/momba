@@ -1,0 +1,117 @@
+﻿{
+	"file": "../philosophers.4.jani",
+	"version": 1,
+	"date": "2018-11-21",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "TIME_BOUND", "value": 1.0 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"variant": [],
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe philosophers.4.jani -S Memory --p1 -E \"TIME_BOUND=1\" -O mcsta.4-1.2018-11-21.json Json",
+	"time": 1.107,
+	"memory": 44290048,
+	"property-times": [
+		{ "name": "MaxPrReachDeadlock", "time": 0.026 },
+		{ "name": "MaxPrReachDeadlockTB", "time": 0.074 },
+		{ "name": "MinExpTimeDeadlock", "time": 0.022 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 24, "unit": "B" },
+				{ "name": "States", "value": 34 },
+				{ "name": "Transitions", "value": 34 },
+				{ "name": "Branches", "value": 89 },
+				{ "name": "Rate", "value": 790.69767441860472 },
+				{ "name": "Time", "value": 0.06, "unit": "s" }
+			]
+		},
+		{
+			"property": "MaxPrReachDeadlock",
+			"value": 1,
+			"values": [ { "name": "Time", "value": 0.026, "unit": "s" } ],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 34 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.013, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "MaxPrReachDeadlockTB",
+			"value": 0.091239432829678932,
+			"values": [
+				{ "name": "Bounds", "value": "[0.0912394078296789, 0.0912394578296789]" },
+				{ "name": "Time", "value": 0.074, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 0 states", "value": 0 },
+						{ "name": "Time for max. prob. 0 states", "value": 0.003, "unit": "s" }
+					]
+				},
+				{
+					"group": "End components",
+					"values": [
+						{ "name": "Iterations", "value": 3 },
+						{ "name": "Time", "value": 0.013, "unit": "s" },
+						{ "name": "MECs", "value": 34 }
+					]
+				},
+				{
+					"group": "Unif+",
+					"values": [
+						{ "name": "Time", "value": 0.017, "unit": "s" },
+						{ "name": "Max. exit rate", "value": 4 },
+						{ "name": "Iterations", "value": 1 },
+						{ "name": "Final unif. rate", "value": 4 }
+					]
+				}
+			]
+		},
+		{
+			"property": "MinExpTimeDeadlock",
+			"value": 5.4455384713619654,
+			"values": [
+				{ "name": "Bounds", "value": "[5.44553847136197, ∞)" },
+				{ "name": "Time", "value": 0.022, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 34 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.001, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 7.3498533109254237E-07 },
+						{ "name": "Iterations", "value": 40 },
+						{ "name": "Time", "value": 0.009, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

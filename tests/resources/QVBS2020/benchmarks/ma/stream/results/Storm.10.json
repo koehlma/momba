@@ -1,0 +1,104 @@
+{
+	"file": "../stream.jani",
+	"version": 1,
+	"date": "2018-08-13",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.10.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 10
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "Intel Core i5-5257U",
+		"ram": "16",
+		"os": "macOS 10.13.5",
+		"runtime": "Apple LLVM version 9.1.0 (clang-902.0.39.2)"
+	},
+	"command": "storm --jani stream.jani -jprop --constants N=10 -tm",
+	"time": 0.037,
+	"property-times": [
+		{ "name": "exp_buffertime", "time": 0.001 },
+		{ "name": "exp_restarts", "time": 0.001 },
+		{ "name": "pr_underrun", "time": 0.001 },
+		{ "name": "pr_underrun_tb", "time": 0.009 }
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.023
+				},
+				{
+					"name": "states",
+					"value": 176
+				},
+				{
+					"name": "branches",
+					"value": 311
+				},
+				{
+					"name": "transitions",
+					"value": 221
+				},
+				{
+					"name": "markovian-states",
+					"value": 111
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "exp_buffertime",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": "0.88098526"
+		},
+		{
+			"property": "exp_restarts",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": "2.52394104"
+		},
+		{
+			"property": "pr_underrun",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": "0.02484840586"
+		},
+		{
+			"property": "pr_underrun_tb",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.009
+				}
+			],
+			"value": "0.01878342645"
+		}
+	]
+}

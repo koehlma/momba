@@ -1,0 +1,53 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Nov 22 04:58:27 2018
+Command line arguments: --jani firewire.false.jani --janiproperty --constants 'delay=3,deadline=400' --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.012s.
+
+Time for model construction: 0.354s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	4093
+Transitions: 	5585
+Choices: 	5519
+Reward Models:  time_sending, time
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (s2 = 7) -> 5 item(s)
+   * (s1 = 8) -> 1 item(s)
+   * (s1 = 7) -> 5 item(s)
+   * (s2 = 8) -> 1 item(s)
+   * done -> 2 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "elected": Pmin>=1 [F "done"] ...
+Result (for initial states): true
+
+Time for model checking: 0.008s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "done"] ...
+Result (for initial states): 299 (approx. 299)
+Time for model checking: 0.219s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F "done"] ...
+Result (for initial states): 553/4 (approx. 138.25)
+Time for model checking: 0.044s.
+
+Model checking property "time_sending": R[exp]{"time_sending"}max=? [F "done"] ...
+Result (for initial states): 18 (approx. 18)
+Time for model checking: 0.111s.
+
+Model checking property "deadline": Pmin=? [true Urew{"time"}<=400 (((s1 = 8) & (s2 = 7)) | ((s1 = 7) & (s2 = 8)))] ...
+Result (for initial states): 25/32 (approx. 0.78125)
+Time for model checking: 3.462s.
+
+Performance statistics:
+  * peak memory usage: 57MB
+  * CPU time: 4.252s
+  * wallclock time: 4.223s
+

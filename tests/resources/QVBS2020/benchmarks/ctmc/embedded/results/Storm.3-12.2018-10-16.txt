@@ -1,0 +1,84 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:24:59 2018
+Command line arguments: --jani embedded.jani --janiproperty --constants 'MAX_COUNT=3,T=12' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/embedded
+
+Time for model construction: 0.128s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	4323
+Transitions: 	18206
+Reward Models:  rewardmodel_up, rewardmodel_danger, rewardmodel_down
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * fail_io -> 845 item(s)
+   * fail_actuators -> 539 item(s)
+   * fail_main -> 2364 item(s)
+   * fail_sensors -> 539 item(s)
+   * init -> 1 item(s)
+   * label_down -> 3119 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "actuators": Pmin=? [!("label_down") U "fail_actuators"] ...
+Result (for initial states): 0.09892044349
+Time for model checking: 0.005s.
+
+Model checking property "actuators_T": Pmin=? [!("label_down") U<=(12 * 3600) "fail_sensors"] ...
+Result (for initial states): 0.0008073066212
+Time for model checking: 0.049s.
+
+Model checking property "danger_T": R[exp]{"rewardmodel_danger"}min=? [C<=(12 * 3600)] ...
+Result (for initial states): 0.008292416086
+Time for model checking: 0.526s.
+
+Model checking property "danger_time": R[exp]{"rewardmodel_danger"}min=? [F "label_down"] ...
+Result (for initial states): 0.3179699953
+Time for model checking: 0.005s.
+
+Model checking property "down_T": R[exp]{"rewardmodel_down"}min=? [C<=(12 * 3600)] ...
+Result (for initial states): 0.02791565785
+Time for model checking: 0.525s.
+
+Model checking property "failure_T": Pmin=? [true U<=(12 * 3600) "label_down"] ...
+Result (for initial states): 0.006314514955
+Time for model checking: 0.113s.
+
+Model checking property "io": Pmin=? [!("label_down") U "fail_io"] ...
+Result (for initial states): 0.1574284557
+Time for model checking: 0.005s.
+
+Model checking property "io_T": Pmin=? [!("label_down") U<=(12 * 3600) "fail_io"] ...
+Result (for initial states): 0.004072892153
+Time for model checking: 0.112s.
+
+Model checking property "main": Pmin=? [!("label_down") U "fail_main"] ...
+Result (for initial states): 0.05236547157
+Time for model checking: 0.005s.
+
+Model checking property "main_T": Pmin=? [!("label_down") U<=(12 * 3600) "fail_main"] ...
+Result (for initial states): 0.001365749152
+Time for model checking: 0.112s.
+
+Model checking property "sensors": Pmin=? [!("label_down") U "fail_sensors"] ...
+Result (for initial states): 0.6912856292
+Time for model checking: 0.003s.
+
+Model checking property "sensors_T": Pmin=? [!("label_down") U<=(12 * 3600) "fail_sensors"] ...
+Result (for initial states): 0.0008073066212
+Time for model checking: 0.049s.
+
+Model checking property "up_T": R[exp]{"rewardmodel_up"}min=? [C<=(12 * 3600)] ...
+Result (for initial states): 11.96379193
+Time for model checking: 0.523s.
+
+Model checking property "up_time": R[exp]{"rewardmodel_up"}min=? [F "label_down"] ...
+Result (for initial states): 458.4035612
+Time for model checking: 0.005s.
+
+Performance statistics:
+  * peak memory usage: 47MB
+  * CPU time: 2.201s
+  * wallclock time: 2.182s

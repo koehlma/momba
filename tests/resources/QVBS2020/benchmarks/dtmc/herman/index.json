@@ -1,0 +1,441 @@
+{
+	"name": "Randomised Self-Stabilising Algorithm of Herman",
+	"short": "herman",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "Ted Herman <ted-herman@uiowa.edu>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1016/0020-0190(90)90107-9",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. A self-stabilising protocol for a network of `N´ processes (ring of identical processes) is a protocol which, when started from some possibly illegal start configuration, returns to a legal/stable configuration without any outside intervention within some finite number of steps. The stable configurations are those where there is exactly one process designated as privileged (has a token). This privilege should be passed around the ring forever in a fair manner. In Herman's version [0] the protocol operates synchronously, the ring is oriented, the number of processes must be odd and communication is unidirectional in the ring",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/self-stabilisation.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of processes",
+			"type": "positive odd integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "steps",
+			"description": "The expected number of steps until termination.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "herman.3.jani",
+			"original-file": [
+				"herman.3.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.3.prism --tojani herman.3.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 8
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": {
+								"approx": 1.3333333333333333,
+								"num": 4,
+								"den": 3
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.5.jani",
+			"original-file": [
+				"herman.5.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.5.prism --tojani herman.5.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 32
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": {
+								"approx": 3.2,
+								"num": 16,
+								"den": 5
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.7.jani",
+			"original-file": [
+				"herman.7.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.7.prism --tojani herman.7.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 7
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 128
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": {
+								"approx": 6.857142857142857,
+								"num": 48,
+								"den": 7
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.9.jani",
+			"original-file": [
+				"herman.9.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.9.prism --tojani herman.9.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 9
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 512
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": 12,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.11.jani",
+			"original-file": [
+				"herman.11.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.11.prism --tojani herman.11.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 11
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2048
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": {
+								"approx": 17.454545454545453,
+								"num": 192,
+								"den": 11
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.13.jani",
+			"original-file": [
+				"herman.13.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.13.prism --tojani herman.13.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 13
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 8192
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.15.jani",
+			"original-file": [
+				"herman.15.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.15.prism --tojani herman.15.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 15
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 32768
+						}
+					],
+					"results": [
+						{
+							"property": "steps",
+							"value": {
+								"num": 100,
+								"approx": 33.333333333333336,
+								"den": 3
+							},
+							"note": "Storm/hybrid/bisim/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.17.jani",
+			"original-file": [
+				"herman.17.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.17.prism --tojani herman.17.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 17
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 131072
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.19.jani",
+			"original-file": [
+				"herman.19.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.19.prism --tojani herman.19.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 19
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 524288
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "herman.21.jani",
+			"original-file": [
+				"herman.21.prism",
+				"herman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism herman.21.prism --tojani herman.21.jani --prop herman.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 21
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 2097152
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3.2018-10-12.json",
+		"results/Storm.5.2018-10-12.json",
+		"results/Storm.7.2018-10-12.json",
+		"results/Storm.9.2018-10-12.json",
+		"results/Storm.11.2018-10-12.json",
+		"results/Storm.13.2018-10-12.json",
+		"results/Storm.15.2018-10-12.json",
+		"results/Storm.17.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.7.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.9.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.11.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-bisim-exact.15.2018-11-26.json"
+		}
+	]
+}

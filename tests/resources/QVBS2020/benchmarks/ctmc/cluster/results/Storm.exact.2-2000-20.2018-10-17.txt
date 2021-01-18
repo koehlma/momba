@@ -1,0 +1,50 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct 17 19:11:25 2018
+Command line arguments: --jani cluster.jani --janiproperty --constants 'N=2,T=2000,t=20' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/cluster
+
+Time for model construction: 0.074s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	276
+Transitions: 	1120
+Reward Models:  time_not_min, num_repairs, percent_op
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * label_minimum -> 132 item(s)
+   * init -> 1 item(s)
+   * premium -> 64 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "below_min": R[exp]{"time_not_min"}min=? [C<=2000] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "operational": R[exp]{"percent_op"}min=? [I=20] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "premium_steady": LRAmin=? ["premium"] ...
+Result (for initial states): 3293310518142048166950593493474891806840039009231142979097598370570396301711154145688188943349902285108307514459229470855663177558811365162418796102780805731205605298144090737818282913305201954783526100286112264674488411390812568477830150233190364232967468679719019435403103023212366160108020829365639101164670895220626620429606265844187702336245206542973622266813232771580915228064278100191996625000000000000000/3293437204938903832610338345690930186384264344182391122714100120150126313186628430031386941286540089246813638301253709664807070665864845882488728595128800011509372866007756697041992723753883662394389072611248838963345225086545962858033556322918252396295252530015086338413713729326376733717790395419322981062006787484997596455858930565277578090992387507059183536107802390829191487860911227695176915316222997333773 (approx. 0.9999615336)
+Time for model checking: 87.535s.
+
+Model checking property "qos1": Pmin=? [true U<=2000 !("label_minimum")] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "qos2": Pmin=? [true U[20, 20] !("label_minimum")] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "qos3": Pmin=? ["label_minimum" U<=20 "premium"] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "qos4": Pmin=? [!("label_minimum") U>=20 "label_minimum"] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "repairs": R[exp]{"num_repairs"}min=? [C<=2000] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 62MB
+  * CPU time: 87.566s
+  * wallclock time: 87.619s

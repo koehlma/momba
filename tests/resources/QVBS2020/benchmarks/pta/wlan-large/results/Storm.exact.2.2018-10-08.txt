@@ -1,0 +1,43 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Oct  8 14:01:09 2018
+Command line arguments: --jani wlan-large.2_mdp.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/pta/wlan-large
+
+Time for model construction: 186.633s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	3283371
+Transitions: 	6221633
+Choices: 	6200795
+Reward Models:  global_time_reward, E_and_rate_reward
+State Labels: 	6 labels
+   * deadlock -> 0 item(s)
+   * success1_seen -> 46878 item(s)
+   * (success1_seen | success2_seen) -> 93754 item(s)
+   * init -> 1 item(s)
+   * ((bc1 = 2) | (bc2 = 2)) -> 2521541 item(s)
+   * (success1_seen & success2_seen) -> 2 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "P_1": Pmin>=1 [F (success1_seen & success2_seen)] ...
+Result (for initial states): 1
+Time for model checking: 10.507s.
+
+Model checking property "P_1_1": Pmin>=1 [F (success1_seen & success2_seen)] ...
+Result (for initial states): 1
+Time for model checking: 10.486s.
+
+Model checking property "P_min": Pmin=? [F ((bc1 = 2) | (bc2 = 2))] ...
+Result (for initial states): 5/128 (approx. 0.0390625)
+Time for model checking: 8.047s.
+
+Model checking property "P_max": Pmax=? [F ((bc1 = 2) | (bc2 = 2))] ...
+Result (for initial states): 1/16 (approx. 0.0625)
+Time for model checking: 8.290s.
+
+Model checking property "D_and": Pmin=? [true Urew{"global_time_reward"}<=(15717 * 5) (success1_seen & success2_seen)] ...
+
+Aborted after 18000 seconds.

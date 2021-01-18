@@ -1,0 +1,507 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p53 <- (p53 + 1)",
+                                    "ref": "p53",
+                                    "value": {
+                                        "left": "p53",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(90 / 90)",
+                                "exp": {
+                                    "left": 90,
+                                    "op": "/",
+                                    "right": 90
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "90",
+                        "exp": 90
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p53 <- (p53 - 1)",
+                                    "ref": "p53",
+                                    "value": {
+                                        "left": "p53",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1/500 * p53) + (17/10 * ((p53 * Mdm2) / (p53 + 1/100)))) / ((1/500 * p53) + (17/10 * ((p53 * Mdm2) / (p53 + 1/100)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 0.002,
+                                            "op": "*",
+                                            "right": "p53"
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": 1.7,
+                                            "op": "*",
+                                            "right": {
+                                                "left": {
+                                                    "left": "p53",
+                                                    "op": "*",
+                                                    "right": "Mdm2"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "left": "p53",
+                                                    "op": "+",
+                                                    "right": 0.01
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 0.002,
+                                            "op": "*",
+                                            "right": "p53"
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": 1.7,
+                                            "op": "*",
+                                            "right": {
+                                                "left": {
+                                                    "left": "p53",
+                                                    "op": "*",
+                                                    "right": "Mdm2"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "left": "p53",
+                                                    "op": "+",
+                                                    "right": 0.01
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(p53 > 0)",
+                        "exp": {
+                            "left": "p53",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1/500 * p53) + (17/10 * ((p53 * Mdm2) / (p53 + 1/100))))",
+                        "exp": {
+                            "left": {
+                                "left": 0.002,
+                                "op": "*",
+                                "right": "p53"
+                            },
+                            "op": "+",
+                            "right": {
+                                "left": 1.7,
+                                "op": "*",
+                                "right": {
+                                    "left": {
+                                        "left": "p53",
+                                        "op": "*",
+                                        "right": "Mdm2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "p53",
+                                        "op": "+",
+                                        "right": 0.01
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pMdm2 <- (pMdm2 + 1)",
+                                    "ref": "pMdm2",
+                                    "value": {
+                                        "left": "pMdm2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((11/10 * p53) / (11/10 * p53))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1.1,
+                                        "op": "*",
+                                        "right": "p53"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1.1,
+                                        "op": "*",
+                                        "right": "p53"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(p53 > 0)",
+                        "exp": {
+                            "left": "p53",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(11/10 * p53)",
+                        "exp": {
+                            "left": 1.1,
+                            "op": "*",
+                            "right": "p53"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "pMdm2 <- (pMdm2 - 1)",
+                                    "ref": "pMdm2",
+                                    "value": {
+                                        "left": "pMdm2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Mdm2 <- (Mdm2 + 1)",
+                                    "ref": "Mdm2",
+                                    "value": {
+                                        "left": "Mdm2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((93/100 * pMdm2) / (93/100 * pMdm2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.93,
+                                        "op": "*",
+                                        "right": "pMdm2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.93,
+                                        "op": "*",
+                                        "right": "pMdm2"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(pMdm2 > 0)",
+                        "exp": {
+                            "left": "pMdm2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(93/100 * pMdm2)",
+                        "exp": {
+                            "left": 0.93,
+                            "op": "*",
+                            "right": "pMdm2"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Mdm2 <- (Mdm2 - 1)",
+                                    "ref": "Mdm2",
+                                    "value": {
+                                        "left": "Mdm2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((24/25 * Mdm2) / (24/25 * Mdm2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.96,
+                                        "op": "*",
+                                        "right": "Mdm2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.96,
+                                        "op": "*",
+                                        "right": "Mdm2"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(Mdm2 > 0)",
+                        "exp": {
+                            "left": "Mdm2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(24/25 * Mdm2)",
+                        "exp": {
+                            "left": 0.96,
+                            "op": "*",
+                            "right": "Mdm2"
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "p53",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "k1",
+            "type": "real",
+            "value": 90
+        },
+        {
+            "name": "k2",
+            "type": "real",
+            "value": 0.002
+        },
+        {
+            "name": "k3",
+            "type": "real",
+            "value": 1.7
+        },
+        {
+            "name": "k4",
+            "type": "real",
+            "value": 1.1
+        },
+        {
+            "name": "k5",
+            "type": "real",
+            "value": 0.93
+        },
+        {
+            "name": "k6",
+            "type": "real",
+            "value": 0.96
+        },
+        {
+            "name": "k7",
+            "type": "real",
+            "value": 0.01
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "p53",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "p53",
+                            "op": ">",
+                            "right": 120
+                        },
+                        "time-bounds": {
+                            "upper": 5,
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "RareEvent1"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "Mdm2",
+                            "op": "=",
+                            "right": 0
+                        },
+                        "time-bounds": {
+                            "upper": 100,
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "RareEvent2"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": {
+                                "left": {
+                                    "left": "p53",
+                                    "op": ">",
+                                    "right": 150
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "pMdm2",
+                                    "op": ">",
+                                    "right": 150
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "Mdm2",
+                                "op": ">",
+                                "right": 150
+                            }
+                        },
+                        "time-bounds": {
+                            "upper": 100,
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "RareEvent3"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": "p53",
+                        "op": "=",
+                        "right": 0
+                    },
+                    "op": "Smin"
+                }
+            },
+            "name": "Steady1"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "p53"
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": 70,
+            "name": "p53",
+            "type": "int"
+        },
+        {
+            "initial-value": 30,
+            "name": "pMdm2",
+            "type": "int"
+        },
+        {
+            "initial-value": 60,
+            "name": "Mdm2",
+            "type": "int"
+        }
+    ]
+}

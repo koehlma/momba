@@ -1,0 +1,1325 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 0) & (x < delay))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "delay"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 1",
+                                    "ref": "s",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 4",
+                                    "ref": "s",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 0) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 2",
+                                    "ref": "s",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 3",
+                                    "ref": "s",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 0) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 1) & (x < delay))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "delay"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 5",
+                                    "ref": "s",
+                                    "value": 5
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 6",
+                                    "ref": "s",
+                                    "value": 6
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 1) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 2) & (x < delay))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "delay"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 5",
+                                    "ref": "s",
+                                    "value": 5
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 7",
+                                    "ref": "s",
+                                    "value": 7
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 2) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 3) & (x < delay))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 3
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "delay"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 6",
+                                    "ref": "s",
+                                    "value": 6
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 8",
+                                    "ref": "s",
+                                    "value": 8
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 3) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 3
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 4) & (x < delay))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 4
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "delay"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 7",
+                                    "ref": "s",
+                                    "value": 7
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 8",
+                                    "ref": "s",
+                                    "value": 8
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 4) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 4
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 5) & (x < 85))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 5
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 85
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 0",
+                                    "ref": "s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 5) & (x >= 76)) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 5
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": 76
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 9",
+                                    "ref": "s",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 5) & (x >= (76 - delay))) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 5
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": {
+                                        "left": 76,
+                                        "op": "-",
+                                        "right": "delay"
+                                    }
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 6) & (x < 167))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 6
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 167
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 9",
+                                    "ref": "s",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 6) & (x >= (159 - delay))) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 6
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": {
+                                        "left": 159,
+                                        "op": "-",
+                                        "right": "delay"
+                                    }
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 7) & (x < 167))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 7
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 167
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 9",
+                                    "ref": "s",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 7) & (x >= (159 - delay))) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 7
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": {
+                                        "left": 159,
+                                        "op": "-",
+                                        "right": "delay"
+                                    }
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- (min((y + 1), (deadline + 1)))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "x <- (min((x + 1), 168))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 168
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((s = 8) & (x < 167))",
+                        "exp": {
+                            "left": {
+                                "left": "s",
+                                "op": "=",
+                                "right": 8
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 167
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 0",
+                                    "ref": "s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 8) & (x >= 159)) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 8
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": 159
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 9",
+                                    "ref": "s",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((s = 8) & (x >= (159 - delay))) & (y <= deadline))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "s",
+                                    "op": "=",
+                                    "right": 8
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": {
+                                        "left": 159,
+                                        "op": "-",
+                                        "right": "delay"
+                                    }
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "≤",
+                                "right": "deadline"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "s <- 10",
+                                    "ref": "s",
+                                    "value": 10
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((y > deadline) & (s < 9))",
+                        "exp": {
+                            "left": {
+                                "left": "y",
+                                "op": ">",
+                                "right": "deadline"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "s",
+                                "op": "<",
+                                "right": 9
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 9",
+                                    "ref": "s",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(s = 9)",
+                        "exp": {
+                            "left": "s",
+                            "op": "=",
+                            "right": 9
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- 10",
+                                    "ref": "s",
+                                    "value": 10
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(s = 10)",
+                        "exp": {
+                            "left": "s",
+                            "op": "=",
+                            "right": 10
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "abstract_firewire",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "deadline",
+            "type": "int"
+        },
+        {
+            "name": "ky",
+            "type": "int",
+            "value": "deadline"
+        },
+        {
+            "name": "delay",
+            "type": "int"
+        },
+        {
+            "name": "fast",
+            "type": "real",
+            "value": 0.5
+        },
+        {
+            "name": "slow",
+            "type": "real",
+            "value": 0.5
+        },
+        {
+            "name": "kx",
+            "type": "int",
+            "value": 167
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "firewire_dl",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "s",
+                            "op": "=",
+                            "right": 9
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "deadline"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "abstract_firewire"
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": 0,
+            "name": "y",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": {
+                    "left": "deadline",
+                    "op": "+",
+                    "right": 1
+                }
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "x",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 168
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 10
+            }
+        }
+    ]
+}

@@ -1,0 +1,247 @@
+mdp
+
+formula localFailure = loc_1=crit&t_1=0&failure_1;
+formula noLocalFailure = !((loc_1=crit&t_1=0&failure_1));
+formula emptyBattery = battery_load=0;
+formula process_1_finishes = (loc_1=crit&t_1=0);
+formula process_2_finishes = (loc_2=crit&t_2=0);
+formula process_3_finishes = (loc_3=crit&t_3=0);
+formula process_4_finishes = (loc_4=crit&t_4=0);
+formula process_5_finishes = (loc_5=crit&t_5=0);
+formula process_6_finishes = (loc_6=crit&t_6=0);
+
+label "localFailure" = ((loc_1=crit&t_1=0&failure_1));
+label "noLocalFailure" = ((!((loc_1=crit&t_1=0&failure_1))));
+label "emptyBattery" = ((battery_load=0));
+label "process_1_finishes" = (((loc_1=crit&t_1=0)));
+label "process_2_finishes" = (((loc_2=crit&t_2=0)));
+label "process_3_finishes" = (((loc_3=crit&t_3=0)));
+label "process_4_finishes" = (((loc_4=crit&t_4=0)));
+label "process_5_finishes" = (((loc_5=crit&t_5=0)));
+label "process_6_finishes" = (((loc_6=crit&t_6=0)));
+
+const int energy_capacity;
+const int t_max = 9;
+const int undef = 0;
+const int ncrit = 2;
+const int wait = 0;
+const int crit = 1;
+const int none = 0;
+const int process_1 = 1;
+const int process_2 = 2;
+const int process_3 = 3;
+const int process_4 = 4;
+const int process_5 = 5;
+const int process_6 = 6;
+const int m_1 = 1;
+const int m_2 = 1;
+const int m_3 = 2;
+const int m_4 = 1;
+const int m_5 = 1;
+const int m_6 = 2;
+const int boost_multiplicator = 3;
+
+module Battery
+
+	battery_load : [0..energy_capacity] init energy_capacity;
+
+	[tick] loc_1=ncrit -> (battery_load'=max(0, battery_load-2*m_1));
+	[tick] loc_1=wait -> (battery_load'=max(0, battery_load-1*m_1));
+	[tick] loc_1=crit&user_1=process_1&boost_1=0 -> (battery_load'=max(0, battery_load-3*m_1));
+	[tick] loc_1=crit&user_1=process_1&boost_1=1 -> (battery_load'=max(0, battery_load-3*m_1*boost_multiplicator));
+
+endmodule
+
+module Process_1
+
+	failure_1 : bool init false;
+	loc_1 : [0..2] init ncrit;
+	t_1 : [0..t_max] init 0;
+
+	[tick] loc_1=ncrit&t_1!=0 -> (t_1'=t_1-1);
+	[tick] loc_1=ncrit&t_1=0 -> 2/3 : (t_1'=9) & (loc_1'=wait) + 1/3 : (t_1'=7) & (loc_1'=wait);
+	[tick] loc_1=wait&user_1!=process_1 -> (t_1'=max(0, t_1-1));
+	[tick] loc_1=wait&user_1=process_1 -> 1/3 : (loc_1'=crit) & (t_1'=2) & (failure_1'=(2<(boost_1+1)*t_1) ? false : true) + 2/3 : (loc_1'=crit) & (t_1'=3) & (failure_1'=(3<(boost_1+1)*t_1) ? false : true);
+	[tick] loc_1=crit&t_1>0 -> (t_1'=max(t_1-(boost_1+1), 0));
+	[tick] loc_1=crit&t_1=0 -> 2/3 : (loc_1'=ncrit) & (t_1'=4) & (failure_1'=false) + 1/3 : (loc_1'=ncrit) & (t_1'=5) & (failure_1'=false);
+
+endmodule
+
+module Process_2
+
+	t_2 : [0..t_max] init 0;
+	loc_2 : [0..2] init ncrit;
+
+	[tick] loc_2=ncrit&t_2!=0 -> (t_2'=t_2-1);
+	[tick] loc_2=ncrit&t_2=0 -> (loc_2'=wait);
+	[tick] loc_2=wait&user_1!=process_2 -> (t_2'=max(0, t_2-1));
+	[tick] loc_2=wait&user_1=process_2 -> 1/3 : (loc_2'=crit) & (t_2'=2) + 2/3 : (loc_2'=crit) & (t_2'=3);
+	[tick] loc_2=crit&t_2>0 -> (t_2'=max(t_2-(boost_1+1), 0));
+	[tick] loc_2=crit&t_2=0 -> 2/3 : (loc_2'=ncrit) & (t_2'=4) + 1/3 : (loc_2'=ncrit) & (t_2'=5);
+
+endmodule
+
+module Resources
+
+	boost_1 : [0..1] init 0;
+	user_1 : [0..6] init none;
+
+	[tick] user_1=none&loc_1=wait -> (user_1'=process_1);
+	[tick] user_1=none&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_1&!(((loc_1=crit&t_1=0))) -> true;
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=0);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=0);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=0);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=0);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_1&(((loc_1=crit&t_1=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=0);
+	[tick] user_1=none&loc_2=wait -> (user_1'=process_2);
+	[tick] user_1=none&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_2&!(((loc_2=crit&t_2=0))) -> true;
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=0);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=0);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=0);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=0);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_2&(((loc_2=crit&t_2=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=0);
+	[tick] user_1=none&loc_3=wait -> (user_1'=process_3);
+	[tick] user_1=none&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_3&!(((loc_3=crit&t_3=0))) -> true;
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=0);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=0);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=0);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=0);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_3&(((loc_3=crit&t_3=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=0);
+	[tick] user_1=none&loc_4=wait -> (user_1'=process_4);
+	[tick] user_1=none&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_4&!(((loc_4=crit&t_4=0))) -> true;
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=0);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=0);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=0);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=0);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_4&(((loc_4=crit&t_4=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=0);
+	[tick] user_1=none&loc_5=wait -> (user_1'=process_5);
+	[tick] user_1=none&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_5&!(((loc_5=crit&t_5=0))) -> true;
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=0);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=0);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=0);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=0);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_5&(((loc_5=crit&t_5=0)))&loc_6=wait -> (user_1'=process_6) & (boost_1'=0);
+	[tick] user_1=none&loc_6=wait -> (user_1'=process_6);
+	[tick] user_1=none&loc_6=wait -> (user_1'=process_6) & (boost_1'=1);
+	[tick] user_1=process_6&!(((loc_6=crit&t_6=0))) -> true;
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> (user_1'=none) & (boost_1'=0);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=1);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_1=wait -> (user_1'=process_1) & (boost_1'=0);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=1);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_2=wait -> (user_1'=process_2) & (boost_1'=0);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=1);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_3=wait -> (user_1'=process_3) & (boost_1'=0);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=1);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_4=wait -> (user_1'=process_4) & (boost_1'=0);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=1);
+	[tick] user_1=process_6&(((loc_6=crit&t_6=0)))&loc_5=wait -> (user_1'=process_5) & (boost_1'=0);
+	[tick] user_1=none&loc_1!=wait&loc_2!=wait&loc_3!=wait&loc_4!=wait&loc_5!=wait&loc_6!=wait -> true;
+
+endmodule
+
+module Process_3
+
+	t_3 : [0..t_max] init 0;
+	loc_3 : [0..2] init ncrit;
+
+	[tick] loc_3=ncrit&t_3!=0 -> (t_3'=t_3-1);
+	[tick] loc_3=ncrit&t_3=0 -> (loc_3'=wait);
+	[tick] loc_3=wait&user_1!=process_3 -> (t_3'=max(0, t_3-1));
+	[tick] loc_3=wait&user_1=process_3 -> 1/3 : (loc_3'=crit) & (t_3'=2) + 2/3 : (loc_3'=crit) & (t_3'=3);
+	[tick] loc_3=crit&t_3>0 -> (t_3'=max(t_3-(boost_1+1), 0));
+	[tick] loc_3=crit&t_3=0 -> 2/3 : (loc_3'=ncrit) & (t_3'=4) + 1/3 : (loc_3'=ncrit) & (t_3'=5);
+
+endmodule
+
+module Process_4
+
+	t_4 : [0..t_max] init 0;
+	loc_4 : [0..2] init ncrit;
+
+	[tick] loc_4=ncrit&t_4!=0 -> (t_4'=t_4-1);
+	[tick] loc_4=ncrit&t_4=0 -> (loc_4'=wait);
+	[tick] loc_4=wait&user_1!=process_4 -> (t_4'=max(0, t_4-1));
+	[tick] loc_4=wait&user_1=process_4 -> 1/3 : (loc_4'=crit) & (t_4'=2) + 2/3 : (loc_4'=crit) & (t_4'=3);
+	[tick] loc_4=crit&t_4>0 -> (t_4'=max(t_4-(boost_1+1), 0));
+	[tick] loc_4=crit&t_4=0 -> 2/3 : (loc_4'=ncrit) & (t_4'=4) + 1/3 : (loc_4'=ncrit) & (t_4'=5);
+
+endmodule
+
+module Process_6
+
+	loc_6 : [0..2] init ncrit;
+	t_6 : [0..t_max] init 0;
+
+	[tick] loc_6=ncrit&t_6!=0 -> (t_6'=t_6-1);
+	[tick] loc_6=ncrit&t_6=0 -> (loc_6'=wait);
+	[tick] loc_6=wait&user_1!=process_6 -> (t_6'=max(0, t_6-1));
+	[tick] loc_6=wait&user_1=process_6 -> 1/3 : (loc_6'=crit) & (t_6'=2) + 2/3 : (loc_6'=crit) & (t_6'=3);
+	[tick] loc_6=crit&t_6>0 -> (t_6'=max(t_6-(boost_1+1), 0));
+	[tick] loc_6=crit&t_6=0 -> 2/3 : (loc_6'=ncrit) & (t_6'=4) + 1/3 : (loc_6'=ncrit) & (t_6'=5);
+
+endmodule
+
+module Process_5
+
+	t_5 : [0..t_max] init 0;
+	loc_5 : [0..2] init ncrit;
+
+	[tick] loc_5=ncrit&t_5!=0 -> (t_5'=t_5-1);
+	[tick] loc_5=ncrit&t_5=0 -> (loc_5'=wait);
+	[tick] loc_5=wait&user_1!=process_5 -> (t_5'=max(0, t_5-1));
+	[tick] loc_5=wait&user_1=process_5 -> 1/3 : (loc_5'=crit) & (t_5'=2) + 2/3 : (loc_5'=crit) & (t_5'=3);
+	[tick] loc_5=crit&t_5>0 -> (t_5'=max(t_5-(boost_1+1), 0));
+	[tick] loc_5=crit&t_5=0 -> 2/3 : (loc_5'=ncrit) & (t_5'=4) + 1/3 : (loc_5'=ncrit) & (t_5'=5);
+
+endmodule
+
+rewards "energyLocal" 
+
+	[tick] loc_1=ncrit : 2*m_1;
+	[tick] loc_1=wait : 1*m_1;
+	[tick] loc_1=crit&user_1=process_1&boost_1=0 : 3*m_1;
+	[tick] loc_1=crit&user_1=process_1&boost_1=1 : 3*m_1*boost_multiplicator;
+
+endrewards
+
+rewards "utilityLocal" 
+
+	[tick] loc_1=crit&t_1=0&!failure_1&!((battery_load=0)) : 1;
+
+endrewards
+

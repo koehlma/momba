@@ -1,0 +1,107 @@
+{
+	"file": "../csma.3-6.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.3-6.2018-10-17.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani csma.3-6.jani --janiproperty --exact --timemem",
+	"time": 5957.607,
+	"property-times": [
+		{
+			"name": "all_before_max",
+			"time": 961.471
+		},
+		{
+			"name": "all_before_min",
+			"time": 741.161
+		},
+		{
+			"name": "some_before",
+			"time": 662.781
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3592.194
+				},
+				{
+					"name": "states",
+					"value": 84856004
+				},
+				{
+					"name": "branches",
+					"value": 147200984
+				},
+				{
+					"name": "transitions",
+					"value": 84988757
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "all_before_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 961.471
+				}
+			],
+			"value": {
+				"approx": 0.9988350900161441,
+				"num": 1425585077619291382058879556199022035448444737,
+				"den": 1427247692705959881058285969449495136382746624
+			}
+		},
+		{
+			"property": "all_before_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 741.161
+				}
+			],
+			"value": {
+				"approx": 0.9971509368647593,
+				"num": 27528331342820564137926242860602786111511899965645013934676796870783315,
+				"den": 27606985387162255149739023449108101809804435888681546220650096895197184
+			}
+		},
+		{
+			"property": "some_before",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 662.781
+				}
+			],
+			"value": {
+				"approx": 0.9999940257337531,
+				"num": 1346586745880576713996270758494327463129361368549831931704359556401524271653017993499288199098174785388284668703466892271071647196750637447372511122949632363243284557400892710812986359183351420796669430746857030211,
+				"den": 1346594790796383617853693410017312938380886989522732508031559911185595431500052690461098633287062643514107640027181623734532974656047053788960720581286881497588537259808881817137065922018386615621451072444360032256
+			}
+		}
+	]
+}

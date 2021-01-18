@@ -1,0 +1,172 @@
+{
+	"name": "IEEE 1394 FireWire Root Contention Protocol (abstract model)",
+	"short": "firewire_abst",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marielle Stoelinga <marielle@cs.kun.nl>",
+		"Frits Vaandrager <fvaan@cs.kun.nl>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/3-540-48778-6_4",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] concerns the Tree Identify Protocol of the IEEE 1394 High Performance Serial Bus, called \"FireWire\". The 1394 High Performance serial bus is used to transport video and audio signals within a network of multimedia devices. It is modeled as a leader election protocol which takes place after a bus reset in the network, that is, when a node is added or removed from the network. After such a reset all nodes in the network have equal status, and know only to which nodes they are directly connected. A leader needs to be chosen to act as the manager of the bus for subsequent phases of IEEE 1394. This is done by the nodes communicating \"be my parent\" messages, starting from the leaf nodes. The protocol is designed for use on connected networks and will correctly elect a leader if the network is acyclic. We consider an MDP version of the probabilistic timed automata models of the root contention part of the tree identify protocol, which are based on probabilistic I/O automata models presented in [3]. In this version the model is represented by a single probabilistic timed automaton where each instance of bifurcating edges corresponds to a coin being flipped. This model is an abstraction of Impl based on the the probabilistic I/O automaton I1 of [3]. `delay´ is the maximum wire transmission delay in nano seconds. This models the distance between the two nodes, i.e. the length of the connecting wires. A delay of 360ns represents the assumption that the nodes are separated by a distance close to the maximum required for the correctness of the protocol. A delay of 30ns corresponds more closely to the maximum separation of nodes specified in the actual IEEE standard. The `_abst´ version is an abstraction of the original full version of this model. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/firewire.php",
+		"https://doi.org/10.1007/3-540-48778-6_4"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "delay",
+			"kind": "open",
+			"description": "Maximum wire transmission delay in units of 10ns",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "elected",
+			"description": "A leader is always eventually elected with probability 1.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "rounds",
+			"description": "The maximum expected rounds to elect a leader.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_max",
+			"description": "The maximum expected time to elect a leader.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_min",
+			"description": "Minimum expected time to elect a leader.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "firewire_abst.jani",
+			"original-file": [
+				"firewire_abst.prism",
+				"firewire_abst.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism firewire_abst.prism --tojani firewire_abst.jani --prop firewire_abst.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 611
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "rounds",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 135.25,
+								"num": 541,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 776
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "rounds",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 102.25,
+								"num": 409,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3.2018-10-12.json",
+		"results/Storm.36.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.36.2018-10-17.json"
+		}
+	]
+}

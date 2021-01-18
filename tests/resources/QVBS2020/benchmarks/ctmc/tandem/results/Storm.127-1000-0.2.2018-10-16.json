@@ -1,0 +1,132 @@
+{
+	"file": "../tandem.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.127-1000-0.2.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "c",
+			"value": 127
+		},
+		{
+			"name": "T",
+			"value": 1000
+		},
+		{
+			"name": "t",
+			"value": 0.2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani tandem.jani --janiproperty --constants c=127,T=1000,t=0.2  --timemem",
+	"time": 250.506,
+	"memory": 75497472,
+	"property-times": [
+		{
+			"name": "customers",
+			"time": 0.24
+		},
+		{
+			"name": "customers_T",
+			"time": 0.345
+		},
+		{
+			"name": "first_queue",
+			"time": 0.376
+		},
+		{
+			"name": "network",
+			"time": 249.109
+		},
+		{
+			"name": "second_queue",
+			"time": 0.012
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.416
+				},
+				{
+					"name": "states",
+					"value": 32640
+				},
+				{
+					"name": "branches",
+					"value": 113283
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "customers",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.24
+				}
+			],
+			"value": 127.8242553
+		},
+		{
+			"property": "customers_T",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.345
+				}
+			],
+			"value": 101.4743485
+		},
+		{
+			"property": "first_queue",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.376
+				}
+			],
+			"value": 0.007682051509
+		},
+		{
+			"property": "network",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 249.109
+				}
+			],
+			"value": 1.635474636e-42
+		},
+		{
+			"property": "second_queue",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.012
+				}
+			],
+			"value": 1.0
+		}
+	]
+}

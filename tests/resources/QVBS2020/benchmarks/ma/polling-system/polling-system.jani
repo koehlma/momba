@@ -1,0 +1,1047 @@
+﻿{
+	"jani-version": 1,
+	"name": "polling-system",
+	"type": "ma",
+	"features": [
+		"derived-operators",
+		"nondet-selection",
+		"arrays"
+	],
+	"actions": [
+		{
+			"name": "deliver!"
+		},
+		{
+			"name": "deliver?"
+		},
+		{
+			"name": "deliver"
+		}
+	],
+	"constants": [
+		{
+			"name": "JOB_TYPES",
+			"type": "int"
+		},
+		{
+			"name": "C",
+			"type": "int"
+		},
+		{
+			"name": "TIME_BOUND",
+			"type": "real"
+		}
+	],
+	"variables": [
+		{
+			"name": "item",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "JOB_TYPES"
+			},
+			"transient": true,
+			"initial-value": 0
+		},
+		{
+			"name": "size",
+			"type": {
+				"kind": "array",
+				"base": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": "C"
+				}
+			},
+			"initial-value": {
+				"op": "av",
+				"elements": [
+					0,
+					0
+				]
+			}
+		}
+	],
+	"properties": [
+		{
+			"name": "PminBothFullIsOne",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "=",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": 0
+									},
+									"right": "C"
+								},
+								"right": {
+									"op": "=",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": 1
+									},
+									"right": "C"
+								}
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PminBothFullIsOne_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "=",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": 0
+									},
+									"right": "C"
+								},
+								"right": {
+									"op": "=",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": 1
+									},
+									"right": "C"
+								}
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TminBothFull",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 0
+							},
+							"right": "C"
+						},
+						"right": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 1
+							},
+							"right": "C"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TmaxBothFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 0
+							},
+							"right": "C"
+						},
+						"right": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 1
+							},
+							"right": "C"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxBothFullBound",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": {
+									"op": "aa",
+									"exp": "size",
+									"index": 0
+								},
+								"right": "C"
+							},
+							"right": {
+								"op": "=",
+								"left": {
+									"op": "aa",
+									"exp": "size",
+									"index": 1
+								},
+								"right": "C"
+							}
+						},
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "SmaxBothFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Smax",
+					"exp": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 0
+							},
+							"right": "C"
+						},
+						"right": {
+							"op": "=",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": 1
+							},
+							"right": "C"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "Station",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_15"
+				},
+				{
+					"name": "loc_18"
+				},
+				{
+					"name": "loc_14"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "id",
+					"type": "int",
+					"initial-value": 1
+				},
+				{
+					"name": "q",
+					"type": {
+						"kind": "array",
+						"base": {
+							"kind": "bounded",
+							"base": "int",
+							"lower-bound": 0,
+							"upper-bound": "JOB_TYPES"
+						}
+					},
+					"initial-value": {
+						"op": "ac",
+						"length": "C",
+						"var": "i",
+						"exp": 0
+					}
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 5
+								},
+								"right": "id"
+							},
+							"right": {
+								"op": "/",
+								"left": 1,
+								"right": 10
+							}
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "deliver!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_15",
+						"assignments": [ {
+							"ref": "item",
+							"value": {
+								"op": "aa",
+								"exp": "q",
+								"index": 0
+							},
+							"index": -1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_15",
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [
+							{
+								"ref": "q",
+								"value": {
+									"op": "ac",
+									"length": "C",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": {
+													"op": "aa",
+													"exp": "size",
+													"index": {
+														"op": "-",
+														"left": "id",
+														"right": 1
+													}
+												},
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "q",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								}
+							},
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "size",
+									"index": {
+										"op": "-",
+										"left": "id",
+										"right": 1
+									}
+								},
+								"value": {
+									"op": "-",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									},
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_15",
+					"destinations": [ {
+						"location": "loc_18"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 5
+								},
+								"right": "id"
+							},
+							"right": {
+								"op": "/",
+								"left": 1,
+								"right": 10
+							}
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"action": "deliver!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_15",
+						"assignments": [ {
+							"ref": "item",
+							"value": {
+								"op": "aa",
+								"exp": "q",
+								"index": 0
+							},
+							"index": -1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_14",
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "q",
+									"index": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									}
+								},
+								"value": {
+									"op": "trc",
+									"exp": {
+										"op": "nondet",
+										"var": "i",
+										"exp": {
+											"op": "∧",
+											"left": {
+												"op": "≤",
+												"left": 1,
+												"right": "i"
+											},
+											"right": {
+												"op": "≤",
+												"left": "i",
+												"right": "JOB_TYPES"
+											}
+										}
+									}
+								}
+							},
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "size",
+									"index": {
+										"op": "-",
+										"left": "id",
+										"right": 1
+									}
+								},
+								"value": {
+									"op": "+",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									},
+									"right": 1
+								}
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Station_1",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_15"
+				},
+				{
+					"name": "loc_18"
+				},
+				{
+					"name": "loc_14"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "id",
+					"type": "int",
+					"initial-value": 2
+				},
+				{
+					"name": "q",
+					"type": {
+						"kind": "array",
+						"base": {
+							"kind": "bounded",
+							"base": "int",
+							"lower-bound": 0,
+							"upper-bound": "JOB_TYPES"
+						}
+					},
+					"initial-value": {
+						"op": "ac",
+						"length": "C",
+						"var": "i",
+						"exp": 0
+					}
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 5
+								},
+								"right": "id"
+							},
+							"right": {
+								"op": "/",
+								"left": 1,
+								"right": 10
+							}
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "deliver!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_15",
+						"assignments": [ {
+							"ref": "item",
+							"value": {
+								"op": "aa",
+								"exp": "q",
+								"index": 0
+							},
+							"index": -1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_15",
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [
+							{
+								"ref": "q",
+								"value": {
+									"op": "ac",
+									"length": "C",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": {
+													"op": "aa",
+													"exp": "size",
+													"index": {
+														"op": "-",
+														"left": "id",
+														"right": 1
+													}
+												},
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "q",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								}
+							},
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "size",
+									"index": {
+										"op": "-",
+										"left": "id",
+										"right": 1
+									}
+								},
+								"value": {
+									"op": "-",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									},
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_15",
+					"destinations": [ {
+						"location": "loc_18"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 5
+								},
+								"right": "id"
+							},
+							"right": {
+								"op": "/",
+								"left": 1,
+								"right": 10
+							}
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": "C"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"action": "deliver!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "aa",
+								"exp": "size",
+								"index": {
+									"op": "-",
+									"left": "id",
+									"right": 1
+								}
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_15",
+						"assignments": [ {
+							"ref": "item",
+							"value": {
+								"op": "aa",
+								"exp": "q",
+								"index": 0
+							},
+							"index": -1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_14",
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "q",
+									"index": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									}
+								},
+								"value": {
+									"op": "trc",
+									"exp": {
+										"op": "nondet",
+										"var": "i",
+										"exp": {
+											"op": "∧",
+											"left": {
+												"op": "≤",
+												"left": 1,
+												"right": "i"
+											},
+											"right": {
+												"op": "≤",
+												"left": "i",
+												"right": "JOB_TYPES"
+											}
+										}
+									}
+								}
+							},
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "size",
+									"index": {
+										"op": "-",
+										"left": "id",
+										"right": 1
+									}
+								},
+								"value": {
+									"op": "+",
+									"left": {
+										"op": "aa",
+										"exp": "size",
+										"index": {
+											"op": "-",
+											"left": "id",
+											"right": 1
+										}
+									},
+									"right": 1
+								}
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Server",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_5"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "j",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 1,
+					"upper-bound": "JOB_TYPES"
+				},
+				"initial-value": 1
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "deliver?",
+					"destinations": [ {
+						"location": "loc_5",
+						"assignments": [ {
+							"ref": "j",
+							"value": "item",
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_5",
+					"rate": {
+						"exp": {
+							"op": "pow",
+							"left": 2,
+							"right": "j"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "j",
+							"value": 1
+						} ]
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "Station"
+			},
+			{
+				"automaton": "Station_1"
+			},
+			{
+				"automaton": "Server"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					"deliver!",
+					null,
+					"deliver?"
+				],
+				"result": "deliver"
+			},
+			{
+				"synchronise": [
+					null,
+					"deliver!",
+					"deliver?"
+				],
+				"result": "deliver"
+			}
+		]
+	}
+}

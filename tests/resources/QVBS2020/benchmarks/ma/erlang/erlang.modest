@@ -1,0 +1,37 @@
+const int K; // the shape parameter of the Erlang distribution
+const real R; // the rate parameter of the Erlang distribution
+
+bool goal;
+
+const real TIME_BOUND;
+
+action a, b;
+
+process ErlangChain(int(0..K) stage)
+{
+   alt {
+   :: when(stage == 1) tau; rate(R) tau; ErlangStages(3) 
+   :: when(stage > 1) tau; rate(R) tau; ErlangChain(stage -1)
+   }
+}
+
+process ErlangStages(int(0..4) state)
+{
+   alt {
+   :: when(state == 0) a; rate(1) tau; ErlangStages(2)
+   :: when(state == 0) b; rate(1) tau; ErlangChain(K)
+   :: when(state == 2) tau; alt{
+      :: rate(0.5) tau; ErlangStages(3)
+      :: rate(0.5) tau; ErlangStages(4)
+      }
+   :: when(state == 3) tau {= goal = true =}; rate(1) tau; ErlangStages(0)
+   :: when(state == 4) tau; rate(1) tau; ErlangStages(4)
+   }
+}
+
+ErlangStages(0)
+
+property PminReach = Pmin(<> goal);
+property TminReach = Xmin(T, goal);
+property PmaxReachBound = Pmax(<>[T<=TIME_BOUND] goal);
+property SmaxNotReach = Smax(!goal);

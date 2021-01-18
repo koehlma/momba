@@ -1,0 +1,40 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Nov 22 21:13:33 2018
+Command line arguments: --jani resource-gathering.jani --janiproperty --constants 'B=400,GOLD_TO_COLLECT=30,GEM_TO_COLLECT=30' --exact --timemem
+Current working directory: /Users/tim/storm/build/bin
+
+Time for model input parsing: 0.006s.
+
+Time for model construction: 13.466s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	90334
+Transitions: 	313286
+Choices: 	290222
+Reward Models:  rew_gold
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * success -> 94 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "expgold": R[exp]{"rew_gold"}max=? [Csteps<=400] ...
+Result (for initial states): 2223069286897035336984392597056847016890586783579314864269796120502251854579941477462685566055157610998958027136282413703655174244046896796834763279969733490943/50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 44.46138574)
+Time for model checking: 247.387s.
+
+Model checking property "expsteps": T[exp]min=? [F "success"] ...
+Result (for initial states): 3490/9 (approx. 387.7777778)
+Time for model checking: 15.598s.
+
+Model checking property "prgoldgem": Pmax=? [true U<=400 "success"] ...
+Result (for initial states): 8647565951595304254437539859537432101902224915260115854978175107719078553743/10000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.8647565952)
+Time for model checking: 147.793s.
+
+Performance statistics:
+  * peak memory usage: 189MB
+  * CPU time: 423.561s
+  * wallclock time: 424.481s
+

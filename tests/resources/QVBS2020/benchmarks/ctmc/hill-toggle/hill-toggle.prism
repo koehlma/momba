@@ -1,0 +1,25 @@
+// Gardner, Timothy S., Charles R. Cantor, and James J. Collins.
+// "Construction of a genetic toggle switch in Escherichia coli."
+// Nature 403.6767 (2000): 339.
+
+
+ctmc
+
+
+const double a1 = 30;
+const double a2 = 30;
+const double b  = 10;
+const double g  = 10;
+const double d1 = 1;
+const double d2 = 1;
+
+module hill_toggle
+  p1 : int init 10;
+  p2 : int init 0;
+
+  [] true -> a1 / (1+pow(p2,b)) : (p1'=p1+1);
+  [] true -> a2 / (1+pow(p1,g)) : (p2'=p2+1);
+
+  [] p1>0 -> d1*p1 : (p1'=p1-1);
+  [] p2>0 -> d2*p2 : (p2'=p2-1);
+endmodule

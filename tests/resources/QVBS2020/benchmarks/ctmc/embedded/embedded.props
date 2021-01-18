@@ -1,0 +1,44 @@
+const double T;
+
+
+// Probability of actuator failure
+"actuators": P=? [ !"down" U "fail_actuators" ];
+
+// Probability of actuator failure within T hours
+"actuators_T": P=? [ !"down" U<=(T*3600) "fail_sensors" ];
+
+// Expected time spent in "danger" by time T (hours)
+"danger_T": R{"danger"}=? [ C<=(T*3600) ];
+
+// Expected time spent in "danger" before "down"
+"danger_time": R{"danger"}=? [ F "down" ];
+
+// Expected time spent in "down" by time T (hours)
+"down_T": R{"down"}=? [ C<=(T*3600) ];
+
+// Probability of any failure occurring within T hours
+"failure_T": P=? [ F<=(T*3600) "down" ];
+
+// Probability of IO failure
+"io": P=? [ !"down" U "fail_io" ];
+
+// Probability of I/O failure within T hours
+"io_T": P=? [ !"down" U<=(T*3600) "fail_io" ];
+
+// Probability of main failure
+"main": P=? [ !"down" U "fail_main" ];
+
+// Probability of main system failure within T hours
+"main_T": P=? [ !"down" U<=(T*3600) "fail_main" ];
+
+// Probability of sensor failure
+"sensors": P=? [ !"down" U "fail_sensors" ];
+
+// Probability of sensor failure within T hours
+"sensors_T": P=? [ !"down" U<=(T*3600) "fail_sensors" ];
+
+// Expected time spent in "up" by time T (hours)
+"up_T": R{"up"}=? [ C<=(T*3600) ];
+
+// Expected time spent in "up" before "down"
+"up_time": R{"up"}=? [ F "down" ];

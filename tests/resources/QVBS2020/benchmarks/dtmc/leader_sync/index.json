@@ -1,0 +1,561 @@
+{
+	"name": "Synchronous Leader Election Protocol",
+	"short": "leader_sync",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Alon Itai <itai@cs.technion.ac.il>",
+		"Michael Rodeh <rodeh@il.ibm.com>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1016/0890-5401(90)90004-2",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. Given a synchronous ring of `N´ processors the protocol manages to elect a leader (a uniquely designated processor) by sending messages around the ring. In each round the IDs of the processors are chosen uniformly from 1 to `K´. The processors then pass their IDs around the ring. If there is a unique ID, then the processor with the maximum unique ID is elected the leader, and otherwise the processors begin a new round. See [2] for more details.",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/synchronous_leader.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of processes",
+			"type": "positive integer"
+		},
+		{
+			"name": "K",
+			"kind": "file",
+			"description": "Range of probabilistic choice",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "eventually_elected",
+			"description": "A leader is eventually elected with probability 1.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "time",
+			"description": "The expected time (num. rounds) to elect a leader.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "leader_sync.3-2.jani",
+			"original-file": [
+				"leader_sync.3-2.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.3-2.prism --tojani leader_sync.3-2.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 26
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.3333333333333333,
+								"num": 4,
+								"den": 3
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.3-3.jani",
+			"original-file": [
+				"leader_sync.3-3.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.3-3.prism --tojani leader_sync.3-3.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 69
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.125,
+								"num": 9,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.3-4.jani",
+			"original-file": [
+				"leader_sync.3-4.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.3-4.prism --tojani leader_sync.3-4.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 147
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.0666666666666667,
+								"num": 16,
+								"den": 15
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.4-2.jani",
+			"original-file": [
+				"leader_sync.4-2.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.4-2.prism --tojani leader_sync.4-2.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 61
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": 2,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.4-3.jani",
+			"original-file": [
+				"leader_sync.4-3.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.4-3.prism --tojani leader_sync.4-3.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 274
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.35,
+								"num": 27,
+								"den": 20
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.4-4.jani",
+			"original-file": [
+				"leader_sync.4-4.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.4-4.prism --tojani leader_sync.4-4.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 812
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.1851851851851851,
+								"num": 32,
+								"den": 27
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.5-2.jani",
+			"original-file": [
+				"leader_sync.5-2.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.5-2.prism --tojani leader_sync.5-2.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 141
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 3.2,
+								"num": 16,
+								"den": 5
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.5-3.jani",
+			"original-file": [
+				"leader_sync.5-3.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.5-3.prism --tojani leader_sync.5-3.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "K",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1050
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.35,
+								"num": 27,
+								"den": 20
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "leader_sync.5-4.jani",
+			"original-file": [
+				"leader_sync.5-4.prism",
+				"leader_sync.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism leader_sync.5-4.prism --tojani leader_sync.5-4.jani --prop leader_sync.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 4244
+						}
+					],
+					"results": [
+						{
+							"property": "eventually_elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time",
+							"value": {
+								"approx": 1.1377777777777778,
+								"num": 256,
+								"den": 225
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3-2.2018-10-12.json",
+		"results/Storm.3-3.2018-10-12.json",
+		"results/Storm.3-4.2018-10-12.json",
+		"results/Storm.4-2.2018-10-12.json",
+		"results/Storm.4-3.2018-10-12.json",
+		"results/Storm.4-4.2018-10-12.json",
+		"results/Storm.5-2.2018-10-12.json",
+		"results/Storm.5-3.2018-10-12.json",
+		"results/Storm.5-4.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-3.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-3.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-3.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-4.2018-10-17.json"
+		},
+		"results/mcsta.3-2.2018-11-21.json",
+		"results/mcsta.3-3.2018-11-21.json",
+		"results/mcsta.3-4.2018-11-21.json",
+		"results/mcsta.4-2.2018-11-21.json",
+		"results/mcsta.4-3.2018-11-21.json",
+		"results/mcsta.4-4.2018-11-21.json",
+		"results/mcsta.5-2.2018-11-21.json",
+		"results/mcsta.5-3.2018-11-21.json",
+		"results/mcsta.5-4.2018-11-21.json"
+	]
+}

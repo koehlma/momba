@@ -1,0 +1,45 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct 17 19:11:30 2018
+Command line arguments: --jani polling.5.jani --janiproperty --constants T=16 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/polling
+
+Time for model construction: 0.050s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	240
+Transitions: 	800
+Reward Models:  waiting, served
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (a = 1) -> 80 item(s)
+   * (s = 2) -> 48 item(s)
+   * (s1 = 1) -> 128 item(s)
+   * (a = 0) -> 160 item(s)
+   * init -> 1 item(s)
+   * (s = 1) -> 48 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "s1": LRAmin=? [((s1 = 1) & !(((s = 1) & (a = 1))))] ...
+Result (for initial states): 98069746834657416640640770090416136409437704862983150174524778199160683812887056400565845487519/676683319504139759515696049120244679950836113286540736723830179302924436231709257397083719410479 (approx. 0.1449270937)
+Time for model checking: 0.426s.
+
+Model checking property "s1_before_s2": Pmin=? [!(((s = 2) & (a = 1))) U ((s = 1) & (a = 1))] ...
+Result (for initial states): 383626627176344362198001781420344025337417381567868217691261639067443116865895480215591378343853612745072976262791667606419714766239/716067883380573582223662738087784862049847275903622358738225912889864165988420563610065440744103356885109451944059087332441611505239 (approx. 0.5357405856)
+Time for model checking: 0.008s.
+
+Model checking property "served": R[exp]{"served"}min=? [C<=16] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "station1_polled": Pmin=? [true U<=16 ((s = 1) & (a = 0))] ...
+ failed, property is unsupported by selected engine/settings.
+
+Model checking property "waiting": R[exp]{"waiting"}min=? [C<=16] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 49MB
+  * CPU time: 0.530s
+  * wallclock time: 0.493s

@@ -1,0 +1,2132 @@
+{"jani-version":1,
+"name":"sf.1-6.jani",
+"type":"ma",
+"variables":[{"name":"marked","type":"bool","initial-value":false}],
+"actions":[
+	{"name":"ACTIVATE !0 !FALSE"},
+	{"name":"ACTIVATE !0 !TRUE"},
+	{"name":"ACTIVATE !1 !TRUE"},
+	{"name":"ACTIVATE !2 !TRUE"},
+	{"name":"ACTIVATE !3 !TRUE"},
+	{"name":"ACTIVATE !4 !TRUE"},
+	{"name":"ACTIVATE !5 !TRUE"},
+	{"name":"ACTIVATE !6 !TRUE"},
+	{"name":"DEACTIVATE !0 !FALSE"},
+	{"name":"DEACTIVATE !1 !TRUE"},
+	{"name":"DEACTIVATE !2 !TRUE"},
+	{"name":"DEACTIVATE !3 !TRUE"},
+	{"name":"DEACTIVATE !4 !TRUE"},
+	{"name":"DEACTIVATE !5 !TRUE"},
+	{"name":"DEACTIVATE !6 !TRUE"},
+	{"name":"FAIL !0"},
+	{"name":"FAIL !1"},
+	{"name":"FAIL !2"},
+	{"name":"FAIL !3"},
+	{"name":"FAIL !4"},
+	{"name":"FAIL !5"},
+	{"name":"FAIL !6"},
+	{"name":"exit"},
+	{"name":"τ"},
+	{"name":"mark"},
+	{"name":"unmark"}
+	],
+"automata":[
+	{"name":"aut0",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "action":"ACTIVATE !0 !TRUE"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"exit"
+		}
+	]},
+	{"name":"aut1",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !4"
+		}
+	]},
+	{"name":"aut2",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"},{"name":"l3"},{"name":"l4"},{"name":"l5"},{"name":"l6"},{"name":"l7"},{"name":"l8"},{"name":"l9"},{"name":"l10"},{"name":"l11"},{"name":"l12"},{"name":"l13"},{"name":"l14"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l5"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l0"}],
+		 "action":"ACTIVATE !2 !TRUE"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l14"}],
+		 "action":"ACTIVATE !1 !TRUE"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l6"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l3"}],
+		 "action":"ACTIVATE !2 !TRUE"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l1"}],
+		 "action":"ACTIVATE !1 !TRUE"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l4"}],
+		 "action":"ACTIVATE !1 !TRUE"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l11"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l12"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l7"}],
+		 "action":"ACTIVATE !2 !TRUE"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l9"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l8"}],
+		 "action":"ACTIVATE !2 !TRUE"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l10"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l9"}],
+		 "action":"ACTIVATE !1 !TRUE"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l11"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l10"}],
+		 "action":"ACTIVATE !1 !TRUE"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l12"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l2"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l13"}],
+		 "action":"ACTIVATE !2 !TRUE"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l14"}],
+		 "action":"ACTIVATE !0 !FALSE"
+		}
+	]},
+	{"name":"aut3",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.25}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut4",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.3}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut5",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.2}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut6",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"},{"name":"l3"},{"name":"l4"},{"name":"l5"},{"name":"l6"},{"name":"l7"},{"name":"l8"},{"name":"l9"},{"name":"l10"},{"name":"l11"},{"name":"l12"},{"name":"l13"},{"name":"l14"},{"name":"l15"},{"name":"l16"},{"name":"l17"},{"name":"l18"},{"name":"l19"},{"name":"l20"},{"name":"l21"},{"name":"l22"},{"name":"l23"},{"name":"l24"},{"name":"l25"},{"name":"l26"},{"name":"l27"},{"name":"l28"},{"name":"l29"},{"name":"l30"},{"name":"l31"},{"name":"l32"},{"name":"l33"},{"name":"l34"},{"name":"l35"},{"name":"l36"},{"name":"l37"},{"name":"l38"},{"name":"l39"},{"name":"l40"},{"name":"l41"},{"name":"l42"},{"name":"l43"},{"name":"l44"},{"name":"l45"},{"name":"l46"},{"name":"l47"},{"name":"l48"},{"name":"l49"},{"name":"l50"},{"name":"l51"},{"name":"l52"},{"name":"l53"},{"name":"l54"},{"name":"l55"},{"name":"l56"},{"name":"l57"},{"name":"l58"},{"name":"l59"},{"name":"l60"},{"name":"l61"},{"name":"l62"},{"name":"l63"},{"name":"l64"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l59"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l60"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l61"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l62"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l63"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l64"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l3",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l4",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l5",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l6",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l7",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l8",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l9",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l10",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l11",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l12",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l8"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l13",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l14",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l15",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l16",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l7"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l17",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l18",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l19",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l6"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l20",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l21",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l5"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l22",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l3"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l4"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l23",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l24",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l25",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l26",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l27",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l28",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l29",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l30",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l31",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l32",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l33",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l23"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l34",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l22"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l35",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l21"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l36",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l20"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l37",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l19"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l38",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l18"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l39",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l13"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l17"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l40",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l12"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l16"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l41",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l11"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l15"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l42",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l9"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l10"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l14"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l43",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l44"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l44",
+		 "destinations":[{"location":"l44"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l45"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l45",
+		 "destinations":[{"location":"l45"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l43"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l46"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l46",
+		 "destinations":[{"location":"l46"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l47"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l47",
+		 "destinations":[{"location":"l47"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l42"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l48"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l48",
+		 "destinations":[{"location":"l48"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l40"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l41"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l49"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l49",
+		 "destinations":[{"location":"l49"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l50"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l50",
+		 "destinations":[{"location":"l50"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l39"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l51"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l51",
+		 "destinations":[{"location":"l51"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l37"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l38"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l52"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l52",
+		 "destinations":[{"location":"l52"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l34"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l35"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l36"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l53"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l53",
+		 "destinations":[{"location":"l53"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l54"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l54",
+		 "destinations":[{"location":"l54"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l33"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l55"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l55",
+		 "destinations":[{"location":"l55"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l31"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l32"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l56"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l56",
+		 "destinations":[{"location":"l56"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l28"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l29"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l30"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l57"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l57",
+		 "destinations":[{"location":"l57"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l24"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l25"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l26"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l27"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l58"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l58",
+		 "destinations":[{"location":"l58"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l54"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l55"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l56"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l57"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l58"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l59",
+		 "destinations":[{"location":"l59"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l50"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l51"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l52"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l53"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l58"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l60",
+		 "destinations":[{"location":"l60"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l47"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l48"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l49"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l53"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l57"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l61",
+		 "destinations":[{"location":"l61"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l45"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l46"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l49"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l52"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l56"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l62",
+		 "destinations":[{"location":"l62"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l44"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l46"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l48"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l51"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l55"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l63",
+		 "destinations":[{"location":"l63"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l44"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l45"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l47"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l50"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l54"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l64",
+		 "destinations":[{"location":"l64"}],
+		 "action":"FAIL !6"
+		}
+	]},
+	{"name":"monitor",
+	 "locations":[{"name":"l"}],
+	 "initial-locations":["l"],
+	 "edges":[
+		{"location":"l",
+		 "action":"mark",
+		 "destinations":[{
+			"location":"l",
+			"assignments":[{"ref":"marked", "value":true}]
+			}]},
+		{"location":"l",
+		 "action":"unmark",
+		 "destinations":[{
+			"location":"l",
+			"assignments":[{"ref":"marked", "value":false}]
+			}]
+		}]
+	}
+],
+"system":{"elements":[
+	{"automaton":"aut0"},
+	{"automaton":"aut1"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut3"},
+	{"automaton":"aut4"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut6"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"aut5"},
+	{"automaton":"monitor"}
+	],
+	"syncs":[
+		{"synchronise":["ACTIVATE !0 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !1 !TRUE",null,null,null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !2 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !2 !TRUE","DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !3 !TRUE",null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !3 !TRUE",null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !4 !TRUE",null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !4 !TRUE",null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"ACTIVATE !2 !TRUE",null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"DEACTIVATE !2 !TRUE",null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"ACTIVATE !1 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"DEACTIVATE !1 !TRUE","DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"ACTIVATE !2 !TRUE",null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE","DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !3 !TRUE",null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !3 !TRUE",null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !4 !TRUE",null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !4 !TRUE",null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !5 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !5 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !6 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !6 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,"ACTIVATE !0 !FALSE",null,"ACTIVATE !1 !TRUE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE", null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE", null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, "mark"],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !1",null,null,null,null,null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !2","FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !3",null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !4",null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,"FAIL !1",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"FAIL !2",null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"FAIL !1","FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"FAIL !2",null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !1","FAIL !0",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !2",null,"FAIL !0",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !3",null,null,"FAIL !0",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !4",null,null,null,"FAIL !0",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !5",null,null,null,null,"FAIL !0",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !6",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,"FAIL !2","FAIL !1",null,null,null,null,"FAIL !0",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,"FAIL !2","FAIL !1",null,null,null,null,"FAIL !0",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,"FAIL !2","FAIL !1",null,null,null,null,"FAIL !0",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,"FAIL !2","FAIL !1",null,null,null,null,"FAIL !0",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,"FAIL !2","FAIL !1",null,null,null,null,"FAIL !0",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"FAIL !2",null,null,null,null,null,"FAIL !0", null],
+		 "result":"τ"}
+	]},
+"properties": [
+	{"name":"Unreliability",
+	 "expression":{
+		"fun":"max",
+		"op":"filter",
+		"states":{"op":"initial"},
+		"values":{
+			"op":"Pmax",
+			"exp":{"op":"F", "exp":"marked", "time-bounds":{"upper":1.0}}
+			}
+		}
+	}
+]
+}

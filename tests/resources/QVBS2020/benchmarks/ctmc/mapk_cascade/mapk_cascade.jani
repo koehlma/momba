@@ -1,0 +1,3908 @@
+{
+    "actions": [
+        {
+            "name": "a_k_kk"
+        },
+        {
+            "name": "a_k_ptase"
+        },
+        {
+            "name": "a_kk_kkk"
+        },
+        {
+            "name": "a_kk_ptase"
+        },
+        {
+            "name": "a_kkk_e1"
+        },
+        {
+            "name": "a_kkk_e2"
+        },
+        {
+            "name": "d_k_kk"
+        },
+        {
+            "name": "d_k_ptase"
+        },
+        {
+            "name": "d_kk_kkk"
+        },
+        {
+            "name": "d_kk_ptase"
+        },
+        {
+            "name": "d_kkk_e1"
+        },
+        {
+            "name": "d_kkk_e2"
+        },
+        {
+            "name": "k_k_kk"
+        },
+        {
+            "name": "k_k_ptase"
+        },
+        {
+            "name": "k_kk_kkk"
+        },
+        {
+            "name": "k_kk_ptase"
+        },
+        {
+            "name": "k_kkk_e1"
+        },
+        {
+            "name": "k_kkk_e2"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "action": "a_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e1 <- (e1 - 1)",
+                                    "ref": "e1",
+                                    "value": {
+                                        "left": "e1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(e1 / e1)",
+                                "exp": {
+                                    "left": "e1",
+                                    "op": "/",
+                                    "right": "e1"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e1 > 0)",
+                        "exp": {
+                            "left": "e1",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "e1",
+                        "exp": "e1"
+                    }
+                },
+                {
+                    "action": "d_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e1 <- (e1 + 1)",
+                                    "ref": "e1",
+                                    "value": {
+                                        "left": "e1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e1 < 1)",
+                        "exp": {
+                            "left": "e1",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e1 <- (e1 + 1)",
+                                    "ref": "e1",
+                                    "value": {
+                                        "left": "e1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e1 < 1)",
+                        "exp": {
+                            "left": "e1",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "activated <- kpp",
+                            "ref": "activated",
+                            "value": "kpp"
+                        },
+                        {
+                            "comment": "activated_squared <- (kpp * kpp)",
+                            "ref": "activated_squared",
+                            "value": {
+                                "left": "kpp",
+                                "op": "*",
+                                "right": "kpp"
+                            }
+                        },
+                        {
+                            "comment": "percentage <- (100 * (kpp / N))",
+                            "ref": "percentage",
+                            "value": {
+                                "left": 100,
+                                "op": "*",
+                                "right": {
+                                    "left": "kpp",
+                                    "op": "/",
+                                    "right": "N"
+                                }
+                            }
+                        },
+                        {
+                            "comment": "time <- 1",
+                            "ref": "time",
+                            "value": 1
+                        }
+                    ]
+                }
+            ],
+            "name": "E1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e2 <- (e2 - 1)",
+                                    "ref": "e2",
+                                    "value": {
+                                        "left": "e2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(e2 / e2)",
+                                "exp": {
+                                    "left": "e2",
+                                    "op": "/",
+                                    "right": "e2"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e2 > 0)",
+                        "exp": {
+                            "left": "e2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "e2",
+                        "exp": "e2"
+                    }
+                },
+                {
+                    "action": "d_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e2 <- (e2 + 1)",
+                                    "ref": "e2",
+                                    "value": {
+                                        "left": "e2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e2 < 1)",
+                        "exp": {
+                            "left": "e2",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "e2 <- (e2 + 1)",
+                                    "ref": "e2",
+                                    "value": {
+                                        "left": "e2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(e2 < 1)",
+                        "exp": {
+                            "left": "e2",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "E2",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kptase <- (kptase - 1)",
+                                    "ref": "kptase",
+                                    "value": {
+                                        "left": "kptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(kptase / kptase)",
+                                "exp": {
+                                    "left": "kptase",
+                                    "op": "/",
+                                    "right": "kptase"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kptase > 0)",
+                        "exp": {
+                            "left": "kptase",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "kptase",
+                        "exp": "kptase"
+                    }
+                },
+                {
+                    "action": "d_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kptase <- (kptase + 1)",
+                                    "ref": "kptase",
+                                    "value": {
+                                        "left": "kptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kptase < 1)",
+                        "exp": {
+                            "left": "kptase",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kptase <- (kptase + 1)",
+                                    "ref": "kptase",
+                                    "value": {
+                                        "left": "kptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kptase < 1)",
+                        "exp": {
+                            "left": "kptase",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "KPTASE",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkptase <- (kkptase - 1)",
+                                    "ref": "kkptase",
+                                    "value": {
+                                        "left": "kkptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(kkptase / kkptase)",
+                                "exp": {
+                                    "left": "kkptase",
+                                    "op": "/",
+                                    "right": "kkptase"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkptase > 0)",
+                        "exp": {
+                            "left": "kkptase",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "kkptase",
+                        "exp": "kkptase"
+                    }
+                },
+                {
+                    "action": "d_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkptase <- (kkptase + 1)",
+                                    "ref": "kkptase",
+                                    "value": {
+                                        "left": "kkptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkptase < 1)",
+                        "exp": {
+                            "left": "kkptase",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkptase <- (kkptase + 1)",
+                                    "ref": "kkptase",
+                                    "value": {
+                                        "left": "kkptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkptase < 1)",
+                        "exp": {
+                            "left": "kkptase",
+                            "op": "<",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "KKPTASE",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "k <- (k - 1)",
+                                    "ref": "k",
+                                    "value": {
+                                        "left": "k",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "k_kkpp <- (k_kkpp + 1)",
+                                    "ref": "k_kkpp",
+                                    "value": {
+                                        "left": "k_kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * k) / ((1 / N) * k))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "k"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "k"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((k > 0) & (k_kkpp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "k",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "k_kkpp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * k)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "k"
+                        }
+                    }
+                },
+                {
+                    "action": "a_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp <- (kp - 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp_kkpp <- (kp_kkpp + 1)",
+                                    "ref": "kp_kkpp",
+                                    "value": {
+                                        "left": "kp_kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kp) / ((1 / N) * kp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp > 0) & (kp_kkpp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp_kkpp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kp"
+                        }
+                    }
+                },
+                {
+                    "action": "a_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp <- (kp - 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp_ptase <- (kp_ptase + 1)",
+                                    "ref": "kp_ptase",
+                                    "value": {
+                                        "left": "kp_ptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kp) / ((1 / N) * kp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp > 0) & (kp_ptase < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp_ptase",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kp"
+                        }
+                    }
+                },
+                {
+                    "action": "a_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kpp <- (kpp - 1)",
+                                    "ref": "kpp",
+                                    "value": {
+                                        "left": "kpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kpp_ptase <- (kpp_ptase + 1)",
+                                    "ref": "kpp_ptase",
+                                    "value": {
+                                        "left": "kpp_ptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kpp) / ((1 / N) * kpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kpp > 0) & (kpp_ptase < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kpp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kpp_ptase",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kpp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kpp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "k <- (k + 1)",
+                                    "ref": "k",
+                                    "value": {
+                                        "left": "k",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "k_kkpp <- (k_kkpp - 1)",
+                                    "ref": "k_kkpp",
+                                    "value": {
+                                        "left": "k_kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * k_kkpp) / (150 * k_kkpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "k_kkpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "k_kkpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((k < N) & (k_kkpp > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "k",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "k_kkpp",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * k_kkpp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "k_kkpp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp <- (kp + 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp_kkpp <- (kp_kkpp - 1)",
+                                    "ref": "kp_kkpp",
+                                    "value": {
+                                        "left": "kp_kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kp_kkpp) / (150 * kp_kkpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_kkpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_kkpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp < N) & (kp_kkpp > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp_kkpp",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kp_kkpp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kp_kkpp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp <- (kp + 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp_ptase <- (kp_ptase - 1)",
+                                    "ref": "kp_ptase",
+                                    "value": {
+                                        "left": "kp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kp_ptase) / (150 * kp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp < N) & (kp_ptase > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp_ptase",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "d_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kpp <- (kpp + 1)",
+                                    "ref": "kpp",
+                                    "value": {
+                                        "left": "kpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kpp_ptase <- (kpp_ptase - 1)",
+                                    "ref": "kpp_ptase",
+                                    "value": {
+                                        "left": "kpp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kpp_ptase) / (150 * kpp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kpp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kpp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kpp < N) & (kpp_ptase > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kpp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kpp_ptase",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kpp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kpp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "k_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp_kkpp <- (kp_kkpp - 1)",
+                                    "ref": "kp_kkpp",
+                                    "value": {
+                                        "left": "kp_kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kpp <- (kpp + 1)",
+                                    "ref": "kpp",
+                                    "value": {
+                                        "left": "kpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kp_kkpp) / (150 * kp_kkpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_kkpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_kkpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp_kkpp > 0) & (kpp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kp_kkpp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kpp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kp_kkpp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kp_kkpp"
+                        }
+                    }
+                },
+                {
+                    "action": "k_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "k_kkpp <- (k_kkpp - 1)",
+                                    "ref": "k_kkpp",
+                                    "value": {
+                                        "left": "k_kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp <- (kp + 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "reactions <- 1",
+                                    "ref": "reactions",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * k_kkpp) / (150 * k_kkpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "k_kkpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "k_kkpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((k_kkpp > 0) & (kp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "k_kkpp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * k_kkpp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "k_kkpp"
+                        }
+                    }
+                },
+                {
+                    "action": "k_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "k <- (k + 1)",
+                                    "ref": "k",
+                                    "value": {
+                                        "left": "k",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kp_ptase <- (kp_ptase - 1)",
+                                    "ref": "kp_ptase",
+                                    "value": {
+                                        "left": "kp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kp_ptase) / (150 * kp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kp_ptase > 0) & (k < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kp_ptase",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "k",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "k_k_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kp <- (kp + 1)",
+                                    "ref": "kp",
+                                    "value": {
+                                        "left": "kp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kpp_ptase <- (kpp_ptase - 1)",
+                                    "ref": "kpp_ptase",
+                                    "value": {
+                                        "left": "kpp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kpp_ptase) / (150 * kpp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kpp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kpp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kpp_ptase > 0) & (kp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kpp_ptase",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kpp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kpp_ptase"
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "MAPK",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkpp <- (kkpp - 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(kkpp / kkpp)",
+                                "exp": {
+                                    "left": "kkpp",
+                                    "op": "/",
+                                    "right": "kkpp"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkpp > 0)",
+                        "exp": {
+                            "left": "kkpp",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "kkpp",
+                        "exp": "kkpp"
+                    }
+                },
+                {
+                    "action": "a_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp <- (kkp - 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp_kkkp <- (kkp_kkkp + 1)",
+                                    "ref": "kkp_kkkp",
+                                    "value": {
+                                        "left": "kkp_kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kkp) / ((1 / N) * kkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp > 0) & (kkp_kkkp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp_kkkp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kkp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kkp"
+                        }
+                    }
+                },
+                {
+                    "action": "a_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kk <- (kk - 1)",
+                                    "ref": "kk",
+                                    "value": {
+                                        "left": "kk",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kk_kkkp <- (kk_kkkp + 1)",
+                                    "ref": "kk_kkkp",
+                                    "value": {
+                                        "left": "kk_kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kk) / ((1 / N) * kk))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kk"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kk"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kk > 0) & (kk_kkkp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kk",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kk_kkkp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kk)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kk"
+                        }
+                    }
+                },
+                {
+                    "action": "a_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp <- (kkp - 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp_ptase <- (kkp_ptase + 1)",
+                                    "ref": "kkp_ptase",
+                                    "value": {
+                                        "left": "kkp_ptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kkp) / ((1 / N) * kkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp > 0) & (kkp_ptase < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp_ptase",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kkp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kkp"
+                        }
+                    }
+                },
+                {
+                    "action": "a_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkpp <- (kkpp - 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkpp_ptase <- (kkpp_ptase + 1)",
+                                    "ref": "kkpp_ptase",
+                                    "value": {
+                                        "left": "kkpp_ptase",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kkpp) / ((1 / N) * kkpp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkpp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkpp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkpp > 0) & (kkpp_ptase < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkpp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkpp_ptase",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kkpp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kkpp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkpp <- (kkpp + 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkpp < N)",
+                        "exp": {
+                            "left": "kkpp",
+                            "op": "<",
+                            "right": "N"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "d_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp <- (kkp + 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp_kkkp <- (kkp_kkkp - 1)",
+                                    "ref": "kkp_kkkp",
+                                    "value": {
+                                        "left": "kkp_kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkp_kkkp) / (150 * kkp_kkkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_kkkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_kkkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp < N) & (kkp_kkkp > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp_kkkp",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkp_kkkp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkp_kkkp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kk <- (kk + 1)",
+                                    "ref": "kk",
+                                    "value": {
+                                        "left": "kk",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kk_kkkp <- (kk_kkkp - 1)",
+                                    "ref": "kk_kkkp",
+                                    "value": {
+                                        "left": "kk_kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kk_kkkp) / (150 * kk_kkkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kk_kkkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kk_kkkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kk < N) & (kk_kkkp > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kk",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kk_kkkp",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kk_kkkp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kk_kkkp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp <- (kkp + 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp_ptase <- (kkp_ptase - 1)",
+                                    "ref": "kkp_ptase",
+                                    "value": {
+                                        "left": "kkp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkp_ptase) / (150 * kkp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp < N) & (kkp_ptase > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp_ptase",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "d_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkpp <- (kkpp + 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkpp_ptase <- (kkpp_ptase - 1)",
+                                    "ref": "kkpp_ptase",
+                                    "value": {
+                                        "left": "kkpp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkpp_ptase) / (150 * kkpp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkpp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkpp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkpp < N) & (kkpp_ptase > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kkpp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkpp_ptase",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkpp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkpp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "k_k_kk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkpp <- (kkpp + 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkpp < N)",
+                        "exp": {
+                            "left": "kkpp",
+                            "op": "<",
+                            "right": "N"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp_kkkp <- (kkp_kkkp - 1)",
+                                    "ref": "kkp_kkkp",
+                                    "value": {
+                                        "left": "kkp_kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkpp <- (kkpp + 1)",
+                                    "ref": "kkpp",
+                                    "value": {
+                                        "left": "kkpp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkp_kkkp) / (150 * kkp_kkkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_kkkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_kkkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp_kkkp > 0) & (kkpp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp_kkkp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkpp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkp_kkkp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkp_kkkp"
+                        }
+                    }
+                },
+                {
+                    "action": "k_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kk_kkkp <- (kk_kkkp - 1)",
+                                    "ref": "kk_kkkp",
+                                    "value": {
+                                        "left": "kk_kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp <- (kkp + 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kk_kkkp) / (150 * kk_kkkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kk_kkkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kk_kkkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kk_kkkp > 0) & (kkp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kk_kkkp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kk_kkkp)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kk_kkkp"
+                        }
+                    }
+                },
+                {
+                    "action": "k_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kk <- (kk + 1)",
+                                    "ref": "kk",
+                                    "value": {
+                                        "left": "kk",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkp_ptase <- (kkp_ptase - 1)",
+                                    "ref": "kkp_ptase",
+                                    "value": {
+                                        "left": "kkp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkp_ptase) / (150 * kkp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkp_ptase > 0) & (kk < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkp_ptase",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kk",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkp_ptase"
+                        }
+                    }
+                },
+                {
+                    "action": "k_kk_ptase",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkp <- (kkp + 1)",
+                                    "ref": "kkp",
+                                    "value": {
+                                        "left": "kkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkpp_ptase <- (kkpp_ptase - 1)",
+                                    "ref": "kkpp_ptase",
+                                    "value": {
+                                        "left": "kkpp_ptase",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkpp_ptase) / (150 * kkpp_ptase))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkpp_ptase"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkpp_ptase"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkpp_ptase > 0) & (kkp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkpp_ptase",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkpp_ptase)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkpp_ptase"
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "MAPKK",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "a_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkkp <- (kkkp - 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(kkkp / kkkp)",
+                                "exp": {
+                                    "left": "kkkp",
+                                    "op": "/",
+                                    "right": "kkkp"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkkp > 0)",
+                        "exp": {
+                            "left": "kkkp",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "kkkp",
+                        "exp": "kkkp"
+                    }
+                },
+                {
+                    "action": "a_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkk <- (kkk - 1)",
+                                    "ref": "kkk",
+                                    "value": {
+                                        "left": "kkk",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkk_e1 <- (kkk_e1 + 1)",
+                                    "ref": "kkk_e1",
+                                    "value": {
+                                        "left": "kkk_e1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kkk) / ((1 / N) * kkk))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkk"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkk"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkk > 0) & (kkk_e1 < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkk",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkk_e1",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kkk)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kkk"
+                        }
+                    }
+                },
+                {
+                    "action": "a_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkkp <- (kkkp - 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkkp_e2 <- (kkkp_e2 + 1)",
+                                    "ref": "kkkp_e2",
+                                    "value": {
+                                        "left": "kkkp_e2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(((1 / N) * kkkp) / ((1 / N) * kkkp))",
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkkp"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": "N"
+                                        },
+                                        "op": "*",
+                                        "right": "kkkp"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkkp > 0) & (kkkp_e2 < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkkp",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkkp_e2",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "((1 / N) * kkkp)",
+                        "exp": {
+                            "left": {
+                                "left": 1,
+                                "op": "/",
+                                "right": "N"
+                            },
+                            "op": "*",
+                            "right": "kkkp"
+                        }
+                    }
+                },
+                {
+                    "action": "d_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkkp <- (kkkp + 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkkp < N)",
+                        "exp": {
+                            "left": "kkkp",
+                            "op": "<",
+                            "right": "N"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "d_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkk <- (kkk + 1)",
+                                    "ref": "kkk",
+                                    "value": {
+                                        "left": "kkk",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkk_e1 <- (kkk_e1 - 1)",
+                                    "ref": "kkk_e1",
+                                    "value": {
+                                        "left": "kkk_e1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkk_e1) / (150 * kkk_e1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkk_e1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkk_e1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkk < N) & (kkk_e1 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kkk",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkk_e1",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkk_e1)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkk_e1"
+                        }
+                    }
+                },
+                {
+                    "action": "d_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkkp <- (kkkp + 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkkp_e2 <- (kkkp_e2 - 1)",
+                                    "ref": "kkkp_e2",
+                                    "value": {
+                                        "left": "kkkp_e2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkkp_e2) / (150 * kkkp_e2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkkp_e2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkkp_e2"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkkp < N) & (kkkp_e2 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "kkkp",
+                                "op": "<",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkkp_e2",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkkp_e2)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkkp_e2"
+                        }
+                    }
+                },
+                {
+                    "action": "k_kk_kkk",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkkp <- (kkkp + 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(kkkp < N)",
+                        "exp": {
+                            "left": "kkkp",
+                            "op": "<",
+                            "right": "N"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "k_kkk_e1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkk_e1 <- (kkk_e1 - 1)",
+                                    "ref": "kkk_e1",
+                                    "value": {
+                                        "left": "kkk_e1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkkp <- (kkkp + 1)",
+                                    "ref": "kkkp",
+                                    "value": {
+                                        "left": "kkkp",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkk_e1) / (150 * kkk_e1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkk_e1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkk_e1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkk_e1 > 0) & (kkkp < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkk_e1",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkkp",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkk_e1)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkk_e1"
+                        }
+                    }
+                },
+                {
+                    "action": "k_kkk_e2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "kkk <- (kkk + 1)",
+                                    "ref": "kkk",
+                                    "value": {
+                                        "left": "kkk",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "kkkp_e2 <- (kkkp_e2 - 1)",
+                                    "ref": "kkkp_e2",
+                                    "value": {
+                                        "left": "kkkp_e2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((150 * kkkp_e2) / (150 * kkkp_e2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkkp_e2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 150,
+                                        "op": "*",
+                                        "right": "kkkp_e2"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((kkkp_e2 > 0) & (kkk < N))",
+                        "exp": {
+                            "left": {
+                                "left": "kkkp_e2",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "kkk",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(150 * kkkp_e2)",
+                        "exp": {
+                            "left": 150,
+                            "op": "*",
+                            "right": "kkkp_e2"
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "MAPKKK",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "E1",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "E2",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "M",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "N",
+            "type": "int"
+        },
+        {
+            "name": "a1",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d1",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k1",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a2",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d2",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k2",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a3",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d3",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k3",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a4",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d4",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k4",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a5",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d5",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k5",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a6",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d6",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k6",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a7",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d7",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k7",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a8",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d8",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k8",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a9",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d9",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k9",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "a10",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": "N"
+            }
+        },
+        {
+            "name": "d10",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "k10",
+            "type": "real",
+            "value": 150
+        },
+        {
+            "name": "T",
+            "type": "real"
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "mapk_cascade",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": "activated",
+                    "op": "Emin",
+                    "time-instant": "T"
+                }
+            },
+            "name": "activated_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "time",
+                    "op": "Emin",
+                    "reach": {
+                        "left": "kpp",
+                        "op": "=",
+                        "right": "N"
+                    }
+                }
+            },
+            "name": "activated_time"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "steps"
+                    ],
+                    "exp": "reactions",
+                    "op": "Emin",
+                    "time-instant": "T"
+                }
+            },
+            "name": "reactions"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "E1"
+            },
+            {
+                "automaton": "E2"
+            },
+            {
+                "automaton": "KPTASE"
+            },
+            {
+                "automaton": "KKPTASE"
+            },
+            {
+                "automaton": "MAPK"
+            },
+            {
+                "automaton": "MAPKK"
+            },
+            {
+                "automaton": "MAPKKK"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "a_k_kk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    "a_k_kk",
+                    "a_k_kk",
+                    null
+                ]
+            },
+            {
+                "result": "a_k_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    "a_k_ptase",
+                    null,
+                    "a_k_ptase",
+                    null,
+                    null
+                ]
+            },
+            {
+                "result": "a_kk_kkk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "a_kk_kkk",
+                    "a_kk_kkk"
+                ]
+            },
+            {
+                "result": "a_kk_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    "a_kk_ptase",
+                    null,
+                    "a_kk_ptase",
+                    null
+                ]
+            },
+            {
+                "result": "a_kkk_e1",
+                "synchronise": [
+                    "a_kkk_e1",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "a_kkk_e1"
+                ]
+            },
+            {
+                "result": "a_kkk_e2",
+                "synchronise": [
+                    null,
+                    "a_kkk_e2",
+                    null,
+                    null,
+                    null,
+                    null,
+                    "a_kkk_e2"
+                ]
+            },
+            {
+                "result": "d_k_kk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    "d_k_kk",
+                    "d_k_kk",
+                    null
+                ]
+            },
+            {
+                "result": "d_k_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    "d_k_ptase",
+                    null,
+                    "d_k_ptase",
+                    null,
+                    null
+                ]
+            },
+            {
+                "result": "d_kk_kkk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "d_kk_kkk",
+                    "d_kk_kkk"
+                ]
+            },
+            {
+                "result": "d_kk_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    "d_kk_ptase",
+                    null,
+                    "d_kk_ptase",
+                    null
+                ]
+            },
+            {
+                "result": "d_kkk_e1",
+                "synchronise": [
+                    "d_kkk_e1",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "d_kkk_e1"
+                ]
+            },
+            {
+                "result": "d_kkk_e2",
+                "synchronise": [
+                    null,
+                    "d_kkk_e2",
+                    null,
+                    null,
+                    null,
+                    null,
+                    "d_kkk_e2"
+                ]
+            },
+            {
+                "result": "k_k_kk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    "k_k_kk",
+                    "k_k_kk",
+                    null
+                ]
+            },
+            {
+                "result": "k_k_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    "k_k_ptase",
+                    null,
+                    "k_k_ptase",
+                    null,
+                    null
+                ]
+            },
+            {
+                "result": "k_kk_kkk",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "k_kk_kkk",
+                    "k_kk_kkk"
+                ]
+            },
+            {
+                "result": "k_kk_ptase",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    "k_kk_ptase",
+                    null,
+                    "k_kk_ptase",
+                    null
+                ]
+            },
+            {
+                "result": "k_kkk_e1",
+                "synchronise": [
+                    "k_kkk_e1",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "k_kkk_e1"
+                ]
+            },
+            {
+                "result": "k_kkk_e2",
+                "synchronise": [
+                    null,
+                    "k_kkk_e2",
+                    null,
+                    null,
+                    null,
+                    null,
+                    "k_kkk_e2"
+                ]
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": 0.0,
+            "name": "activated",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "activated_squared",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "percentage",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "reactions",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "time",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 1,
+            "name": "e1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "e2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "kptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "kkptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": "N",
+            "name": "k",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "k_kkpp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kp_kkpp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kp_ptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kpp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kpp_ptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": "N",
+            "name": "kk",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kk_kkkp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkp_kkkp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkp_ptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkpp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkpp_ptase",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": "N",
+            "name": "kkk",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkk_e1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkkp",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "kkkp_e2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "N"
+            }
+        }
+    ]
+}

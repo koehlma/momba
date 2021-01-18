@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 07:07:40 2018
+Command line arguments: --jani wlan.6.jani --janiproperty --constants COL=0 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/wlan
+
+Time for model construction: 598.285s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	5007548
+Transitions: 	11475748
+Choices: 	6350470
+Reward Models:  time, collisions, cost
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (col = 0) -> 5007548 item(s)
+   * (s2 = 12) -> 10891 item(s)
+   * (s1 = 12) -> 10891 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collisions": Pmax=? [F (col = 0)] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 13.897s.
+
+Model checking property "cost_max": R[exp]{"cost"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1669977806705340623589741851475/7347116803629629894033408 (approx. 227297.027)
+Time for model checking: 50.860s.
+
+Model checking property "cost_min": R[exp]{"cost"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 7625 (approx. 7625)
+Time for model checking: 59.193s.
+
+Model checking property "num_collisions": R[exp]{"collisions"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 289639454789298300673463/241077039534796309528576 (approx. 1.201439404)
+Time for model checking: 44.219s.
+
+Model checking property "sent": Pmin>=1 [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): true
+
+Time for model checking: 16.453s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 37448939728860673819103673575/9643090804763889235918848 (approx. 3883.499646)
+Time for model checking: 50.991s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1325 (approx. 1325)
+Time for model checking: 59.222s.
+
+Performance statistics:
+  * peak memory usage: 7613MB
+  * CPU time: 899.002s
+  * wallclock time: 906.193s

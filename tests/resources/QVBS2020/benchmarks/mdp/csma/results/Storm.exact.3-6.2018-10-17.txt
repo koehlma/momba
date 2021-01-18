@@ -1,0 +1,39 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 05:14:14 2018
+Command line arguments: --jani csma.3-6.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/csma
+
+Time for model construction: 3592.194s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	84856004
+Transitions: 	147200984
+Choices: 	84988757
+Reward Models:  time
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * collision_max_backoff -> 13256 item(s)
+   * ((min((min(((s1 = 4) ? cd1 : 7), ((s2 = 4) ? cd2 : 7))), ((s3 = 4) ? cd3 : 7))) < 6) -> 2364928 item(s)
+   * all_delivered -> 125 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "all_before_max": Pmax=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 1425585077619291382058879556199022035448444737/1427247692705959881058285969449495136382746624 (approx. 0.99883509)
+Time for model checking: 961.471s.
+
+Model checking property "all_before_min": Pmin=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 27528331342820564137926242860602786111511899965645013934676796870783315/27606985387162255149739023449108101809804435888681546220650096895197184 (approx. 0.9971509369)
+Time for model checking: 741.161s.
+
+Model checking property "some_before": Pmin=? [F ((min((min(((s1 = 4) ? cd1 : 7), ((s2 = 4) ? cd2 : 7))), ((s3 = 4) ? cd3 : 7))) < 6)] ...
+Result (for initial states): 1346586745880576713996270758494327463129361368549831931704359556401524271653017993499288199098174785388284668703466892271071647196750637447372511122949632363243284557400892710812986359183351420796669430746857030211/1346594790796383617853693410017312938380886989522732508031559911185595431500052690461098633287062643514107640027181623734532974656047053788960720581286881497588537259808881817137065922018386615621451072444360032256 (approx. 0.9999940257)
+Time for model checking: 662.781s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "all_delivered"] ...
+
+
+Terminated as it exceeded the (cumulative) memory limit of 180.0 GB by taking 81.0616645813 GB.

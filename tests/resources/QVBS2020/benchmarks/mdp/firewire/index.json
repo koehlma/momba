@@ -1,0 +1,1014 @@
+{
+	"name": "IEEE 1394 FireWire Root Contention Protocol",
+	"short": "firewire",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 2,
+	"date": "2018-11-03",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		},
+		{
+			"date": "2018-11-03",
+			"notes": "Added property `deadline´ and merged with the firewire_impl_dl model.",
+			"version": 2
+		}
+	],
+	"author": [
+		"Marielle Stoelinga <marielle@cs.kun.nl>",
+		"Frits Vaandrager <fvaan@cs.kun.nl>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/3-540-48778-6_4",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] concerns the Tree Identify Protocol of the IEEE 1394 High Performance Serial Bus, called \"FireWire\". The 1394 High Performance serial bus is used to transport video and audio signals within a network of multimedia devices. It is modeled as a leader election protocol which takes place after a bus reset in the network, that is, when a node is added or removed from the network. After such a reset all nodes in the network have equal status, and know only to which nodes they are directly connected. A leader needs to be chosen to act as the manager of the bus for subsequent phases of IEEE 1394. This is done by the nodes communicating \"be my parent\" messages, starting from the leaf nodes. The protocol is designed for use on connected networks and will correctly elect a leader if the network is acyclic. We consider probabilistic timed automata models of the root contention part of the tree identify protocol, which are based on probabilistic I/O automata models presented in [0]. `delay´ is the maximum wire transmission delay in nano seconds. This models the distance between the two nodes, i.e. the length of the connecting wires. A delay of 360ns represents the assumption that the nodes are separated by a distance close to the maximum required for the correctness of the protocol. A delay of 30ns corresponds more closely to the maximum separation of nodes specified in the actual IEEE standard. The version where parameter `explicit_timer´ is true corresponds to the firewire_impl_dl model from the PRISM Benchmark suite and includes an explicit timer module to allow the verification of time-bounded properties as unbounded properties. See [2] for more details.",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/firewire.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "explicit_timer",
+			"kind": "file",
+			"description": "When set to true, an explicit timer module is included",
+			"type": "Boolean"
+		},
+		{
+			"name": "delay",
+			"kind": "open",
+			"description": "Maximum wire transmission delay in units of 10ns",
+			"type": "positive integer"
+		},
+		{
+			"name": "deadline",
+			"kind": "open",
+			"description": "Timer deadline in units of 10 ns",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "elected",
+			"description": "A leader is always eventually elected with probability 1.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "time_max",
+			"description": "The maximum expected time to elect a leader.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_min",
+			"description": "Minimum expected time to elect a leader.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_sending",
+			"description": "The maximum expected time spent sending before electing a leader.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "deadline",
+			"description": "Minimum probability of completing within `deadline´. If `explicit_timer´ is true, this is an unbounded probabilistic reachability property.",
+			"type": "prob-reach-reward-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "firewire.false.jani",
+			"original-file": [
+				"firewire.false.prism",
+				"firewire.false.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism firewire.false.prism --tojani firewire.false.jani --prop firewire.false.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "explicit_timer",
+					"value": false
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 4093
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 1,
+								"approx": 0.5,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 4093
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 25,
+								"approx": 0.78125,
+								"den": 32
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 4093
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 477,
+								"approx": 0.931640625,
+								"den": 512
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 4093
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 31965,
+								"approx": 0.975494384765625,
+								"den": 32768
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 212268
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"approx": 202.25,
+								"num": 809,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": 0,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 212268
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"approx": 202.25,
+								"num": 809,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 5,
+								"approx": 0.625,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 212268
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"approx": 202.25,
+								"num": 809,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 109,
+								"approx": 0.8515625,
+								"den": 128
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 212268
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 138.25,
+								"num": 553,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"approx": 202.25,
+								"num": 809,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 481,
+								"approx": 0.939453125,
+								"den": 512
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "firewire.true.jani",
+			"original-file": [
+				"firewire.true.prism",
+				"firewire.true.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism firewire.true.prism --tojani firewire.true.jani --prop firewire.true.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "explicit_timer",
+					"value": true
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 82979
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 1,
+								"approx": 0.5,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 430177
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 25,
+								"approx": 0.78125,
+								"den": 32
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 1078299
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 477,
+								"approx": 0.931640625,
+								"den": 512
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 3
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 1887132
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 299,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": 18,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 31965,
+								"approx": 0.975494384765625,
+								"den": 32768
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 6931981
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"num": 809,
+								"approx": 202.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": 0,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 400
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 44578443
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": 365,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"num": 553,
+								"approx": 138.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_sending",
+							"value": {
+								"num": 809,
+								"approx": 202.25,
+								"den": 4
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "deadline",
+							"value": {
+								"num": 5,
+								"approx": 0.625,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 600
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 87025687
+						}
+					],
+					"results": [
+						{
+							"property": "elected",
+							"value": true,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "delay",
+							"value": 36
+						},
+						{
+							"name": "deadline",
+							"value": 800
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 129479287
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.false-3-200.2018-11-05.json",
+		"results/mcsta.false-3-400.2018-11-05.json",
+		"results/mcsta.false-3-600.2018-11-05.json",
+		"results/mcsta.false-3-800.2018-11-05.json",
+		"results/mcsta.false-36-200.2018-11-05.json",
+		"results/mcsta.false-36-400.2018-11-05.json",
+		"results/mcsta.false-36-600.2018-11-05.json",
+		"results/mcsta.false-36-800.2018-11-05.json",
+		"results/mcsta.true-3-200.2018-11-05.json",
+		"results/mcsta.true-3-400.2018-11-05.json",
+		"results/mcsta.true-3-600.2018-11-05.json",
+		"results/mcsta.true-3-800.2018-11-05.json",
+		"results/mcsta.true-36-200.2018-11-05.json",
+		"results/mcsta.true-36-400.2018-11-06.json",
+		"results/Storm.false-3-0.2018-10-12.json",
+		"results/Storm.false-36-0.2018-10-12.json",
+		"results/Storm.true-3-200.2018-10-12.json",
+		"results/Storm.true-3-400.2018-10-12.json",
+		"results/Storm.true-3-600.2018-10-12.json",
+		"results/Storm.true-3-800.2018-10-12.json",
+		"results/Storm.true-36-200.2018-10-12.json",
+		"results/Storm.true-36-400.2018-10-12.json",
+		"results/Storm.true-36-600.2018-10-12.json",
+		"results/Storm.true-36-800.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-3-200.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-3-400.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-3-600.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-3-800.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-36-200.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-36-400.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-36-600.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.false-36-800.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-3-200.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-3-400.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-3-600.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-3-800.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-36-200.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-36-400.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.true-36-600.2018-11-22.json"
+		}
+	]
+}

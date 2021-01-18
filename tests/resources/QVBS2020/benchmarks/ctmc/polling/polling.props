@@ -1,0 +1,17 @@
+const double T;
+
+
+// Probability that in the long run station 1 is awaiting service 
+"s1": S=? [ s1=1 & !(s=1 & a=1) ];
+
+// Probability that station 1 is served before station 2
+"s1_before_s2": P=? [ !(s=2 & a=1) U (s=1 & a=1) ];
+
+// Expected number of times station1 is served
+"served": R{"served"}=? [ C<=T ];
+
+// Probability that station 1 will be polled within T time units
+"station1_polled": P=? [ F<=T (s=1 & a=0) ];
+
+// Expected time station 1 is waiting to be served
+"waiting": R{"waiting"}=? [ C<=T ];

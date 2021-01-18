@@ -1,0 +1,57 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:30:28 2018
+Command line arguments: --jani cluster.jani --janiproperty --constants 'N=64,T=2000,t=20' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/cluster
+
+Time for model construction: 3.477s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	151060
+Transitions: 	733216
+Reward Models:  time_not_min, num_repairs, percent_op
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * label_minimum -> 36133 item(s)
+   * init -> 1 item(s)
+   * premium -> 7597 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "below_min": R[exp]{"time_not_min"}min=? [C<=2000] ...
+Result (for initial states): 0.00421944377
+Time for model checking: 532.304s.
+
+Model checking property "operational": R[exp]{"percent_op"}min=? [I=20] ...
+Result (for initial states): 99.85848102
+Time for model checking: 5.185s.
+
+Model checking property "premium_steady": LRAmin=? ["premium"] ...
+Result (for initial states): 0.9986761964
+Time for model checking: 29.771s.
+
+Model checking property "qos1": Pmin=? [true U<=2000 !("label_minimum")] ...
+Result (for initial states): 0.001044539673
+Time for model checking: 59.346s.
+
+Model checking property "qos2": Pmin=? [true U[20, 20] !("label_minimum")] ...
+Result (for initial states): 2.019270278e-06
+Time for model checking: 5.158s.
+
+Model checking property "qos3": Pmin=? ["label_minimum" U<=20 "premium"] ...
+Result (for initial states): 1
+Time for model checking: 0.781s.
+
+Model checking property "qos4": Pmin=? [!("label_minimum") U>=20 "label_minimum"] ...
+Result (for initial states): 0
+Time for model checking: 4.063s.
+
+Model checking property "repairs": R[exp]{"num_repairs"}min=? [C<=2000] ...
+Result (for initial states): 512.4818415
+Time for model checking: 535.064s.
+
+Performance statistics:
+  * peak memory usage: 201MB
+  * CPU time: 1173.645s
+  * wallclock time: 1175.164s

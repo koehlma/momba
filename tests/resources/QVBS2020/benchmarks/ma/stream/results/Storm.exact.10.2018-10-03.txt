@@ -1,0 +1,61 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:27 2018
+Command line arguments: --jani stream.jani --janiproperty --constants N=10 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/stream
+
+Time for model construction: 0.030s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	176
+Transitions: 	311
+Choices: 	221
+Markovian St.: 	111
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * done -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * underrun -> 54 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	176
+Transitions: 	311
+Choices: 	221
+Markovian St.: 	111
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * done -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * underrun -> 54 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "exp_buffertime": R[exp]{"buffering"}min=? [F "done"] ...
+Result (for initial states): 230945/262144 (approx. 0.88098526)
+Time for model checking: 0.001s.
+
+Model checking property "exp_restarts": R[exp]{"numrestarts"}max=? [F "done"] ...
+Result (for initial states): 165409/65536 (approx. 2.52394104)
+Time for model checking: 0.001s.
+
+Model checking property "pr_underrun": Pmin=? [F "underrun"] ...
+Result (for initial states): 12722383798221896101/512000000000000000000 (approx. 0.02484840586)
+Time for model checking: 0.000s.
+
+Model checking property "pr_underrun_tb": Pmin=? [true U<=2 "underrun"] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 45MB
+  * CPU time: 0.074s
+  * wallclock time: 0.040s

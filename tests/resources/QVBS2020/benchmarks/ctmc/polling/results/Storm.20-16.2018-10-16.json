@@ -1,0 +1,78 @@
+{
+	"file": "../polling.20.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.20-16.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.20.jani --janiproperty --constants T=16  --timemem",
+	"time": 2722.232,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 1032.108
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 331.874
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1358.25
+				},
+				{
+					"name": "states",
+					"value": 31457280
+				},
+				{
+					"name": "branches",
+					"value": 340787200
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1032.108
+				}
+			],
+			"value": 0.1537069539
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 331.874
+				}
+			],
+			"value": 0.5383330717
+		}
+	]
+}

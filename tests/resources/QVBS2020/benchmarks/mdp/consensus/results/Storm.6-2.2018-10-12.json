@@ -1,0 +1,128 @@
+{
+	"file": "../consensus.6.jani",
+	"version": 1,
+	"date": "2018-10-12",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.6-2.2018-10-12.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani consensus.6.jani --janiproperty --constants K=2  --timemem",
+	"time": 206.699,
+	"memory": 893386752,
+	"property-times": [
+		{
+			"name": "c1",
+			"time": 2.323
+		},
+		{
+			"name": "c2",
+			"time": 24.514
+		},
+		{
+			"name": "disagree",
+			"time": 35.351
+		},
+		{
+			"name": "steps_max",
+			"time": 69.195
+		},
+		{
+			"name": "steps_min",
+			"time": 49.35
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 25.949
+				},
+				{
+					"name": "states",
+					"value": 1258240
+				},
+				{
+					"name": "branches",
+					"value": 6236736
+				},
+				{
+					"name": "transitions",
+					"value": 5008128
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "c1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 2.323
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "c2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 24.514
+				}
+			],
+			"value": 0.2943375674
+		},
+		{
+			"property": "disagree",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 35.351
+				}
+			],
+			"value": 0.3636232291
+		},
+		{
+			"property": "steps_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 69.195
+				}
+			],
+			"value": 866.9036049
+		},
+		{
+			"property": "steps_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 49.35
+				}
+			],
+			"value": 432.0161778
+		}
+	]
+}

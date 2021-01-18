@@ -1,0 +1,57 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:23 2018
+Command line arguments: --jani jobs.10-3.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/jobs
+
+Time for model construction: 2.284s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	16439
+Transitions: 	61596
+Choices: 	30831
+Markovian St.: 	15416
+Max. Rate.: 	9
+Reward Models:  avg_waiting_time
+State Labels: 	4 labels
+   * deadlock -> 1 item(s)
+   * init -> 1 item(s)
+   * all_jobs_finished -> 1 item(s)
+   * half_of_jobs_finished -> 2772 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	16439
+Transitions: 	61596
+Choices: 	30831
+Markovian St.: 	15416
+Max. Rate.: 	9
+Reward Models:  avg_waiting_time
+State Labels: 	4 labels
+   * deadlock -> 1 item(s)
+   * init -> 1 item(s)
+   * all_jobs_finished -> 1 item(s)
+   * half_of_jobs_finished -> 2772 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "completiontime": T[exp]min=? [F "all_jobs_finished"] ...
+Result (for initial states): 4852666717/1975680000 (approx. 2.45620076)
+Time for model checking: 0.238s.
+
+Model checking property "avgtime": R[exp]{"avg_waiting_time"}max=? [F "all_jobs_finished"] ...
+Result (for initial states): 60482417/47040000 (approx. 1.285765668)
+Time for model checking: 0.228s.
+
+Model checking property "prhalfdone": Pmax=? [true U<=(10 / 12) "half_of_jobs_finished"] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 81MB
+  * CPU time: 2.881s
+  * wallclock time: 2.855s

@@ -1,0 +1,85 @@
+{
+	"file": "../firewire-pta.jani",
+	"version": 1,
+	"date": "2018-12-03",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.30-5000.2018-12-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "delay",
+			"value": 30
+		},
+		{
+			"name": "T",
+			"value": 5000
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani converted_firewire-pta.jani --janiproperty eventually  --timemem --exact",
+	"time": 1881.41539478302,
+	"memory": 1778384896,
+	"property-times": [
+		{
+			"name": "eventually",
+			"time": 8.478
+		}
+	],
+	"preprocessing": [
+		{
+			"tool": "moconv",
+			"version": "3.0.86",
+			"url": "http://www.modestchecker.net/",
+			"note": "Converted PTA to its digital clock semantics",
+			"command": "moconv.exe firewire-pta.jani --digital-clocks --output converted_firewire-pta.jani --overwrite --experiment delay=30,T=5000",
+			"time": 1.979403018951416
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"value": 1869.718,
+					"unit": "s",
+					"name": "time"
+				},
+				{
+					"value": 4432272,
+					"name": "states"
+				},
+				{
+					"value": 5529800,
+					"name": "transitions"
+				},
+				{
+					"value": 5533832,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "eventually",
+			"value": 1,
+			"values": [
+				{
+					"value": 8.478,
+					"unit": "s",
+					"name": "time"
+				}
+			]
+		}
+	]
+}

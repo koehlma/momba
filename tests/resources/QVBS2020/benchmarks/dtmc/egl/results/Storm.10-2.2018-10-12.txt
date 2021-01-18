@@ -1,0 +1,42 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:32:22 2018
+Command line arguments: --jani egl.jani --janiproperty --constants 'N=10,L=2' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/dtmc/egl
+
+Time for model construction: 1688.075s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	66060286
+Transitions: 	67108861
+Reward Models:  messages_B_needs, messages_A_needs
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * knowB -> 36680703 item(s)
+   * (phase = 4) -> 1 item(s)
+   * knowA -> 40865279 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "messagesA": R[exp]{"messages_A_needs"}min=? [F (phase = 4)] ...
+Result (for initial states): 1.009756088
+Time for model checking: 172.882s.
+
+Model checking property "messagesB": R[exp]{"messages_B_needs"}min=? [F (phase = 4)] ...
+Result (for initial states): 4.010732651
+Time for model checking: 187.399s.
+
+Model checking property "unfairA": Pmin=? [F (!("knowA") & "knowB")] ...
+Result (for initial states): 0.5004882812
+Time for model checking: 13.839s.
+
+Model checking property "unfairB": Pmin=? [F (!("knowB") & "knowA")] ...
+Result (for initial states): 0.4995117188
+Time for model checking: 14.943s.
+
+Performance statistics:
+  * peak memory usage: 14553MB
+  * CPU time: 2061.018s
+  * wallclock time: 2077.890s

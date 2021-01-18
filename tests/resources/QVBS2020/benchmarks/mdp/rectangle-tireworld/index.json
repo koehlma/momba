@@ -1,0 +1,148 @@
+{
+	"name": "Rectangle Tireworld",
+	"short": "rectangle-tireworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://ippc-2008.loria.fr/wiki/images/0/03/Results.pdf",
+	"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 model [1] of the rectangle tireworld [0]. A car has to move between two of the `xy´ locations. When the car drives a segment of the route, there is the chance of getting a flat tire. But there are no spare tires available. However, the car can still go everywhere but at low probaility.",
+	"references": [
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{
+			"name": "xy",
+			"kind": "file",
+			"description": "Number of locations",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "rectangle-tireworld.5.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01-x5-y5-h2-v2-u0-s1.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01-x5-y5-h2-v2-u0-s1.pddl --jani rectangle-tireworld.5.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "xy",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 50
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "rectangle-tireworld.11.jani",
+			"original-file": [
+				"domain.pddl",
+				"p06-x11-y11-h4-v3-u40-s6.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p06-x11-y11-h4-v3-u40-s6.pddl --jani rectangle-tireworld.11.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "xy",
+					"value": 11
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 242
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "rectangle-tireworld.30.jani.gz",
+			"original-file": [
+				"domain.pddl",
+				"p14-x30-y30-h25-v20-u700-s14.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p14-x30-y30-h25-v20-u700-s14.pddl --jani rectangle-tireworld.30.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "xy",
+					"value": 30
+				}
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the destination alive."
+		}
+	],
+	"results": [
+		"results/mcsta.5.json",
+		"results/mcsta.11.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.11.2018-10-03.json"
+		}
+	]
+}

@@ -1,0 +1,3275 @@
+{
+    "actions": [
+        {
+            "name": "fp12"
+        },
+        {
+            "name": "p1p2"
+        },
+        {
+            "name": "p2p3"
+        },
+        {
+            "name": "t1"
+        },
+        {
+            "name": "t12"
+        },
+        {
+            "name": "t2"
+        },
+        {
+            "name": "t3"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1M1 <- (P1M1 - 1)",
+                                    "ref": "P1M1",
+                                    "value": {
+                                        "left": "P1M1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1s <- (P1s + 1)",
+                                    "ref": "P1s",
+                                    "value": {
+                                        "left": "P1s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1 <- (M1 + 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/5 * P1M1) / (1/5 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.2,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.2,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P1M1 > 0) & (P1wM1 = 0)) & (M1 < 3)) & (P1s < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1s",
+                                    "op": "<",
+                                    "right": "n"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wM1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "M1",
+                                    "op": "<",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/5 * P1M1)",
+                        "exp": {
+                            "left": 0.2,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1wM1 <- (P1wM1 - 1)",
+                                    "ref": "P1wM1",
+                                    "value": {
+                                        "left": "P1wM1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1s <- (P1s + 1)",
+                                    "ref": "P1s",
+                                    "value": {
+                                        "left": "P1s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/5 * P1M1) / (1/5 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.2,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.2,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P1M1 > 0) & (P1wM1 > 0)) & (P1s < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wM1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P1s",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/5 * P1M1)",
+                        "exp": {
+                            "left": 0.2,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1M1 <- (P1M1 - 1)",
+                                    "ref": "P1M1",
+                                    "value": {
+                                        "left": "P1M1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1wP2 <- (P1wP2 + 1)",
+                                    "ref": "P1wP2",
+                                    "value": {
+                                        "left": "P1wP2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1 <- (M1 + 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/20 * P1M1) / (1/20 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((((P1M1 > 0) & (P2wP1 = 0)) & (P1wM1 = 0)) & (M1 < 3)) & (P1wP2 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "P1wP2",
+                                        "op": "<",
+                                        "right": "n"
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "P2wP1",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wM1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "M1",
+                                    "op": "<",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/20 * P1M1)",
+                        "exp": {
+                            "left": 0.05,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1wM1 <- (P1wM1 - 1)",
+                                    "ref": "P1wM1",
+                                    "value": {
+                                        "left": "P1wM1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1wP2 <- (P1wP2 + 1)",
+                                    "ref": "P1wP2",
+                                    "value": {
+                                        "left": "P1wP2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/20 * P1M1) / (1/20 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P1M1 > 0) & (P2wP1 = 0)) & (P1wM1 > 0)) & (P1wP2 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1wP2",
+                                    "op": "<",
+                                    "right": "n"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wP1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P1wM1",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/20 * P1M1)",
+                        "exp": {
+                            "left": 0.05,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1 <- (P1 + P1s)",
+                                    "ref": "P1",
+                                    "value": {
+                                        "left": "P1",
+                                        "op": "+",
+                                        "right": "P1s"
+                                    }
+                                },
+                                {
+                                    "comment": "P1s <- 0",
+                                    "ref": "P1s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P1s > 0) & ((P1 + P1s) <= n))",
+                        "exp": {
+                            "left": {
+                                "left": "P1s",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P1",
+                                    "op": "+",
+                                    "right": "P1s"
+                                },
+                                "op": "≤",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                },
+                {
+                    "action": "fp12",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1 <- (P1 + P12s)",
+                                    "ref": "P1",
+                                    "value": {
+                                        "left": "P1",
+                                        "op": "+",
+                                        "right": "P12s"
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P1 + P12s) <= n)",
+                        "exp": {
+                            "left": {
+                                "left": "P1",
+                                "op": "+",
+                                "right": "P12s"
+                            },
+                            "op": "≤",
+                            "right": "n"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1wP2 <- (P1wP2 - 1)",
+                                    "ref": "P1wP2",
+                                    "value": {
+                                        "left": "P1wP2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(P1wP2 > 0)",
+                        "exp": {
+                            "left": "P1wP2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1wM1 <- (P1wM1 - 1)",
+                                    "ref": "P1wM1",
+                                    "value": {
+                                        "left": "P1wM1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/20 * P1M1) / (1/20 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P1M1 > 0) & (P2wP1 > 0)) & (P1wM1 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wP1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P1wM1",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/20 * P1M1)",
+                        "exp": {
+                            "left": 0.05,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1M1 <- (P1M1 - 1)",
+                                    "ref": "P1M1",
+                                    "value": {
+                                        "left": "P1M1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1 <- (M1 + 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/20 * P1M1) / (1/20 * P1M1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 0.05,
+                                        "op": "*",
+                                        "right": "P1M1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P1M1 > 0) & (P2wP1 > 0)) & (P1wM1 = 0)) & (M1 < 3))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "M1",
+                                    "op": "<",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wP1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P1wM1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1M1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/20 * P1M1)",
+                        "exp": {
+                            "left": 0.05,
+                            "op": "*",
+                            "right": "P1M1"
+                        }
+                    }
+                },
+                {
+                    "action": "t1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1 <- (P1 - 1)",
+                                    "ref": "P1",
+                                    "value": {
+                                        "left": "P1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1M1 <- (P1M1 + 1)",
+                                    "ref": "P1M1",
+                                    "value": {
+                                        "left": "P1M1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1 <- (M1 - 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m1 <- 1",
+                                    "ref": "throughput_m1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 400",
+                                    "ref": "productivity",
+                                    "value": 400
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P1 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P1 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P1",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P1",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P1 > 0) & (M1 > 0)) & (P1M1 < 3))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M1",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P1M1",
+                                "op": "<",
+                                "right": 3
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P1 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P1",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "action": "t1",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P1 <- (P1 - 1)",
+                                    "ref": "P1",
+                                    "value": {
+                                        "left": "P1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P1wM1 <- (P1wM1 + 1)",
+                                    "ref": "P1wM1",
+                                    "value": {
+                                        "left": "P1wM1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m1 <- 1",
+                                    "ref": "throughput_m1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 400",
+                                    "ref": "productivity",
+                                    "value": 400
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P1 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P1 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P1",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P1",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P1 > 0) & (M1 = 0)) & (P1wM1 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P1",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P1wM1",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P1 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P1",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "machine1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2M2 <- (P2M2 - 1)",
+                                    "ref": "P2M2",
+                                    "value": {
+                                        "left": "P2M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2s <- (P2s + 1)",
+                                    "ref": "P2s",
+                                    "value": {
+                                        "left": "P2s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2 <- (M2 + 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1/10 / 1/10)",
+                                "exp": {
+                                    "left": 0.1,
+                                    "op": "/",
+                                    "right": 0.1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P2M2 > 0) & (P2wM2 = 0)) & (M2 < 1)) & (P2s < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2s",
+                                    "op": "<",
+                                    "right": "n"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wM2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "M2",
+                                    "op": "<",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1/10",
+                        "exp": 0.1
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2wM2 <- (P2wM2 - 1)",
+                                    "ref": "P2wM2",
+                                    "value": {
+                                        "left": "P2wM2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2s <- (P2s + 1)",
+                                    "ref": "P2s",
+                                    "value": {
+                                        "left": "P2s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1/10 / 1/10)",
+                                "exp": {
+                                    "left": 0.1,
+                                    "op": "/",
+                                    "right": 0.1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P2M2 > 0) & (P2wM2 > 0)) & (P2s < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wM2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P2s",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1/10",
+                        "exp": 0.1
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2M2 <- (P2M2 - 1)",
+                                    "ref": "P2M2",
+                                    "value": {
+                                        "left": "P2M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2wP1 <- (P2wP1 + 1)",
+                                    "ref": "P2wP1",
+                                    "value": {
+                                        "left": "P2wP1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2 <- (M2 + 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 15) / (1 / 15))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((((P2M2 > 0) & (P1wP2 = 0)) & (P2wM2 = 0)) & (M2 < 1)) & (P2wP1 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "P2wP1",
+                                        "op": "<",
+                                        "right": "n"
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "P1wP2",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2wM2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "M2",
+                                    "op": "<",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 15)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 15
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2wM2 <- (P2wM2 - 1)",
+                                    "ref": "P2wM2",
+                                    "value": {
+                                        "left": "P2wM2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2wP1 <- (P2wP1 + 1)",
+                                    "ref": "P2wP1",
+                                    "value": {
+                                        "left": "P2wP1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 15) / (1 / 15))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P2M2 > 0) & (P1wP2 = 0)) & (P2wM2 > 0)) & (P2wP1 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2wP1",
+                                    "op": "<",
+                                    "right": "n"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wP2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P2wM2",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 15)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 15
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2 <- (P2 + P2s)",
+                                    "ref": "P2",
+                                    "value": {
+                                        "left": "P2",
+                                        "op": "+",
+                                        "right": "P2s"
+                                    }
+                                },
+                                {
+                                    "comment": "P2s <- 0",
+                                    "ref": "P2s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P2s > 0) & ((P2 + P2s) <= n))",
+                        "exp": {
+                            "left": {
+                                "left": "P2s",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P2",
+                                    "op": "+",
+                                    "right": "P2s"
+                                },
+                                "op": "≤",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                },
+                {
+                    "action": "fp12",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2 <- (P2 + P12s)",
+                                    "ref": "P2",
+                                    "value": {
+                                        "left": "P2",
+                                        "op": "+",
+                                        "right": "P12s"
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P2 + P12s) <= n)",
+                        "exp": {
+                            "left": {
+                                "left": "P2",
+                                "op": "+",
+                                "right": "P12s"
+                            },
+                            "op": "≤",
+                            "right": "n"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2wP1 <- (P2wP1 - 1)",
+                                    "ref": "P2wP1",
+                                    "value": {
+                                        "left": "P2wP1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(P2wP1 > 0)",
+                        "exp": {
+                            "left": "P2wP1",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2wM2 <- (P2wM2 - 1)",
+                                    "ref": "P2wM2",
+                                    "value": {
+                                        "left": "P2wM2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 15) / (1 / 15))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P2M2 > 0) & (P1wP2 > 0)) & (P2wM2 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wP2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P2wM2",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 15)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 15
+                        }
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2M2 <- (P2M2 - 1)",
+                                    "ref": "P2M2",
+                                    "value": {
+                                        "left": "P2M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2 <- (M2 + 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 15) / (1 / 15))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 15
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P2M2 > 0) & (P1wP2 > 0)) & (P2wM2 = 0)) & (M2 < 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "M2",
+                                    "op": "<",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P1wP2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P2wM2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P2M2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 15)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 15
+                        }
+                    }
+                },
+                {
+                    "action": "p2p3",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M2 <- M2",
+                                    "ref": "M2",
+                                    "value": "M2"
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(M2 > 0)",
+                        "exp": {
+                            "left": "M2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "t2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2 <- (P2 - 1)",
+                                    "ref": "P2",
+                                    "value": {
+                                        "left": "P2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2M2 <- (P2M2 + 1)",
+                                    "ref": "P2M2",
+                                    "value": {
+                                        "left": "P2M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2 <- (M2 - 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m2 <- 1",
+                                    "ref": "throughput_m2",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 600",
+                                    "ref": "productivity",
+                                    "value": 600
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P2 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P2 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P2",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P2",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P2 > 0) & (M2 > 0)) & (P2M2 < 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M2",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P2M2",
+                                "op": "<",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P2 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P2",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "action": "t2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P2 <- (P2 - 1)",
+                                    "ref": "P2",
+                                    "value": {
+                                        "left": "P2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P2wM2 <- (P2wM2 + 1)",
+                                    "ref": "P2wM2",
+                                    "value": {
+                                        "left": "P2wM2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m2 <- 1",
+                                    "ref": "throughput_m2",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 600",
+                                    "ref": "productivity",
+                                    "value": 600
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P2 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P2 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P2",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P2",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P2 > 0) & (M2 = 0)) & (P2wM2 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P2",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P2wM2",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P2 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P2",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "machine2",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P3 <- (P3 + P3s)",
+                                    "ref": "P3",
+                                    "value": {
+                                        "left": "P3",
+                                        "op": "+",
+                                        "right": "P3s"
+                                    }
+                                },
+                                {
+                                    "comment": "P3s <- 0",
+                                    "ref": "P3s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P3s > 0) & ((P3 + P3s) <= n))",
+                        "exp": {
+                            "left": {
+                                "left": "P3s",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P3",
+                                    "op": "+",
+                                    "right": "P3s"
+                                },
+                                "op": "≤",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                },
+                {
+                    "action": "p2p3",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P3M2 <- (P3M2 - 1)",
+                                    "ref": "P3M2",
+                                    "value": {
+                                        "left": "P3M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P3s <- (P3s + 1)",
+                                    "ref": "P3s",
+                                    "value": {
+                                        "left": "P3s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 2) / (1 / 2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 2
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 2
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P3M2 > 0) & (P3s < n))",
+                        "exp": {
+                            "left": {
+                                "left": "P3M2",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P3s",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 2)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 2
+                        }
+                    }
+                },
+                {
+                    "action": "t3",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P3 <- (P3 - 1)",
+                                    "ref": "P3",
+                                    "value": {
+                                        "left": "P3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P3M2 <- (P3M2 + 1)",
+                                    "ref": "P3M2",
+                                    "value": {
+                                        "left": "P3M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m3 <- 1",
+                                    "ref": "throughput_m3",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 100",
+                                    "ref": "productivity",
+                                    "value": 100
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P3 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P3 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P3",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P3",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((P3 > 0) & (P3M2 < n))",
+                        "exp": {
+                            "left": {
+                                "left": "P3",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P3M2",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P3 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P3",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "machine3",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12M3 <- (P12M3 - 1)",
+                                    "ref": "P12M3",
+                                    "value": {
+                                        "left": "P12M3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P12s <- (P12s + 1)",
+                                    "ref": "P12s",
+                                    "value": {
+                                        "left": "P12s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3 <- (M3 + 1)",
+                                    "ref": "M3",
+                                    "value": {
+                                        "left": "M3",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(P12M3 / P12M3)",
+                                "exp": {
+                                    "left": "P12M3",
+                                    "op": "/",
+                                    "right": "P12M3"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((P12M3 > 0) & (P12wM3 = 0)) & (P12s < n)) & (M3 < 2))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "M3",
+                                    "op": "<",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P12wM3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "P12s",
+                                    "op": "<",
+                                    "right": "n"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P12M3",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "P12M3",
+                        "exp": "P12M3"
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12wM3 <- (P12wM3 - 1)",
+                                    "ref": "P12wM3",
+                                    "value": {
+                                        "left": "P12wM3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P12s <- (P12s + 1)",
+                                    "ref": "P12s",
+                                    "value": {
+                                        "left": "P12s",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(P12M3 / P12M3)",
+                                "exp": {
+                                    "left": "P12M3",
+                                    "op": "/",
+                                    "right": "P12M3"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P12M3 > 0) & (P12wM3 > 0)) & (P12s < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P12M3",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "P12wM3",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P12s",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "P12M3",
+                        "exp": "P12M3"
+                    }
+                },
+                {
+                    "action": "fp12",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12s <- 0",
+                                    "ref": "P12s",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(P12s > 0)",
+                        "exp": {
+                            "left": "P12s",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                },
+                {
+                    "action": "p1p2",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12 <- (P12 + 1)",
+                                    "ref": "P12",
+                                    "value": {
+                                        "left": "P12",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(P12 < n)",
+                        "exp": {
+                            "left": "P12",
+                            "op": "<",
+                            "right": "n"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "t12",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12 <- (P12 - 1)",
+                                    "ref": "P12",
+                                    "value": {
+                                        "left": "P12",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P12M3 <- (P12M3 + 1)",
+                                    "ref": "P12M3",
+                                    "value": {
+                                        "left": "P12M3",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3 <- (M3 - 1)",
+                                    "ref": "M3",
+                                    "value": {
+                                        "left": "M3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m12 <- 1",
+                                    "ref": "throughput_m12",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 1100",
+                                    "ref": "productivity",
+                                    "value": 1100
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P12 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P12 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P12",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P12",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P12 > 0) & (M3 > 0)) & (P12M3 < 2))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P12",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M3",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P12M3",
+                                "op": "<",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P12 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P12",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "action": "t12",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "P12 <- (P12 - 1)",
+                                    "ref": "P12",
+                                    "value": {
+                                        "left": "P12",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "P12wM3 <- (P12wM3 + 1)",
+                                    "ref": "P12wM3",
+                                    "value": {
+                                        "left": "P12wM3",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "throughput_m12 <- 1",
+                                    "ref": "throughput_m12",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "productivity <- 1100",
+                                    "ref": "productivity",
+                                    "value": 1100
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((P12 * (min(1, (floor(((3 * n) / 2)) / r)))) / (P12 * (min(1, (floor(((3 * n) / 2)) / r)))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "P12",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "P12",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "min",
+                                            "right": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": {
+                                                            "left": 3,
+                                                            "op": "*",
+                                                            "right": "n"
+                                                        },
+                                                        "op": "/",
+                                                        "right": 2
+                                                    },
+                                                    "op": "floor"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "args": [],
+                                                    "function": "r",
+                                                    "op": "call"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((P12 > 0) & (M3 = 0)) & (P12wM3 < n))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "P12",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "P12wM3",
+                                "op": "<",
+                                "right": "n"
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(P12 * (min(1, (floor(((3 * n) / 2)) / r))))",
+                        "exp": {
+                            "left": "P12",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "min",
+                                "right": {
+                                    "left": {
+                                        "exp": {
+                                            "left": {
+                                                "left": 3,
+                                                "op": "*",
+                                                "right": "n"
+                                            },
+                                            "op": "/",
+                                            "right": 2
+                                        },
+                                        "op": "floor"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "args": [],
+                                        "function": "r",
+                                        "op": "call"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "machine12",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "n",
+            "type": "int"
+        },
+        {
+            "name": "np",
+            "type": "int",
+            "value": {
+                "exp": {
+                    "left": {
+                        "left": 3,
+                        "op": "*",
+                        "right": "n"
+                    },
+                    "op": "/",
+                    "right": 2
+                },
+                "op": "floor"
+            }
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "functions"
+    ],
+    "functions": [
+        {
+            "body": {
+                "left": {
+                    "left": "P12",
+                    "op": "+",
+                    "right": "P2"
+                },
+                "op": "+",
+                "right": {
+                    "left": "P3",
+                    "op": "+",
+                    "right": "P1"
+                }
+            },
+            "name": "r",
+            "parameters": [],
+            "type": "int"
+        }
+    ],
+    "jani-version": 1,
+    "name": "fms",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": "productivity",
+                    "op": "Smin"
+                }
+            },
+            "name": "productivity"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "machine1"
+            },
+            {
+                "automaton": "machine2"
+            },
+            {
+                "automaton": "machine3"
+            },
+            {
+                "automaton": "machine12"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "fp12",
+                "synchronise": [
+                    "fp12",
+                    "fp12",
+                    null,
+                    "fp12"
+                ]
+            },
+            {
+                "result": "p1p2",
+                "synchronise": [
+                    "p1p2",
+                    "p1p2",
+                    null,
+                    "p1p2"
+                ]
+            },
+            {
+                "result": "p2p3",
+                "synchronise": [
+                    null,
+                    "p2p3",
+                    "p2p3",
+                    null
+                ]
+            },
+            {
+                "result": "t1",
+                "synchronise": [
+                    "t1",
+                    null,
+                    null,
+                    null
+                ]
+            },
+            {
+                "result": "t12",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    "t12"
+                ]
+            },
+            {
+                "result": "t2",
+                "synchronise": [
+                    null,
+                    "t2",
+                    null,
+                    null
+                ]
+            },
+            {
+                "result": "t3",
+                "synchronise": [
+                    null,
+                    null,
+                    "t3",
+                    null
+                ]
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": 0.0,
+            "name": "throughput_m1",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "throughput_m2",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "throughput_m3",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "throughput_m12",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "productivity",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": "n",
+            "name": "P1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P1wM1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P1M1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P1s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P1wP2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 3,
+            "name": "M1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": "n",
+            "name": "P2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P2wM2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P2M2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P2s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P2wP1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "M2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": "n",
+            "name": "P3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P3M2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P3s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P12",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P12wM3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P12M3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "P12s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "n"
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "M3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        }
+    ]
+}

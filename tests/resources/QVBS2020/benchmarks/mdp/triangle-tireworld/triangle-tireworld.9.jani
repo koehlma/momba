@@ -1,0 +1,338 @@
+{
+"jani-version": 1,
+"name": "jani_from_ppddl",
+"type": "mdp",
+"features": ["derived-operators"],
+"variables": [
+  {
+    "name": "var0",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var1",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var2",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var3",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 1
+  },
+  {
+    "name": "var4",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 2
+    },
+    "initial-value": 0
+  },
+  {
+    "name": "var5",
+    "type": {
+      "kind": "bounded",
+      "base": "int",
+      "lower-bound": 0,
+      "upper-bound": 6
+    },
+    "initial-value": 0
+  }],
+"automata": [
+  {
+    "name": "aut",
+    "locations": [{"name": "loc0"}],
+    "initial-locations": ["loc0"],
+    "edges": [
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {"op": "=", "left": "var3", "right": 0}},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":1},
+        "assignments": [
+          { "ref": "var3", "value": 1 },
+          { "ref": "var4", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 3},
+        "right": {"op": "=", "left": "var0", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":1},
+        "assignments": [
+          { "ref": "var0", "value": 1 },
+          { "ref": "var3", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 4},
+        "right": {"op": "=", "left": "var1", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":1},
+        "assignments": [
+          { "ref": "var1", "value": 1 },
+          { "ref": "var3", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 5},
+        "right": {"op": "=", "left": "var2", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":1},
+        "assignments": [
+          { "ref": "var2", "value": 1 },
+          { "ref": "var3", "value": 0 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 0},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 0},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 3 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 3 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 1},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 2 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 1},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 4 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 4 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 3},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 1 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 1 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 3},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 5 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 5 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 4},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 2 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 2 }]
+        }]
+      }, 
+      {
+      "location": "loc0",
+      "guard": { "exp": 
+        {
+        "op": "∧",
+        "left":           {"op": "=", "left": "var5", "right": 5},
+        "right": {"op": "=", "left": "var4", "right": 0}
+        }},
+      "destinations": [
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var4", "value": 1 },
+          { "ref": "var5", "value": 4 }]
+        },
+        {
+        "location": "loc0",
+        "probability": {"exp":0.5},
+        "assignments": [
+          { "ref": "var5", "value": 4 }]
+        }]
+      }]
+  }],
+"system": { "elements": [ { "automaton": "aut" }], "syncs": [ ] },
+"properties": [ { "name": "goal", "expression": {
+  "op": "filter",
+  "fun": "min",
+  "values": {
+    "op": "Pmax",
+    "exp": {
+      "op": "U",
+      "left": true,
+      "right":
+        {"op": "=", "left": "var5", "right": 2}
+    }
+  },
+  "states": { "op": "initial" }
+  }
+}]
+}

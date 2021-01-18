@@ -1,0 +1,135 @@
+﻿{
+	"file": "../stream.jani",
+	"version": 1,
+	"date": "2018-08-30",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 500 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe stream.jani -S Memory -E N=500 -O mcsta.500.json Json",
+	"time": 20.826,
+	"memory": 151076864,
+	"property-times": [
+		{ "name": "exp_buffertime", "time": 17.085 },
+		{ "name": "exp_restarts", "time": 1.325 },
+		{ "name": "pr_underrun", "time": 0.018 },
+		{ "name": "pr_underrun_tb", "time": 1.571 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 6, "unit": "B" },
+				{ "name": "States", "value": 376251 },
+				{ "name": "Transitions", "value": 501001 },
+				{ "name": "Branches", "value": 750501 },
+				{ "name": "Rate", "value": 1014153.6388140161 },
+				{ "name": "Time", "value": 0.403, "unit": "s" }
+			]
+		},
+		{
+			"property": "exp_buffertime",
+			"value": 6.3062286969874712,
+			"values": [
+				{ "name": "Bounds", "value": "[6.30622869698747, ∞)" },
+				{ "name": "Time", "value": 17.085, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 0 states", "value": 0 },
+						{ "name": "Time for max. prob. 0 states", "value": 0.036, "unit": "s" },
+						{ "name": "Max. prob. 1 states", "value": 376251 },
+						{ "name": "Time for max. prob. 1 states", "value": 15.7, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.239387614614274E-07 },
+						{ "name": "Iterations", "value": 126 },
+						{ "name": "Time", "value": 1.341, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "exp_restarts",
+			"value": 24.224914787949885,
+			"values": [
+				{ "name": "Bounds", "value": "[24.2249147879499, ∞)" },
+				{ "name": "Time", "value": 1.325, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.033, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 376251 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.018, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.8727401282059612E-07 },
+						{ "name": "Iterations", "value": 126 },
+						{ "name": "Time", "value": 1.273, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "pr_underrun",
+			"value": 0.20334453606545977,
+			"values": [
+				{ "name": "Bounds", "value": "[0.20334453606546, 0.20334453606546]" },
+				{ "name": "Time", "value": 0.018, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 3 },
+						{ "name": "Time", "value": 0.018, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "pr_underrun_tb",
+			"value": 0.018939081721257606,
+			"values": [
+				{ "name": "Bounds", "value": "[0.0189390317212576, 0.0189391317212576]" },
+				{ "name": "Time", "value": 1.571, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Unif+",
+					"values": [
+						{ "name": "Time", "value": 1.569, "unit": "s" },
+						{ "name": "Max. exit rate", "value": 8 },
+						{ "name": "Iterations", "value": 1 },
+						{ "name": "Final unif. rate", "value": 8 }
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,113 @@
+{
+	"file": "../egl.jani",
+	"version": 1,
+	"date": "2018-10-12",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.5-6.2018-10-12.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 5
+		},
+		{
+			"name": "L",
+			"value": 6
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani egl.jani --janiproperty --constants N=5,L=6  --timemem",
+	"time": 3.491,
+	"memory": 72351744,
+	"property-times": [
+		{
+			"name": "messagesA",
+			"time": 0.168
+		},
+		{
+			"name": "messagesB",
+			"time": 0.156
+		},
+		{
+			"name": "unfairA",
+			"time": 0.022
+		},
+		{
+			"name": "unfairB",
+			"time": 0.022
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.089
+				},
+				{
+					"name": "states",
+					"value": 115710
+				},
+				{
+					"name": "branches",
+					"value": 116733
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "messagesA",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.168
+				}
+			],
+			"value": 1.756835938
+		},
+		{
+			"property": "messagesB",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.156
+				}
+			],
+			"value": 2.288085938
+		},
+		{
+			"property": "unfairA",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.022
+				}
+			],
+			"value": 0.515625
+		},
+		{
+			"property": "unfairB",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.022
+				}
+			],
+			"value": 0.484375
+		}
+	]
+}

@@ -1,0 +1,35 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Nov 23 16:53:08 2018
+Command line arguments: --jani resource-gathering.jani --janiproperty 'expsteps,prgoldgem' --constants 'B=1000000,GOLD_TO_COLLECT=0,GEM_TO_COLLECT=0' --timemem --exact
+Current working directory: /Users/tim/git/qcomp/benchmarks/mdp/resource-gathering
+
+Time for model input parsing: 0.007s.
+
+Time for model construction: 0.038s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	94
+Transitions: 	326
+Choices: 	302
+Reward Models:  none
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * success -> 94 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "expsteps": T[exp]min=? [F "success"] ...
+Result (for initial states): 0 (approx. 0)
+Time for model checking: 0.000s.
+
+Model checking property "prgoldgem": Pmax=? [true U<=1000000 "success"] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.000s.
+
+Performance statistics:
+  * peak memory usage: 30MB
+  * CPU time: 0.078s
+  * wallclock time: 0.049s

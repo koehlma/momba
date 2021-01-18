@@ -1,0 +1,11 @@
+// Minimal Expected buffering time until the playback is done
+"exp_buffertime": R[exp]{"buffering"}min=? [F "done"];
+
+// Maximal expected number of buffer underruns during the playback
+"exp_restarts": R[exp]{"numrestarts"}max=? [F "done"];
+
+// Minimal Probability for a buffer underrun
+"pr_underrun": Pmin=? [F "underrun"];
+
+// Minimal Probability for a buffer underrun within two time units
+"pr_underrun_tb": Pmin=? [F<=2 "underrun"];

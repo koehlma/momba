@@ -1,0 +1,2204 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M3ko <- (M3ko - 1)",
+                                    "ref": "M3ko",
+                                    "value": {
+                                        "left": "M3ko",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3repairing <- (M3repairing + 1)",
+                                    "ref": "M3repairing",
+                                    "value": {
+                                        "left": "M3repairing",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Ready <- (Ready - 1)",
+                                    "ref": "Ready",
+                                    "value": {
+                                        "left": "Ready",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((M3ko >= 1) & (Ready >= 1)) ? (1 / (0 + (((M3ko >= 1) & (Ready >= 1)) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "M3ko",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "Ready",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 0.0,
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": "M3ko",
+                                                        "op": "≥",
+                                                        "right": 1
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "Ready",
+                                                        "op": "≥",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((M3ko >= 1) & (Ready >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "M3ko",
+                                "op": "≥",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "Ready",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "loc"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Ready <- (Ready - 1)",
+                                    "ref": "Ready",
+                                    "value": {
+                                        "left": "Ready",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "SpareBroken <- (SpareBroken - 1)",
+                                    "ref": "SpareBroken",
+                                    "value": {
+                                        "left": "SpareBroken",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "SpareRepairing <- (SpareRepairing + 1)",
+                                    "ref": "SpareRepairing",
+                                    "value": {
+                                        "left": "SpareRepairing",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((SpareBroken >= 1) & (Ready >= 1)) ? (1 / (0 + (((SpareBroken >= 1) & (Ready >= 1)) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "SpareBroken",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "Ready",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 0.0,
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": "SpareBroken",
+                                                        "op": "≥",
+                                                        "right": 1
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "Ready",
+                                                        "op": "≥",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(!(((M3ko >= 1) & (Ready >= 1))) & ((SpareBroken >= 1) & (Ready >= 1)))",
+                        "exp": {
+                            "left": {
+                                "exp": {
+                                    "left": {
+                                        "left": "M3ko",
+                                        "op": "≥",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "Ready",
+                                        "op": "≥",
+                                        "right": 1
+                                    }
+                                },
+                                "op": "¬"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "SpareBroken",
+                                    "op": "≥",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "Ready",
+                                    "op": "≥",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "loc"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M1 <- (M1 - 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1on <- (M1on + 1)",
+                                    "ref": "M1on",
+                                    "value": {
+                                        "left": "M1on",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "StartM1 <- (StartM1 - 1)",
+                                    "ref": "StartM1",
+                                    "value": {
+                                        "left": "StartM1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((StartM1 >= 1) & (M1 >= 1)) ? (1 / (((((0 + (((StartM1 >= 1) & (M1 >= 1)) ? 1 : 0)) + (((M2buff >= 1) & (M2 >= 1)) ? 1 : 0)) + (((M3buff >= 1) & (M3 >= 1)) ? 1 : 0)) + (((M2ko >= 1) & (Spares >= 1)) ? 1 : 0)) + ((Ready >= 1) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "StartM1",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "M1",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": {
+                                                "left": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": "Ready",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "StartM1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M3buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M3",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M2buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M2",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "left": {
+                                                    "else": 0.0,
+                                                    "if": {
+                                                        "left": {
+                                                            "left": "M2ko",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "Spares",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "ite",
+                                                    "then": 1
+                                                },
+                                                "op": "+",
+                                                "right": 0.0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M2 <- (M2 - 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2buff <- (M2buff - 1)",
+                                    "ref": "M2buff",
+                                    "value": {
+                                        "left": "M2buff",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2go <- (M2go + 1)",
+                                    "ref": "M2go",
+                                    "value": {
+                                        "left": "M2go",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2on <- (M2on + 1)",
+                                    "ref": "M2on",
+                                    "value": {
+                                        "left": "M2on",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((M2buff >= 1) & (M2 >= 1)) ? (1 / (((((0 + (((StartM1 >= 1) & (M1 >= 1)) ? 1 : 0)) + (((M2buff >= 1) & (M2 >= 1)) ? 1 : 0)) + (((M3buff >= 1) & (M3 >= 1)) ? 1 : 0)) + (((M2ko >= 1) & (Spares >= 1)) ? 1 : 0)) + ((Ready >= 1) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "M2buff",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "M2",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": {
+                                                "left": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": "Ready",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "StartM1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M3buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M3",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M2buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M2",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "left": {
+                                                    "else": 0.0,
+                                                    "if": {
+                                                        "left": {
+                                                            "left": "M2ko",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "Spares",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "ite",
+                                                    "then": 1
+                                                },
+                                                "op": "+",
+                                                "right": 0.0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M3 <- (M3 - 1)",
+                                    "ref": "M3",
+                                    "value": {
+                                        "left": "M3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3buff <- (M3buff - 1)",
+                                    "ref": "M3buff",
+                                    "value": {
+                                        "left": "M3buff",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3go <- (M3go + 1)",
+                                    "ref": "M3go",
+                                    "value": {
+                                        "left": "M3go",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3on <- (M3on + 1)",
+                                    "ref": "M3on",
+                                    "value": {
+                                        "left": "M3on",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((M3buff >= 1) & (M3 >= 1)) ? (1 / (((((0 + (((StartM1 >= 1) & (M1 >= 1)) ? 1 : 0)) + (((M2buff >= 1) & (M2 >= 1)) ? 1 : 0)) + (((M3buff >= 1) & (M3 >= 1)) ? 1 : 0)) + (((M2ko >= 1) & (Spares >= 1)) ? 1 : 0)) + ((Ready >= 1) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "M3buff",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "M3",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": {
+                                                "left": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": "Ready",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "StartM1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M3buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M3",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M2buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M2",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "left": {
+                                                    "else": 0.0,
+                                                    "if": {
+                                                        "left": {
+                                                            "left": "M2ko",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "Spares",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "ite",
+                                                    "then": 1
+                                                },
+                                                "op": "+",
+                                                "right": 0.0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M2go <- (M2go + 1)",
+                                    "ref": "M2go",
+                                    "value": {
+                                        "left": "M2go",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2ko <- (M2ko - 1)",
+                                    "ref": "M2ko",
+                                    "value": {
+                                        "left": "M2ko",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "SpareBroken <- (SpareBroken + 1)",
+                                    "ref": "SpareBroken",
+                                    "value": {
+                                        "left": "SpareBroken",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Spares <- (Spares - 1)",
+                                    "ref": "Spares",
+                                    "value": {
+                                        "left": "Spares",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "(((M2ko >= 1) & (Spares >= 1)) ? (1 / (((((0 + (((StartM1 >= 1) & (M1 >= 1)) ? 1 : 0)) + (((M2buff >= 1) & (M2 >= 1)) ? 1 : 0)) + (((M3buff >= 1) & (M3 >= 1)) ? 1 : 0)) + (((M2ko >= 1) & (Spares >= 1)) ? 1 : 0)) + ((Ready >= 1) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": {
+                                            "left": "M2ko",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "Spares",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": {
+                                                "left": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": "Ready",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "StartM1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M3buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M3",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M2buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M2",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "left": {
+                                                    "else": 0.0,
+                                                    "if": {
+                                                        "left": {
+                                                            "left": "M2ko",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "Spares",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "ite",
+                                                    "then": 1
+                                                },
+                                                "op": "+",
+                                                "right": 0.0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Idle <- (Idle + 1)",
+                                    "ref": "Idle",
+                                    "value": {
+                                        "left": "Idle",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Ready <- (Ready - 1)",
+                                    "ref": "Ready",
+                                    "value": {
+                                        "left": "Ready",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc",
+                            "probability": {
+                                "comment": "((Ready >= 1) ? (1 / (((((0 + (((StartM1 >= 1) & (M1 >= 1)) ? 1 : 0)) + (((M2buff >= 1) & (M2 >= 1)) ? 1 : 0)) + (((M3buff >= 1) & (M3 >= 1)) ? 1 : 0)) + (((M2ko >= 1) & (Spares >= 1)) ? 1 : 0)) + ((Ready >= 1) ? 1 : 0))) : 0)",
+                                "exp": {
+                                    "else": 0.0,
+                                    "if": {
+                                        "left": "Ready",
+                                        "op": "≥",
+                                        "right": 1
+                                    },
+                                    "op": "ite",
+                                    "then": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": {
+                                            "left": {
+                                                "left": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": "Ready",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "StartM1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M1",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                },
+                                                "op": "+",
+                                                "right": {
+                                                    "left": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M3buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M3",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "else": 0.0,
+                                                        "if": {
+                                                            "left": {
+                                                                "left": "M2buff",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            },
+                                                            "op": "∧",
+                                                            "right": {
+                                                                "left": "M2",
+                                                                "op": "≥",
+                                                                "right": 1
+                                                            }
+                                                        },
+                                                        "op": "ite",
+                                                        "then": 1
+                                                    }
+                                                }
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "left": {
+                                                    "else": 0.0,
+                                                    "if": {
+                                                        "left": {
+                                                            "left": "M2ko",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "Spares",
+                                                            "op": "≥",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "ite",
+                                                    "then": 1
+                                                },
+                                                "op": "+",
+                                                "right": 0.0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((!(((M3ko >= 1) & (Ready >= 1))) & !((((M3ko >= 1) & (Ready >= 1)) | ((SpareBroken >= 1) & (Ready >= 1))))) & ((((((StartM1 >= 1) & (M1 >= 1)) | ((M2buff >= 1) & (M2 >= 1))) | ((M3buff >= 1) & (M3 >= 1))) | ((M2ko >= 1) & (Spares >= 1))) | (Ready >= 1)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "exp": {
+                                        "left": {
+                                            "left": "M3ko",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "Ready",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "¬"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "exp": {
+                                        "left": {
+                                            "left": {
+                                                "left": "M3ko",
+                                                "op": "≥",
+                                                "right": 1
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "Ready",
+                                                "op": "≥",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "left": {
+                                                "left": "SpareBroken",
+                                                "op": "≥",
+                                                "right": 1
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "Ready",
+                                                "op": "≥",
+                                                "right": 1
+                                            }
+                                        }
+                                    },
+                                    "op": "¬"
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "Ready",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "left": {
+                                                "left": "M2buff",
+                                                "op": "≥",
+                                                "right": 1
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "M2",
+                                                "op": "≥",
+                                                "right": 1
+                                            }
+                                        }
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": {
+                                            "left": "M3buff",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "M3",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                "op": "∨",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": "M2ko",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "Spares",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": {
+                                            "left": "StartM1",
+                                            "op": "≥",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "M1",
+                                            "op": "≥",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "location": "loc"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Pallets <- (Pallets - 1)",
+                                    "ref": "Pallets",
+                                    "value": {
+                                        "left": "Pallets",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "StartM1 <- (StartM1 + 1)",
+                                    "ref": "StartM1",
+                                    "value": {
+                                        "left": "StartM1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(Pallets >= 1)",
+                        "exp": {
+                            "left": "Pallets",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(7205759403792793/18014398509481984 * (Pallets / 1))",
+                        "exp": {
+                            "left": 0.4,
+                            "op": "*",
+                            "right": {
+                                "left": "Pallets",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M1 <- (M1 + 1)",
+                                    "ref": "M1",
+                                    "value": {
+                                        "left": "M1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M1on <- (M1on - 1)",
+                                    "ref": "M1on",
+                                    "value": {
+                                        "left": "M1on",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2buff <- (M2buff + 1)",
+                                    "ref": "M2buff",
+                                    "value": {
+                                        "left": "M2buff",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(M1on >= 1)",
+                        "exp": {
+                            "left": "M1on",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(5404319552844595/4503599627370496 * (M1on / 1))",
+                        "exp": {
+                            "left": 1.2,
+                            "op": "*",
+                            "right": {
+                                "left": "M1on",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M2 <- (M2 + 1)",
+                                    "ref": "M2",
+                                    "value": {
+                                        "left": "M2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2go <- (M2go - 1)",
+                                    "ref": "M2go",
+                                    "value": {
+                                        "left": "M2go",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2on <- (M2on - 1)",
+                                    "ref": "M2on",
+                                    "value": {
+                                        "left": "M2on",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3buff <- (M3buff + 1)",
+                                    "ref": "M3buff",
+                                    "value": {
+                                        "left": "M3buff",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((M2on >= 1) & (M2go >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "M2on",
+                                "op": "≥",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "M2go",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(2026619832316723/1125899906842624 * (M2go / 1))",
+                        "exp": {
+                            "left": 1.8,
+                            "op": "*",
+                            "right": {
+                                "left": "M2go",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M2go <- (M2go - 1)",
+                                    "ref": "M2go",
+                                    "value": {
+                                        "left": "M2go",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M2ko <- (M2ko + 1)",
+                                    "ref": "M2ko",
+                                    "value": {
+                                        "left": "M2ko",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(M2go >= 1)",
+                        "exp": {
+                            "left": "M2go",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(2882303761517117/144115188075855872 * (M2go / 1))",
+                        "exp": {
+                            "left": 0.02,
+                            "op": "*",
+                            "right": {
+                                "left": "M2go",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "EndRep <- (EndRep + 1)",
+                                    "ref": "EndRep",
+                                    "value": {
+                                        "left": "EndRep",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "SpareRepairing <- (SpareRepairing - 1)",
+                                    "ref": "SpareRepairing",
+                                    "value": {
+                                        "left": "SpareRepairing",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Spares <- (Spares + 1)",
+                                    "ref": "Spares",
+                                    "value": {
+                                        "left": "Spares",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(SpareRepairing >= 1)",
+                        "exp": {
+                            "left": "SpareRepairing",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(7205759403792793/72057594037927936 * (SpareRepairing / 1))",
+                        "exp": {
+                            "left": 0.1,
+                            "op": "*",
+                            "right": {
+                                "left": "SpareRepairing",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Idle <- (Idle - 1)",
+                                    "ref": "Idle",
+                                    "value": {
+                                        "left": "Idle",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Ready <- (Ready + 1)",
+                                    "ref": "Ready",
+                                    "value": {
+                                        "left": "Ready",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(Idle >= 1)",
+                        "exp": {
+                            "left": "Idle",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(5404319552844595/9007199254740992 * (Idle / 1))",
+                        "exp": {
+                            "left": 0.6,
+                            "op": "*",
+                            "right": {
+                                "left": "Idle",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "EndRep <- (EndRep - 1)",
+                                    "ref": "EndRep",
+                                    "value": {
+                                        "left": "EndRep",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Ready <- (Ready + 1)",
+                                    "ref": "Ready",
+                                    "value": {
+                                        "left": "Ready",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(EndRep >= 1)",
+                        "exp": {
+                            "left": "EndRep",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(1/2 * (EndRep / 1))",
+                        "exp": {
+                            "left": 0.5,
+                            "op": "*",
+                            "right": {
+                                "left": "EndRep",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "M3go <- (M3go - 1)",
+                                    "ref": "M3go",
+                                    "value": {
+                                        "left": "M3go",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3ko <- (M3ko + 1)",
+                                    "ref": "M3ko",
+                                    "value": {
+                                        "left": "M3ko",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(M3go >= 1)",
+                        "exp": {
+                            "left": "M3go",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(5044031582654955/72057594037927936 * (M3go / 1))",
+                        "exp": {
+                            "left": 0.07,
+                            "op": "*",
+                            "right": {
+                                "left": "M3go",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "EndRep <- (EndRep + 1)",
+                                    "ref": "EndRep",
+                                    "value": {
+                                        "left": "EndRep",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3go <- (M3go + 1)",
+                                    "ref": "M3go",
+                                    "value": {
+                                        "left": "M3go",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3repairing <- (M3repairing - 1)",
+                                    "ref": "M3repairing",
+                                    "value": {
+                                        "left": "M3repairing",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(M3repairing >= 1)",
+                        "exp": {
+                            "left": "M3repairing",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(5404319552844595/36028797018963968 * (M3repairing / 1))",
+                        "exp": {
+                            "left": 0.15,
+                            "op": "*",
+                            "right": {
+                                "left": "M3repairing",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Completed <- (Completed + 1)",
+                                    "ref": "Completed",
+                                    "value": {
+                                        "left": "Completed",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3 <- (M3 + 1)",
+                                    "ref": "M3",
+                                    "value": {
+                                        "left": "M3",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3go <- (M3go - 1)",
+                                    "ref": "M3go",
+                                    "value": {
+                                        "left": "M3go",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "M3on <- (M3on - 1)",
+                                    "ref": "M3on",
+                                    "value": {
+                                        "left": "M3on",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((M3go >= 1) & (M3on >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "M3go",
+                                "op": "≥",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "M3on",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(4278419646001971/2251799813685248 * (M3on / 1))",
+                        "exp": {
+                            "left": 1.9,
+                            "op": "*",
+                            "right": {
+                                "left": "M3on",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "Completed <- (Completed - 1)",
+                                    "ref": "Completed",
+                                    "value": {
+                                        "left": "Completed",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "Pallets <- (Pallets + 1)",
+                                    "ref": "Pallets",
+                                    "value": {
+                                        "left": "Pallets",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "loc"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(Completed >= 1)",
+                        "exp": {
+                            "left": "Completed",
+                            "op": "≥",
+                            "right": 1
+                        }
+                    },
+                    "location": "loc",
+                    "rate": {
+                        "comment": "(7205759403792793/36028797018963968 * (Completed / 1))",
+                        "exp": {
+                            "left": 0.2,
+                            "op": "*",
+                            "right": {
+                                "left": "Completed",
+                                "op": "/",
+                                "right": 1
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "loc"
+            ],
+            "locations": [
+                {
+                    "name": "loc"
+                }
+            ],
+            "name": "gspn_automaton",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "T",
+            "type": "real"
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "flexible-manufacturing.3",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "left": {
+                                "left": "M2on",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "M2go",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "Spares",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "op": "Smin"
+                }
+            },
+            "name": "M2Fail_S"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "left": "M3on",
+                            "op": ">",
+                            "right": 0
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "M3go",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "op": "Smin"
+                }
+            },
+            "name": "M3Fail_S"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": 1,
+                    "op": "Emin",
+                    "reach": {
+                        "left": {
+                            "left": {
+                                "left": "M2on",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "M2go",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "Spares",
+                            "op": "=",
+                            "right": 0
+                        }
+                    }
+                }
+            },
+            "name": "M2Fail_E"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": 1,
+                    "op": "Emin",
+                    "reach": {
+                        "left": {
+                            "left": "M3on",
+                            "op": ">",
+                            "right": 0
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "M3go",
+                            "op": "=",
+                            "right": 0
+                        }
+                    }
+                }
+            },
+            "name": "M3Fail_E"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": {
+                                "left": {
+                                    "left": "M2on",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "M2go",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "Spares",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        "time-bounds": {
+                            "upper": "T",
+                            "upper-exclusive": true
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "M2Fail_Pb"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": {
+                                "left": "M3on",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "M3go",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        "time-bounds": {
+                            "upper": "T",
+                            "upper-exclusive": true
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "M3Fail_Pb"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "gspn_automaton"
+            }
+        ]
+    },
+    "type": "ma",
+    "variables": [
+        {
+            "initial-value": 3,
+            "name": "Pallets",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "StartM1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M1on",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "M1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M2buff",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M2on",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "M2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M3buff",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M3on",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "M3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "Completed",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M2go",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M2ko",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 3,
+            "name": "Spares",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "SpareBroken",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "SpareRepairing",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "Ready",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "Idle",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "EndRep",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M3go",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M3ko",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "M3repairing",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        }
+    ]
+}

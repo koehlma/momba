@@ -1,0 +1,73 @@
+{
+	"file": "../cluster.jani",
+	"version": 1,
+	"date": "2018-11-29",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.64-2000-20.2018-11-29.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 64
+		},
+		{
+			"name": "T",
+			"value": 2000
+		},
+		{
+			"name": "t",
+			"value": 20
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani cluster.jani --janiproperty below_min --constants N=64,T=2000,t=20 --precision 1e-10 --timemem",
+	"time": 603.2583944797516,
+	"memory": 98566144,
+	"property-times": [
+		{
+			"name": "below_min",
+			"time": 598.503
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"value": 3.396,
+					"name": "time"
+				},
+				{
+					"value": 151060,
+					"name": "states"
+				},
+				{
+					"value": 733216,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "below_min",
+			"value": 0.00421944377,
+			"values": [
+				{
+					"unit": "s",
+					"value": 598.503,
+					"name": "time"
+				}
+			]
+		}
+	]
+}

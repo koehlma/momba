@@ -1,0 +1,90 @@
+{
+	"file": "../polling.5.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.5-16.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.5.jani --janiproperty --constants T=16 --exact --timemem",
+	"time": 0.493,
+	"memory": 51380224,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 0.426
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 0.008
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.05
+				},
+				{
+					"name": "states",
+					"value": 240
+				},
+				{
+					"name": "branches",
+					"value": 800
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.426
+				}
+			],
+			"value": {
+				"approx": 0.14492709367584383,
+				"num": 98069746834657416640640770090416136409437704862983150174524778199160683812887056400565845487519,
+				"den": 676683319504139759515696049120244679950836113286540736723830179302924436231709257397083719410479
+			}
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.008
+				}
+			],
+			"value": {
+				"approx": 0.5357405856065404,
+				"num": 383626627176344362198001781420344025337417381567868217691261639067443116865895480215591378343853612745072976262791667606419714766239,
+				"den": 716067883380573582223662738087784862049847275903622358738225912889864165988420563610065440744103356885109451944059087332441611505239
+			}
+		}
+	]
+}

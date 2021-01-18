@@ -1,0 +1,98 @@
+﻿{
+	"file": "../brp.jani",
+	"version": 1,
+	"date": "2018-11-21",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 16 },
+		{ "name": "MAX", "value": 5 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe brp.jani -S Memory -E \"N=16, MAX=5\" -O mcsta.16-5.2018-11-21.json Json",
+	"time": 1.016,
+	"memory": 43634688,
+	"property-times": [
+		{ "name": "p1", "time": 0.031 },
+		{ "name": "p2", "time": 0.000 },
+		{ "name": "p4", "time": 0.000 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 24, "unit": "B" },
+				{ "name": "States", "value": 1304 },
+				{ "name": "Transitions", "value": 1304 },
+				{ "name": "Branches", "value": 1731 },
+				{ "name": "Rate", "value": 28347.826086956524 },
+				{ "name": "Time", "value": 0.063, "unit": "s" }
+			]
+		},
+		{
+			"property": "p1",
+			"value": 1.1205147120172881E-08,
+			"values": [
+				{ "name": "Bounds", "value": "[1.12051471201729E-08, 1]" },
+				{ "name": "Time", "value": 0.031, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 4.5620612491836503E-07 },
+						{ "name": "Iterations", "value": 14 },
+						{ "name": "Time", "value": 0.012, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "p2",
+			"value": 7.0032169157473165E-10,
+			"values": [
+				{ "name": "Bounds", "value": "[7.00321691574732E-10, 1]" },
+				{ "name": "Time", "value": 0.001, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 6.5939703187300575E-07 },
+						{ "name": "Iterations", "value": 15 },
+						{ "name": "Time", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "p4",
+			"value": 6.4000000000000012E-11,
+			"values": [
+				{ "name": "Bounds", "value": "[6.4E-11, 6.4E-11]" },
+				{ "name": "Time", "value": 0.001, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

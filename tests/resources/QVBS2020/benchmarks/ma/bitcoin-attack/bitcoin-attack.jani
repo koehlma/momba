@@ -1,0 +1,315 @@
+﻿{
+	"jani-version": 1,
+	"name": "bitcoin-attack",
+	"type": "ma",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "sln"
+		},
+		{
+			"name": "rst"
+		},
+		{
+			"name": "cnt"
+		}
+	],
+	"constants": [
+		{
+			"name": "MALICIOUS",
+			"type": "int"
+		},
+		{
+			"name": "CD",
+			"type": "int"
+		}
+	],
+	"variables": [
+		{
+			"name": "m_len",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "CD"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "m_diff",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": {
+					"op": "-",
+					"left": 0,
+					"right": "CD"
+				},
+				"upper-bound": "CD"
+			},
+			"initial-value": 0
+		}
+	],
+	"properties": [
+		{
+			"name": "T_MWinMin",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [ "time" ],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "≥",
+							"left": "m_len",
+							"right": "CD"
+						},
+						"right": {
+							"op": ">",
+							"left": "m_diff",
+							"right": 0
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_MWinMax",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "m_len",
+								"right": "CD"
+							},
+							"right": {
+								"op": ">",
+								"left": "m_diff",
+								"right": 0
+							}
+						},
+						"time-bounds": {
+							"upper": 2880
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "HonestPool",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_5"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": {
+								"op": "/",
+								"left": 1,
+								"right": 12
+							},
+							"right": {
+								"op": "-",
+								"left": 1,
+								"right": {
+									"op": "/",
+									"left": "MALICIOUS",
+									"right": 100
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_5"
+					} ]
+				},
+				{
+					"location": "loc_5",
+					"action": "sln",
+					"destinations": [ {
+						"location": "loc_1"
+					} ]
+				}
+			]
+		},
+		{
+			"name": "MaliciousPool",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_11"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 12
+								},
+								"right": "MALICIOUS"
+							},
+							"right": 100
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "m_len",
+								"value": {
+									"op": "min",
+									"left": "CD",
+									"right": {
+										"op": "+",
+										"left": "m_len",
+										"right": 1
+									}
+								}
+							},
+							{
+								"ref": "m_diff",
+								"value": {
+									"op": "min",
+									"left": "CD",
+									"right": {
+										"op": "+",
+										"left": "m_diff",
+										"right": 1
+									}
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "sln",
+					"destinations": [ {
+						"location": "loc_11",
+						"assignments": [ {
+							"ref": "m_diff",
+							"value": {
+								"op": "max",
+								"left": {
+									"op": "-",
+									"left": 0,
+									"right": "CD"
+								},
+								"right": {
+									"op": "-",
+									"left": "m_diff",
+									"right": 1
+								}
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "rst",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "m_len",
+								"value": 0
+							},
+							{
+								"ref": "m_diff",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "cnt",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "m_diff",
+							"right": {
+								"op": "-",
+								"left": 0,
+								"right": "CD"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1"
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "HonestPool"
+			},
+			{
+				"automaton": "MaliciousPool"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					null,
+					"rst"
+				],
+				"result": "rst"
+			},
+			{
+				"synchronise": [
+					null,
+					"cnt"
+				],
+				"result": "cnt"
+			},
+			{
+				"synchronise": [
+					"sln",
+					"sln"
+				],
+				"result": "sln"
+			}
+		]
+	}
+}

@@ -1,0 +1,51 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:32 2018
+Command line arguments: --jani readers-writers.20.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/readers-writers
+
+Time for model construction: 223.175s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1903108
+Transitions: 	6852496
+Choices: 	3730680
+Markovian St.: 	1857673
+Max. Rate.: 	200
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (160 / 10)) -> 77955 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 20)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 42286 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 20)) -> 1825153 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 1.972s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	168387
+Transitions: 	337128
+Choices: 	168387
+Markovian St.: 	30101
+Max. Rate.: 	200
+Reward Models:  none
+State Labels: 	5 labels
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 20)) -> 135782 item(s)
+   * deadlock -> 0 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 20)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 17852 item(s)
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (160 / 10)) -> 32605 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "pr_many_requests": Pmax=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (160 / 10))] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.458s.
+
+Model checking property "exp_time_many_requests": T[exp]min=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (160 / 10))] ...
+
+Aborted after 18000 seconds.

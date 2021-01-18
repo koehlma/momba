@@ -1,0 +1,29 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct 17 19:11:52 2018
+Command line arguments: --jani nand.jani --janiproperty --constants 'N=20,K=2' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/dtmc/nand
+
+Time for model construction: 7.856s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	154942
+Transitions: 	239832
+Reward Models:  none
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * ((z / 20) < 1/10) -> 36508 item(s)
+   * init -> 1 item(s)
+   * (s = 4) -> 21 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "reliable": Pmin=? [F ((s = 4) & ((z / 20) < 1/10))] ...
+Result (for initial states): 2194974688808488055424508277308731491759855468938970202969488797908761894476812508369389774856612630215525485926848858903537587811049771143274343755845368296314570667710474176164598619399/5316477107364120698473441922057214404170674202069463137948043796477945775679108186261508907874916552941615372157992269577569868083122273105800559278577566146850585937500000000000000000000 (approx. 0.412862624)
+Time for model checking: 1.159s.
+
+Performance statistics:
+  * peak memory usage: 169MB
+  * CPU time: 9.008s
+  * wallclock time: 9.038s

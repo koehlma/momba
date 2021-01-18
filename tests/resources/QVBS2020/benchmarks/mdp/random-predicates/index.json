@@ -1,0 +1,94 @@
+{
+	"name": "Random Predicates",
+	"short": "random-predicates",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{ "version": 1, "date": "2018-08-01", "notes": "Initial version." }
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/",
+	"part-of": {
+		"name": "the IPPC 2006 Benchmark Set",
+		"url": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/"
+	},
+	"description": "An IPPC 2006 model of a random domain where random predicates are set and unset until the goal state is reached.",
+	"notes": "IPPC 2006 benchmark",
+	"parameters": [
+		{ "name": "variant", "kind": "file", "description": "the variant of the model", "type": "in {a, b, c, d}" }
+	],
+	"files": [
+		{
+			"file": "random-predicates.a.jani",
+			"original-file": ["p01-domain.pddl", "p01-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p01-domain.pddl p01-problem.pddl --jani random-predicates.a.jani"
+			},
+			"file-parameter-values": [
+				{"name": "variant", "value": "a"}
+			],
+			"open-parameter-values": [
+			]
+		},
+		{
+			"file": "random-predicates.b.jani",
+			"original-file": ["p05-domain.pddl", "p05-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p05-domain.pddl p05-problem.pddl --jani random-predicates.b.jani"
+			},
+			"file-parameter-values": [
+				{"name": "variant", "value": "b"}
+			],
+			"open-parameter-values": [
+			]
+		},
+		{
+			"file": "random-predicates.c.jani",
+			"original-file": ["p10-domain.pddl", "p10-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p10-domain.pddl p10-problem.pddl --jani random-predicates.c.jani"
+			},
+			"file-parameter-values": [
+				{"name": "variant", "value": "c"}
+			],
+			"open-parameter-values": [
+			]
+		},
+		{
+			"file": "random-predicates.d.jani",
+			"original-file": ["p15-domain.pddl", "p15-problem.pddl"],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p15-domain.pddl p15-problem.pddl --jani random-predicates.d.jani"
+			},
+			"file-parameter-values": [
+				{"name": "variant", "value": "d"}
+			],
+			"open-parameter-values": [
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach a state where the predicates are set as required."
+		}
+	],
+	"results": [
+	]
+}

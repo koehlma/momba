@@ -1,0 +1,108 @@
+{
+	"name": "Bluetooth Device Discovery",
+	"short": "bluetooth",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marie Duflot <marie.duflot-kremer@loria.fr>",
+		"Marta Kwiatkowska <Marta.Kwiatkowska@cs.ox.ac.uk>",
+		"Gethin Norman <gethin.norman@glasgow.ac.uk>",
+		"David Parker <d.a.parker@cs.bham.ac.uk>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/s10009-006-0014-x",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] was first described in [0]. It describes the processes of inquiring and scanning devices according to the Bluetooth protocol. The inquiring device broadcasts inquiry packets on two frequencies and scans for a reply. The scanning devices whish to be discovered and listen to frequencies. After receiving `mrec´ messages the inquiry is stopped. `k´ specifies the frequency and `T´ the number of the train the sender starts on. See [2] for more details.",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/bluetooth.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "mrec",
+			"kind": "open",
+			"description": "Number of replies received",
+			"type": "in {1,2}"
+		}
+	],
+	"properties": [
+		{
+			"name": "time",
+			"description": "The expected time to complete the inquiry phase.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "bluetooth.jani",
+			"original-file": [
+				"bluetooth.prism",
+				"bluetooth.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism bluetooth.prism --tojani bluetooth.jani --prop bluetooth.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "mrec",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 3411945339
+						}
+					],
+					"results": [
+						{
+							"property": "time",
+							"value": 8229,
+							"note": "Storm/dd/bisim/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "mrec",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 55300038488
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.dd-bisim.1.2018-10-16.json",
+		{
+			"reference": true,
+			"file": "results/Storm.dd-bisim-exact.1.2018-11-26.json"
+		}
+	]
+}

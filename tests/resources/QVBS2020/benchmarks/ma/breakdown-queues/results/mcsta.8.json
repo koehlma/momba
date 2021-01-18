@@ -1,0 +1,78 @@
+﻿{
+	"file": "../breakdown-queues.jani",
+	"version": 2,
+	"date": "2018-09-10",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "K", "value": 8 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe breakdown-queues.jani -S Memory -E K=8 -O mcsta.8.json Json",
+	"time": 0.505,
+	"memory": 53432320,
+	"property-times": [
+		{ "name": "Min", "time": 0.017 },
+		{ "name": "Max", "time": 0.008 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 10, "unit": "B" },
+				{ "name": "States", "value": 20583 },
+				{ "name": "Transitions", "value": 22137 },
+				{ "name": "Branches", "value": 37060 },
+				{ "name": "Rate", "value": 428812.5 },
+				{ "name": "Time", "value": 0.056, "unit": "s" }
+			]
+		},
+		{
+			"property": "Min",
+			"value": 0.028004827920354879,
+			"values": [
+				{ "name": "Bounds", "value": "[0.0280048279203549, 1]" },
+				{ "name": "Time", "value": 0.017, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 6.3629910130434611E-07 },
+						{ "name": "Iterations", "value": 21 },
+						{ "name": "Time", "value": 0.011, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "Max",
+			"value": 0.23177396051701529,
+			"values": [
+				{ "name": "Bounds", "value": "[0.231773960517015, 1]" },
+				{ "name": "Time", "value": 0.008, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 6.3629910130434611E-07 },
+						{ "name": "Iterations", "value": 21 },
+						{ "name": "Time", "value": 0.008, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

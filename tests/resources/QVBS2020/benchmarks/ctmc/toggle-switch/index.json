@@ -1,0 +1,77 @@
+{
+	"name": "Genetic Toggle Switch",
+	"short": "toggle-switch",
+	"type": "ctmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-26",
+	"version-history": [
+		{
+			"date": "2018-10-26",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Curtis Madsen <ckmadsen@bu.edu>",
+		"Zhen Zhang <zhen.zhang@usu.edu>",
+		"Nicholas Roehner <nicholas.roehner@raytheon.com>",
+		"Chris Winstead <chris.winstead@usu.edu>",
+		"Chris Myers <myers@ece.utah.edu>"
+	],
+	"submitter": "Zhen Zhang <zhen.zhang@usu.edu>",
+	"source": "http://doi.acm.org/10.1145/2644817",
+	"description": "This is a genetic circuit model for the toggle switch. Two input toggle switch can be set to the OFF state by supplying it with aTc and set to ON state by supplying IPTG. The inputs are IPTG and aTc and the outputs are LacI, TetR and GFP.",
+	"references": [],
+	"notes": "biological model",
+	"parameters": [
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time parameter for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "change_state",
+			"description": "Probability that the toggle switch changes state erroneously within `T´ time units.",
+			"type": "prob-reach-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "toggle-switch.jani",
+			"original-file": [
+				"toggle-switch.prism",
+				"toggle-switch.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "Storm 1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism toggle-switch.prism --tojani toggle-switch.jani -jprop --prismcompat --prop toggle-switch.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 2100
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 99
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.2100.2018-10-30.json"
+	]
+}

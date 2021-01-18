@@ -1,0 +1,66 @@
+const int JOB_TYPES; // number of different job types
+const int LAMBDA = 2; // job arrival rate
+const real MU_LEFT = 1.5; // service rate of left desk
+const int MU_RIGHT = 1; // service rate of right desk
+const int C_LEFT; // capacity of left queue
+const int C_RIGHT; // capacity of right queue
+const real TIME_BOUND;
+
+binary action service_left, service_right, reenter;
+
+transient int(0..JOB_TYPES) j;
+
+int sizeLeft = 0;
+int sizeRight = 0;
+
+property PminBothQueuesFullIsOne = Pmin(<> (sizeLeft == C_LEFT && sizeRight == C_RIGHT)) == 1;
+property TminBothQueuesFull = Xmin(T, sizeLeft == C_LEFT && sizeRight == C_RIGHT);
+property TmaxBothQueuesFull = Xmax(T, sizeLeft == C_LEFT && sizeRight == C_RIGHT);
+property PmaxBothQueuesFullBound = Pmax(<>[T<=TIME_BOUND] (sizeLeft == C_LEFT && sizeRight == C_RIGHT));
+property SmaxBothQueuesFull = Smax(sizeLeft == C_LEFT && sizeRight == C_RIGHT);
+
+process Arrival()
+{
+   int(0..JOB_TYPES)[] ql = array(i, C_LEFT, 0);
+   int(0..JOB_TYPES)[] qr = array(i, C_RIGHT, 0);
+
+   do {
+   :: when(sizeLeft < C_LEFT || sizeRight < C_RIGHT) rate(LAMBDA) tau; alt {
+      :: when(sizeLeft < C_LEFT) {= ql[sizeLeft] = (int)any(i, 1 <= i && i <= JOB_TYPES), sizeLeft++ =}
+      :: when(sizeRight < C_RIGHT) {= qr[sizeRight] = (int)any(i, 1 <= i && i <= JOB_TYPES), sizeRight++ =}
+      }
+   :: when(sizeRight < C_RIGHT) reenter? {= qr[sizeRight] = j, sizeRight++ =}
+   :: when(sizeLeft > 0) service_left! {= j = ql[0], ql = array(i, C_LEFT, i < sizeLeft - 1 ? ql[i + 1] : 0), sizeLeft-- =}
+   :: when(sizeRight > 0) service_right! {= j = qr[0], qr = array(i, C_RIGHT, i < sizeRight - 1 ? qr[i + 1] : 0), sizeRight-- =}
+   }
+}
+
+process LeftDesk()
+{   
+   int(0..JOB_TYPES) lj;
+   
+   service_left? {= lj = j =};
+   rate(MU_LEFT + 0.5 * (lj - 1)) tau;
+   alt {
+   :: LeftDesk()
+   :: reenter! {= j = lj =}; LeftDesk()
+   }
+}
+
+process RightDesk()
+{
+   int(0..JOB_TYPES) rj;      
+
+   service_right? {= rj = j =};
+   rate(MU_RIGHT + 0.3 * (rj - 1)) tau;
+   RightDesk()
+}
+
+restrict { service_left!, service_left?, service_right!, service_right?, reenter!, reenter? }
+{
+   par {
+   :: Arrival()
+   :: LeftDesk()
+   :: RightDesk()
+   }
+}

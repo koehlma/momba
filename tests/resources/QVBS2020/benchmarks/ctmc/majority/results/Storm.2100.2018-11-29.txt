@@ -1,0 +1,32 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Nov 29 15:02:06 2018
+Command line arguments: --jani majority.jani --janiproperty --constants T=2100 --precision 1e-10 --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.075s.
+
+Time for model construction: 4.376s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	192000
+Transitions: 	1961600
+Reward Models:  none
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (CC < 20) -> 24000 item(s)
+   * (EE > 40) -> 24000 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "change_state": Pmin=? [true U[0, 2100] ((EE > 40) & (CC < 20))] ...
+Result (for initial states): 0.05429919316
+Time for model checking: 68.361s.
+
+Performance statistics:
+  * peak memory usage: 178MB
+  * CPU time: 72.803s
+  * wallclock time: 72.821s
+

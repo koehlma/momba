@@ -1,0 +1,414 @@
+{
+	"name": "IEEE 802.11 Wireless LAN (with timer)",
+	"short": "wlan_dl",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marta Kwiatkowska <Marta.Kwiatkowska@cs.ox.ac.uk>",
+		"Gethin Norman <gethin.norman@glasgow.ac.uk>",
+		"Jeremy Sproston <sproston@di.unito.it>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/3-540-45605-8_11",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. We consider an MDP representing the IEEE 802.11 Wireless LAN which models two stations colliding - trying to send messages at the same time over one channel - and then entering the randomised exponential backoff procedure. The timing constraints (values of parameters not listed here) of the model correspond to the Frequency Hopping Spread Spectrum (FHSS) physical layer, rounded by a factor of 50 (i.e. 1 time unit equals 50 μs) to reduce complexity. We used the integer semantics given in [0]. `COL´ is the maximum number of collisions, `MAX_BACKOFF´ the maximum backoff counter and `TRANS_TIME_MAX/MIN´ the transition times.  The `_dl´ version includes a timer module to allow the verification of time-bounded properties. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/wlan.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "MAX_BACKOFF",
+			"kind": "file",
+			"description": "Maximum backoff counter",
+			"type": "positive integer"
+		},
+		{
+			"name": "deadline",
+			"kind": "open",
+			"description": "Timer deadline",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline",
+			"description": "Minimum probability of both stations sending correctly within `deadline´.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "wlan_dl.0.jani",
+			"original-file": [
+				"wlan_dl.0.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.0.prism --tojani wlan_dl.0.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 0
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 189703
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.1.jani",
+			"original-file": [
+				"wlan_dl.1.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.1.prism --tojani wlan_dl.1.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 1
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 450627
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.2.jani",
+			"original-file": [
+				"wlan_dl.2.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.2.prism --tojani wlan_dl.2.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1148419
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.3.jani",
+			"original-file": [
+				"wlan_dl.3.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.3.prism --tojani wlan_dl.3.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 3041883
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.4.jani",
+			"original-file": [
+				"wlan_dl.4.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.4.prism --tojani wlan_dl.4.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 6959410
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.5.jani",
+			"original-file": [
+				"wlan_dl.5.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.5.prism --tojani wlan_dl.5.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 9633089
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan_dl.6.jani",
+			"original-file": [
+				"wlan_dl.6.prism",
+				"wlan_dl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan_dl.6.prism --tojani wlan_dl.6.jani --prop wlan_dl.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "deadline",
+							"value": 80
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 10131465
+						}
+					],
+					"results": [
+						{
+							"property": "deadline",
+							"value": {
+								"approx": 0.81640625,
+								"num": 209,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.0-80.2018-10-12.json",
+		"results/Storm.1-80.2018-10-12.json",
+		"results/Storm.2-80.2018-10-12.json",
+		"results/Storm.3-80.2018-10-12.json",
+		"results/Storm.4-80.2018-10-12.json",
+		"results/Storm.5-80.2018-10-12.json",
+		"results/Storm.6-80.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.0-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-80.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-80.2018-10-17.json"
+		}
+	]
+}

@@ -1,0 +1,1704 @@
+{
+	"actions": [],
+	"automata": [
+		{
+			"edges": [
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_db",
+									"value": {
+										"left": "p_db",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_w",
+									"value": {
+										"left": "p_w",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_write",
+									"value": {
+										"left": "p_write",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "((((p_w >= 1) & (p_db >= 1)) & (p_read < 1)) ? (1 / (0 + ((((p_w >= 1) & (p_db >= 1)) & (p_read < 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": {
+											"left": {
+												"left": "p_w",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_db",
+												"op": "≥",
+												"right": 1
+											}
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_read",
+											"op": "<",
+											"right": 1
+										}
+									},
+									"op": "ite",
+									"then": {
+										"left": 1,
+										"op": "/",
+										"right": {
+											"left": 0.0,
+											"op": "+",
+											"right": {
+												"else": 0.0,
+												"if": {
+													"left": {
+														"left": {
+															"left": "p_w",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "∧",
+														"right": {
+															"left": "p_db",
+															"op": "≥",
+															"right": 1
+														}
+													},
+													"op": "∧",
+													"right": {
+														"left": "p_read",
+														"op": "<",
+														"right": 1
+													}
+												},
+												"op": "ite",
+												"then": 1
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((p_w >= 1) & (p_db >= 1)) & (p_read < 1))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": "p_w",
+									"op": "≥",
+									"right": 1
+								},
+								"op": "∧",
+								"right": {
+									"left": "p_db",
+									"op": "≥",
+									"right": 1
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": "p_read",
+								"op": "<",
+								"right": 1
+							}
+						}
+					},
+					"location": "loc"
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_db",
+									"value": {
+										"left": {
+											"left": "p_db",
+											"op": "+",
+											"right": 1
+										},
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_r",
+									"value": {
+										"left": "p_r",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_read",
+									"value": {
+										"left": "p_read",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "(((p_r >= 1) & (p_db >= 1)) ? (1 / (0 + (((p_r >= 1) & (p_db >= 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": {
+											"left": "p_r",
+											"op": "≥",
+											"right": 1
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_db",
+											"op": "≥",
+											"right": 1
+										}
+									},
+									"op": "ite",
+									"then": {
+										"left": 1,
+										"op": "/",
+										"right": {
+											"left": 0.0,
+											"op": "+",
+											"right": {
+												"else": 0.0,
+												"if": {
+													"left": {
+														"left": "p_r",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "∧",
+													"right": {
+														"left": "p_db",
+														"op": "≥",
+														"right": 1
+													}
+												},
+												"op": "ite",
+												"then": 1
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(!((((p_w >= 1) & (p_db >= 1)) & (p_read < 1))) & ((p_r >= 1) & (p_db >= 1)))",
+						"exp": {
+							"left": {
+								"exp": {
+									"left": {
+										"left": {
+											"left": "p_w",
+											"op": "≥",
+											"right": 1
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_db",
+											"op": "≥",
+											"right": 1
+										}
+									},
+									"op": "∧",
+									"right": {
+										"left": "p_read",
+										"op": "<",
+										"right": 1
+									}
+								},
+								"op": "¬"
+							},
+							"op": "∧",
+							"right": {
+								"left": {
+									"left": "p_r",
+									"op": "≥",
+									"right": 1
+								},
+								"op": "∧",
+								"right": {
+									"left": "p_db",
+									"op": "≥",
+									"right": 1
+								}
+							}
+						}
+					},
+					"location": "loc"
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_r",
+									"value": {
+										"left": "p_r",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_request",
+									"value": {
+										"left": "p_request",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "((p_request >= 1) ? (8 / ((0 + ((p_request >= 1) ? 8 : 0)) + ((p_request >= 1) ? 2 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": "p_request",
+										"op": "≥",
+										"right": 1
+									},
+									"op": "ite",
+									"then": {
+										"left": 8,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": 0.0,
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_request",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 8
+												}
+											},
+											"op": "+",
+											"right": {
+												"else": 0.0,
+												"if": {
+													"left": "p_request",
+													"op": "≥",
+													"right": 1
+												},
+												"op": "ite",
+												"then": 2
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "p_request",
+									"value": {
+										"left": "p_request",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_w",
+									"value": {
+										"left": "p_w",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "((p_request >= 1) ? (2 / ((0 + ((p_request >= 1) ? 8 : 0)) + ((p_request >= 1) ? 2 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": "p_request",
+										"op": "≥",
+										"right": 1
+									},
+									"op": "ite",
+									"then": {
+										"left": 2,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": 0.0,
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_request",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 8
+												}
+											},
+											"op": "+",
+											"right": {
+												"else": 0.0,
+												"if": {
+													"left": "p_request",
+													"op": "≥",
+													"right": 1
+												},
+												"op": "ite",
+												"then": 2
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "((!((((p_w >= 1) & (p_db >= 1)) & (p_read < 1))) & !(((((p_w >= 1) & (p_db >= 1)) & (p_read < 1)) | ((p_r >= 1) & (p_db >= 1))))) & ((p_request >= 1) | (p_request >= 1)))",
+						"exp": {
+							"left": {
+								"left": {
+									"exp": {
+										"left": {
+											"left": {
+												"left": "p_w",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_db",
+												"op": "≥",
+												"right": 1
+											}
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_read",
+											"op": "<",
+											"right": 1
+										}
+									},
+									"op": "¬"
+								},
+								"op": "∧",
+								"right": {
+									"exp": {
+										"left": {
+											"left": {
+												"left": {
+													"left": "p_w",
+													"op": "≥",
+													"right": 1
+												},
+												"op": "∧",
+												"right": {
+													"left": "p_db",
+													"op": "≥",
+													"right": 1
+												}
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_read",
+												"op": "<",
+												"right": 1
+											}
+										},
+										"op": "∨",
+										"right": {
+											"left": {
+												"left": "p_r",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_db",
+												"op": "≥",
+												"right": 1
+											}
+										}
+									},
+									"op": "¬"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": {
+									"left": "p_request",
+									"op": "≥",
+									"right": 1
+								},
+								"op": "∨",
+								"right": {
+									"left": "p_request",
+									"op": "≥",
+									"right": 1
+								}
+							}
+						}
+					},
+					"location": "loc"
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_reaccess",
+									"value": {
+										"left": "p_reaccess",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_think",
+									"value": {
+										"left": "p_think",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "((p_reaccess >= 1) ? (9 / ((((0 + ((p_reaccess >= 1) ? 9 : 0)) + ((p_reaccess >= 1) ? 1 : 0)) + (((p_lan_r >= 1) & (p_lan >= 1)) ? 1 : 0)) + (((p_lan_w >= 1) & (p_lan >= 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": "p_reaccess",
+										"op": "≥",
+										"right": 1
+									},
+									"op": "ite",
+									"then": {
+										"left": 9,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": {
+													"left": {
+														"else": 0.0,
+														"if": {
+															"left": {
+																"left": "p_lan_w",
+																"op": "≥",
+																"right": 1
+															},
+															"op": "∧",
+															"right": {
+																"left": "p_lan",
+																"op": "≥",
+																"right": 1
+															}
+														},
+														"op": "ite",
+														"then": 1
+													},
+													"op": "+",
+													"right": {
+														"else": 0.0,
+														"if": {
+															"left": "p_reaccess",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "ite",
+														"then": 9
+													}
+												},
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_reaccess",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 1
+												}
+											},
+											"op": "+",
+											"right": {
+												"left": {
+													"else": 0.0,
+													"if": {
+														"left": {
+															"left": "p_lan_r",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "∧",
+														"right": {
+															"left": "p_lan",
+															"op": "≥",
+															"right": 1
+														}
+													},
+													"op": "ite",
+													"then": 1
+												},
+												"op": "+",
+												"right": 0.0
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "p_reaccess",
+									"value": {
+										"left": "p_reaccess",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_request",
+									"value": {
+										"left": "p_request",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "((p_reaccess >= 1) ? (1 / ((((0 + ((p_reaccess >= 1) ? 9 : 0)) + ((p_reaccess >= 1) ? 1 : 0)) + (((p_lan_r >= 1) & (p_lan >= 1)) ? 1 : 0)) + (((p_lan_w >= 1) & (p_lan >= 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": "p_reaccess",
+										"op": "≥",
+										"right": 1
+									},
+									"op": "ite",
+									"then": {
+										"left": 1,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": {
+													"left": {
+														"else": 0.0,
+														"if": {
+															"left": {
+																"left": "p_lan_w",
+																"op": "≥",
+																"right": 1
+															},
+															"op": "∧",
+															"right": {
+																"left": "p_lan",
+																"op": "≥",
+																"right": 1
+															}
+														},
+														"op": "ite",
+														"then": 1
+													},
+													"op": "+",
+													"right": {
+														"else": 0.0,
+														"if": {
+															"left": "p_reaccess",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "ite",
+														"then": 9
+													}
+												},
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_reaccess",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 1
+												}
+											},
+											"op": "+",
+											"right": {
+												"left": {
+													"else": 0.0,
+													"if": {
+														"left": {
+															"left": "p_lan_r",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "∧",
+														"right": {
+															"left": "p_lan",
+															"op": "≥",
+															"right": 1
+														}
+													},
+													"op": "ite",
+													"then": 1
+												},
+												"op": "+",
+												"right": 0.0
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "p_lan",
+									"value": {
+										"left": "p_lan",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_lan_r",
+									"value": {
+										"left": "p_lan_r",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_start_lan_r",
+									"value": {
+										"left": "p_start_lan_r",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "(((p_lan_r >= 1) & (p_lan >= 1)) ? (1 / ((((0 + ((p_reaccess >= 1) ? 9 : 0)) + ((p_reaccess >= 1) ? 1 : 0)) + (((p_lan_r >= 1) & (p_lan >= 1)) ? 1 : 0)) + (((p_lan_w >= 1) & (p_lan >= 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": {
+											"left": "p_lan_r",
+											"op": "≥",
+											"right": 1
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_lan",
+											"op": "≥",
+											"right": 1
+										}
+									},
+									"op": "ite",
+									"then": {
+										"left": 1,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": {
+													"left": {
+														"else": 0.0,
+														"if": {
+															"left": {
+																"left": "p_lan_w",
+																"op": "≥",
+																"right": 1
+															},
+															"op": "∧",
+															"right": {
+																"left": "p_lan",
+																"op": "≥",
+																"right": 1
+															}
+														},
+														"op": "ite",
+														"then": 1
+													},
+													"op": "+",
+													"right": {
+														"else": 0.0,
+														"if": {
+															"left": "p_reaccess",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "ite",
+														"then": 9
+													}
+												},
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_reaccess",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 1
+												}
+											},
+											"op": "+",
+											"right": {
+												"left": {
+													"else": 0.0,
+													"if": {
+														"left": {
+															"left": "p_lan_r",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "∧",
+														"right": {
+															"left": "p_lan",
+															"op": "≥",
+															"right": 1
+														}
+													},
+													"op": "ite",
+													"then": 1
+												},
+												"op": "+",
+												"right": 0.0
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"assignments": [
+								{
+									"ref": "p_lan",
+									"value": {
+										"left": "p_lan",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_lan_w",
+									"value": {
+										"left": "p_lan_w",
+										"op": "-",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_start_lan_w",
+									"value": {
+										"left": "p_start_lan_w",
+										"op": "+",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc",
+							"probability": {
+								"comment": "(((p_lan_w >= 1) & (p_lan >= 1)) ? (1 / ((((0 + ((p_reaccess >= 1) ? 9 : 0)) + ((p_reaccess >= 1) ? 1 : 0)) + (((p_lan_r >= 1) & (p_lan >= 1)) ? 1 : 0)) + (((p_lan_w >= 1) & (p_lan >= 1)) ? 1 : 0))) : 0)",
+								"exp": {
+									"else": 0.0,
+									"if": {
+										"left": {
+											"left": "p_lan_w",
+											"op": "≥",
+											"right": 1
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_lan",
+											"op": "≥",
+											"right": 1
+										}
+									},
+									"op": "ite",
+									"then": {
+										"left": 1,
+										"op": "/",
+										"right": {
+											"left": {
+												"left": {
+													"left": {
+														"else": 0.0,
+														"if": {
+															"left": {
+																"left": "p_lan_w",
+																"op": "≥",
+																"right": 1
+															},
+															"op": "∧",
+															"right": {
+																"left": "p_lan",
+																"op": "≥",
+																"right": 1
+															}
+														},
+														"op": "ite",
+														"then": 1
+													},
+													"op": "+",
+													"right": {
+														"else": 0.0,
+														"if": {
+															"left": "p_reaccess",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "ite",
+														"then": 9
+													}
+												},
+												"op": "+",
+												"right": {
+													"else": 0.0,
+													"if": {
+														"left": "p_reaccess",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "ite",
+													"then": 1
+												}
+											},
+											"op": "+",
+											"right": {
+												"left": {
+													"else": 0.0,
+													"if": {
+														"left": {
+															"left": "p_lan_r",
+															"op": "≥",
+															"right": 1
+														},
+														"op": "∧",
+														"right": {
+															"left": "p_lan",
+															"op": "≥",
+															"right": 1
+														}
+													},
+													"op": "ite",
+													"then": 1
+												},
+												"op": "+",
+												"right": 0.0
+											}
+										}
+									}
+								}
+							}
+						}
+					],
+					"guard": {
+						"comment": "(((!((((p_w >= 1) & (p_db >= 1)) & (p_read < 1))) & !(((((p_w >= 1) & (p_db >= 1)) & (p_read < 1)) | ((p_r >= 1) & (p_db >= 1))))) & !((((((p_w >= 1) & (p_db >= 1)) & (p_read < 1)) | ((p_r >= 1) & (p_db >= 1))) | ((p_request >= 1) | (p_request >= 1))))) & ((((p_reaccess >= 1) | (p_reaccess >= 1)) | ((p_lan_r >= 1) & (p_lan >= 1))) | ((p_lan_w >= 1) & (p_lan >= 1))))",
+						"exp": {
+							"left": {
+								"left": {
+									"left": {
+										"left": {
+											"left": {
+												"left": "p_lan_w",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_lan",
+												"op": "≥",
+												"right": 1
+											}
+										},
+										"op": "∨",
+										"right": {
+											"left": "p_reaccess",
+											"op": "≥",
+											"right": 1
+										}
+									},
+									"op": "∨",
+									"right": {
+										"left": {
+											"left": {
+												"left": "p_lan_r",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_lan",
+												"op": "≥",
+												"right": 1
+											}
+										},
+										"op": "∨",
+										"right": {
+											"left": "p_reaccess",
+											"op": "≥",
+											"right": 1
+										}
+									}
+								},
+								"op": "∧",
+								"right": {
+									"exp": {
+										"left": {
+											"left": {
+												"left": {
+													"left": "p_w",
+													"op": "≥",
+													"right": 1
+												},
+												"op": "∧",
+												"right": {
+													"left": "p_db",
+													"op": "≥",
+													"right": 1
+												}
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_read",
+												"op": "<",
+												"right": 1
+											}
+										},
+										"op": "∨",
+										"right": {
+											"left": {
+												"left": "p_r",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_db",
+												"op": "≥",
+												"right": 1
+											}
+										}
+									},
+									"op": "¬"
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": {
+									"exp": {
+										"left": {
+											"left": {
+												"left": "p_request",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∨",
+											"right": {
+												"left": {
+													"left": "p_r",
+													"op": "≥",
+													"right": 1
+												},
+												"op": "∧",
+												"right": {
+													"left": "p_db",
+													"op": "≥",
+													"right": 1
+												}
+											}
+										},
+										"op": "∨",
+										"right": {
+											"left": {
+												"left": "p_request",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∨",
+											"right": {
+												"left": {
+													"left": {
+														"left": "p_w",
+														"op": "≥",
+														"right": 1
+													},
+													"op": "∧",
+													"right": {
+														"left": "p_db",
+														"op": "≥",
+														"right": 1
+													}
+												},
+												"op": "∧",
+												"right": {
+													"left": "p_read",
+													"op": "<",
+													"right": 1
+												}
+											}
+										}
+									},
+									"op": "¬"
+								},
+								"op": "∧",
+								"right": {
+									"exp": {
+										"left": {
+											"left": {
+												"left": "p_w",
+												"op": "≥",
+												"right": 1
+											},
+											"op": "∧",
+											"right": {
+												"left": "p_db",
+												"op": "≥",
+												"right": 1
+											}
+										},
+										"op": "∧",
+										"right": {
+											"left": "p_read",
+											"op": "<",
+											"right": 1
+										}
+									},
+									"op": "¬"
+								}
+							}
+						}
+					},
+					"location": "loc"
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_request",
+									"value": {
+										"left": "p_request",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_think",
+									"value": {
+										"left": "p_think",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc"
+						}
+					],
+					"guard": {
+						"comment": "(p_think >= 1)",
+						"exp": {
+							"left": "p_think",
+							"op": "≥",
+							"right": 1
+						}
+					},
+					"location": "loc",
+					"rate": {
+						"comment": "(1 * (p_think / 1))",
+						"exp": {
+							"left": 1,
+							"op": "*",
+							"right": {
+								"left": "p_think",
+								"op": "/",
+								"right": 1
+							}
+						}
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_lan_r",
+									"value": {
+										"left": "p_lan_r",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_read",
+									"value": {
+										"left": "p_read",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc"
+						}
+					],
+					"guard": {
+						"comment": "(p_read >= 1)",
+						"exp": {
+							"left": "p_read",
+							"op": "≥",
+							"right": 1
+						}
+					},
+					"location": "loc",
+					"rate": {
+						"comment": "(10 * (p_read / 1))",
+						"exp": {
+							"left": 10,
+							"op": "*",
+							"right": {
+								"left": "p_read",
+								"op": "/",
+								"right": 1
+							}
+						}
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_db",
+									"value": {
+										"left": "p_db",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_lan_w",
+									"value": {
+										"left": "p_lan_w",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_write",
+									"value": {
+										"left": "p_write",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc"
+						}
+					],
+					"guard": {
+						"comment": "(p_write >= 1)",
+						"exp": {
+							"left": "p_write",
+							"op": "≥",
+							"right": 1
+						}
+					},
+					"location": "loc",
+					"rate": {
+						"comment": "7",
+						"exp": 7
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_lan",
+									"value": {
+										"left": "p_lan",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_reaccess",
+									"value": {
+										"left": "p_reaccess",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_start_lan_r",
+									"value": {
+										"left": "p_start_lan_r",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc"
+						}
+					],
+					"guard": {
+						"comment": "(p_start_lan_r >= 1)",
+						"exp": {
+							"left": "p_start_lan_r",
+							"op": "≥",
+							"right": 1
+						}
+					},
+					"location": "loc",
+					"rate": {
+						"comment": "8",
+						"exp": 8
+					}
+				},
+				{
+					"destinations": [
+						{
+							"assignments": [
+								{
+									"ref": "p_lan",
+									"value": {
+										"left": "p_lan",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_reaccess",
+									"value": {
+										"left": "p_reaccess",
+										"op": "+",
+										"right": 1
+									}
+								},
+								{
+									"ref": "p_start_lan_w",
+									"value": {
+										"left": "p_start_lan_w",
+										"op": "-",
+										"right": 1
+									}
+								}
+							],
+							"location": "loc"
+						}
+					],
+					"guard": {
+						"comment": "(p_start_lan_w >= 1)",
+						"exp": {
+							"left": "p_start_lan_w",
+							"op": "≥",
+							"right": 1
+						}
+					},
+					"location": "loc",
+					"rate": {
+						"comment": "7",
+						"exp": 7
+					}
+				}
+			],
+			"initial-locations": [
+				"loc"
+			],
+			"locations": [
+				{
+					"name": "loc"
+				}
+			],
+			"name": "gspn_automaton",
+			"variables": []
+		}
+	],
+	"constants": [],
+	"features": [
+		"derived-operators"
+	],
+	"jani-version": 1,
+	"name": "ReadersWriters",
+	"properties": [
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"exp": {
+						"left": true,
+						"op": "U",
+						"right": {
+							"left": {
+								"left": {
+									"left": "p_lan_w",
+									"op": "+",
+									"right": "p_w"
+								},
+								"op": "+",
+								"right": {
+									"left": "p_lan_r",
+									"op": "+",
+									"right": "p_r"
+								}
+							},
+							"op": ">",
+							"right": {
+								"left": 320,
+								"op": "/",
+								"right": 10
+							}
+						}
+					},
+					"op": "Pmax"
+				}
+			},
+			"name": "pr_many_requests"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"accumulate": [
+						"time"
+					],
+					"exp": 1,
+					"op": "Emin",
+					"reach": {
+						"left": {
+							"left": {
+								"left": "p_lan_w",
+								"op": "+",
+								"right": "p_w"
+							},
+							"op": "+",
+							"right": {
+								"left": "p_lan_r",
+								"op": "+",
+								"right": "p_r"
+							}
+						},
+						"op": ">",
+						"right": {
+							"left": 320,
+							"op": "/",
+							"right": 10
+						}
+					}
+				}
+			},
+			"name": "exp_time_many_requests"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"exp": {
+						"left": {
+							"left": {
+								"left": {
+									"left": "p_lan_w",
+									"op": "+",
+									"right": "p_w"
+								},
+								"op": "+",
+								"right": {
+									"left": "p_lan_r",
+									"op": "+",
+									"right": "p_r"
+								}
+							},
+							"op": "≤",
+							"right": {
+								"left": {
+									"left": 8,
+									"op": "/",
+									"right": 10
+								},
+								"op": "*",
+								"right": 40
+							}
+						},
+						"op": "U",
+						"right": {
+							"left": {
+								"left": {
+									"left": {
+										"left": "p_lan_w",
+										"op": "+",
+										"right": "p_w"
+									},
+									"op": "+",
+									"right": {
+										"left": "p_lan_r",
+										"op": "+",
+										"right": "p_r"
+									}
+								},
+								"op": ">",
+								"right": {
+									"left": {
+										"left": 8,
+										"op": "/",
+										"right": 10
+									},
+									"op": "*",
+									"right": 40
+								}
+							},
+							"op": "∧",
+							"right": {
+								"left": {
+									"left": "p_lan_r",
+									"op": "+",
+									"right": "p_lan_w"
+								},
+								"op": ">",
+								"right": {
+									"left": "p_r",
+									"op": "+",
+									"right": "p_w"
+								}
+							}
+						}
+					},
+					"op": "Pmax"
+				}
+			},
+			"name": "pr_network"
+		},
+		{
+			"expression": {
+				"fun": "values",
+				"op": "filter",
+				"states": {
+					"op": "initial"
+				},
+				"values": {
+					"exp": {
+						"left": true,
+						"op": "U",
+						"right": {
+							"left": {
+								"left": {
+									"left": "p_lan_w",
+									"op": "+",
+									"right": "p_w"
+								},
+								"op": "+",
+								"right": {
+									"left": "p_lan_r",
+									"op": "+",
+									"right": "p_r"
+								}
+							},
+							"op": ">",
+							"right": {
+								"left": 320,
+								"op": "/",
+								"right": 10
+							}
+						},
+						"time-bounds": {
+							"upper": 5,
+							"upper-exclusive": false
+						}
+					},
+					"op": "Pmax"
+				}
+			},
+			"name": "prtb_many_requests"
+		}
+	],
+	"restrict-initial": {
+		"exp": true
+	},
+	"system": {
+		"elements": [
+			{
+				"automaton": "gspn_automaton"
+			}
+		]
+	},
+	"type": "ma",
+	"variables": [
+		{
+			"initial-value": 0,
+			"name": "p_reaccess",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 40,
+			"name": "p_think",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_request",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_r",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 1,
+			"name": "p_db",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 1
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_w",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_read",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_write",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_lan_r",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_lan_w",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_start_lan_r",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 0,
+			"name": "p_start_lan_w",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 40
+			}
+		},
+		{
+			"initial-value": 1,
+			"name": "p_lan",
+			"type": {
+				"base": "int",
+				"kind": "bounded",
+				"lower-bound": 0,
+				"upper-bound": 1
+			}
+		}
+	]
+}

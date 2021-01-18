@@ -1,0 +1,141 @@
+{
+	"name": "Reentrant Queueing System",
+	"short": "reentrant-queues",
+	"type": "ma",
+	"original": "Modest",
+	"version": 3,
+	"date": "2018-10-24",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-14",
+			"notes": "Initial version."
+		},
+		{
+			"version": 2,
+			"date": "2018-08-22",
+			"notes": "Replaced query property `PminBothQueuesFull´ by probability-one assertion property `PminBothQueuesFullIsOne´."
+		},
+		{
+			"version": 3,
+			"date": "2018-10-24",
+			"notes": "Added properties `PmaxBothQueuesFullBound ´ and `SmaxBothQueuesFull´."
+		}
+	],
+	"author": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.14279/tuj.eceasst.53.783",
+	"description": "A queueing system with a left and a right queue of capacity `C_LEFT´ and `C_RIGHT´, respectively. Jobs of `JOB_TYPES´ different types arrive into the left and right queues, where they are stored until they start being processed by the left or right service desk, respectively. When a job is completed at the left service desk, it may re-enter the right queue. The original model was translated from a MAPA file.",
+	"notes": "asymmetric nondeterministic queueing system",
+	"references": [],
+	"parameters": [
+		{
+			"name": "JOB_TYPES",
+			"kind": "open",
+			"description": "Number of job types",
+			"type": "positive integer"
+		},
+		{
+			"name": "C_LEFT",
+			"kind": "open",
+			"description": "Capacity of the left queue",
+			"type": "positive integer"
+		},
+		{
+			"name": "C_RIGHT",
+			"kind": "open",
+			"description": "Capacity of the right queue",
+			"type": "positive integer"
+		},
+		{
+			"name": "TIME_BOUND", 
+			"kind": "open", 
+			"description": "The time bound for property PminBothQueuesFullBound", 
+			"type": "positive real" 
+		}
+	],
+	"files": [
+		{
+			"file": "reentrant-queues.jani",
+			"original-file": "reentrant-queues.modest",
+			"conversion": {
+				"tool": "moconv",
+				"version": "3.0.90",
+				"url": "http://www.modestchecker.net/",
+				"command": "moconv.exe reentrant-queues.modest -O reentrant-queues.jani"
+			},
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "JOB_TYPES",
+							"value": 3
+						},
+						{
+							"name": "C_LEFT",
+							"value": 3
+						},
+						{
+							"name": "C_RIGHT",
+							"value": 3
+						},
+						{ 
+							"name": "TIME_BOUND", 
+							"value": 5 
+						}
+					],
+					"states": [
+						{
+							"number": 77937,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 126801
+						}
+					],
+					"results": [
+						{
+							"property": "PminBothQueuesFullIsOne",
+							"value": 1.0,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "PminBothQueuesFullIsOne",
+			"type": "prob-reach",
+			"description": "The minimum probability that both queues are full is one."
+		},
+		{
+			"name": "TminBothQueuesFull",
+			"type": "exp-time",
+			"description": "The minimum expected time until both queues are full."
+		},
+		{
+			"name": "TmaxBothQueuesFull",
+			"type": "exp-time",
+			"description": "The maximum expected time until both queues are full."
+		},
+		{
+			"name": "PmaxBothQueuesFullBound",
+			"type": "prob-reach-time-bounded",
+			"description": "The maximum probability that both queues are full within the TIME-BOUND."
+		},
+		{
+			"name": "SmaxBothQueuesFull",
+			"description": "Long-run probability that both queues are full.",
+			"type": "steady-state-prob"
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-3-3.2018-10-03.json"
+		}
+	]
+}

@@ -1,0 +1,4658 @@
+{
+    "actions": [
+        {
+            "name": "tick"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "battery_load <- (max(0, (battery_load - 2)))",
+                                    "ref": "battery_load",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "battery_load",
+                                            "op": "-",
+                                            "right": 2
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "energyLocal <- (((((loc_1 = 2) ? 2 : 0) + ((loc_1 = 0) ? 1 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 0)) ? 3 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 1)) ? 9 : 0))",
+                                    "ref": "energyLocal",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 9
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 3
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "ite",
+                                                "then": 2
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "utilityLocal <- (((((loc_1 = 1) & (t_1 = 0)) & !(failure_1)) & !((battery_load = 0))) ? 1 : 0)",
+                                    "ref": "utilityLocal",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": "battery_load",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    },
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "t_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                }
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": {
+                                                    "exp": "failure_1",
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 1
+                                                }
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(loc_1 = 2)",
+                        "exp": {
+                            "left": "loc_1",
+                            "op": "=",
+                            "right": 2
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "battery_load <- (max(0, (battery_load - 1)))",
+                                    "ref": "battery_load",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "battery_load",
+                                            "op": "-",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "energyLocal <- (((((loc_1 = 2) ? 2 : 0) + ((loc_1 = 0) ? 1 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 0)) ? 3 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 1)) ? 9 : 0))",
+                                    "ref": "energyLocal",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 9
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 3
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "ite",
+                                                "then": 2
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "utilityLocal <- (((((loc_1 = 1) & (t_1 = 0)) & !(failure_1)) & !((battery_load = 0))) ? 1 : 0)",
+                                    "ref": "utilityLocal",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": "battery_load",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    },
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "t_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                }
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": {
+                                                    "exp": "failure_1",
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 1
+                                                }
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(loc_1 = 0)",
+                        "exp": {
+                            "left": "loc_1",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "battery_load <- (max(0, (battery_load - 3)))",
+                                    "ref": "battery_load",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "battery_load",
+                                            "op": "-",
+                                            "right": 3
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "energyLocal <- (((((loc_1 = 2) ? 2 : 0) + ((loc_1 = 0) ? 1 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 0)) ? 3 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 1)) ? 9 : 0))",
+                                    "ref": "energyLocal",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 9
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 3
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "ite",
+                                                "then": 2
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "utilityLocal <- (((((loc_1 = 1) & (t_1 = 0)) & !(failure_1)) & !((battery_load = 0))) ? 1 : 0)",
+                                    "ref": "utilityLocal",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": "battery_load",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    },
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "t_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                }
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": {
+                                                    "exp": "failure_1",
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 1
+                                                }
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "boost_1",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "battery_load <- (max(0, (battery_load - 9)))",
+                                    "ref": "battery_load",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "battery_load",
+                                            "op": "-",
+                                            "right": 9
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "energyLocal <- (((((loc_1 = 2) ? 2 : 0) + ((loc_1 = 0) ? 1 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 0)) ? 3 : 0)) + ((((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 1)) ? 9 : 0))",
+                                    "ref": "energyLocal",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 1
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 9
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "left": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": {
+                                                        "left": {
+                                                            "left": "loc_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        },
+                                                        "op": "∧",
+                                                        "right": {
+                                                            "left": "user_1",
+                                                            "op": "=",
+                                                            "right": 1
+                                                        }
+                                                    },
+                                                    "op": "∧",
+                                                    "right": {
+                                                        "left": "boost_1",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    }
+                                                },
+                                                "op": "ite",
+                                                "then": 3
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "else": 0.0,
+                                                "if": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "ite",
+                                                "then": 2
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "utilityLocal <- (((((loc_1 = 1) & (t_1 = 0)) & !(failure_1)) & !((battery_load = 0))) ? 1 : 0)",
+                                    "ref": "utilityLocal",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "left": {
+                                                    "exp": {
+                                                        "left": "battery_load",
+                                                        "op": "=",
+                                                        "right": 0
+                                                    },
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "t_1",
+                                                    "op": "=",
+                                                    "right": 0
+                                                }
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": {
+                                                    "exp": "failure_1",
+                                                    "op": "¬"
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "loc_1",
+                                                    "op": "=",
+                                                    "right": 1
+                                                }
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((loc_1 = 1) & (user_1 = 1)) & (boost_1 = 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "boost_1",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "label_localFailure <- (((loc_1 = 1) & (t_1 = 0)) & failure_1)",
+                            "ref": "label_localFailure",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_1",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_1",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": "failure_1"
+                            }
+                        },
+                        {
+                            "comment": "label_noLocalFailure <- !((((loc_1 = 1) & (t_1 = 0)) & failure_1))",
+                            "ref": "label_noLocalFailure",
+                            "value": {
+                                "exp": {
+                                    "left": {
+                                        "left": {
+                                            "left": "loc_1",
+                                            "op": "=",
+                                            "right": 1
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "t_1",
+                                            "op": "=",
+                                            "right": 0
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": "failure_1"
+                                },
+                                "op": "¬"
+                            }
+                        },
+                        {
+                            "comment": "label_emptyBattery <- (battery_load = 0)",
+                            "ref": "label_emptyBattery",
+                            "value": {
+                                "left": "battery_load",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        {
+                            "comment": "label_process_1_finishes <- ((loc_1 = 1) & (t_1 = 0))",
+                            "ref": "label_process_1_finishes",
+                            "value": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        },
+                        {
+                            "comment": "label_process_2_finishes <- ((loc_2 = 1) & (t_2 = 0))",
+                            "ref": "label_process_2_finishes",
+                            "value": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        },
+                        {
+                            "comment": "label_process_3_finishes <- ((loc_3 = 1) & (t_3 = 0))",
+                            "ref": "label_process_3_finishes",
+                            "value": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        },
+                        {
+                            "comment": "label_process_4_finishes <- ((loc_4 = 1) & (t_4 = 0))",
+                            "ref": "label_process_4_finishes",
+                            "value": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "Battery",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_1 <- (t_1 - 1)",
+                                    "ref": "t_1",
+                                    "value": {
+                                        "left": "t_1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 2) & (t_1 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_1",
+                                "op": "≠",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_1 <- 0",
+                                    "ref": "loc_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "t_1 <- 9",
+                                    "ref": "t_1",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_1 <- 0",
+                                    "ref": "loc_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "t_1 <- 7",
+                                    "ref": "t_1",
+                                    "value": 7
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 2) & (t_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_1",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_1 <- (max(0, (t_1 - 1)))",
+                                    "ref": "t_1",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "t_1",
+                                            "op": "-",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 0) & (user_1 != 1))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "≠",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "failure_1 <- ((2 < ((boost_1 + 1) * t_1)) ? false : true)",
+                                    "ref": "failure_1",
+                                    "value": {
+                                        "else": true,
+                                        "if": {
+                                            "left": 2,
+                                            "op": "<",
+                                            "right": {
+                                                "left": {
+                                                    "left": "boost_1",
+                                                    "op": "+",
+                                                    "right": 1
+                                                },
+                                                "op": "*",
+                                                "right": "t_1"
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": false
+                                    }
+                                },
+                                {
+                                    "comment": "loc_1 <- 1",
+                                    "ref": "loc_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "t_1 <- 2",
+                                    "ref": "t_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "failure_1 <- ((3 < ((boost_1 + 1) * t_1)) ? false : true)",
+                                    "ref": "failure_1",
+                                    "value": {
+                                        "else": true,
+                                        "if": {
+                                            "left": 3,
+                                            "op": "<",
+                                            "right": {
+                                                "left": {
+                                                    "left": "boost_1",
+                                                    "op": "+",
+                                                    "right": 1
+                                                },
+                                                "op": "*",
+                                                "right": "t_1"
+                                            }
+                                        },
+                                        "op": "ite",
+                                        "then": false
+                                    }
+                                },
+                                {
+                                    "comment": "loc_1 <- 1",
+                                    "ref": "loc_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "t_1 <- 3",
+                                    "ref": "t_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 0) & (user_1 = 1))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_1 <- (max((t_1 - (boost_1 + 1)), 0))",
+                                    "ref": "t_1",
+                                    "value": {
+                                        "left": {
+                                            "left": "t_1",
+                                            "op": "-",
+                                            "right": {
+                                                "left": "boost_1",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "max",
+                                        "right": 0
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 1) & (t_1 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_1",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "failure_1 <- false",
+                                    "ref": "failure_1",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "loc_1 <- 2",
+                                    "ref": "loc_1",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "t_1 <- 4",
+                                    "ref": "t_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "failure_1 <- false",
+                                    "ref": "failure_1",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "loc_1 <- 2",
+                                    "ref": "loc_1",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "t_1 <- 5",
+                                    "ref": "t_1",
+                                    "value": 5
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_1 = 1) & (t_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_1",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "Process_1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_1",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 1) & !(((loc_1 = 1) & (t_1 = 0))))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "exp": {
+                                    "left": {
+                                        "left": "loc_1",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_1",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "¬"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 0",
+                                    "ref": "user_1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_1 != 0)) & (loc_2 != 0)) & (loc_3 != 0)) & (loc_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_1",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "≠",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_3",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "loc_1",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "loc_2",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "user_1",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 1) & ((loc_1 = 1) & (t_1 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 2) & !(((loc_2 = 1) & (t_2 = 0))))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "exp": {
+                                    "left": {
+                                        "left": "loc_2",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_2",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "¬"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 0",
+                                    "ref": "user_1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_1 != 0)) & (loc_2 != 0)) & (loc_3 != 0)) & (loc_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_2",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "≠",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_3",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "loc_2",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "loc_2",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "user_1",
+                                        "op": "=",
+                                        "right": 2
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 2) & ((loc_2 = 1) & (t_2 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_2",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 3) & !(((loc_3 = 1) & (t_3 = 0))))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 3
+                            },
+                            "op": "∧",
+                            "right": {
+                                "exp": {
+                                    "left": {
+                                        "left": "loc_3",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_3",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "¬"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 0",
+                                    "ref": "user_1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_1 != 0)) & (loc_2 != 0)) & (loc_3 != 0)) & (loc_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_3",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "≠",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_3",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "loc_3",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "loc_2",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "user_1",
+                                        "op": "=",
+                                        "right": 3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 3) & ((loc_3 = 1) & (t_3 = 0))) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_3",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 4",
+                                    "ref": "user_1",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 0) & (loc_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((user_1 = 4) & !(((loc_4 = 1) & (t_4 = 0))))",
+                        "exp": {
+                            "left": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 4
+                            },
+                            "op": "∧",
+                            "right": {
+                                "exp": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_4",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "¬"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 0",
+                                    "ref": "user_1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_1 != 0)) & (loc_2 != 0)) & (loc_3 != 0)) & (loc_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "t_4",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_1",
+                                    "op": "≠",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_3",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "loc_4",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "loc_2",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "user_1",
+                                        "op": "=",
+                                        "right": 4
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 1",
+                                    "ref": "user_1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_1",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 2",
+                                    "ref": "user_1",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_2",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 1",
+                                    "ref": "boost_1",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "boost_1 <- 0",
+                                    "ref": "boost_1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "user_1 <- 3",
+                                    "ref": "user_1",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((user_1 = 4) & ((loc_4 = 1) & (t_4 = 0))) & (loc_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "t_4",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_4",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((((user_1 = 0) & (loc_1 != 0)) & (loc_2 != 0)) & (loc_3 != 0)) & (loc_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "loc_4",
+                                        "op": "≠",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "loc_1",
+                                        "op": "≠",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "loc_2",
+                                    "op": "≠",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "loc_3",
+                                    "op": "≠",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "user_1",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "Resources",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- (t_3 - 1)",
+                                    "ref": "t_3",
+                                    "value": {
+                                        "left": "t_3",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 2) & (t_3 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_3",
+                                "op": "≠",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_3 <- 0",
+                                    "ref": "loc_3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 2) & (t_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_3",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- (max(0, (t_3 - 1)))",
+                                    "ref": "t_3",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "t_3",
+                                            "op": "-",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 0) & (user_1 != 3))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "≠",
+                                "right": 3
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- 2",
+                                    "ref": "t_3",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "loc_3 <- 1",
+                                    "ref": "loc_3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- 3",
+                                    "ref": "t_3",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "loc_3 <- 1",
+                                    "ref": "loc_3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 0) & (user_1 = 3))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 3
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- (max((t_3 - (boost_1 + 1)), 0))",
+                                    "ref": "t_3",
+                                    "value": {
+                                        "left": {
+                                            "left": "t_3",
+                                            "op": "-",
+                                            "right": {
+                                                "left": "boost_1",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "max",
+                                        "right": 0
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 1) & (t_3 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_3",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- 4",
+                                    "ref": "t_3",
+                                    "value": 4
+                                },
+                                {
+                                    "comment": "loc_3 <- 2",
+                                    "ref": "loc_3",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_3 <- 5",
+                                    "ref": "t_3",
+                                    "value": 5
+                                },
+                                {
+                                    "comment": "loc_3 <- 2",
+                                    "ref": "loc_3",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_3 = 1) & (t_3 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_3",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_3",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "Process_3",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_4 <- (t_4 - 1)",
+                                    "ref": "t_4",
+                                    "value": {
+                                        "left": "t_4",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 2) & (t_4 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_4",
+                                "op": "≠",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_4 <- 0",
+                                    "ref": "loc_4",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 2) & (t_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_4",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_4 <- (max(0, (t_4 - 1)))",
+                                    "ref": "t_4",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "t_4",
+                                            "op": "-",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 0) & (user_1 != 4))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "≠",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_4 <- 1",
+                                    "ref": "loc_4",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "t_4 <- 2",
+                                    "ref": "t_4",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_4 <- 1",
+                                    "ref": "loc_4",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "t_4 <- 3",
+                                    "ref": "t_4",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 0) & (user_1 = 4))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_4 <- (max((t_4 - (boost_1 + 1)), 0))",
+                                    "ref": "t_4",
+                                    "value": {
+                                        "left": {
+                                            "left": "t_4",
+                                            "op": "-",
+                                            "right": {
+                                                "left": "boost_1",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "max",
+                                        "right": 0
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 1) & (t_4 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_4",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_4 <- 2",
+                                    "ref": "loc_4",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "t_4 <- 4",
+                                    "ref": "t_4",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_4 <- 2",
+                                    "ref": "loc_4",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "t_4 <- 5",
+                                    "ref": "t_4",
+                                    "value": 5
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_4 = 1) & (t_4 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_4",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_4",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "Process_4",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- (t_2 - 1)",
+                                    "ref": "t_2",
+                                    "value": {
+                                        "left": "t_2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 2) & (t_2 != 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_2",
+                                "op": "≠",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "loc_2 <- 0",
+                                    "ref": "loc_2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 2) & (t_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_2",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- (max(0, (t_2 - 1)))",
+                                    "ref": "t_2",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "t_2",
+                                            "op": "-",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 0) & (user_1 != 2))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "≠",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- 2",
+                                    "ref": "t_2",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "loc_2 <- 1",
+                                    "ref": "loc_2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- 3",
+                                    "ref": "t_2",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "loc_2 <- 1",
+                                    "ref": "loc_2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 0) & (user_1 = 2))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "user_1",
+                                "op": "=",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- (max((t_2 - (boost_1 + 1)), 0))",
+                                    "ref": "t_2",
+                                    "value": {
+                                        "left": {
+                                            "left": "t_2",
+                                            "op": "-",
+                                            "right": {
+                                                "left": "boost_1",
+                                                "op": "+",
+                                                "right": 1
+                                            }
+                                        },
+                                        "op": "max",
+                                        "right": 0
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 1) & (t_2 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_2",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "tick",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- 4",
+                                    "ref": "t_2",
+                                    "value": 4
+                                },
+                                {
+                                    "comment": "loc_2 <- 2",
+                                    "ref": "loc_2",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 3)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t_2 <- 5",
+                                    "ref": "t_2",
+                                    "value": 5
+                                },
+                                {
+                                    "comment": "loc_2 <- 2",
+                                    "ref": "loc_2",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 3)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((loc_2 = 1) & (t_2 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "loc_2",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "t_2",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "Process_2",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "energy_capacity",
+            "type": "int"
+        },
+        {
+            "name": "t_max",
+            "type": "int",
+            "value": 9
+        },
+        {
+            "name": "undef",
+            "type": "int",
+            "value": 0
+        },
+        {
+            "name": "ncrit",
+            "type": "int",
+            "value": 2
+        },
+        {
+            "name": "wait",
+            "type": "int",
+            "value": 0
+        },
+        {
+            "name": "crit",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "none",
+            "type": "int",
+            "value": 0
+        },
+        {
+            "name": "process_1",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "process_2",
+            "type": "int",
+            "value": 2
+        },
+        {
+            "name": "process_3",
+            "type": "int",
+            "value": 3
+        },
+        {
+            "name": "process_4",
+            "type": "int",
+            "value": 4
+        },
+        {
+            "name": "m_1",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "m_2",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "m_3",
+            "type": "int",
+            "value": 2
+        },
+        {
+            "name": "m_4",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "boost_multiplicator",
+            "type": "int",
+            "value": 3
+        },
+        {
+            "name": "B",
+            "type": "int"
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "functions"
+    ],
+    "functions": [
+        {
+            "body": {
+                "left": {
+                    "left": "loc_4",
+                    "op": "=",
+                    "right": 1
+                },
+                "op": "∧",
+                "right": {
+                    "left": "t_4",
+                    "op": "=",
+                    "right": 0
+                }
+            },
+            "name": "process_4_finishes",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "loc_3",
+                    "op": "=",
+                    "right": 1
+                },
+                "op": "∧",
+                "right": {
+                    "left": "t_3",
+                    "op": "=",
+                    "right": 0
+                }
+            },
+            "name": "process_3_finishes",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": "battery_load",
+                "op": "=",
+                "right": 0
+            },
+            "name": "emptyBattery",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "exp": {
+                    "left": {
+                        "left": {
+                            "left": "loc_1",
+                            "op": "=",
+                            "right": 1
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "t_1",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "op": "∧",
+                    "right": "failure_1"
+                },
+                "op": "¬"
+            },
+            "name": "noLocalFailure",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "loc_2",
+                    "op": "=",
+                    "right": 1
+                },
+                "op": "∧",
+                "right": {
+                    "left": "t_2",
+                    "op": "=",
+                    "right": 0
+                }
+            },
+            "name": "process_2_finishes",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "left": "loc_1",
+                        "op": "=",
+                        "right": 1
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "t_1",
+                        "op": "=",
+                        "right": 0
+                    }
+                },
+                "op": "∧",
+                "right": "failure_1"
+            },
+            "name": "localFailure",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "loc_1",
+                    "op": "=",
+                    "right": 1
+                },
+                "op": "∧",
+                "right": {
+                    "left": "t_1",
+                    "op": "=",
+                    "right": 0
+                }
+            },
+            "name": "process_1_finishes",
+            "parameters": [],
+            "type": "bool"
+        }
+    ],
+    "jani-version": 1,
+    "name": "eajs.4",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "steps"
+                    ],
+                    "exp": "utilityLocal",
+                    "op": "Emax",
+                    "reach": {
+                        "left": "battery_load",
+                        "op": "=",
+                        "right": 0
+                    }
+                }
+            },
+            "name": "ExpUtil"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "reward-bounds": [
+                            {
+                                "accumulate": [
+                                    "steps"
+                                ],
+                                "bounds": {
+                                    "lower": "B",
+                                    "lower-exclusive": false
+                                },
+                                "exp": "utilityLocal"
+                            }
+                        ],
+                        "right": {
+                            "left": "battery_load",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "op": "Pmax"
+                }
+            },
+            "name": "ProbUtil"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "Battery"
+            },
+            {
+                "automaton": "Process_1"
+            },
+            {
+                "automaton": "Resources"
+            },
+            {
+                "automaton": "Process_3"
+            },
+            {
+                "automaton": "Process_4"
+            },
+            {
+                "automaton": "Process_2"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "tick",
+                "synchronise": [
+                    "tick",
+                    "tick",
+                    "tick",
+                    "tick",
+                    "tick",
+                    "tick"
+                ]
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "label_localFailure",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_noLocalFailure",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_emptyBattery",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_process_1_finishes",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_process_2_finishes",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_process_3_finishes",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_process_4_finishes",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "energyLocal",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "utilityLocal",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": "energy_capacity",
+            "name": "battery_load",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "energy_capacity"
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "loc_1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "t_1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 9
+            }
+        },
+        {
+            "initial-value": false,
+            "name": "failure_1",
+            "type": "bool"
+        },
+        {
+            "initial-value": 0,
+            "name": "boost_1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "user_1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 4
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "t_3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 9
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "loc_3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "loc_4",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "t_4",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 9
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "t_2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 9
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "loc_2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        }
+    ]
+}

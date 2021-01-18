@@ -1,0 +1,73 @@
+{
+	"file": "../cluster.jani",
+	"version": 1,
+	"date": "2018-11-29",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.128-2000-20.2018-11-29.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 128
+		},
+		{
+			"name": "T",
+			"value": 2000
+		},
+		{
+			"name": "t",
+			"value": 20
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani cluster.jani --janiproperty qos1 --constants N=128,T=2000,t=20 --precision 1e-10 --timemem",
+	"time": 316.65907073020935,
+	"memory": 188743680,
+	"property-times": [
+		{
+			"name": "qos1",
+			"time": 303.898
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"value": 12.636,
+					"name": "time"
+				},
+				{
+					"value": 597012,
+					"name": "states"
+				},
+				{
+					"value": 2908192,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "qos1",
+			"value": 0.001072402534,
+			"values": [
+				{
+					"unit": "s",
+					"value": 303.898,
+					"name": "time"
+				}
+			]
+		}
+	]
+}

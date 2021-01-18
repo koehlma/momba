@@ -1,0 +1,61 @@
+Storm 1.2.4 (dev)
+
+Date: Sun Oct 28 02:12:18 2018
+Command line arguments: --jani flexible-manufacturing.21.jani --janiproperty --constants T=1 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/flexible-manufacturing
+
+Time for model input parsing: 0.006s.
+
+Time for model construction: 53.761s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	2695484
+Transitions: 	14385694
+Choices: 	5021430
+Markovian St.: 	2691784
+Max. Rate.: 	12.79
+Reward Models:  none
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (Spares = 0) -> 715341 item(s)
+   * (M2go = 0) -> 1853489 item(s)
+   * init -> 1 item(s)
+   * (M2on > 0) -> 1683990 item(s)
+   * (M3go = 0) -> 1918169 item(s)
+   * (M3on > 0) -> 1761914 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 2.045s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1309474
+Transitions: 	3066236
+Choices: 	1309474
+Markovian St.: 	365838
+Max. Rate.: 	12.79
+Reward Models:  none
+State Labels: 	7 labels
+   * (M3on > 0) -> 1092959 item(s)
+   * (Spares = 0) -> 416263 item(s)
+   * deadlock -> 0 item(s)
+   * (M2on > 0) -> 955952 item(s)
+   * (M3go = 0) -> 830489 item(s)
+   * (M2go = 0) -> 691934 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "M2Fail_S": LRAmin=? [(((M2on > 0) & (M2go = 0)) & (Spares = 0))] ...
+Result (for initial states): 0.000246000292
+Time for model checking: 550.959s.
+
+Model checking property "M3Fail_S": LRAmin=? [((M3on > 0) & (M3go = 0))] ...
+Result (for initial states): 0.3304155987
+Time for model checking: 678.884s.
+
+Model checking property "M2Fail_E": T[exp]min=? [F (((M2on > 0) & (M2go = 0)) & (Spares = 0))] ...
+
+Aborted after 7200 seconds.

@@ -1,0 +1,46 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Nov 26 21:41:05 2018
+Command line arguments: --jani herman.15.jani --janiproperty --engine hybrid --ddlib sylvan --bisimulation --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.006s.
+
+Time for model construction: 0.934s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (symbolic)
+States: 	32768 (16 nodes)
+Transitions: 	14348908 (840 nodes)
+Reward Models:  steps
+Variables: 	rows: 30 meta variables (30 DD variables), columns: 30 meta variables (30 DD variables)
+Labels: 	3
+   * deadlock -> 0 state(s) (1 nodes)
+   * init -> 32768 state(s) (16 nodes)
+   * stable
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 1.140s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (symbolic)
+States: 	612 (29 nodes)
+Transitions: 	104721 (65106 nodes)
+Reward Models:  steps
+Variables: 	rows: 1 meta variables (30 DD variables), columns: 1 meta variables (30 DD variables)
+Labels: 	4
+   * (((((((x15 = x1) ? 1 : 0) + ((x2 = x3) ? 1 : 0)) + ((x8 = x9) ? 1 : 0)) + ((((x12 = x13) ? 1 : 0) + ((x4 = x5) ? 1 : 0)) + (((x11 = x12) ? 1 : 0) + ((x5 = x6) ? 1 : 0)))) + (((((x14 = x15) ? 1 : 0) + ((x1 = x2) ? 1 : 0)) + (((x9 = x10) ? 1 : 0) + ((x7 = x8) ? 1 : 0))) + ((((x13 = x14) ? 1 : 0) + ((x3 = x4) ? 1 : 0)) + (((x10 = x11) ? 1 : 0) + ((x6 = x7) ? 1 : 0))))) = 1) -> 1 state(s) (31 nodes)
+   * deadlock -> 0 state(s) (1 nodes)
+   * init -> 612 state(s) (29 nodes)
+   * stable -> 1 state(s) (31 nodes)
+-------------------------------------------------------------- 
+
+Model checking property "steps": R[exp]{"steps"}min=? [F "stable"] ...
+Result (for initial states): 100/3 (approx. 33.33333333)
+Time for model checking: 62.282s.
+
+Performance statistics:
+  * peak memory usage: 3208MB
+  * CPU time: 3084.249s
+  * wallclock time: 64.432s
+

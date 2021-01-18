@@ -1,0 +1,632 @@
+{
+	"name": "Crowds Protocol",
+	"short": "crowds",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Michael K. Reiter <reiter@research.bell-labs.com>",
+		"Aviel D. Rubin <rubin@research.att.com>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1145/290163.290168",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This PRISM case study [1] provides a mechanism for anonymous Web browsing. The goal is to hide each user's communications by routing them randomly within a group of `N = CrowdSize/(1-badC)´ users, where `CrowdSize´ is the number of honest users and `badC´ the proprotion of corrupt members. With probability `pf´ (forwarding probability), the protocol selects a crowd member at random as the next router in the path, and forwards the message to it, re-encrypted with the appropriate pairwise key. The next router then repeats this step. `TotalRuns´ is the number of different paths to be analyzed. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/crowds.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "TotalRuns",
+			"kind": "open",
+			"description": "Number of protocol runs",
+			"type": "positive integer"
+		},
+		{
+			"name": "CrowdSize",
+			"kind": "open",
+			"description": "Number of good crowd members",
+			"type": "in {5,10,15,20}"
+		}
+	],
+	"properties": [
+		{
+			"name": "positive",
+			"description": "The probability that the adversary observes the real sender more than once.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "crowds.jani",
+			"original-file": [
+				"crowds.prism",
+				"crowds.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism crowds.prism --tojani crowds.jani --prop crowds.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 3
+						},
+						{
+							"name": "CrowdSize",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1145
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.05296253509523565,
+								"num": 16406726260175797,
+								"den": 309779851562500000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 4
+						},
+						{
+							"name": "CrowdSize",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 3190
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.09619923114483922,
+								"num": 50809994943329740182883,
+								"den": 528174646914062500000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 5
+						},
+						{
+							"name": "CrowdSize",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 7421
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.14580523773601864,
+								"num": 8206445255053100873220794209,
+								"den": 56283610811779785156250000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 6
+						},
+						{
+							"name": "CrowdSize",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 15233
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.19916173482259542,
+								"num": 15289814703326650374397041147006209,
+								"den": 76770845147267626953125000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 3
+						},
+						{
+							"name": "CrowdSize",
+							"value": 10
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 6460
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.03679081147658523,
+								"num": 729411335557151611,
+								"den": 19825910500000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 4
+						},
+						{
+							"name": "CrowdSize",
+							"value": 10
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 28975
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.06798654506055131,
+								"num": 9192644974659503330725843,
+								"den": 135212709610000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 5
+						},
+						{
+							"name": "CrowdSize",
+							"value": 10
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 104512
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.10478678887151971,
+								"num": 12078651070588421522046968111351,
+								"den": 115268834942525000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 6
+						},
+						{
+							"name": "CrowdSize",
+							"value": 10
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 321751
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.14548520103083834,
+								"num": 45748313454827887979154898555112333321,
+								"den": 314453381723208200000000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 3
+						},
+						{
+							"name": "CrowdSize",
+							"value": 15
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 19075
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.03199550483232037,
+								"num": 309736335550733,
+								"den": 9680620361328125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 4
+						},
+						{
+							"name": "CrowdSize",
+							"value": 15
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 117485
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.05946296108294738,
+								"num": 122682923728321771633,
+								"den": 2063182214508056640625
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 5
+						},
+						{
+							"name": "CrowdSize",
+							"value": 15
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 572153
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.09216125204017474,
+								"num": 40524750326215162356624821,
+								"den": 439715709467029571533203125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 6
+						},
+						{
+							"name": "CrowdSize",
+							"value": 15
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2341309
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.12865369542143604,
+								"num": 2411341047075878849894054815541,
+								"den": 18742882116032135486602783203125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 3
+						},
+						{
+							"name": "CrowdSize",
+							"value": 20
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 42115
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.029713032798049065,
+								"num": 4712703431501482781,
+								"den": 158607284000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 4
+						},
+						{
+							"name": "CrowdSize",
+							"value": 20
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 329470
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.055378074743379316,
+								"num": 119805112624598770089352723,
+								"den": 2163403353760000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 5
+						},
+						{
+							"name": "CrowdSize",
+							"value": 20
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2061951
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.08606905443651044,
+								"num": 317474548144042278373095748974301,
+								"den": 3688602718160800000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "TotalRuns",
+							"value": 6
+						},
+						{
+							"name": "CrowdSize",
+							"value": 20
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 10633591
+						}
+					],
+					"results": [
+						{
+							"property": "positive",
+							"value": {
+								"approx": 0.12047637088459826,
+								"num": 2424588943513688408580233534610158569961,
+								"den": 20125016430285324800000000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.3-5.2018-10-12.json",
+		"results/Storm.4-5.2018-10-12.json",
+		"results/Storm.5-5.2018-10-12.json",
+		"results/Storm.6-5.2018-10-12.json",
+		"results/Storm.3-10.2018-10-12.json",
+		"results/Storm.4-10.2018-10-12.json",
+		"results/Storm.5-10.2018-10-12.json",
+		"results/Storm.6-10.2018-10-12.json",
+		"results/Storm.3-15.2018-10-12.json",
+		"results/Storm.4-15.2018-10-12.json",
+		"results/Storm.5-15.2018-10-12.json",
+		"results/Storm.6-15.2018-10-12.json",
+		"results/Storm.3-20.2018-10-12.json",
+		"results/Storm.4-20.2018-10-12.json",
+		"results/Storm.5-20.2018-10-12.json",
+		"results/Storm.6-20.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-5.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-5.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-5.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-5.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-10.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-10.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-10.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-10.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-15.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-15.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-15.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-15.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-20.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-20.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-20.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-20.2018-10-17.json"
+		},
+		"results/mcsta.3-5.2018-11-21.json",
+		"results/mcsta.3-10.2018-11-21.json",
+		"results/mcsta.3-15.2018-11-21.json",
+		"results/mcsta.3-20.2018-11-21.json",
+		"results/mcsta.4-5.2018-11-21.json",
+		"results/mcsta.4-10.2018-11-21.json",
+		"results/mcsta.4-15.2018-11-21.json",
+		"results/mcsta.4-20.2018-11-21.json",
+		"results/mcsta.5-5.2018-11-21.json",
+		"results/mcsta.5-10.2018-11-21.json",
+		"results/mcsta.5-15.2018-11-21.json",
+		"results/mcsta.5-20.2018-11-21.json",
+		"results/mcsta.6-5.2018-11-21.json",
+		"results/mcsta.6-10.2018-11-21.json",
+		"results/mcsta.6-15.2018-11-21.json",
+		"results/mcsta.6-20.2018-11-21.json"
+	]
+}

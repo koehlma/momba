@@ -1,0 +1,62 @@
+Storm 1.2.4 (dev)
+
+Date: Sat Aug 11 11:36:30 2018
+Command line arguments: --jani ../ma/stream/stream..jani -jprop --constants N=1000 -tm
+Current working directory: /Users/tim/git/qmcc/generate_Meta
+
+Time for model construction: 5.482s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1502501
+Transitions: 	3001001
+Choices: 	2002001
+Markovian St.: 	1001001
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * underrun -> 500499 item(s)
+   * done -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1502501
+Transitions: 	3001001
+Choices: 	2002001
+Markovian St.: 	1001001
+Max. Rate.: 	8
+Reward Models:  numrestarts, buffering
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * underrun -> 500499 item(s)
+   * done -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "exp_buffertime": R[exp]{"buffering"}min=? [F "done"] ...
+Result (for initial states): 8.919505573
+Time for model checking: 3.176s.
+
+Model checking property "exp_restarts": R[exp]{"numrestarts"}max=? [F "done"] ...
+Result (for initial states): 34.67802229
+Time for model checking: 1.512s.
+
+Model checking property "pr_underrun": Pmin=? [F "underrun"] ...
+Result (for initial states): 0.2712315729
+Time for model checking: 35.875s.
+
+Model checking property "pr_underrun_tb": Pmin=? [true U<=2 "underrun"] ...
+Result (for initial states): 0.01893903172
+Time for model checking: 495.324s.
+
+Performance statistics:
+  * peak memory usage: 6627MB
+  * CPU time: 135.435s
+  * wallclock time: 541.418s

@@ -1,0 +1,75 @@
+{
+	"file": "../crowds.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.5-15.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "TotalRuns",
+			"value": 5
+		},
+		{
+			"name": "CrowdSize",
+			"value": 15
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani crowds.jani --janiproperty --constants TotalRuns=5,CrowdSize=15 --exact --timemem",
+	"time": 26.445,
+	"memory": 545259520,
+	"property-times": [
+		{
+			"name": "positive",
+			"time": 9.604
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 16.704
+				},
+				{
+					"name": "states",
+					"value": 572153
+				},
+				{
+					"name": "branches",
+					"value": 1698233
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "positive",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 9.604
+				}
+			],
+			"value": {
+				"approx": 0.09216125204017474,
+				"num": 40524750326215162356624821,
+				"den": 439715709467029571533203125
+			}
+		}
+	]
+}

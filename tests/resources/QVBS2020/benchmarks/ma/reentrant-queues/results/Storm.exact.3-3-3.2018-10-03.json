@@ -1,0 +1,92 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../reentrant-queues.jani",
+	"version": 2,
+	"log": "Storm.exact.3-3-3.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "JOB_TYPES",
+			"value": 3
+		},
+		{
+			"name": "C_LEFT",
+			"value": 3
+		},
+		{
+			"name": "C_RIGHT",
+			"value": 3
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"preprocessing": [
+		{
+			"tool": "moconv",
+			"version": "3.0.86",
+			"url": "http://www.modestchecker.net/",
+			"note": "Removed discrete nondeterministic expressions",
+			"command": "moconv.exe reentrant-queues.jani -O reentrant-queues.3-3-3_removed-disc-nondet.jani --overwrite --remove-disc-nondet -E JOB_TYPES=3,C_LEFT=3,C_RIGHT=3",
+			"time": 0.732429027557373
+		}
+	],
+	"command": "storm --jani reentrant-queues.3-3-3_removed-disc-nondet.jani --janiproperty --exact --timemem",
+	"time": 7.016429027557374,
+	"property-times": [
+		{
+			"name": "PminBothQueuesFullIsOne",
+			"time": 0.267
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 5.711
+				},
+				{
+					"name": "states",
+					"value": 126801
+				},
+				{
+					"name": "branches",
+					"value": 419346
+				},
+				{
+					"name": "transitions",
+					"value": 320026
+				},
+				{
+					"name": "markovian-states",
+					"value": 120001
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "PminBothQueuesFullIsOne",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.267
+				}
+			],
+			"value": 1.0
+		}
+	]
+}

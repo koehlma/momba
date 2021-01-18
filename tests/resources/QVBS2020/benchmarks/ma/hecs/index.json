@@ -1,0 +1,809 @@
+{
+	"name": "Hypothetical example computer system",
+	"short": "hecs",
+	"type": "ma",
+	"original": "Galileo",
+	"version": 1,
+	"date": "2018-10-28",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-10-28",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"submitter": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"source": "https://elibrary.gsfc.nasa.gov/_assets/doclibBidder/tech_docs/25.%20NASA_Fault_Tree_Handbook_with_Aerospace_Applications%20-%20Copy.pdf",
+	"part-of": {
+		"name": "the Twente Arberretum",
+		"url": "https://dftbenchmarks.utwente.nl/"
+	},
+	"description": "The hypothetical example computer system (HECS) is a dynamic fault tree modelling a computer system with redundant processors, memory modules, and connecting buses, and non-redundant operator console, operator, and software.  It is one of the classic example from the \"Fault tree handbook\" by NASA [0]. Variations of the form `hecs.N-k´ are obtained by replicating the system `N´ times, of which `k´ replications must be functional to avoid system failures (as described in [1]). Repairable versions were introduced in [2].  The original model was translated by the DFTRES tool [3] using the DFTCalc tool [4]. Note that the construction by DFTCalc introduces spurious nondeterminism, while the quotient of this model under weak bisimulation is a CTMC (i.e., has no nondeterminism).",
+	"challenge": "rare event, small weak bisimulation quotient",
+	"references": [
+		"https://doi.org/10.1007/s00165-016-0412-0",
+		"https://doi.org/10.1007/978-3-319-66266-4_2",
+		"https://github.com/utwente-fmt/DFTRES",
+		"https://research.utwente.nl/en/publications/dftcalc-a-tool-for-efficient-fault-tree-analysis-extended-version"
+	],
+	"parameters": [
+		{
+			"name": "R",
+			"kind": "file",
+			"description": "Whether the model has repairs or not",
+			"type": "Boolean"
+		},
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of replications of the computer system",
+			"type": "positive integer"
+		},
+		{
+			"name": "k",
+			"kind": "file",
+			"description": "Number of functioning replications needed to avoid system failure",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "Unreliability",
+			"type": "prob-reach-time-bounded",
+			"description": "Probability that a system failure occurs before time 1."
+		},
+		{
+			"name": "Unavailability",
+			"type": "steady-state-prob",
+			"description": "Steady state probability of being in a failed state (only useful for repairable instances)."
+		}
+	],
+	"files": [
+		{
+			"file": "hecs.false-1-1.jani",
+			"original-file": "hecs.false-1-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-1-1.jani -a -r 1 hecs.false-1-1.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 42773
+						}
+					],
+					"results": [
+						{
+							"property": "Unreliability",
+							"value": {
+								"lower": 0.000109993854,
+								"upper": 0.000109994054
+							},
+							"note": "Storm-dft"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 1
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-2-1.jani",
+			"original-file": "hecs.false-2-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-2-1.jani -a -r 1 hecs.false-2-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-2-2.jani",
+			"original-file": "hecs.false-2-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-2-2.jani -a -r 1 hecs.false-2-2.dft"
+			},
+			"open-parameter-values": [
+				{
+					"results": [
+						{
+							"property": "Unreliability",
+							"value": {
+								"lower": 0.0002199757094,
+								"upper": 0.0002199759094
+							},
+							"note": "Storm-dft"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.false-3-1.jani",
+			"original-file": "hecs.false-3-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-3-1.jani -a -r 1 hecs.false-3-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-3-2.jani",
+			"original-file": "hecs.false-3-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-3-2.jani -a -r 1 hecs.false-3-2.dft"
+			},
+			"open-parameter-values": [
+				{
+					"results": [
+						{
+							"property": "Unreliability",
+							"value": {
+								"lower": 3.619334822e-08,
+								"upper": 3.639334822e-08
+							},
+							"note": "Storm-dft"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.false-3-3.jani",
+			"original-file": "hecs.false-3-3.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-3-3.jani -a -r 1 hecs.false-3-3.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 3
+				}
+			]
+		},
+		{
+			"file": "hecs.false-4-1.jani",
+			"original-file": "hecs.false-4-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-4-1.jani -a -r 1 hecs.false-4-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-4-2.jani",
+			"original-file": "hecs.false-4-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-4-2.jani -a -r 1 hecs.false-4-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.false-4-3.jani",
+			"original-file": "hecs.false-4-3.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-4-3.jani -a -r 1 hecs.false-4-3.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 3
+				}
+			]
+		},
+		{
+			"file": "hecs.false-4-4.jani",
+			"original-file": "hecs.false-4-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-4-4.jani -a -r 1 hecs.false-4-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 4
+				}
+			]
+		},
+		{
+			"file": "hecs.false-5-1.jani",
+			"original-file": "hecs.false-5-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-5-1.jani -a -r 1 hecs.false-5-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-5-5.jani",
+			"original-file": "hecs.false-5-5.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-5-5.jani -a -r 1 hecs.false-5-5.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "k",
+					"value": 5
+				}
+			]
+		},
+		{
+			"file": "hecs.false-6-1.jani",
+			"original-file": "hecs.false-6-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-6-1.jani -a -r 1 hecs.false-6-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 6
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-6-6.jani",
+			"original-file": "hecs.false-6-6.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-6-6.jani -a -r 1 hecs.false-6-6.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 6
+				},
+				{
+					"name": "k",
+					"value": 6
+				}
+			]
+		},
+		{
+			"file": "hecs.false-7-1.jani",
+			"original-file": "hecs.false-7-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-7-1.jani -a -r 1 hecs.false-7-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 7
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-7-7.jani",
+			"original-file": "hecs.false-7-7.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-7-7.jani -a -r 1 hecs.false-7-7.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 7
+				},
+				{
+					"name": "k",
+					"value": 7
+				}
+			]
+		},
+		{
+			"file": "hecs.false-8-1.jani",
+			"original-file": "hecs.false-8-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-8-1.jani -a -r 1 hecs.false-8-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 8
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.false-8-8.jani",
+			"original-file": "hecs.false-8-8.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.false-8-8.jani -a -r 1 hecs.false-8-8.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": false
+				},
+				{
+					"name": "N",
+					"value": 8
+				},
+				{
+					"name": "k",
+					"value": 8
+				}
+			]
+		},
+		{
+			"file": "hecs.true-1-1.jani",
+			"original-file": "hecs.true-1-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-1-1.jani -a -r 1 hecs.true-1-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 1
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.true-2-1.jani",
+			"original-file": "hecs.true-2-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-2-1.jani -a -r 1 hecs.true-2-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.true-2-2.jani",
+			"original-file": "hecs.true-2-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-2-2.jani -a -r 1 hecs.true-2-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.true-3-1.jani",
+			"original-file": "hecs.true-3-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-3-1.jani -a -r 1 hecs.true-3-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.true-3-2.jani",
+			"original-file": "hecs.true-3-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-3-2.jani -a -r 1 hecs.true-3-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.true-3-3.jani",
+			"original-file": "hecs.true-3-3.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-3-3.jani -a -r 1 hecs.true-3-3.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "k",
+					"value": 3
+				}
+			]
+		},
+		{
+			"file": "hecs.true-4-1.jani",
+			"original-file": "hecs.true-4-1.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-4-1.jani -a -r 1 hecs.true-4-1.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 1
+				}
+			]
+		},
+		{
+			"file": "hecs.true-4-2.jani",
+			"original-file": "hecs.true-4-2.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-4-2.jani -a -r 1 hecs.true-4-2.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 2
+				}
+			]
+		},
+		{
+			"file": "hecs.true-4-3.jani",
+			"original-file": "hecs.true-4-3.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-4-3.jani -a -r 1 hecs.true-4-3.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 3
+				}
+			]
+		},
+		{
+			"file": "hecs.true-4-4.jani",
+			"original-file": "hecs.true-4-4.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani hecs.true-4-4.jani -a -r 1 hecs.true-4-4.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "R",
+					"value": true
+				},
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "k",
+					"value": 4
+				}
+			]
+		}
+	]
+}

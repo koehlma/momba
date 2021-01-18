@@ -1,0 +1,262 @@
+{
+	"name": "Elevators",
+	"short": "elevators",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-01",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://www.aaai.org/Library/AIPS/2000/aips00-036.php",
+	"part-of": {
+		"name": "the IPPC 2006 Benchmark Set",
+		"url": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/"
+	},
+	"description": "An IPPC 2006 [1] model of the elevators problem. A certain number of elevators is available which should be used to transport `c´ coins to one of the `p´ positions. The movement of the elevator can fail and it can fall down on a lower level.",
+	"references": [
+		"http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/"
+	],
+	"notes": "IPPC 2006 benchmark",
+	"parameters": [
+		{
+			"name": "variant",
+			"kind": "file",
+			"description": "The variant of the model",
+			"type": "in {a,b}"
+		},
+		{
+			"name": "p",
+			"kind": "file",
+			"description": "Number of positions",
+			"type": "positive integer"
+		},
+		{
+			"name": "c",
+			"kind": "file",
+			"description": "Number of coins",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "elevators.a-3-3.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01.pddl --jani elevators.a-3-3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "a"
+				},
+				{
+					"name": "p",
+					"value": 3
+				},
+				{
+					"name": "c",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 909,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 909
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "elevators.b-3-3.jani",
+			"original-file": [
+				"domain.pddl",
+				"p05.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p05.pddl --jani elevators.b-3-3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "b"
+				},
+				{
+					"name": "p",
+					"value": 3
+				},
+				{
+					"name": "c",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 909,
+							"note": "mcsta"
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "elevators.a-11-9.jani",
+			"original-file": [
+				"domain.pddl",
+				"p10.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p10.pddl --jani elevators.a-11-9.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "a"
+				},
+				{
+					"name": "p",
+					"value": 11
+				},
+				{
+					"name": "c",
+					"value": 9
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 14796,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 14796
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "elevators.b-11-9.jani",
+			"original-file": [
+				"domain.pddl",
+				"p15.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p15.pddl --jani elevators.b-11-9.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "b"
+				},
+				{
+					"name": "p",
+					"value": 11
+				},
+				{
+					"name": "c",
+					"value": 9
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 539136,
+							"note": "Storm"
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach a state where all coins have been collected."
+		}
+	],
+	"results": [
+		"results/mcsta.a-3-3.json",
+		"results/mcsta.b-3-3.json",
+		"results/mcsta.a-11-9.json",
+		"results/mcsta.b-11-9.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.a-3-3.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.a-11-9.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.b-3-3.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.b-11-9.2018-11-22.json"
+		}
+	]
+}

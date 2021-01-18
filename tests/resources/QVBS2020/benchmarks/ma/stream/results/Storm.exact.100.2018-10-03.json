@@ -1,0 +1,117 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../stream.jani",
+	"version": 1,
+	"log": "Storm.exact.100.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 100
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani stream.jani --janiproperty --constants N=100 --exact --timemem",
+	"time": 1.29,
+	"memory": 72351744,
+	"property-times": [
+		{
+			"name": "exp_buffertime",
+			"time": 0.164
+		},
+		{
+			"name": "exp_restarts",
+			"time": 0.135
+		},
+		{
+			"name": "pr_underrun",
+			"time": 0.16
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.767
+				},
+				{
+					"name": "states",
+					"value": 15251
+				},
+				{
+					"name": "branches",
+					"value": 30101
+				},
+				{
+					"name": "transitions",
+					"value": 20201
+				},
+				{
+					"name": "markovian-states",
+					"value": 10101
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "exp_buffertime",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.164
+				}
+			],
+			"value": {
+				"approx": 2.817423950462821,
+				"num": 282964108300322753641888053367138012107826842735666677629125,
+				"den": 100433627766186892221372630771322662657637687111424552206336
+			}
+		},
+		{
+			"property": "exp_restarts",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.135
+				}
+			],
+			"value": {
+				"approx": 10.269695801851285,
+				"num": 257855701358776030586544895674307346443417420957810539577541,
+				"den": 25108406941546723055343157692830665664409421777856138051584
+			}
+		},
+		{
+			"property": "pr_underrun",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.16
+				}
+			],
+			"value": {
+				"approx": 0.09531407260833372,
+				"num": 60412470676075640774367344581594222312481540342855647437437638370113756812513296522196190863476746873099961684606989357743184166961025273025055163284611494368410928758668105347706753250927914814719787326482664891456254129870101,
+				"den": 633825300114114700748351602688000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+			}
+		}
+	]
+}

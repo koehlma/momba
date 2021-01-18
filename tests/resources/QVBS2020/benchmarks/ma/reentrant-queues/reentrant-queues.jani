@@ -1,0 +1,1006 @@
+﻿{
+	"jani-version": 1,
+	"name": "reentrant-queues",
+	"type": "ma",
+	"features": [
+		"derived-operators",
+		"nondet-selection",
+		"arrays"
+	],
+	"actions": [
+		{
+			"name": "reenter?"
+		},
+		{
+			"name": "service_left!"
+		},
+		{
+			"name": "service_right!"
+		},
+		{
+			"name": "service_left?"
+		},
+		{
+			"name": "reenter!"
+		},
+		{
+			"name": "service_right?"
+		},
+		{
+			"name": "reenter"
+		},
+		{
+			"name": "service_left"
+		},
+		{
+			"name": "service_right"
+		}
+	],
+	"constants": [
+		{
+			"name": "JOB_TYPES",
+			"type": "int"
+		},
+		{
+			"name": "C_LEFT",
+			"type": "int"
+		},
+		{
+			"name": "C_RIGHT",
+			"type": "int"
+		},
+		{
+			"name": "TIME_BOUND",
+			"type": "real"
+		}
+	],
+	"variables": [
+		{
+			"name": "j",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "JOB_TYPES"
+			},
+			"transient": true,
+			"initial-value": 0
+		},
+		{
+			"name": "sizeLeft",
+			"type": "int",
+			"initial-value": 0
+		},
+		{
+			"name": "sizeRight",
+			"type": "int",
+			"initial-value": 0
+		}
+	],
+	"properties": [
+		{
+			"name": "PminBothQueuesFullIsOne",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "=",
+									"left": "sizeLeft",
+									"right": "C_LEFT"
+								},
+								"right": {
+									"op": "=",
+									"left": "sizeRight",
+									"right": "C_RIGHT"
+								}
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PminBothQueuesFullIsOne_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "=",
+									"left": "sizeLeft",
+									"right": "C_LEFT"
+								},
+								"right": {
+									"op": "=",
+									"left": "sizeRight",
+									"right": "C_RIGHT"
+								}
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TminBothQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": "sizeLeft",
+							"right": "C_LEFT"
+						},
+						"right": {
+							"op": "=",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TmaxBothQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": "sizeLeft",
+							"right": "C_LEFT"
+						},
+						"right": {
+							"op": "=",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxBothQueuesFullBound",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "sizeLeft",
+								"right": "C_LEFT"
+							},
+							"right": {
+								"op": "=",
+								"left": "sizeRight",
+								"right": "C_RIGHT"
+							}
+						},
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "SmaxBothQueuesFull",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Smax",
+					"exp": {
+						"op": "∧",
+						"left": {
+							"op": "=",
+							"left": "sizeLeft",
+							"right": "C_LEFT"
+						},
+						"right": {
+							"op": "=",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "Arrival",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_2"
+				},
+				{
+					"name": "loc_8"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "ql",
+					"type": {
+						"kind": "array",
+						"base": {
+							"kind": "bounded",
+							"base": "int",
+							"lower-bound": 0,
+							"upper-bound": "JOB_TYPES"
+						}
+					},
+					"initial-value": {
+						"op": "ac",
+						"length": "C_LEFT",
+						"var": "i",
+						"exp": 0
+					}
+				},
+				{
+					"name": "qr",
+					"type": {
+						"kind": "array",
+						"base": {
+							"kind": "bounded",
+							"base": "int",
+							"lower-bound": 0,
+							"upper-bound": "JOB_TYPES"
+						}
+					},
+					"initial-value": {
+						"op": "ac",
+						"length": "C_RIGHT",
+						"var": "i",
+						"exp": 0
+					}
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": 2
+					},
+					"guard": {
+						"exp": {
+							"op": "∨",
+							"left": {
+								"op": "<",
+								"left": "sizeLeft",
+								"right": "C_LEFT"
+							},
+							"right": {
+								"op": "<",
+								"left": "sizeRight",
+								"right": "C_RIGHT"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_8"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "reenter?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "qr",
+									"index": "sizeRight"
+								},
+								"value": "j",
+								"index": 1
+							},
+							{
+								"ref": "sizeRight",
+								"value": {
+									"op": "+",
+									"left": "sizeRight",
+									"right": 1
+								},
+								"index": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "service_left!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "sizeLeft",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "j",
+								"value": {
+									"op": "aa",
+									"exp": "ql",
+									"index": 0
+								},
+								"index": -1
+							},
+							{
+								"ref": "ql",
+								"value": {
+									"op": "ac",
+									"length": "C_LEFT",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": "sizeLeft",
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "ql",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								},
+								"index": -1
+							},
+							{
+								"ref": "sizeLeft",
+								"value": {
+									"op": "-",
+									"left": "sizeLeft",
+									"right": 1
+								},
+								"index": -1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "service_right!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "sizeRight",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "j",
+								"value": {
+									"op": "aa",
+									"exp": "qr",
+									"index": 0
+								},
+								"index": -1
+							},
+							{
+								"ref": "qr",
+								"value": {
+									"op": "ac",
+									"length": "C_RIGHT",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": "sizeRight",
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "qr",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								},
+								"index": -1
+							},
+							{
+								"ref": "sizeRight",
+								"value": {
+									"op": "-",
+									"left": "sizeRight",
+									"right": 1
+								},
+								"index": -1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": 2
+					},
+					"guard": {
+						"exp": {
+							"op": "∨",
+							"left": {
+								"op": "<",
+								"left": "sizeLeft",
+								"right": "C_LEFT"
+							},
+							"right": {
+								"op": "<",
+								"left": "sizeRight",
+								"right": "C_RIGHT"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_8"
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "reenter?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "qr",
+									"index": "sizeRight"
+								},
+								"value": "j",
+								"index": 1
+							},
+							{
+								"ref": "sizeRight",
+								"value": {
+									"op": "+",
+									"left": "sizeRight",
+									"right": 1
+								},
+								"index": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "service_left!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "sizeLeft",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "j",
+								"value": {
+									"op": "aa",
+									"exp": "ql",
+									"index": 0
+								},
+								"index": -1
+							},
+							{
+								"ref": "ql",
+								"value": {
+									"op": "ac",
+									"length": "C_LEFT",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": "sizeLeft",
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "ql",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								},
+								"index": -1
+							},
+							{
+								"ref": "sizeLeft",
+								"value": {
+									"op": "-",
+									"left": "sizeLeft",
+									"right": 1
+								},
+								"index": -1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "service_right!",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "sizeRight",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "j",
+								"value": {
+									"op": "aa",
+									"exp": "qr",
+									"index": 0
+								},
+								"index": -1
+							},
+							{
+								"ref": "qr",
+								"value": {
+									"op": "ac",
+									"length": "C_RIGHT",
+									"var": "i",
+									"exp": {
+										"op": "ite",
+										"if": {
+											"op": "<",
+											"left": "i",
+											"right": {
+												"op": "-",
+												"left": "sizeRight",
+												"right": 1
+											}
+										},
+										"then": {
+											"op": "aa",
+											"exp": "qr",
+											"index": {
+												"op": "+",
+												"left": "i",
+												"right": 1
+											}
+										},
+										"else": 0
+									}
+								},
+								"index": -1
+							},
+							{
+								"ref": "sizeRight",
+								"value": {
+									"op": "-",
+									"left": "sizeRight",
+									"right": 1
+								},
+								"index": -1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_8",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "sizeLeft",
+							"right": "C_LEFT"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "ql",
+									"index": "sizeLeft"
+								},
+								"value": {
+									"op": "trc",
+									"exp": {
+										"op": "nondet",
+										"var": "i",
+										"exp": {
+											"op": "∧",
+											"left": {
+												"op": "≤",
+												"left": 1,
+												"right": "i"
+											},
+											"right": {
+												"op": "≤",
+												"left": "i",
+												"right": "JOB_TYPES"
+											}
+										}
+									}
+								}
+							},
+							{
+								"ref": "sizeLeft",
+								"value": {
+									"op": "+",
+									"left": "sizeLeft",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_8",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "sizeRight",
+							"right": "C_RIGHT"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": {
+									"op": "aa",
+									"exp": "qr",
+									"index": "sizeRight"
+								},
+								"value": {
+									"op": "trc",
+									"exp": {
+										"op": "nondet",
+										"var": "i",
+										"exp": {
+											"op": "∧",
+											"left": {
+												"op": "≤",
+												"left": 1,
+												"right": "i"
+											},
+											"right": {
+												"op": "≤",
+												"left": "i",
+												"right": "JOB_TYPES"
+											}
+										}
+									}
+								}
+							},
+							{
+								"ref": "sizeRight",
+								"value": {
+									"op": "+",
+									"left": "sizeRight",
+									"right": 1
+								}
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "LeftDesk",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_5"
+				},
+				{
+					"name": "loc_8"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "lj",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": "JOB_TYPES"
+				},
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "service_left?",
+					"destinations": [ {
+						"location": "loc_5",
+						"assignments": [ {
+							"ref": "lj",
+							"value": "j",
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_5",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": {
+								"op": "/",
+								"left": 3,
+								"right": 2
+							},
+							"right": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 1,
+									"right": 2
+								},
+								"right": {
+									"op": "-",
+									"left": "lj",
+									"right": 1
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_8",
+						"assignments": [ {
+							"ref": "lj",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_8",
+					"action": "service_left?",
+					"destinations": [ {
+						"location": "loc_5",
+						"assignments": [ {
+							"ref": "lj",
+							"value": "j",
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_8",
+					"action": "reenter!",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "j",
+								"value": "lj",
+								"index": -1
+							},
+							{
+								"ref": "lj",
+								"value": 0,
+								"index": 2
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "RightDesk",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_5"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "rj",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": "JOB_TYPES"
+				},
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "service_right?",
+					"destinations": [ {
+						"location": "loc_5",
+						"assignments": [ {
+							"ref": "rj",
+							"value": "j",
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_5",
+					"rate": {
+						"exp": {
+							"op": "+",
+							"left": 1,
+							"right": {
+								"op": "*",
+								"left": {
+									"op": "/",
+									"left": 3,
+									"right": 10
+								},
+								"right": {
+									"op": "-",
+									"left": "rj",
+									"right": 1
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "rj",
+							"value": 0
+						} ]
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "Arrival"
+			},
+			{
+				"automaton": "LeftDesk"
+			},
+			{
+				"automaton": "RightDesk"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					"reenter?",
+					"reenter!",
+					null
+				],
+				"result": "reenter"
+			},
+			{
+				"synchronise": [
+					"service_left!",
+					"service_left?",
+					null
+				],
+				"result": "service_left"
+			},
+			{
+				"synchronise": [
+					"service_right!",
+					null,
+					"service_right?"
+				],
+				"result": "service_right"
+			}
+		]
+	}
+}

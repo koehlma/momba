@@ -1,0 +1,102 @@
+{
+	"file": "../zeroconf.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.1000-4-false.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 1000
+		},
+		{
+			"name": "K",
+			"value": 4
+		},
+		{
+			"name": "reset",
+			"value": false
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani zeroconf.jani --janiproperty --constants N=1000,K=4,reset=false --exact --timemem",
+	"time": 4031.774,
+	"memory": 1186988032,
+	"property-times": [
+		{
+			"name": "correct_max",
+			"time": 4018.314
+		},
+		{
+			"name": "correct_min",
+			"time": 3.043
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 10.313
+				},
+				{
+					"name": "states",
+					"value": 307768
+				},
+				{
+					"name": "branches",
+					"value": 712132
+				},
+				{
+					"name": "transitions",
+					"value": 569227
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "correct_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 4018.314
+				}
+			],
+			"value": {
+				"approx": 3.6937735268431015e-05,
+				"num": 22020954458849714916335411324013674754141533126095198261047135800267766277392154884533247101547956196323875761546359880309156168437951580557445853778731517680013318734692237419080956331038675078076213637080312691510570097873802578836623996103616758982960439618577852301201322989885451882931004775845700209809911079125141745594845597783648156046601829419286003469379126106647011,
+				"den": 596164174625779345485874583733943001607230068209726932613402207712762933142023663739075988088222134099637421411978007704533009963009772731469207190581991404332338539122302263511041099141676869399095837895278610046498784218907521851295491115036742665938838517005168583437684516423812451319402321868751635230389594782787406672051465669277203866285374041306897308825311828858538647011
+			}
+		},
+		{
+			"property": "correct_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.043
+				}
+			],
+			"value": {
+				"approx": 3.867439434957333e-06,
+				"num": 2476099,
+				"den": 640242476099
+			}
+		}
+	]
+}

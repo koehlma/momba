@@ -1,0 +1,50 @@
+// Modest MA model of the Andresen attack on Bitcoin as presented in
+// Ansgar Fehnker and Kaylash Chaudhary:
+// Twenty Percent and a Few Days - Optimising a Bitcoin Majority Attack.
+// 10th NASA Formal Methods Symposium, Newport News, VA, USA, April 17-19, 2018.
+// 
+// Fig. 3:
+// To obtain the expected duration of an attack with a truly optimal strategy (in file bitcoin-attack.results.txt) as well as that optimal strategy (in file bitcoin-attack.scheduler.txt):
+// mcsta bitcoin-attack.modest -S Memory -E "MALICIOUS=10,CD=6" -E "MALICIOUS=20,CD=6" -E "MALICIOUS=30,CD=6" -E "MALICIOUS=40,CD=6" -E "MALICIOUS=50,CD=6" -O bitcoin-attack.results.txt --scheduler bitcoin-attack.scheduler.txt
+
+const int MALICIOUS; // percentage of hash rate in malicious pool (0..100)
+const int CD; // confirmation depth
+const int DIFF_BOUND = CD; // malicious pool always resets when it gets this far behind
+
+action sln; // a solution was found by the honest pool
+action rst, cnt; // the malicious pool resets or continues its fork
+
+int(0..CD) m_len = 0; // length of the malicious chain (up to confirmation depth)
+int(-DIFF_BOUND..CD) m_diff = 0; // length of malicious chain minus length of honest chain
+
+// Minimum expected time until the malicious pool wins
+// (minimisation corresponds to optimal strategy)
+property T_MWinMin = Xmin(T, m_len >= CD && m_diff > 0);
+
+// Maximum probability that the malicious pool wins within 2 days (= 2880 minutes)
+// (maximisation corresponds to optimal strategy)
+property P_MWinMax = Pmax(<>[T<=2880] (m_len >= CD && m_diff > 0));
+
+process HonestPool()
+{
+   rate((1 / 12) * (1 - MALICIOUS / 100)) tau; sln; // honest chain extended
+   HonestPool()
+}
+
+process MaliciousPool()
+{
+   alt {
+   :: rate((1 / 12) * MALICIOUS / 100) {= m_len = min(CD, m_len + 1), m_diff = min(CD, m_diff + 1) =} // malicious fork extended
+   :: sln {= m_diff = max(-DIFF_BOUND, m_diff - 1) =}; // honest chain extended
+      alt { // strategy choice: reset or continue malicious fork
+      :: rst {= m_len = 0, m_diff = 0 =}
+      :: when(m_diff > -DIFF_BOUND) cnt
+      }
+   };
+   MaliciousPool()
+}
+
+par {
+:: HonestPool()
+:: MaliciousPool()
+}

@@ -1,0 +1,109 @@
+﻿{
+	"file": "../erlang.jani",
+	"version": 2,
+	"date": "2018-10-24",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"open-parameter-values": [
+		{ "name": "K", "value": 5000 },
+		{ "name": "R", "value": 10.0 },
+		{ "name": "TIME_BOUND", "value": 5.0 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.90",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-7500U",
+		"ram": 16,
+		"os": "Windows 10 Home 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta erlang.jani -E \"K=5000, R=10, TIME_BOUND=5\" -O mcsta.5000-10-5.2018-24-10.json JSON",
+	"time": 64.451,
+	"memory": 46981120,
+	"property-times": [
+		{ "name": "PminReach", "time": 0.049 },
+		{ "name": "TminReach", "time": 61.053 },
+		{ "name": "PmaxReachBound", "time": 1.252 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 4, "unit": "B" },
+				{ "name": "States", "value": 10009 },
+				{ "name": "Transitions", "value": 10010 },
+				{ "name": "Branches", "value": 10011 },
+				{ "name": "Rate", "value": 94424.528301886792 },
+				{ "name": "Time", "value": 0.159, "unit": "s" }
+			]
+		},
+		{
+			"property": "PminReach",
+			"value": 0.5,
+			"values": [
+				{ "name": "Bounds", "value": "[0.5, 0.5]" },
+				{ "name": "Time", "value": 0.049, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 3 },
+						{ "name": "Time", "value": 0.024, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "TminReach",
+			"value": 501.00000000004519,
+			"values": [
+				{ "name": "Bounds", "value": "[501.000000000045, 501.000000000045]" },
+				{ "name": "Time", "value": 61.053, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 0 states", "value": 2 },
+						{ "name": "Time for max. prob. 0 states", "value": 0.012, "unit": "s" },
+						{ "name": "Max. prob. 1 states", "value": 10004 },
+						{ "name": "Time for max. prob. 1 states", "value": 61.013, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.006, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "PmaxReachBound",
+			"value": 0.47978620900274271,
+			"values": [
+				{ "name": "Bounds", "value": "[0.479786159002743, 0.479786259002743]" },
+				{ "name": "Time", "value": 1.252, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Unif+",
+					"values": [
+						{ "name": "Time", "value": 1.247, "unit": "s" },
+						{ "name": "Max. exit rate", "value": 10 },
+						{ "name": "Iterations", "value": 1 },
+						{ "name": "Final unif. rate", "value": 10 }
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,645 @@
+﻿{
+	"jani-version": 1,
+	"name": "erlang",
+	"type": "ma",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "a"
+		},
+		{
+			"name": "b"
+		}
+	],
+	"constants": [
+		{
+			"name": "K",
+			"type": "int"
+		},
+		{
+			"name": "R",
+			"type": "real"
+		},
+		{
+			"name": "TIME_BOUND",
+			"type": "real"
+		}
+	],
+	"variables": [ {
+		"name": "goal",
+		"type": "bool",
+		"initial-value": false
+	} ],
+	"properties": [
+		{
+			"name": "PminReach",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": "goal"
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "TminReach",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": "goal"
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "PmaxReachBound",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": "goal",
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "SmaxNotReach",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Smax",
+					"exp": {
+						"op": "¬",
+						"exp": "goal"
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "ErlangStages",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_21"
+				},
+				{
+					"name": "loc_29"
+				},
+				{
+					"name": "loc_18"
+				},
+				{
+					"name": "loc_14"
+				},
+				{
+					"name": "loc_27"
+				},
+				{
+					"name": "loc_10"
+				},
+				{
+					"name": "loc_24"
+				},
+				{
+					"name": "loc_36"
+				},
+				{
+					"name": "loc_38"
+				},
+				{
+					"name": "loc_33"
+				},
+				{
+					"name": "loc_6"
+				},
+				{
+					"name": "loc_23"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "state",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": 4
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "stage",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": "K"
+					},
+					"initial-value": 0
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "a",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_6"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "b",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "goal",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 4
+						}
+					},
+					"destinations": [ {
+						"location": "loc_21"
+					} ]
+				},
+				{
+					"location": "loc_21",
+					"rate": {
+						"exp": 1
+					},
+					"destinations": [ {
+						"location": "loc_29",
+						"assignments": [ {
+							"ref": "state",
+							"value": 4
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"action": "a",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_6"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"action": "b",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "goal",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 4
+						}
+					},
+					"destinations": [ {
+						"location": "loc_21"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"rate": {
+						"exp": 1
+					},
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "state",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_14",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 1,
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_27",
+						"assignments": [ {
+							"ref": "state",
+							"value": 3
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_14",
+					"rate": {
+						"exp": {
+							"op": "/",
+							"left": 1,
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_29",
+						"assignments": [ {
+							"ref": "state",
+							"value": 4
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_27",
+					"action": "a",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_6"
+					} ]
+				},
+				{
+					"location": "loc_27",
+					"action": "b",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_27",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_27",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "goal",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_27",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 4
+						}
+					},
+					"destinations": [ {
+						"location": "loc_21"
+					} ]
+				},
+				{
+					"location": "loc_10",
+					"rate": {
+						"exp": 1
+					},
+					"destinations": [ {
+						"location": "loc_24",
+						"assignments": [ {
+							"ref": "stage",
+							"value": "K"
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_24",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "stage",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_33"
+					} ]
+				},
+				{
+					"location": "loc_24",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "stage",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_36"
+					} ]
+				},
+				{
+					"location": "loc_36",
+					"rate": {
+						"exp": "R"
+					},
+					"destinations": [ {
+						"location": "loc_38",
+						"assignments": [ {
+							"ref": "stage",
+							"value": {
+								"op": "-",
+								"left": "stage",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_38",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "stage",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_33"
+					} ]
+				},
+				{
+					"location": "loc_38",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "stage",
+							"right": 1
+						}
+					},
+					"destinations": [ {
+						"location": "loc_36"
+					} ]
+				},
+				{
+					"location": "loc_33",
+					"rate": {
+						"exp": "R"
+					},
+					"destinations": [ {
+						"location": "loc_27",
+						"assignments": [ {
+							"ref": "state",
+							"value": 3
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_6",
+					"rate": {
+						"exp": 1
+					},
+					"destinations": [ {
+						"location": "loc_23",
+						"assignments": [ {
+							"ref": "state",
+							"value": 2
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"action": "a",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_6"
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"action": "b",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_10"
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 2
+						}
+					},
+					"destinations": [ {
+						"location": "loc_14"
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 3
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "goal",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "state",
+							"right": 4
+						}
+					},
+					"destinations": [ {
+						"location": "loc_21"
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [ {
+			"automaton": "ErlangStages"
+		} ],
+		"syncs": [
+			{
+				"synchronise": [ "a" ],
+				"result": "a"
+			},
+			{
+				"synchronise": [ "b" ],
+				"result": "b"
+			}
+		]
+	}
+}

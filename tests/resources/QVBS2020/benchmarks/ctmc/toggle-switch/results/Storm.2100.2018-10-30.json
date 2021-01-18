@@ -1,0 +1,64 @@
+{
+	"file": "../toggle-switch.jani",
+	"version": 1,
+	"date": "2018-10-30",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.2100.2018-10-30.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 2100
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "Intel Core i5-5257U",
+		"ram": "16",
+		"os": "macOS 10.13.5",
+		"runtime": "Apple LLVM version 9.1.0 (clang-902.0.39.2)"
+	},
+	"command": "storm --jani toggle-switch.jani --janiproperty --constants T=2100  --timemem",
+	"time": 0.042,
+	"memory": 32505856,
+	"property-times": [
+		{
+			"name": "change_state",
+			"time": 0.002
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.024
+				},
+				{
+					"name": "states",
+					"value": 99
+				},
+				{
+					"name": "branches",
+					"value": 356
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "change_state",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.002
+				}
+			],
+			"value": 0.01349121251
+		}
+	]
+}

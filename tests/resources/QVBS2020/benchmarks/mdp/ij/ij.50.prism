@@ -1,0 +1,169 @@
+
+// Israeli-Jalfon self stabilising algorithm
+// dxp/gxn 10/06/02
+
+mdp
+
+// variables to represent whether a process has a token or not
+// note they are global because they can be updated by other processes
+
+		global q0  : [0..1] init 1;
+	
+		global q1  : [0..1] init 1;
+	
+		global q2  : [0..1] init 1;
+	
+		global q3  : [0..1] init 1;
+	
+		global q4  : [0..1] init 1;
+	
+		global q5  : [0..1] init 1;
+	
+		global q6  : [0..1] init 1;
+	
+		global q7  : [0..1] init 1;
+	
+		global q8  : [0..1] init 1;
+	
+		global q9  : [0..1] init 1;
+	
+		global q10  : [0..1] init 1;
+	
+		global q11  : [0..1] init 1;
+	
+		global q12  : [0..1] init 1;
+	
+		global q13  : [0..1] init 1;
+	
+		global q14  : [0..1] init 1;
+	
+		global q15  : [0..1] init 1;
+	
+		global q16  : [0..1] init 1;
+	
+		global q17  : [0..1] init 1;
+	
+		global q18  : [0..1] init 1;
+	
+		global q19  : [0..1] init 1;
+	
+		global q20  : [0..1] init 1;
+	
+		global q21  : [0..1] init 1;
+	
+		global q22  : [0..1] init 1;
+	
+		global q23  : [0..1] init 1;
+	
+		global q24  : [0..1] init 1;
+	
+		global q25  : [0..1] init 1;
+	
+		global q26  : [0..1] init 1;
+	
+		global q27  : [0..1] init 1;
+	
+		global q28  : [0..1] init 1;
+	
+		global q29  : [0..1] init 1;
+	
+		global q30  : [0..1] init 1;
+	
+		global q31  : [0..1] init 1;
+	
+		global q32  : [0..1] init 1;
+	
+		global q33  : [0..1] init 1;
+	
+		global q34  : [0..1] init 1;
+	
+		global q35  : [0..1] init 1;
+	
+		global q36  : [0..1] init 1;
+	
+		global q37  : [0..1] init 1;
+	
+		global q38  : [0..1] init 1;
+	
+		global q39  : [0..1] init 1;
+	
+		global q40  : [0..1] init 1;
+	
+		global q41  : [0..1] init 1;
+	
+		global q42  : [0..1] init 1;
+	
+		global q43  : [0..1] init 1;
+	
+		global q44  : [0..1] init 1;
+	
+		global q45  : [0..1] init 1;
+	
+		global q46  : [0..1] init 1;
+	
+		global q47  : [0..1] init 1;
+	
+		global q48  : [0..1] init 1;
+	
+		global q49  : [0..1] init 1;
+	
+global num_tokens_var : [0..50];
+
+// module of process 0
+module process0
+	
+	[] (q0=1) -> 0.5 : (q0'=0) & (q49'=1) + 0.5 : (q0'=0) & (q1'=1);
+	
+endmodule
+
+// add further processes through renaming
+module process1 = process0 [ q0=q1, q1=q2, q2=q3, q3=q4, q4=q5, q5=q6, q6=q7, q7=q8, q8=q9, q9=q10, q10=q11, q11=q12, q12=q13, q13=q14, q14=q15, q15=q16, q16=q17, q17=q18, q18=q19, q19=q20, q20=q21, q21=q22, q22=q23, q23=q24, q24=q25, q25=q26, q26=q27, q27=q28, q28=q29, q29=q30, q30=q31, q31=q32, q32=q33, q33=q34, q34=q35, q35=q36, q36=q37, q37=q38, q38=q39, q39=q40, q40=q41, q41=q42, q42=q43, q43=q44, q44=q45, q45=q46, q46=q47, q47=q48, q48=q49, q49=q0 ] endmodule
+	module process2 = process0 [ q0=q2, q1=q3, q2=q4, q3=q5, q4=q6, q5=q7, q6=q8, q7=q9, q8=q10, q9=q11, q10=q12, q11=q13, q12=q14, q13=q15, q14=q16, q15=q17, q16=q18, q17=q19, q18=q20, q19=q21, q20=q22, q21=q23, q22=q24, q23=q25, q24=q26, q25=q27, q26=q28, q27=q29, q28=q30, q29=q31, q30=q32, q31=q33, q32=q34, q33=q35, q34=q36, q35=q37, q36=q38, q37=q39, q38=q40, q39=q41, q40=q42, q41=q43, q42=q44, q43=q45, q44=q46, q45=q47, q46=q48, q47=q49, q48=q0, q49=q1 ] endmodule
+	module process3 = process0 [ q0=q3, q1=q4, q2=q5, q3=q6, q4=q7, q5=q8, q6=q9, q7=q10, q8=q11, q9=q12, q10=q13, q11=q14, q12=q15, q13=q16, q14=q17, q15=q18, q16=q19, q17=q20, q18=q21, q19=q22, q20=q23, q21=q24, q22=q25, q23=q26, q24=q27, q25=q28, q26=q29, q27=q30, q28=q31, q29=q32, q30=q33, q31=q34, q32=q35, q33=q36, q34=q37, q35=q38, q36=q39, q37=q40, q38=q41, q39=q42, q40=q43, q41=q44, q42=q45, q43=q46, q44=q47, q45=q48, q46=q49, q47=q0, q48=q1, q49=q2 ] endmodule
+	module process4 = process0 [ q0=q4, q1=q5, q2=q6, q3=q7, q4=q8, q5=q9, q6=q10, q7=q11, q8=q12, q9=q13, q10=q14, q11=q15, q12=q16, q13=q17, q14=q18, q15=q19, q16=q20, q17=q21, q18=q22, q19=q23, q20=q24, q21=q25, q22=q26, q23=q27, q24=q28, q25=q29, q26=q30, q27=q31, q28=q32, q29=q33, q30=q34, q31=q35, q32=q36, q33=q37, q34=q38, q35=q39, q36=q40, q37=q41, q38=q42, q39=q43, q40=q44, q41=q45, q42=q46, q43=q47, q44=q48, q45=q49, q46=q0, q47=q1, q48=q2, q49=q3 ] endmodule
+	module process5 = process0 [ q0=q5, q1=q6, q2=q7, q3=q8, q4=q9, q5=q10, q6=q11, q7=q12, q8=q13, q9=q14, q10=q15, q11=q16, q12=q17, q13=q18, q14=q19, q15=q20, q16=q21, q17=q22, q18=q23, q19=q24, q20=q25, q21=q26, q22=q27, q23=q28, q24=q29, q25=q30, q26=q31, q27=q32, q28=q33, q29=q34, q30=q35, q31=q36, q32=q37, q33=q38, q34=q39, q35=q40, q36=q41, q37=q42, q38=q43, q39=q44, q40=q45, q41=q46, q42=q47, q43=q48, q44=q49, q45=q0, q46=q1, q47=q2, q48=q3, q49=q4 ] endmodule
+	module process6 = process0 [ q0=q6, q1=q7, q2=q8, q3=q9, q4=q10, q5=q11, q6=q12, q7=q13, q8=q14, q9=q15, q10=q16, q11=q17, q12=q18, q13=q19, q14=q20, q15=q21, q16=q22, q17=q23, q18=q24, q19=q25, q20=q26, q21=q27, q22=q28, q23=q29, q24=q30, q25=q31, q26=q32, q27=q33, q28=q34, q29=q35, q30=q36, q31=q37, q32=q38, q33=q39, q34=q40, q35=q41, q36=q42, q37=q43, q38=q44, q39=q45, q40=q46, q41=q47, q42=q48, q43=q49, q44=q0, q45=q1, q46=q2, q47=q3, q48=q4, q49=q5 ] endmodule
+	module process7 = process0 [ q0=q7, q1=q8, q2=q9, q3=q10, q4=q11, q5=q12, q6=q13, q7=q14, q8=q15, q9=q16, q10=q17, q11=q18, q12=q19, q13=q20, q14=q21, q15=q22, q16=q23, q17=q24, q18=q25, q19=q26, q20=q27, q21=q28, q22=q29, q23=q30, q24=q31, q25=q32, q26=q33, q27=q34, q28=q35, q29=q36, q30=q37, q31=q38, q32=q39, q33=q40, q34=q41, q35=q42, q36=q43, q37=q44, q38=q45, q39=q46, q40=q47, q41=q48, q42=q49, q43=q0, q44=q1, q45=q2, q46=q3, q47=q4, q48=q5, q49=q6 ] endmodule
+	module process8 = process0 [ q0=q8, q1=q9, q2=q10, q3=q11, q4=q12, q5=q13, q6=q14, q7=q15, q8=q16, q9=q17, q10=q18, q11=q19, q12=q20, q13=q21, q14=q22, q15=q23, q16=q24, q17=q25, q18=q26, q19=q27, q20=q28, q21=q29, q22=q30, q23=q31, q24=q32, q25=q33, q26=q34, q27=q35, q28=q36, q29=q37, q30=q38, q31=q39, q32=q40, q33=q41, q34=q42, q35=q43, q36=q44, q37=q45, q38=q46, q39=q47, q40=q48, q41=q49, q42=q0, q43=q1, q44=q2, q45=q3, q46=q4, q47=q5, q48=q6, q49=q7 ] endmodule
+	module process9 = process0 [ q0=q9, q1=q10, q2=q11, q3=q12, q4=q13, q5=q14, q6=q15, q7=q16, q8=q17, q9=q18, q10=q19, q11=q20, q12=q21, q13=q22, q14=q23, q15=q24, q16=q25, q17=q26, q18=q27, q19=q28, q20=q29, q21=q30, q22=q31, q23=q32, q24=q33, q25=q34, q26=q35, q27=q36, q28=q37, q29=q38, q30=q39, q31=q40, q32=q41, q33=q42, q34=q43, q35=q44, q36=q45, q37=q46, q38=q47, q39=q48, q40=q49, q41=q0, q42=q1, q43=q2, q44=q3, q45=q4, q46=q5, q47=q6, q48=q7, q49=q8 ] endmodule
+	module process10 = process0 [ q0=q10, q1=q11, q2=q12, q3=q13, q4=q14, q5=q15, q6=q16, q7=q17, q8=q18, q9=q19, q10=q20, q11=q21, q12=q22, q13=q23, q14=q24, q15=q25, q16=q26, q17=q27, q18=q28, q19=q29, q20=q30, q21=q31, q22=q32, q23=q33, q24=q34, q25=q35, q26=q36, q27=q37, q28=q38, q29=q39, q30=q40, q31=q41, q32=q42, q33=q43, q34=q44, q35=q45, q36=q46, q37=q47, q38=q48, q39=q49, q40=q0, q41=q1, q42=q2, q43=q3, q44=q4, q45=q5, q46=q6, q47=q7, q48=q8, q49=q9 ] endmodule
+	module process11 = process0 [ q0=q11, q1=q12, q2=q13, q3=q14, q4=q15, q5=q16, q6=q17, q7=q18, q8=q19, q9=q20, q10=q21, q11=q22, q12=q23, q13=q24, q14=q25, q15=q26, q16=q27, q17=q28, q18=q29, q19=q30, q20=q31, q21=q32, q22=q33, q23=q34, q24=q35, q25=q36, q26=q37, q27=q38, q28=q39, q29=q40, q30=q41, q31=q42, q32=q43, q33=q44, q34=q45, q35=q46, q36=q47, q37=q48, q38=q49, q39=q0, q40=q1, q41=q2, q42=q3, q43=q4, q44=q5, q45=q6, q46=q7, q47=q8, q48=q9, q49=q10 ] endmodule
+	module process12 = process0 [ q0=q12, q1=q13, q2=q14, q3=q15, q4=q16, q5=q17, q6=q18, q7=q19, q8=q20, q9=q21, q10=q22, q11=q23, q12=q24, q13=q25, q14=q26, q15=q27, q16=q28, q17=q29, q18=q30, q19=q31, q20=q32, q21=q33, q22=q34, q23=q35, q24=q36, q25=q37, q26=q38, q27=q39, q28=q40, q29=q41, q30=q42, q31=q43, q32=q44, q33=q45, q34=q46, q35=q47, q36=q48, q37=q49, q38=q0, q39=q1, q40=q2, q41=q3, q42=q4, q43=q5, q44=q6, q45=q7, q46=q8, q47=q9, q48=q10, q49=q11 ] endmodule
+	module process13 = process0 [ q0=q13, q1=q14, q2=q15, q3=q16, q4=q17, q5=q18, q6=q19, q7=q20, q8=q21, q9=q22, q10=q23, q11=q24, q12=q25, q13=q26, q14=q27, q15=q28, q16=q29, q17=q30, q18=q31, q19=q32, q20=q33, q21=q34, q22=q35, q23=q36, q24=q37, q25=q38, q26=q39, q27=q40, q28=q41, q29=q42, q30=q43, q31=q44, q32=q45, q33=q46, q34=q47, q35=q48, q36=q49, q37=q0, q38=q1, q39=q2, q40=q3, q41=q4, q42=q5, q43=q6, q44=q7, q45=q8, q46=q9, q47=q10, q48=q11, q49=q12 ] endmodule
+	module process14 = process0 [ q0=q14, q1=q15, q2=q16, q3=q17, q4=q18, q5=q19, q6=q20, q7=q21, q8=q22, q9=q23, q10=q24, q11=q25, q12=q26, q13=q27, q14=q28, q15=q29, q16=q30, q17=q31, q18=q32, q19=q33, q20=q34, q21=q35, q22=q36, q23=q37, q24=q38, q25=q39, q26=q40, q27=q41, q28=q42, q29=q43, q30=q44, q31=q45, q32=q46, q33=q47, q34=q48, q35=q49, q36=q0, q37=q1, q38=q2, q39=q3, q40=q4, q41=q5, q42=q6, q43=q7, q44=q8, q45=q9, q46=q10, q47=q11, q48=q12, q49=q13 ] endmodule
+	module process15 = process0 [ q0=q15, q1=q16, q2=q17, q3=q18, q4=q19, q5=q20, q6=q21, q7=q22, q8=q23, q9=q24, q10=q25, q11=q26, q12=q27, q13=q28, q14=q29, q15=q30, q16=q31, q17=q32, q18=q33, q19=q34, q20=q35, q21=q36, q22=q37, q23=q38, q24=q39, q25=q40, q26=q41, q27=q42, q28=q43, q29=q44, q30=q45, q31=q46, q32=q47, q33=q48, q34=q49, q35=q0, q36=q1, q37=q2, q38=q3, q39=q4, q40=q5, q41=q6, q42=q7, q43=q8, q44=q9, q45=q10, q46=q11, q47=q12, q48=q13, q49=q14 ] endmodule
+	module process16 = process0 [ q0=q16, q1=q17, q2=q18, q3=q19, q4=q20, q5=q21, q6=q22, q7=q23, q8=q24, q9=q25, q10=q26, q11=q27, q12=q28, q13=q29, q14=q30, q15=q31, q16=q32, q17=q33, q18=q34, q19=q35, q20=q36, q21=q37, q22=q38, q23=q39, q24=q40, q25=q41, q26=q42, q27=q43, q28=q44, q29=q45, q30=q46, q31=q47, q32=q48, q33=q49, q34=q0, q35=q1, q36=q2, q37=q3, q38=q4, q39=q5, q40=q6, q41=q7, q42=q8, q43=q9, q44=q10, q45=q11, q46=q12, q47=q13, q48=q14, q49=q15 ] endmodule
+	module process17 = process0 [ q0=q17, q1=q18, q2=q19, q3=q20, q4=q21, q5=q22, q6=q23, q7=q24, q8=q25, q9=q26, q10=q27, q11=q28, q12=q29, q13=q30, q14=q31, q15=q32, q16=q33, q17=q34, q18=q35, q19=q36, q20=q37, q21=q38, q22=q39, q23=q40, q24=q41, q25=q42, q26=q43, q27=q44, q28=q45, q29=q46, q30=q47, q31=q48, q32=q49, q33=q0, q34=q1, q35=q2, q36=q3, q37=q4, q38=q5, q39=q6, q40=q7, q41=q8, q42=q9, q43=q10, q44=q11, q45=q12, q46=q13, q47=q14, q48=q15, q49=q16 ] endmodule
+	module process18 = process0 [ q0=q18, q1=q19, q2=q20, q3=q21, q4=q22, q5=q23, q6=q24, q7=q25, q8=q26, q9=q27, q10=q28, q11=q29, q12=q30, q13=q31, q14=q32, q15=q33, q16=q34, q17=q35, q18=q36, q19=q37, q20=q38, q21=q39, q22=q40, q23=q41, q24=q42, q25=q43, q26=q44, q27=q45, q28=q46, q29=q47, q30=q48, q31=q49, q32=q0, q33=q1, q34=q2, q35=q3, q36=q4, q37=q5, q38=q6, q39=q7, q40=q8, q41=q9, q42=q10, q43=q11, q44=q12, q45=q13, q46=q14, q47=q15, q48=q16, q49=q17 ] endmodule
+	module process19 = process0 [ q0=q19, q1=q20, q2=q21, q3=q22, q4=q23, q5=q24, q6=q25, q7=q26, q8=q27, q9=q28, q10=q29, q11=q30, q12=q31, q13=q32, q14=q33, q15=q34, q16=q35, q17=q36, q18=q37, q19=q38, q20=q39, q21=q40, q22=q41, q23=q42, q24=q43, q25=q44, q26=q45, q27=q46, q28=q47, q29=q48, q30=q49, q31=q0, q32=q1, q33=q2, q34=q3, q35=q4, q36=q5, q37=q6, q38=q7, q39=q8, q40=q9, q41=q10, q42=q11, q43=q12, q44=q13, q45=q14, q46=q15, q47=q16, q48=q17, q49=q18 ] endmodule
+	module process20 = process0 [ q0=q20, q1=q21, q2=q22, q3=q23, q4=q24, q5=q25, q6=q26, q7=q27, q8=q28, q9=q29, q10=q30, q11=q31, q12=q32, q13=q33, q14=q34, q15=q35, q16=q36, q17=q37, q18=q38, q19=q39, q20=q40, q21=q41, q22=q42, q23=q43, q24=q44, q25=q45, q26=q46, q27=q47, q28=q48, q29=q49, q30=q0, q31=q1, q32=q2, q33=q3, q34=q4, q35=q5, q36=q6, q37=q7, q38=q8, q39=q9, q40=q10, q41=q11, q42=q12, q43=q13, q44=q14, q45=q15, q46=q16, q47=q17, q48=q18, q49=q19 ] endmodule
+	module process21 = process0 [ q0=q21, q1=q22, q2=q23, q3=q24, q4=q25, q5=q26, q6=q27, q7=q28, q8=q29, q9=q30, q10=q31, q11=q32, q12=q33, q13=q34, q14=q35, q15=q36, q16=q37, q17=q38, q18=q39, q19=q40, q20=q41, q21=q42, q22=q43, q23=q44, q24=q45, q25=q46, q26=q47, q27=q48, q28=q49, q29=q0, q30=q1, q31=q2, q32=q3, q33=q4, q34=q5, q35=q6, q36=q7, q37=q8, q38=q9, q39=q10, q40=q11, q41=q12, q42=q13, q43=q14, q44=q15, q45=q16, q46=q17, q47=q18, q48=q19, q49=q20 ] endmodule
+	module process22 = process0 [ q0=q22, q1=q23, q2=q24, q3=q25, q4=q26, q5=q27, q6=q28, q7=q29, q8=q30, q9=q31, q10=q32, q11=q33, q12=q34, q13=q35, q14=q36, q15=q37, q16=q38, q17=q39, q18=q40, q19=q41, q20=q42, q21=q43, q22=q44, q23=q45, q24=q46, q25=q47, q26=q48, q27=q49, q28=q0, q29=q1, q30=q2, q31=q3, q32=q4, q33=q5, q34=q6, q35=q7, q36=q8, q37=q9, q38=q10, q39=q11, q40=q12, q41=q13, q42=q14, q43=q15, q44=q16, q45=q17, q46=q18, q47=q19, q48=q20, q49=q21 ] endmodule
+	module process23 = process0 [ q0=q23, q1=q24, q2=q25, q3=q26, q4=q27, q5=q28, q6=q29, q7=q30, q8=q31, q9=q32, q10=q33, q11=q34, q12=q35, q13=q36, q14=q37, q15=q38, q16=q39, q17=q40, q18=q41, q19=q42, q20=q43, q21=q44, q22=q45, q23=q46, q24=q47, q25=q48, q26=q49, q27=q0, q28=q1, q29=q2, q30=q3, q31=q4, q32=q5, q33=q6, q34=q7, q35=q8, q36=q9, q37=q10, q38=q11, q39=q12, q40=q13, q41=q14, q42=q15, q43=q16, q44=q17, q45=q18, q46=q19, q47=q20, q48=q21, q49=q22 ] endmodule
+	module process24 = process0 [ q0=q24, q1=q25, q2=q26, q3=q27, q4=q28, q5=q29, q6=q30, q7=q31, q8=q32, q9=q33, q10=q34, q11=q35, q12=q36, q13=q37, q14=q38, q15=q39, q16=q40, q17=q41, q18=q42, q19=q43, q20=q44, q21=q45, q22=q46, q23=q47, q24=q48, q25=q49, q26=q0, q27=q1, q28=q2, q29=q3, q30=q4, q31=q5, q32=q6, q33=q7, q34=q8, q35=q9, q36=q10, q37=q11, q38=q12, q39=q13, q40=q14, q41=q15, q42=q16, q43=q17, q44=q18, q45=q19, q46=q20, q47=q21, q48=q22, q49=q23 ] endmodule
+	module process25 = process0 [ q0=q25, q1=q26, q2=q27, q3=q28, q4=q29, q5=q30, q6=q31, q7=q32, q8=q33, q9=q34, q10=q35, q11=q36, q12=q37, q13=q38, q14=q39, q15=q40, q16=q41, q17=q42, q18=q43, q19=q44, q20=q45, q21=q46, q22=q47, q23=q48, q24=q49, q25=q0, q26=q1, q27=q2, q28=q3, q29=q4, q30=q5, q31=q6, q32=q7, q33=q8, q34=q9, q35=q10, q36=q11, q37=q12, q38=q13, q39=q14, q40=q15, q41=q16, q42=q17, q43=q18, q44=q19, q45=q20, q46=q21, q47=q22, q48=q23, q49=q24 ] endmodule
+	module process26 = process0 [ q0=q26, q1=q27, q2=q28, q3=q29, q4=q30, q5=q31, q6=q32, q7=q33, q8=q34, q9=q35, q10=q36, q11=q37, q12=q38, q13=q39, q14=q40, q15=q41, q16=q42, q17=q43, q18=q44, q19=q45, q20=q46, q21=q47, q22=q48, q23=q49, q24=q0, q25=q1, q26=q2, q27=q3, q28=q4, q29=q5, q30=q6, q31=q7, q32=q8, q33=q9, q34=q10, q35=q11, q36=q12, q37=q13, q38=q14, q39=q15, q40=q16, q41=q17, q42=q18, q43=q19, q44=q20, q45=q21, q46=q22, q47=q23, q48=q24, q49=q25 ] endmodule
+	module process27 = process0 [ q0=q27, q1=q28, q2=q29, q3=q30, q4=q31, q5=q32, q6=q33, q7=q34, q8=q35, q9=q36, q10=q37, q11=q38, q12=q39, q13=q40, q14=q41, q15=q42, q16=q43, q17=q44, q18=q45, q19=q46, q20=q47, q21=q48, q22=q49, q23=q0, q24=q1, q25=q2, q26=q3, q27=q4, q28=q5, q29=q6, q30=q7, q31=q8, q32=q9, q33=q10, q34=q11, q35=q12, q36=q13, q37=q14, q38=q15, q39=q16, q40=q17, q41=q18, q42=q19, q43=q20, q44=q21, q45=q22, q46=q23, q47=q24, q48=q25, q49=q26 ] endmodule
+	module process28 = process0 [ q0=q28, q1=q29, q2=q30, q3=q31, q4=q32, q5=q33, q6=q34, q7=q35, q8=q36, q9=q37, q10=q38, q11=q39, q12=q40, q13=q41, q14=q42, q15=q43, q16=q44, q17=q45, q18=q46, q19=q47, q20=q48, q21=q49, q22=q0, q23=q1, q24=q2, q25=q3, q26=q4, q27=q5, q28=q6, q29=q7, q30=q8, q31=q9, q32=q10, q33=q11, q34=q12, q35=q13, q36=q14, q37=q15, q38=q16, q39=q17, q40=q18, q41=q19, q42=q20, q43=q21, q44=q22, q45=q23, q46=q24, q47=q25, q48=q26, q49=q27 ] endmodule
+	module process29 = process0 [ q0=q29, q1=q30, q2=q31, q3=q32, q4=q33, q5=q34, q6=q35, q7=q36, q8=q37, q9=q38, q10=q39, q11=q40, q12=q41, q13=q42, q14=q43, q15=q44, q16=q45, q17=q46, q18=q47, q19=q48, q20=q49, q21=q0, q22=q1, q23=q2, q24=q3, q25=q4, q26=q5, q27=q6, q28=q7, q29=q8, q30=q9, q31=q10, q32=q11, q33=q12, q34=q13, q35=q14, q36=q15, q37=q16, q38=q17, q39=q18, q40=q19, q41=q20, q42=q21, q43=q22, q44=q23, q45=q24, q46=q25, q47=q26, q48=q27, q49=q28 ] endmodule
+	module process30 = process0 [ q0=q30, q1=q31, q2=q32, q3=q33, q4=q34, q5=q35, q6=q36, q7=q37, q8=q38, q9=q39, q10=q40, q11=q41, q12=q42, q13=q43, q14=q44, q15=q45, q16=q46, q17=q47, q18=q48, q19=q49, q20=q0, q21=q1, q22=q2, q23=q3, q24=q4, q25=q5, q26=q6, q27=q7, q28=q8, q29=q9, q30=q10, q31=q11, q32=q12, q33=q13, q34=q14, q35=q15, q36=q16, q37=q17, q38=q18, q39=q19, q40=q20, q41=q21, q42=q22, q43=q23, q44=q24, q45=q25, q46=q26, q47=q27, q48=q28, q49=q29 ] endmodule
+	module process31 = process0 [ q0=q31, q1=q32, q2=q33, q3=q34, q4=q35, q5=q36, q6=q37, q7=q38, q8=q39, q9=q40, q10=q41, q11=q42, q12=q43, q13=q44, q14=q45, q15=q46, q16=q47, q17=q48, q18=q49, q19=q0, q20=q1, q21=q2, q22=q3, q23=q4, q24=q5, q25=q6, q26=q7, q27=q8, q28=q9, q29=q10, q30=q11, q31=q12, q32=q13, q33=q14, q34=q15, q35=q16, q36=q17, q37=q18, q38=q19, q39=q20, q40=q21, q41=q22, q42=q23, q43=q24, q44=q25, q45=q26, q46=q27, q47=q28, q48=q29, q49=q30 ] endmodule
+	module process32 = process0 [ q0=q32, q1=q33, q2=q34, q3=q35, q4=q36, q5=q37, q6=q38, q7=q39, q8=q40, q9=q41, q10=q42, q11=q43, q12=q44, q13=q45, q14=q46, q15=q47, q16=q48, q17=q49, q18=q0, q19=q1, q20=q2, q21=q3, q22=q4, q23=q5, q24=q6, q25=q7, q26=q8, q27=q9, q28=q10, q29=q11, q30=q12, q31=q13, q32=q14, q33=q15, q34=q16, q35=q17, q36=q18, q37=q19, q38=q20, q39=q21, q40=q22, q41=q23, q42=q24, q43=q25, q44=q26, q45=q27, q46=q28, q47=q29, q48=q30, q49=q31 ] endmodule
+	module process33 = process0 [ q0=q33, q1=q34, q2=q35, q3=q36, q4=q37, q5=q38, q6=q39, q7=q40, q8=q41, q9=q42, q10=q43, q11=q44, q12=q45, q13=q46, q14=q47, q15=q48, q16=q49, q17=q0, q18=q1, q19=q2, q20=q3, q21=q4, q22=q5, q23=q6, q24=q7, q25=q8, q26=q9, q27=q10, q28=q11, q29=q12, q30=q13, q31=q14, q32=q15, q33=q16, q34=q17, q35=q18, q36=q19, q37=q20, q38=q21, q39=q22, q40=q23, q41=q24, q42=q25, q43=q26, q44=q27, q45=q28, q46=q29, q47=q30, q48=q31, q49=q32 ] endmodule
+	module process34 = process0 [ q0=q34, q1=q35, q2=q36, q3=q37, q4=q38, q5=q39, q6=q40, q7=q41, q8=q42, q9=q43, q10=q44, q11=q45, q12=q46, q13=q47, q14=q48, q15=q49, q16=q0, q17=q1, q18=q2, q19=q3, q20=q4, q21=q5, q22=q6, q23=q7, q24=q8, q25=q9, q26=q10, q27=q11, q28=q12, q29=q13, q30=q14, q31=q15, q32=q16, q33=q17, q34=q18, q35=q19, q36=q20, q37=q21, q38=q22, q39=q23, q40=q24, q41=q25, q42=q26, q43=q27, q44=q28, q45=q29, q46=q30, q47=q31, q48=q32, q49=q33 ] endmodule
+	module process35 = process0 [ q0=q35, q1=q36, q2=q37, q3=q38, q4=q39, q5=q40, q6=q41, q7=q42, q8=q43, q9=q44, q10=q45, q11=q46, q12=q47, q13=q48, q14=q49, q15=q0, q16=q1, q17=q2, q18=q3, q19=q4, q20=q5, q21=q6, q22=q7, q23=q8, q24=q9, q25=q10, q26=q11, q27=q12, q28=q13, q29=q14, q30=q15, q31=q16, q32=q17, q33=q18, q34=q19, q35=q20, q36=q21, q37=q22, q38=q23, q39=q24, q40=q25, q41=q26, q42=q27, q43=q28, q44=q29, q45=q30, q46=q31, q47=q32, q48=q33, q49=q34 ] endmodule
+	module process36 = process0 [ q0=q36, q1=q37, q2=q38, q3=q39, q4=q40, q5=q41, q6=q42, q7=q43, q8=q44, q9=q45, q10=q46, q11=q47, q12=q48, q13=q49, q14=q0, q15=q1, q16=q2, q17=q3, q18=q4, q19=q5, q20=q6, q21=q7, q22=q8, q23=q9, q24=q10, q25=q11, q26=q12, q27=q13, q28=q14, q29=q15, q30=q16, q31=q17, q32=q18, q33=q19, q34=q20, q35=q21, q36=q22, q37=q23, q38=q24, q39=q25, q40=q26, q41=q27, q42=q28, q43=q29, q44=q30, q45=q31, q46=q32, q47=q33, q48=q34, q49=q35 ] endmodule
+	module process37 = process0 [ q0=q37, q1=q38, q2=q39, q3=q40, q4=q41, q5=q42, q6=q43, q7=q44, q8=q45, q9=q46, q10=q47, q11=q48, q12=q49, q13=q0, q14=q1, q15=q2, q16=q3, q17=q4, q18=q5, q19=q6, q20=q7, q21=q8, q22=q9, q23=q10, q24=q11, q25=q12, q26=q13, q27=q14, q28=q15, q29=q16, q30=q17, q31=q18, q32=q19, q33=q20, q34=q21, q35=q22, q36=q23, q37=q24, q38=q25, q39=q26, q40=q27, q41=q28, q42=q29, q43=q30, q44=q31, q45=q32, q46=q33, q47=q34, q48=q35, q49=q36 ] endmodule
+	module process38 = process0 [ q0=q38, q1=q39, q2=q40, q3=q41, q4=q42, q5=q43, q6=q44, q7=q45, q8=q46, q9=q47, q10=q48, q11=q49, q12=q0, q13=q1, q14=q2, q15=q3, q16=q4, q17=q5, q18=q6, q19=q7, q20=q8, q21=q9, q22=q10, q23=q11, q24=q12, q25=q13, q26=q14, q27=q15, q28=q16, q29=q17, q30=q18, q31=q19, q32=q20, q33=q21, q34=q22, q35=q23, q36=q24, q37=q25, q38=q26, q39=q27, q40=q28, q41=q29, q42=q30, q43=q31, q44=q32, q45=q33, q46=q34, q47=q35, q48=q36, q49=q37 ] endmodule
+	module process39 = process0 [ q0=q39, q1=q40, q2=q41, q3=q42, q4=q43, q5=q44, q6=q45, q7=q46, q8=q47, q9=q48, q10=q49, q11=q0, q12=q1, q13=q2, q14=q3, q15=q4, q16=q5, q17=q6, q18=q7, q19=q8, q20=q9, q21=q10, q22=q11, q23=q12, q24=q13, q25=q14, q26=q15, q27=q16, q28=q17, q29=q18, q30=q19, q31=q20, q32=q21, q33=q22, q34=q23, q35=q24, q36=q25, q37=q26, q38=q27, q39=q28, q40=q29, q41=q30, q42=q31, q43=q32, q44=q33, q45=q34, q46=q35, q47=q36, q48=q37, q49=q38 ] endmodule
+	module process40 = process0 [ q0=q40, q1=q41, q2=q42, q3=q43, q4=q44, q5=q45, q6=q46, q7=q47, q8=q48, q9=q49, q10=q0, q11=q1, q12=q2, q13=q3, q14=q4, q15=q5, q16=q6, q17=q7, q18=q8, q19=q9, q20=q10, q21=q11, q22=q12, q23=q13, q24=q14, q25=q15, q26=q16, q27=q17, q28=q18, q29=q19, q30=q20, q31=q21, q32=q22, q33=q23, q34=q24, q35=q25, q36=q26, q37=q27, q38=q28, q39=q29, q40=q30, q41=q31, q42=q32, q43=q33, q44=q34, q45=q35, q46=q36, q47=q37, q48=q38, q49=q39 ] endmodule
+	module process41 = process0 [ q0=q41, q1=q42, q2=q43, q3=q44, q4=q45, q5=q46, q6=q47, q7=q48, q8=q49, q9=q0, q10=q1, q11=q2, q12=q3, q13=q4, q14=q5, q15=q6, q16=q7, q17=q8, q18=q9, q19=q10, q20=q11, q21=q12, q22=q13, q23=q14, q24=q15, q25=q16, q26=q17, q27=q18, q28=q19, q29=q20, q30=q21, q31=q22, q32=q23, q33=q24, q34=q25, q35=q26, q36=q27, q37=q28, q38=q29, q39=q30, q40=q31, q41=q32, q42=q33, q43=q34, q44=q35, q45=q36, q46=q37, q47=q38, q48=q39, q49=q40 ] endmodule
+	module process42 = process0 [ q0=q42, q1=q43, q2=q44, q3=q45, q4=q46, q5=q47, q6=q48, q7=q49, q8=q0, q9=q1, q10=q2, q11=q3, q12=q4, q13=q5, q14=q6, q15=q7, q16=q8, q17=q9, q18=q10, q19=q11, q20=q12, q21=q13, q22=q14, q23=q15, q24=q16, q25=q17, q26=q18, q27=q19, q28=q20, q29=q21, q30=q22, q31=q23, q32=q24, q33=q25, q34=q26, q35=q27, q36=q28, q37=q29, q38=q30, q39=q31, q40=q32, q41=q33, q42=q34, q43=q35, q44=q36, q45=q37, q46=q38, q47=q39, q48=q40, q49=q41 ] endmodule
+	module process43 = process0 [ q0=q43, q1=q44, q2=q45, q3=q46, q4=q47, q5=q48, q6=q49, q7=q0, q8=q1, q9=q2, q10=q3, q11=q4, q12=q5, q13=q6, q14=q7, q15=q8, q16=q9, q17=q10, q18=q11, q19=q12, q20=q13, q21=q14, q22=q15, q23=q16, q24=q17, q25=q18, q26=q19, q27=q20, q28=q21, q29=q22, q30=q23, q31=q24, q32=q25, q33=q26, q34=q27, q35=q28, q36=q29, q37=q30, q38=q31, q39=q32, q40=q33, q41=q34, q42=q35, q43=q36, q44=q37, q45=q38, q46=q39, q47=q40, q48=q41, q49=q42 ] endmodule
+	module process44 = process0 [ q0=q44, q1=q45, q2=q46, q3=q47, q4=q48, q5=q49, q6=q0, q7=q1, q8=q2, q9=q3, q10=q4, q11=q5, q12=q6, q13=q7, q14=q8, q15=q9, q16=q10, q17=q11, q18=q12, q19=q13, q20=q14, q21=q15, q22=q16, q23=q17, q24=q18, q25=q19, q26=q20, q27=q21, q28=q22, q29=q23, q30=q24, q31=q25, q32=q26, q33=q27, q34=q28, q35=q29, q36=q30, q37=q31, q38=q32, q39=q33, q40=q34, q41=q35, q42=q36, q43=q37, q44=q38, q45=q39, q46=q40, q47=q41, q48=q42, q49=q43 ] endmodule
+	module process45 = process0 [ q0=q45, q1=q46, q2=q47, q3=q48, q4=q49, q5=q0, q6=q1, q7=q2, q8=q3, q9=q4, q10=q5, q11=q6, q12=q7, q13=q8, q14=q9, q15=q10, q16=q11, q17=q12, q18=q13, q19=q14, q20=q15, q21=q16, q22=q17, q23=q18, q24=q19, q25=q20, q26=q21, q27=q22, q28=q23, q29=q24, q30=q25, q31=q26, q32=q27, q33=q28, q34=q29, q35=q30, q36=q31, q37=q32, q38=q33, q39=q34, q40=q35, q41=q36, q42=q37, q43=q38, q44=q39, q45=q40, q46=q41, q47=q42, q48=q43, q49=q44 ] endmodule
+	module process46 = process0 [ q0=q46, q1=q47, q2=q48, q3=q49, q4=q0, q5=q1, q6=q2, q7=q3, q8=q4, q9=q5, q10=q6, q11=q7, q12=q8, q13=q9, q14=q10, q15=q11, q16=q12, q17=q13, q18=q14, q19=q15, q20=q16, q21=q17, q22=q18, q23=q19, q24=q20, q25=q21, q26=q22, q27=q23, q28=q24, q29=q25, q30=q26, q31=q27, q32=q28, q33=q29, q34=q30, q35=q31, q36=q32, q37=q33, q38=q34, q39=q35, q40=q36, q41=q37, q42=q38, q43=q39, q44=q40, q45=q41, q46=q42, q47=q43, q48=q44, q49=q45 ] endmodule
+	module process47 = process0 [ q0=q47, q1=q48, q2=q49, q3=q0, q4=q1, q5=q2, q6=q3, q7=q4, q8=q5, q9=q6, q10=q7, q11=q8, q12=q9, q13=q10, q14=q11, q15=q12, q16=q13, q17=q14, q18=q15, q19=q16, q20=q17, q21=q18, q22=q19, q23=q20, q24=q21, q25=q22, q26=q23, q27=q24, q28=q25, q29=q26, q30=q27, q31=q28, q32=q29, q33=q30, q34=q31, q35=q32, q36=q33, q37=q34, q38=q35, q39=q36, q40=q37, q41=q38, q42=q39, q43=q40, q44=q41, q45=q42, q46=q43, q47=q44, q48=q45, q49=q46 ] endmodule
+	module process48 = process0 [ q0=q48, q1=q49, q2=q0, q3=q1, q4=q2, q5=q3, q6=q4, q7=q5, q8=q6, q9=q7, q10=q8, q11=q9, q12=q10, q13=q11, q14=q12, q15=q13, q16=q14, q17=q15, q18=q16, q19=q17, q20=q18, q21=q19, q22=q20, q23=q21, q24=q22, q25=q23, q26=q24, q27=q25, q28=q26, q29=q27, q30=q28, q31=q29, q32=q30, q33=q31, q34=q32, q35=q33, q36=q34, q37=q35, q38=q36, q39=q37, q40=q38, q41=q39, q42=q40, q43=q41, q44=q42, q45=q43, q46=q44, q47=q45, q48=q46, q49=q47 ] endmodule
+	module process49 = process0 [ q0=q49, q1=q0, q2=q1, q3=q2, q4=q3, q5=q4, q6=q5, q7=q6, q8=q7, q9=q8, q10=q9, q11=q10, q12=q11, q13=q12, q14=q13, q15=q14, q16=q15, q17=q16, q18=q17, q19=q18, q20=q19, q21=q20, q22=q21, q23=q22, q24=q23, q25=q24, q26=q25, q27=q26, q28=q27, q29=q28, q30=q29, q31=q30, q32=q31, q33=q32, q34=q33, q35=q34, q36=q35, q37=q36, q38=q37, q39=q38, q40=q39, q41=q40, q42=q41, q43=q42, q44=q43, q45=q44, q46=q45, q47=q46, q48=q47, q49=q48 ] endmodule
+	

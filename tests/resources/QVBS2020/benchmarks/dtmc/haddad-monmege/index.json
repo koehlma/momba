@@ -1,0 +1,168 @@
+{
+	"name": "Haddad-Monmege",
+	"short": "haddad-monmege",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-01",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1016/j.tcs.2016.12.003",
+	"description": "An adversarial example that highlights the problems of the traditional convergence criteria in value iteration.",
+	"notes": "adversarial example for value iteration",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "open",
+			"description": "Model size",
+			"type": "positive integer"
+		},
+		{
+			"name": "p",
+			"kind": "open",
+			"description": "The probability to reach the target state, i.e. the value of property `target´",
+			"type": "probability"
+		}
+	],
+	"properties": [
+		{
+			"name": "target",
+			"description": "The probability to reach the target state.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "exp_steps",
+			"description": "The expected number of steps to reach the target state or the sink state.",
+			"type": "exp-steps"
+		}
+	],
+	"files": [
+		{
+			"file": "haddad-monmege.jani",
+			"original-file": [
+				"haddad-monmege.pm",
+				"haddad-monmege.prctl"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism haddad-monmege.pm --tojani haddad-monmege.jani --prop haddad-monmege.prctl --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 20
+						},
+						{
+							"name": "p",
+							"value": 0.7
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 41
+						}
+					],
+					"results": [
+						{
+							"property": "target",
+							"value": 0.7,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_steps",
+							"value": 1572862,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 100
+						},
+						{
+							"name": "p",
+							"value": 0.7
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 201
+						}
+					],
+					"results": [
+						{
+							"property": "target",
+							"value": 0.7,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_steps",
+							"value": 1901475900342344102245054808062,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 300
+						},
+						{
+							"name": "p",
+							"value": 0.7
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 601
+						}
+					],
+					"results": [
+						{
+							"property": "target",
+							"value": 0.7,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "exp_steps",
+							"value": 3055553964501729129402668532614067241577202590498904375954210674031571949645005059275096062,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"file": "results/Storm.exact.20-0.7.2018-10-03.json",
+			"reference": true
+		},
+		{
+			"file": "results/Storm.exact.100-0.7.2018-10-03.json",
+			"reference": true
+		},
+		{
+			"file": "results/Storm.exact.300-0.7.2018-10-03.json",
+			"reference": true
+		}
+	]
+}

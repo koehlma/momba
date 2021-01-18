@@ -1,0 +1,57 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:24:58 2018
+Command line arguments: --jani cluster.jani --janiproperty --constants 'N=4,T=2000,t=20' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/cluster
+
+Time for model construction: 0.042s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	820
+Transitions: 	3616
+Reward Models:  time_not_min, num_repairs, percent_op
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * label_minimum -> 253 item(s)
+   * init -> 1 item(s)
+   * premium -> 127 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "below_min": R[exp]{"time_not_min"}min=? [C<=2000] ...
+Result (for initial states): 0.007363146871
+Time for model checking: 2.184s.
+
+Model checking property "operational": R[exp]{"percent_op"}min=? [I=20] ...
+Result (for initial states): 99.87593254
+Time for model checking: 0.020s.
+
+Model checking property "premium_steady": LRAmin=? ["premium"] ...
+Result (for initial states): 0.999921253
+Time for model checking: 0.004s.
+
+Model checking property "qos1": Pmin=? [true U<=2000 !("label_minimum")] ...
+Result (for initial states): 0.001822105149
+Time for model checking: 0.359s.
+
+Model checking property "qos2": Pmin=? [true U[20, 20] !("label_minimum")] ...
+Result (for initial states): 3.32170686e-06
+Time for model checking: 0.020s.
+
+Model checking property "qos3": Pmin=? ["label_minimum" U<=20 "premium"] ...
+Result (for initial states): 1
+Time for model checking: 0.002s.
+
+Model checking property "qos4": Pmin=? [!("label_minimum") U>=20 "label_minimum"] ...
+Result (for initial states): 0
+Time for model checking: 0.016s.
+
+Model checking property "repairs": R[exp]{"num_repairs"}min=? [C<=2000] ...
+Result (for initial states): 33.34469884
+Time for model checking: 2.187s.
+
+Performance statistics:
+  * peak memory usage: 47MB
+  * CPU time: 4.878s
+  * wallclock time: 4.848s

@@ -1,0 +1,169 @@
+{
+	"name": "Dining Philosophers",
+	"short": "philosophers-mdp",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-11-12",
+	"version-history": [
+		{
+			"date": "2018-11-12",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Daniel Lehmann <lehmann@cs.huji.ac.il>",
+		"Michael O. Rabin <rabin@seas.harvard.edu>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1145/567532.567547",
+	"part-of": {
+		"name": "the PRISM Case Studies",
+		"url": "http://www.prismmodelchecker.org/casestudies/"
+	},
+	"description": "This is a PRISM case study [1]. `N´ >= 3 philosophers are sitting around a table and try to pick up one chopstick with their right and one chopstick with their left hand. The problem is that they share each chopstick with the respective neighbor. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/phil.php"
+	],
+	"notes": "PRISM case study",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of philosophers",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "eat",
+			"description": "The maximal probability that finally someone is able to eat.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "philosophers-mdp.3.jani",
+			"original-file": [
+				"philosophers-mdp.3.prism",
+				"philosophers-mdp.3.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism philosophers-mdp.3.prism --prop philosophers-mdp.3.props  --prism2jani --jani-output philosophers-mdp.3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 440
+						}
+					],
+					"results": [
+						{
+							"property": "eat",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers-mdp.10.jani",
+			"original-file": [
+				"philosophers-mdp.10.prism",
+				"philosophers-mdp.10.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism philosophers-mdp.10.prism --prop philosophers-mdp.10.props  --prism2jani --jani-output philosophers-mdp.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 10
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "philosophers-mdp.20.jani",
+			"original-file": [
+				"philosophers-mdp.20.prism",
+				"philosophers-mdp.20.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism philosophers-mdp.20.prism --prop philosophers-mdp.20.props  --prism2jani --jani-output philosophers-mdp.20.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 20
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "philosophers-mdp.30.jani",
+			"original-file": [
+				"philosophers-mdp.30.prism",
+				"philosophers-mdp.30.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism philosophers-mdp.30.prism --prop philosophers-mdp.30.props  --prism2jani --jani-output philosophers-mdp.30.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 30
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": false,
+			"file": "results/mcsta.3.2018-11-13.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-11-22.json"
+		}
+	]
+}

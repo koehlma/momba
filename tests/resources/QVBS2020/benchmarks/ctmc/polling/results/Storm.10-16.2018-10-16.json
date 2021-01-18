@@ -1,0 +1,124 @@
+{
+	"file": "../polling.10.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.10-16.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.10.jani --janiproperty --constants T=16  --timemem",
+	"time": 5.518,
+	"memory": 62914560,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 0.109
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 0.031
+		},
+		{
+			"name": "served",
+			"time": 1.81
+		},
+		{
+			"name": "station1_polled",
+			"time": 1.336
+		},
+		{
+			"name": "waiting",
+			"time": 1.812
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.406
+				},
+				{
+					"name": "states",
+					"value": 15360
+				},
+				{
+					"name": "branches",
+					"value": 89600
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.109
+				}
+			],
+			"value": 0.1403506639
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.031
+				}
+			],
+			"value": 0.5410254273
+		},
+		{
+			"property": "served",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.81
+				}
+			],
+			"value": 1.116806306
+		},
+		{
+			"property": "station1_polled",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.336
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "waiting",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.812
+				}
+			],
+			"value": 1.588579115
+		}
+	]
+}

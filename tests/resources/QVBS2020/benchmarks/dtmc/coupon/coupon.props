@@ -1,0 +1,11 @@
+const int B;
+
+// The probability to eventually collect all coupons
+"collect_all": P=? [ F "_ret0_" ];
+
+// The expected number of draws until all coupons are collected.
+"exp_draws": R{"numberDraws"}=? [ F "_ret0_" ];
+
+
+// The probability to collect all coupons with at most B draws
+"collect_all_bounded": P=? [F^{rew{"numberDraws"}<=B } "_ret0_" ];  

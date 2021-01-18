@@ -1,0 +1,68 @@
+{
+	"file": "../wlan_dl.6.jani",
+	"version": 1,
+	"date": "2018-10-12",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.6-80.2018-10-12.txt",
+	"open-parameter-values": [
+		{
+			"name": "deadline",
+			"value": 80
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani wlan_dl.6.jani --janiproperty --constants deadline=80  --timemem",
+	"time": 179.741,
+	"memory": 1231028224,
+	"property-times": [
+		{
+			"name": "deadline",
+			"time": 2.8
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 176.896
+				},
+				{
+					"name": "states",
+					"value": 10131465
+				},
+				{
+					"name": "branches",
+					"value": 23343048
+				},
+				{
+					"name": "transitions",
+					"value": 13817232
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "deadline",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 2.8
+				}
+			],
+			"value": 0.81640625
+		}
+	]
+}

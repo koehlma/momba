@@ -1,0 +1,381 @@
+{
+	"name": "Energy-aware job scheduling",
+	"short": "eajs",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-26",
+	"version-history": [
+		{
+			"date": "2018-10-26",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marcus Daum"
+	],
+	"submitter": "Joachim Klein <klein@tcs.inf.tu-dresden.de>",
+	"source": "https://doi.org/10.1007/978-3-319-06200-6_24",
+	"description": "A system of `N´ processes which need to enter a critical section in order to perform tasks, each within a given deadline. Access to the critical section is exclusively granted by a scheduler, which selects processes only if they have requested to enter. When a process states such a request, a deadline counter is set and decreased over time even if the process did not enter the critical section yet. Since computing a task also requires a certain amount of time in the critical section, deadlines can be exceeded. Utility is hence provided in terms of tasks finished without exceeding their deadline. Each process consumes energy, especially if it is in the critical section, and the global energy consumption equals the sum of energy consumed by all processes. Additional dependencies between utility and energy arise as the scheduler can activate a turbo mode for the critical section, doubling the computation speed but tripling energy consumption. This model was used to benchmark quantile computation engines in [1] and [2], here we consider related properties for expected-reward and reward bounded reachability probabilities.",
+	"references": [
+		"https://doi.org/10.1007/s10009-017-0456-3"
+	],
+	"notes": "reward-bounded properties",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "The number of processes",
+			"type": "positive integer"
+		},
+		{
+			"name": "energy_capacity",
+			"kind": "open",
+			"description": "The amount of available energy.",
+			"type": "positive integer"
+		},
+		{
+			"name": "B",
+			"kind": "open",
+			"description": "The utility value that is to be achieved.",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "ExpUtil",
+			"description": "The maximal expected utility obtained until the battery becomes empty.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "ProbUtil",
+			"description": "The maximal probability that a utility value of at least `B´ is achieved until the battery becomes empty.",
+			"type": "prob-reach-reward-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "eajs.2.jani",
+			"original-file": [
+				"eajs.2.prism",
+				"eajs.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism eajs.2.prism --tojani eajs.2.jani --prop eajs.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "energy_capacity",
+							"value": 100
+						},
+						{
+							"name": "B",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 12828
+						}
+					],
+					"results": [
+						{
+							"property": "ExpUtil",
+							"value": {
+								"approx": 4.028044505410761,
+								"num": 26428,
+								"den": 6561
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "ProbUtil",
+							"value": {
+								"approx": 0.028044505410760555,
+								"num": 184,
+								"den": 6561
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "eajs.3.jani",
+			"original-file": [
+				"eajs.3.prism",
+				"eajs.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism eajs.3.prism --tojani eajs.3.jani --prop eajs.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "energy_capacity",
+							"value": 150
+						},
+						{
+							"name": "B",
+							"value": 7
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 143155
+						}
+					],
+					"results": [
+						{
+							"property": "ExpUtil",
+							"value": {
+								"approx": 6.007519407845207,
+								"num": 5090102765275,
+								"den": 847288609443
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "ProbUtil",
+							"value": {
+								"approx": 0.007519407845206736,
+								"num": 6371108617,
+								"den": 847288609443
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "eajs.4.jani",
+			"original-file": [
+				"eajs.4.prism",
+				"eajs.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism eajs.4.prism --tojani eajs.4.jani --prop eajs.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "energy_capacity",
+							"value": 200
+						},
+						{
+							"name": "B",
+							"value": 9
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 872410
+						}
+					],
+					"results": [
+						{
+							"property": "ExpUtil",
+							"value": {
+								"approx": 8.017635597429246,
+								"num": 3610212272821140749,
+								"den": 450283905890997363
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "ProbUtil",
+							"value": {
+								"approx": 0.0179099252480266,
+								"num": 24193653284691620,
+								"den": 1350851717672992089
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "eajs.5.jani",
+			"original-file": [
+				"eajs.5.prism",
+				"eajs.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism eajs.5.prism --tojani eajs.5.jani --prop eajs.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "energy_capacity",
+							"value": 250
+						},
+						{
+							"name": "B",
+							"value": 11
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 3049471
+						}
+					],
+					"results": [
+						{
+							"property": "ExpUtil",
+							"value": {
+								"approx": 10.032940688435446,
+								"num": 266763997439241350774737,
+								"den": 26588814358957503287787
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "ProbUtil",
+							"value": {
+								"approx": 0.03389571932225896,
+								"num": 300415662874290793717,
+								"den": 8862938119652501095929
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "eajs.6.jani",
+			"original-file": [
+				"eajs.6.prism",
+				"eajs.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism eajs.6.prism --tojani eajs.6.jani --prop eajs.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "energy_capacity",
+							"value": 300
+						},
+						{
+							"name": "B",
+							"value": 13
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 7901694
+						}
+					],
+					"results": [
+						{
+							"property": "ExpUtil",
+							"value": {
+								"approx": 12.051110823281476,
+								"num": 2102306774904922316278224079,
+								"den": 174449211009120179071170507
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "ProbUtil",
+							"value": {
+								"approx": 0.053314442981833195,
+								"num": 3100220837857174938151493,
+								"den": 58149737003040059690390169
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.2-100-5.2018-10-28.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-100-5.2018-10-28.json"
+		},
+		"results/Storm.3-150-7.2018-10-28.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-150-7.2018-10-28.json"
+		},
+		"results/Storm.4-200-9.2018-10-28.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-200-9.2018-10-28.json"
+		},
+		"results/Storm.5-250-11.2018-10-28.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-250-11.2018-10-28.json"
+		},
+		"results/Storm.6-300-13.2018-10-28.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-300-13.2018-10-28.json"
+		}
+	]
+}

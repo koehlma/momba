@@ -1,0 +1,162 @@
+﻿{
+	"file": "../firewire.true.jani",
+	"version": 2,
+	"date": "2018-11-05",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "delay", "value": 3 },
+		{ "name": "deadline", "value": 200 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.94",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.16.0.179"
+	},
+	"command": "mcsta.exe firewire.true.jani -S Memory -E \"delay=3, deadline=200\" -O mcsta.true-3-200.2018-11-05.json Json",
+	"time": 2.888,
+	"memory": 74752000,
+	"property-times": [
+		{ "name": "elected", "time": 0.124 },
+		{ "name": "time_max", "time": 0.733 },
+		{ "name": "time_min", "time": 0.618 },
+		{ "name": "time_sending", "time": 0.688 },
+		{ "name": "deadline", "time": 0.005 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 16, "unit": "B" },
+				{ "name": "States", "value": 82979 },
+				{ "name": "Transitions", "value": 112521 },
+				{ "name": "Branches", "value": 114793 },
+				{ "name": "Rate", "value": 471471.59090909094 },
+				{ "name": "Time", "value": 0.188, "unit": "s" }
+			]
+		},
+		{
+			"property": "elected",
+			"value": true,
+			"values": [
+				{ "name": "Time", "value": 0.124, "unit": "s" },
+				{ "name": "Probability", "value": 1 }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.116, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 82979 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.004, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_max",
+			"value": 298.99777492121439,
+			"values": [
+				{ "name": "Bounds", "value": "[298.997774921214, ∞)" },
+				{ "name": "Time", "value": 0.733, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.113, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 82979 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.003, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.4966255408087756E-07 },
+						{ "name": "Iterations", "value": 409 },
+						{ "name": "Time", "value": 0.614, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_min",
+			"value": 138.25,
+			"values": [
+				{ "name": "Bounds", "value": "[138.25, ∞)" },
+				{ "name": "Time", "value": 0.618, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 82979 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.564, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 36 },
+						{ "name": "Time", "value": 0.053, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_sending",
+			"value": 17.999966587547249,
+			"values": [
+				{ "name": "Bounds", "value": "[17.9999665875472, ∞)" },
+				{ "name": "Time", "value": 0.688, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.113, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 82979 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.003, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.6297064671543448E-07 },
+						{ "name": "Iterations", "value": 374 },
+						{ "name": "Time", "value": 0.572, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "deadline",
+			"value": 0.5,
+			"values": [
+				{ "name": "Bounds", "value": "[0.5, 0.5]" },
+				{ "name": "Time", "value": 0.005, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 3 },
+						{ "name": "Time", "value": 0.004, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

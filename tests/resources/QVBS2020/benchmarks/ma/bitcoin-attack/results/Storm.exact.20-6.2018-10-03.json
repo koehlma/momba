@@ -1,0 +1,83 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../bitcoin-attack.jani",
+	"version": 1,
+	"log": "Storm.exact.20-6.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "MALICIOUS",
+			"value": 20
+		},
+		{
+			"name": "CD",
+			"value": 6
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani bitcoin-attack.jani --janiproperty --constants MALICIOUS=20,CD=6 --exact --timemem",
+	"time": 0.053,
+	"memory": 47185920,
+	"property-times": [
+		{
+			"name": "T_MWinMin",
+			"time": 0.02
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.028
+				},
+				{
+					"name": "states",
+					"value": 252
+				},
+				{
+					"name": "branches",
+					"value": 553
+				},
+				{
+					"name": "transitions",
+					"value": 490
+				},
+				{
+					"name": "markovian-states",
+					"value": 189
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "T_MWinMin",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.02
+				}
+			],
+			"value": {
+				"approx": 3736.5910586927494,
+				"num": 4194984840,
+				"den": 1122677
+			}
+		}
+	]
+}

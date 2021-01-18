@@ -1,0 +1,32 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:16 2018
+Command line arguments: --jani oscillators.3-6-0.1-1.jani --janiproperty --constants 'mu=0.1,lambda=1.0' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/dtmc/oscillators
+
+Time for model construction: 0.097s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	57
+Transitions: 	122
+Reward Models:  power_consumption, time_to_synch
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * (((((((((1/2 * k_6) + (1/2 * k_2)) + ((-1 * k_4) + (-1/2 * k_3))) + ((-1/2 * k_5) + (1 * k_1))) / 3) ^ 2) + ((((((-108253175473/125000000000 * k_6) + (108253175473/125000000000 * k_2)) + ((0 * k_4) + (108253175473/125000000000 * k_3))) + ((-108253175473/125000000000 * k_5) + (0 * k_1))) / 3) ^ 2)) ^ 1/2) >= 1) -> 2 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "time_to_synch": R[exp]{"time_to_synch"}min=? [F (((((((((1/2 * k_6) + (1/2 * k_2)) + ((-1 * k_4) + (-1/2 * k_3))) + ((-1/2 * k_5) + (1 * k_1))) / 3) ^ 2) + ((((((-108253175473/125000000000 * k_6) + (108253175473/125000000000 * k_2)) + ((0 * k_4) + (108253175473/125000000000 * k_3))) + ((-108253175473/125000000000 * k_5) + (0 * k_1))) / 3) ^ 2)) ^ 1/2) >= 1)] ...
+Result (for initial states): inf
+Time for model checking: 0.005s.
+
+Model checking property "power_consumption": R[exp]{"power_consumption"}min=? [F (((((((((1/2 * k_6) + (1/2 * k_2)) + ((-1 * k_4) + (-1/2 * k_3))) + ((-1/2 * k_5) + (1 * k_1))) / 3) ^ 2) + ((((((-108253175473/125000000000 * k_6) + (108253175473/125000000000 * k_2)) + ((0 * k_4) + (108253175473/125000000000 * k_3))) + ((-108253175473/125000000000 * k_5) + (0 * k_1))) / 3) ^ 2)) ^ 1/2) >= 1)] ...
+Result (for initial states): inf
+Time for model checking: 0.005s.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.155s
+  * wallclock time: 0.130s

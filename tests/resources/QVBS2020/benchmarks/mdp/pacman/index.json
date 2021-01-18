@@ -1,0 +1,153 @@
+{
+	"name": "Pacman",
+	"short": "pacman",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-26",
+	"version-history": [
+		{
+			"date": "2018-10-26",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Sebastian Junges <sebastian.junges@cs.rwth-aachen.de>",
+		"Bettina Könighofer <bettina.koenighofer@iaik.tugraz.at>"
+	],
+	"submitter": "Sebastian Junges <sebastian.junges@cs.rwth-aachen.de>",
+	"source": "https://arxiv.org/abs/1807.06096",
+	"description": "The benchmark encodes a small variant of the arcade game Pac-Man in which the ghosts behave randomly based on observed behavior. The benchmark has been extended with some manual abstraction in order to improve scalability. In some sense, it is a grid-world with many obstacles: still largely connected, but far fewer actions than states",
+	"references": [
+	],
+	"notes": "learned probabilities",
+	"parameters": [
+		{
+			"name": "MAXSTEPS",
+			"kind": "open",
+			"description": "The planning horizon",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "crash",
+			"description": "The probability to bump into another ghost.",
+			"type": "prob-reach"
+		}
+	],
+		"files": [
+			{
+			"file": "pacman.jani",
+			"original-file": [
+				"pacman.nm",
+				"pacman.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism pacman.nm --tojani pacman.jani --prop pacman.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "MAXSTEPS",
+							"value": 5
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 498
+						}
+					],
+					"results": [
+						{
+							"property": "crash",
+							"value": {
+								"approx": 0.5511,
+								"num": 5511,
+								"den": 10000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "MAXSTEPS",
+							"value": 60
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 38786521
+						}
+					],
+					"results": [
+						{
+							"property": "crash",
+							"value": {
+								"approx": 0.5511074970678996,
+								"num": 86110546416859324224933809991178655824964067,
+								"den": 156250000000000000000000000000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "MAXSTEPS",
+							"value": 100
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 79440921
+						}
+					],
+					"results": [
+						{
+							"property": "crash",
+							"value": {
+								"approx": 0.5511176224662503,
+								"num": 20530731322849178168274065935141602924670578150393429768659213274416501568911383642435277893633713,
+								"den": 37252902984619140625000000000000000000000000000000000000000000000000000000000000000000000000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.5.2018-11-22.json",
+		"results/mcsta.60.2018-11-22.json",
+		"results/mcsta.100.2018-11-22.json",
+		"results/Storm.5.2018-10-29.json",
+		"results/Storm.60.2018-10-29.json",
+		"results/Storm.100.2018-10-29.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-29.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.60.2018-10-29.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.100.2018-10-29.json"
+		}
+	]
+}

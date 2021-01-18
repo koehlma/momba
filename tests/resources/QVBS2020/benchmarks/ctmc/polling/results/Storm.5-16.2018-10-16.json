@@ -1,0 +1,124 @@
+{
+	"file": "../polling.5.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.5-16.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "T",
+			"value": 16
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani polling.5.jani --janiproperty --constants T=16  --timemem",
+	"time": 0.098,
+	"memory": 48234496,
+	"property-times": [
+		{
+			"name": "s1",
+			"time": 0.001
+		},
+		{
+			"name": "s1_before_s2",
+			"time": 0.0
+		},
+		{
+			"name": "served",
+			"time": 0.022
+		},
+		{
+			"name": "station1_polled",
+			"time": 0.013
+		},
+		{
+			"name": "waiting",
+			"time": 0.022
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.029
+				},
+				{
+					"name": "states",
+					"value": 240
+				},
+				{
+					"name": "branches",
+					"value": 800
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "s1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": 0.1449159625
+		},
+		{
+			"property": "s1_before_s2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": 0.5357408848
+		},
+		{
+			"property": "served",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.022
+				}
+			],
+			"value": 2.107965214
+		},
+		{
+			"property": "station1_polled",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.013
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "waiting",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.022
+				}
+			],
+			"value": 1.916684509
+		}
+	]
+}

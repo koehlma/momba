@@ -1,0 +1,238 @@
+{
+	"name": "Stochastic Job Scheduling",
+	"short": "jobs",
+	"type": "ma",
+	"original": "PRISM-MA",
+	"version": 1,
+	"date": "2018-08-13",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-13",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1007/978-3-319-63387-9_7",
+	"description": "A model of the stochastic job scheduling problem of [1]. The task is to perform `N´ jobs with exponential service times on `K´ identical processors under a pre-emptive scheduling policy. Once a job finishes, all `K´ processors can be assigned any of the remaining jobs. There are three different types of jobs and two jobs of the same type have the same rate.",
+	"references": [
+		"https://doi.org/10.1145/322234.322242"
+	],
+	"notes": "stochastic scheduling problem",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of jobs to schedule",
+			"type": "positive integer"
+		},
+		{
+			"name": "K",
+			"kind": "file",
+			"description": "Number of processors",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "completiontime",
+			"description": "The minimal expected time until all jobs are finished.",
+			"type": "exp-time"
+		},
+		{
+			"name": "avgtime",
+			"description": "The minimal expected time that a job requires to complete (on average).",
+			"type": "exp-reward"
+		},
+		{
+			"name": "prhalfdone",
+			"description": "The maximal probability that half of the jobs are finished within `N´/(4`K´) time units.",
+			"type": "prob-reach-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "jobs.5-2.jani",
+			"original-file": [
+				"jobs.5-2.ma",
+				"jobs.csl"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism jobs.5-2.ma --tojani jobs.5-2.jani --prop jobs.csl --globalvars --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 117
+						}
+					],
+					"results": [
+						{
+							"property": "completiontime",
+							"value": {
+								"approx": 1.6,
+								"num": 8,
+								"den": 5
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "avgtime",
+							"value": {
+								"approx": 0.9,
+								"num": 9,
+								"den": 10
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "jobs.10-3.jani",
+			"original-file": [
+				"jobs.10-3.ma",
+				"jobs.csl"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism jobs.10-3.ma --tojani jobs.10-3.jani --prop jobs.csl --globalvars --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 10
+				},
+				{
+					"name": "K",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 16439
+						}
+					],
+					"results": [
+						{
+							"property": "completiontime",
+							"value": {
+								"approx": 2.4562007597384192,
+								"num": 4852666717,
+								"den": 1975680000
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "avgtime",
+							"value": {
+								"approx": 1.2857656675170068,
+								"num": 60482417,
+								"den": 47040000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "jobs.15-3.jani",
+			"original-file": [
+				"jobs.15-3.ma",
+				"jobs.csl"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism jobs.15-3.ma --tojani jobs.15-3.jani --prop jobs.csl --globalvars --standard-compliant"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 15
+				},
+				{
+					"name": "K",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1896568
+						}
+					],
+					"results": [
+						{
+							"property": "completiontime",
+							"value": {
+								"approx": 3.440139110688588,
+								"num": 17761818019843,
+								"den": 5163110400000
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "avgtime",
+							"value": {
+								"approx": 1.9523026690756022,
+								"num": 359998364809,
+								"den": 184396800000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.5-2.json",
+		"results/Storm.5-2.json",
+		"results/mcsta.10-3.json",
+		"results/Storm.10-3.json",
+		"results/mcsta.15-3.json",
+		"results/Storm.15-3.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-2.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.10-3.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.15-3.2018-10-03.json"
+		}
+	]
+}

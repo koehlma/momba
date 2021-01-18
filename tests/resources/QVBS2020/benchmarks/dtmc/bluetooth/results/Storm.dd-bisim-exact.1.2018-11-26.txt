@@ -1,0 +1,44 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Nov 26 21:40:18 2018
+Command line arguments: --jani bluetooth.jani --janiproperty --constants mrec=1 --engine dd --ddlib sylvan --bisimulation '--bisimulation:quot' sparse --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.036s.
+
+Time for model construction: 16.616s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (symbolic)
+States: 	3411945339 (4397 nodes)
+Transitions: 	5035263739 (14735 nodes)
+Reward Models:  time
+Variables: 	rows: 17 meta variables (56 DD variables), columns: 17 meta variables (56 DD variables)
+Labels: 	2
+   * deadlock -> 0 state(s) (1 nodes)
+   * init -> 536870912 state(s) (31 nodes)
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.471s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	372
+Transitions: 	372
+Reward Models:  time
+State Labels: 	3 labels
+   * (rec = 1) -> 1 item(s)
+   * init -> 184 item(s)
+   * deadlock -> 0 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "time": R[exp]{"time"}min=? [F (rec = 1)] ...
+Result (for initial states): 8229 (approx. 8229)
+Time for model checking: 0.002s.
+
+Performance statistics:
+  * peak memory usage: 3024MB
+  * CPU time: 806.506s
+  * wallclock time: 17.169s
+

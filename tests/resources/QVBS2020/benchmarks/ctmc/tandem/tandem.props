@@ -1,0 +1,17 @@
+const double T;
+const double t;
+
+// Long-run expected number of customers in the network
+"customers": R{"customers"}=? [ S ];
+
+// Expected number of customers in the network at time t
+"customers_T": R=? [ I=t ];
+
+// Probability first queue becomes full in t time units
+"first_queue": P=? [ F<=t sc=c ];
+
+// Probability network becomes full in T time units
+"network": P=? [ F<=T sc=c & sm=c & ph=2 ];
+
+// Probability of leaving a situation where the second queue is entirely populated within t time units
+"second_queue": P=? [ sm=c U<=t sm<c ];

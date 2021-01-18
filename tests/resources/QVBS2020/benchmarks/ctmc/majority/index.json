@@ -1,0 +1,92 @@
+{
+	"name": "Genetic Muller C-Element Majority Gate Design",
+	"short": "majority",
+	"type": "ctmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-26",
+	"version-history": [
+		{
+			"date": "2018-10-26",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Curtis Madsen <ckmadsen@bu.edu>",
+		"Zhen Zhang <zhen.zhang@usu.edu>",
+		"Nicholas Roehner <nicholas.roehner@raytheon.com>",
+		"Chris Winstead <chris.winstead@usu.edu>",
+		"Chris Myers <myers@ece.utah.edu>"
+	],
+	"submitter": "Zhen Zhang <zhen.zhang@usu.edu>",
+	"source": "http://doi.acm.org/10.1145/2644817",
+	"description": "This is a genetic circuit model for the Muller C-element (majority gate design). C-elements are critical state-holding gates commonly used by asynchronous designers to coordinate parallel processes. In a two-input C-element, its output goes high when both inputs are high, goes low when both inputs are low, and retains its previous state when the inputs are mixed. The inputs are IPTG and aTc and the output is GFP.",
+	"references": [],
+	"notes": "biological model",
+	"parameters": [
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time parameter for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "change_state",
+			"description": "Probability that the toggle switch changes state erroneously within `T´ time units.",
+			"type": "prob-reach-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "majority.jani",
+			"original-file": [
+				"majority.prism",
+				"majority.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "Storm 1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism majority.prism --tojani majority.jani -jprop --prismcompat --prop majority.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 2100
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 192000
+						}
+					],
+					"results": [
+						{
+							"property": "change_state",
+							"value":
+								{
+									"lower": 0.05429919306,
+									"upper": 0.05429919326
+								},
+							"note": "Storm"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.2100.2018-10-30.json",
+		{
+			"reference": true,
+			"file": "results/Storm.2100.2018-11-29.json"
+		}
+	]
+}

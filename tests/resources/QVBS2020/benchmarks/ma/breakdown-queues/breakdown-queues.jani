@@ -1,0 +1,1041 @@
+﻿{
+	"jani-version": 1,
+	"name": "breakdown-queues",
+	"type": "ma",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "rs?"
+		},
+		{
+			"name": "produce?"
+		},
+		{
+			"name": "fail!"
+		},
+		{
+			"name": "r1?"
+		},
+		{
+			"name": "produce!"
+		},
+		{
+			"name": "r2?"
+		},
+		{
+			"name": "fail?"
+		},
+		{
+			"name": "r1!"
+		},
+		{
+			"name": "r2!"
+		},
+		{
+			"name": "rs!"
+		},
+		{
+			"name": "produce"
+		},
+		{
+			"name": "fail"
+		},
+		{
+			"name": "rs"
+		},
+		{
+			"name": "r1"
+		},
+		{
+			"name": "r2"
+		}
+	],
+	"constants": [ {
+		"name": "K",
+		"type": "int"
+	} ],
+	"variables": [
+		{
+			"name": "buf",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "K"
+			},
+			"initial-value": 1
+		},
+		{
+			"name": "reset",
+			"type": "bool",
+			"initial-value": false
+		}
+	],
+	"properties": [
+		{
+			"name": "Min",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "buf",
+								"right": "K"
+							},
+							"right": {
+								"op": "¬",
+								"exp": "reset"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "Max",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "buf",
+								"right": "K"
+							},
+							"right": {
+								"op": "¬",
+								"exp": "reset"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "BufferedServer",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_2"
+				},
+				{
+					"name": "loc_9"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "on",
+				"type": "bool",
+				"initial-value": false
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": 3
+					},
+					"guard": {
+						"exp": "on"
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": false
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "rs?",
+					"guard": {
+						"exp": {
+							"op": "¬",
+							"exp": "on"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": 100
+					},
+					"guard": {
+						"exp": "on"
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "buf",
+								"value": {
+									"op": "max",
+									"left": 0,
+									"right": {
+										"op": "-",
+										"left": "buf",
+										"right": 1
+									}
+								}
+							},
+							{
+								"ref": "reset",
+								"value": {
+									"op": "∨",
+									"left": "reset",
+									"right": {
+										"op": "=",
+										"left": "buf",
+										"right": 1
+									}
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "produce?",
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "buf",
+							"value": {
+								"op": "min",
+								"left": "K",
+								"right": {
+									"op": "+",
+									"left": "buf",
+									"right": 1
+								}
+							},
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": 3
+					},
+					"guard": {
+						"exp": "on"
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": false
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "rs?",
+					"guard": {
+						"exp": {
+							"op": "¬",
+							"exp": "on"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": 100
+					},
+					"guard": {
+						"exp": "on"
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [
+							{
+								"ref": "buf",
+								"value": {
+									"op": "max",
+									"left": 0,
+									"right": {
+										"op": "-",
+										"left": "buf",
+										"right": 1
+									}
+								}
+							},
+							{
+								"ref": "reset",
+								"value": {
+									"op": "∨",
+									"left": "reset",
+									"right": {
+										"op": "=",
+										"left": "buf",
+										"right": 1
+									}
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "produce?",
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "buf",
+							"value": {
+								"op": "min",
+								"left": "K",
+								"right": {
+									"op": "+",
+									"left": "buf",
+									"right": 1
+								}
+							},
+							"index": 1
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_9",
+					"action": "fail!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				}
+			]
+		},
+		{
+			"name": "TypeOneSources",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_17"
+				},
+				{
+					"name": "loc_2"
+				},
+				{
+					"name": "loc_9"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "on",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": 5
+				},
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 2,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "-",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "r1?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "on",
+							"right": 5
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "+",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 3,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_17"
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "produce!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 2,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "-",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "r1?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "on",
+							"right": 5
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "+",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 3,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_17"
+					} ]
+				},
+				{
+					"location": "loc_9",
+					"action": "fail!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				}
+			]
+		},
+		{
+			"name": "TypeTwoSources",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_17"
+				},
+				{
+					"name": "loc_2"
+				},
+				{
+					"name": "loc_9"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "on",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": 5
+				},
+				"initial-value": 1
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 4,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "-",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "r2?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "on",
+							"right": 5
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "+",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 6,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_17"
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "produce!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 4,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "-",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "r2?",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "on",
+							"right": 5
+						}
+					},
+					"destinations": [ {
+						"location": "loc_2",
+						"assignments": [ {
+							"ref": "on",
+							"value": {
+								"op": "+",
+								"left": "on",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"rate": {
+						"exp": {
+							"op": "*",
+							"left": 6,
+							"right": "on"
+						}
+					},
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "on",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_17"
+					} ]
+				},
+				{
+					"location": "loc_9",
+					"action": "fail!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Repair",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_13"
+				},
+				{
+					"name": "loc_18"
+				},
+				{
+					"name": "loc_22"
+				},
+				{
+					"name": "loc_12"
+				},
+				{
+					"name": "loc_17"
+				},
+				{
+					"name": "loc_2"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "down",
+				"type": {
+					"kind": "bounded",
+					"base": "int",
+					"lower-bound": 0,
+					"upper-bound": 11
+				},
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "down",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_12",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "-",
+								"left": "down",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "fail?",
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "max",
+								"left": {
+									"op": "+",
+									"left": "down",
+									"right": 1
+								},
+								"right": 11
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_13",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "down",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "-",
+								"left": "down",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"rate": {
+						"exp": 2
+					},
+					"destinations": [ {
+						"location": "loc_22"
+					} ]
+				},
+				{
+					"location": "loc_22",
+					"action": "r1!",
+					"destinations": [ {
+						"location": "loc_13"
+					} ]
+				},
+				{
+					"location": "loc_22",
+					"action": "r2!",
+					"destinations": [ {
+						"location": "loc_13"
+					} ]
+				},
+				{
+					"location": "loc_22",
+					"action": "rs!",
+					"destinations": [ {
+						"location": "loc_13"
+					} ]
+				},
+				{
+					"location": "loc_12",
+					"rate": {
+						"exp": 2
+					},
+					"destinations": [ {
+						"location": "loc_17"
+					} ]
+				},
+				{
+					"location": "loc_12",
+					"action": "fail?",
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "max",
+								"left": {
+									"op": "+",
+									"left": "down",
+									"right": 1
+								},
+								"right": 11
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "fail?",
+					"destinations": [ {
+						"location": "loc_22",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "max",
+								"left": {
+									"op": "+",
+									"left": "down",
+									"right": 1
+								},
+								"right": 11
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "r1!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "r2!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_17",
+					"action": "rs!",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": "down",
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_12",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "-",
+								"left": "down",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "fail?",
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "down",
+							"value": {
+								"op": "max",
+								"left": {
+									"op": "+",
+									"left": "down",
+									"right": 1
+								},
+								"right": 11
+							}
+						} ]
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "BufferedServer"
+			},
+			{
+				"automaton": "TypeOneSources"
+			},
+			{
+				"automaton": "TypeTwoSources"
+			},
+			{
+				"automaton": "Repair"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					"produce?",
+					"produce!",
+					null,
+					null
+				],
+				"result": "produce"
+			},
+			{
+				"synchronise": [
+					"produce?",
+					null,
+					"produce!",
+					null
+				],
+				"result": "produce"
+			},
+			{
+				"synchronise": [
+					"fail!",
+					null,
+					null,
+					"fail?"
+				],
+				"result": "fail"
+			},
+			{
+				"synchronise": [
+					null,
+					"fail!",
+					null,
+					"fail?"
+				],
+				"result": "fail"
+			},
+			{
+				"synchronise": [
+					null,
+					null,
+					"fail!",
+					"fail?"
+				],
+				"result": "fail"
+			},
+			{
+				"synchronise": [
+					"rs?",
+					null,
+					null,
+					"rs!"
+				],
+				"result": "rs"
+			},
+			{
+				"synchronise": [
+					null,
+					"r1?",
+					null,
+					"r1!"
+				],
+				"result": "r1"
+			},
+			{
+				"synchronise": [
+					null,
+					null,
+					"r2?",
+					"r2!"
+				],
+				"result": "r2"
+			}
+		]
+	}
+}

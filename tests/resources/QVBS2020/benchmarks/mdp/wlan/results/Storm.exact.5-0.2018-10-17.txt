@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 07:03:45 2018
+Command line arguments: --jani wlan.5.jani --janiproperty --constants COL=0 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/wlan
+
+Time for model construction: 156.669s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	1295218
+Transitions: 	2929960
+Choices: 	1646074
+Reward Models:  time, collisions, cost
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (col = 0) -> 1295218 item(s)
+   * (s2 = 12) -> 5442 item(s)
+   * (s1 = 12) -> 5442 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collisions": Pmax=? [F (col = 0)] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 3.584s.
+
+Model checking property "cost_max": R[exp]{"cost"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 26677467903150239524795325/117368309888902496256 (approx. 227297.027)
+Time for model checking: 13.231s.
+
+Model checking property "cost_min": R[exp]{"cost"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 7625 (approx. 7625)
+Time for model checking: 14.887s.
+
+Model checking property "num_collisions": R[exp]{"collisions"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 5508217626823953517/4584682012849209344 (approx. 1.201439404)
+Time for model checking: 11.451s.
+
+Model checking property "sent": Pmin>=1 [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): true
+
+Time for model checking: 3.948s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 79796881563110097825/20547673299877888 (approx. 3883.499625)
+Time for model checking: 13.207s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1325 (approx. 1325)
+Time for model checking: 14.513s.
+
+Performance statistics:
+  * peak memory usage: 2058MB
+  * CPU time: 233.042s
+  * wallclock time: 234.806s

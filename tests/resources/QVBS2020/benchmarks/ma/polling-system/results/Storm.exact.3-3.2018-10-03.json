@@ -1,0 +1,127 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../polling-system.jani",
+	"version": 2,
+	"log": "Storm.exact.3-3.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "JOB_TYPES",
+			"value": 3
+		},
+		{
+			"name": "C",
+			"value": 3
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"preprocessing": [
+		{
+			"tool": "moconv",
+			"version": "3.0.86",
+			"url": "http://www.modestchecker.net/",
+			"note": "Removed discrete nondeterministic expressions",
+			"command": "moconv.exe polling-system.jani -O polling-system.3-3_removed-disc-nondet.jani --overwrite --remove-disc-nondet -E JOB_TYPES=3,C=3",
+			"time": 0.7674150466918945
+		}
+	],
+	"command": "storm --jani polling-system.3-3_removed-disc-nondet.jani --janiproperty --exact --timemem",
+	"time": 51.9154150466919,
+	"memory": 125829120,
+	"property-times": [
+		{
+			"name": "PminBothFullIsOne",
+			"time": 0.031
+		},
+		{
+			"name": "TminBothFull",
+			"time": 48.662
+		},
+		{
+			"name": "TmaxBothFull",
+			"time": 1.093
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.291
+				},
+				{
+					"name": "states",
+					"value": 32409
+				},
+				{
+					"name": "branches",
+					"value": 119892
+				},
+				{
+					"name": "transitions",
+					"value": 112046
+				},
+				{
+					"name": "markovian-states",
+					"value": 26168
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "PminBothFullIsOne",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.031
+				}
+			],
+			"value": 1.0
+		},
+		{
+			"property": "TminBothFull",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 48.662
+				}
+			],
+			"value": {
+				"approx": 10.9591064453125,
+				"num": 89777,
+				"den": 8192
+			}
+		},
+		{
+			"property": "TmaxBothFull",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.093
+				}
+			],
+			"value": {
+				"approx": 6297835.465501567,
+				"num": 656520718285914541189633,
+				"den": 104245454153608704
+			}
+		}
+	]
+}

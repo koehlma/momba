@@ -1,0 +1,339 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (N - 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "N",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "p",
+                                "exp": "p"
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (N + 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "N",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - p)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "-",
+                                    "right": "p"
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(x = N)",
+                        "exp": {
+                            "left": "x",
+                            "op": "=",
+                            "right": "N"
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (x - 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- N",
+                                    "ref": "x",
+                                    "value": "N"
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((x > 0) & (x < N))",
+                        "exp": {
+                            "left": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": "N"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (x + 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- N",
+                                    "ref": "x",
+                                    "value": "N"
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((x > N) & (x < (2 * N)))",
+                        "exp": {
+                            "left": {
+                                "left": "x",
+                                "op": ">",
+                                "right": "N"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": {
+                                    "left": 2,
+                                    "op": "*",
+                                    "right": "N"
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((x = 0) | (x = (2 * N)))",
+                        "exp": {
+                            "left": {
+                                "left": "x",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∨",
+                            "right": {
+                                "left": "x",
+                                "op": "=",
+                                "right": {
+                                    "left": 2,
+                                    "op": "*",
+                                    "right": "N"
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "Target <- (x = 0)",
+                            "ref": "Target",
+                            "value": {
+                                "left": "x",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        {
+                            "comment": "Done <- ((x = 0) | (x = (2 * N)))",
+                            "ref": "Done",
+                            "value": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∨",
+                                "right": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": {
+                                        "left": 2,
+                                        "op": "*",
+                                        "right": "N"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "main",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "N",
+            "type": "int"
+        },
+        {
+            "name": "p",
+            "type": "real"
+        },
+        {
+            "name": "q",
+            "type": "real",
+            "value": 0.5
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "haddad-monmege",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": "Target"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "target"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "steps"
+                    ],
+                    "exp": 1,
+                    "op": "Emin",
+                    "reach": "Done"
+                }
+            },
+            "name": "exp_steps"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "main"
+            }
+        ]
+    },
+    "type": "dtmc",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "Target",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "Done",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": "N",
+            "name": "x",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": {
+                    "left": 2,
+                    "op": "*",
+                    "right": "N"
+                }
+            }
+        }
+    ]
+}

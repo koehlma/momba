@@ -21,9 +21,19 @@ from momba.model import (
     types,
 )
 
+from .dump_model import ModelFeature
+
 
 class InvalidJANIError(Exception):
     pass
+
+
+class UnsupportedJANIError(Exception):
+    unsupported_features: t.AbstractSet[ModelFeature]
+
+    def __init__(self, unsupported_features: t.AbstractSet[ModelFeature]):
+        self.unsupported_features = unsupported_features
+        super().__init__(f"unsupported JANI features {self.unsupported_features!r}")
 
 
 _TYPE_MAP = {
@@ -371,7 +381,8 @@ def _property(jani_property: t.Any) -> properties.Property:
         )
     if jani_property["op"] in _STATE_SELECTORS:
         return _STATE_SELECTORS[jani_property["op"]]
-    raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
+    return _expression(jani_property)
+    # raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
 
 
 def _type(typ: t.Any) -> types.Type:
@@ -606,6 +617,17 @@ def load_model(source: JANIModel) -> model.Network:
         jani_model = json.loads(source.decode("utf-8"))
     else:
         jani_model = json.loads(source)
+    features = {ModelFeature(feature) for feature in jani_model.get("features", [])}
+    unsupported_features = features.difference(
+        {
+            ModelFeature.ARRAYS,
+            ModelFeature.DERIVED_OPERATORS,
+            ModelFeature.NONDET_EXPRESSIONS,
+            ModelFeature.TRIGONOMETRIC_FUNCTIONS,
+        }
+    )
+    if unsupported_features:
+        raise UnsupportedJANIError(unsupported_features)
     _check_fields(
         jani_model,
         required={"jani-version", "name", "type", "automata", "system"},
@@ -621,6 +643,7 @@ def load_model(source: JANIModel) -> model.Network:
         },
         unsupported={"comment"},
     )
+
     network = model.Network(model.Context(model.ModelType[jani_model["type"].upper()]))
     if "variables" in jani_model:
         for jani_declaration in jani_model["variables"]:

@@ -1,0 +1,522 @@
+{"jani-version":1,
+"name":"sms.1-false.jani",
+"type":"ma",
+"variables":[{"name":"marked","type":"bool","initial-value":false}],
+"actions":[
+	{"name":"ACTIVATE !0 !FALSE"},
+	{"name":"ACTIVATE !0 !TRUE"},
+	{"name":"ACTIVATE !1 !TRUE"},
+	{"name":"ACTIVATE !2 !TRUE"},
+	{"name":"ACTIVATE !3 !TRUE"},
+	{"name":"ACTIVATE !4 !TRUE"},
+	{"name":"ACTIVATE !5 !TRUE"},
+	{"name":"ACTIVATE !6 !TRUE"},
+	{"name":"DEACTIVATE !0 !FALSE"},
+	{"name":"DEACTIVATE !1 !TRUE"},
+	{"name":"DEACTIVATE !2 !TRUE"},
+	{"name":"DEACTIVATE !3 !TRUE"},
+	{"name":"DEACTIVATE !4 !TRUE"},
+	{"name":"DEACTIVATE !5 !TRUE"},
+	{"name":"DEACTIVATE !6 !TRUE"},
+	{"name":"FAIL !0"},
+	{"name":"FAIL !1"},
+	{"name":"FAIL !2"},
+	{"name":"FAIL !3"},
+	{"name":"FAIL !4"},
+	{"name":"FAIL !5"},
+	{"name":"FAIL !6"},
+	{"name":"exit"},
+	{"name":"τ"},
+	{"name":"mark"},
+	{"name":"unmark"}
+	],
+"automata":[
+	{"name":"aut0",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "action":"ACTIVATE !0 !TRUE"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"exit"
+		}
+	]},
+	{"name":"aut1",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !6"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !5"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !6"
+		}
+	]},
+	{"name":"aut2",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		}
+	]},
+	{"name":"aut3",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		}
+	]},
+	{"name":"aut4",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":1.73e-05}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut5",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.0042}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut6",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l0",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !4"
+		},
+		{"location":"l1",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !0"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !1"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !2"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !3"
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l2"}],
+		 "action":"FAIL !4"
+		}
+	]},
+	{"name":"aut7",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.00931}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut8",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.00864}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut9",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":8.95e-06}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut10",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":9.93e-05}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut11",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":4.37e-05}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut12",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":5.46e-08}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"aut13",
+	 "locations":[{"name":"l0"},{"name":"l1"},{"name":"l2"}],
+	 "initial-locations":["l0"],
+	 "edges":[
+		{"location":"l0",
+		 "destinations":[{"location":"l2"}],
+		 "rate":{"exp":0.00417}
+		},
+		{"location":"l2",
+		 "destinations":[{"location":"l1"}],
+		 "action":"FAIL !0"
+		}
+	]},
+	{"name":"monitor",
+	 "locations":[{"name":"l"}],
+	 "initial-locations":["l"],
+	 "edges":[
+		{"location":"l",
+		 "action":"mark",
+		 "destinations":[{
+			"location":"l",
+			"assignments":[{"ref":"marked", "value":true}]
+			}]},
+		{"location":"l",
+		 "action":"unmark",
+		 "destinations":[{
+			"location":"l",
+			"assignments":[{"ref":"marked", "value":false}]
+			}]
+		}]
+	}
+],
+"system":{"elements":[
+	{"automaton":"aut0"},
+	{"automaton":"aut1"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut2"},
+	{"automaton":"aut3"},
+	{"automaton":"aut4"},
+	{"automaton":"aut5"},
+	{"automaton":"aut6"},
+	{"automaton":"aut7"},
+	{"automaton":"aut8"},
+	{"automaton":"aut9"},
+	{"automaton":"aut9"},
+	{"automaton":"aut10"},
+	{"automaton":"aut11"},
+	{"automaton":"aut12"},
+	{"automaton":"aut13"},
+	{"automaton":"monitor"}
+	],
+	"syncs":[
+		{"synchronise":["ACTIVATE !0 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !1 !TRUE","ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !1 !TRUE","DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !2 !TRUE",null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !2 !TRUE",null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !3 !TRUE",null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !3 !TRUE",null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !4 !TRUE",null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !4 !TRUE",null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !5 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !5 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"ACTIVATE !6 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"DEACTIVATE !6 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !1 !TRUE",null,null,null,null,"ACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !1 !TRUE",null,null,null,null,"DEACTIVATE !0 !FALSE",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !2 !TRUE",null,null,null,null,null,"ACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !2 !TRUE",null,null,null,null,null,"DEACTIVATE !0 !FALSE",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !3 !TRUE",null,null,null,null,null,null,"ACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !3 !TRUE",null,null,null,null,null,null,"DEACTIVATE !0 !FALSE",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"ACTIVATE !4 !TRUE",null,null,null,null,null,null,null,"ACTIVATE !0 !FALSE", null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"DEACTIVATE !4 !TRUE",null,null,null,null,null,null,null,"DEACTIVATE !0 !FALSE", null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, "mark"],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !1","FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !2",null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !3",null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !4",null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !5",null,null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,"FAIL !6",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"FAIL !1",null,null,null,null,null,"FAIL !0",null,null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,"FAIL !2",null,null,null,null,null,null,"FAIL !0",null,null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !1",null,null,null,null,"FAIL !0",null,null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !2",null,null,null,null,null,"FAIL !0",null,null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !3",null,null,null,null,null,null,"FAIL !0",null, null],
+		 "result":"τ"},
+		{"synchronise":[null,null,null,null,null,null,null,null,null,"FAIL !4",null,null,null,null,null,null,null,"FAIL !0", null],
+		 "result":"τ"}
+	]},
+"properties": [
+	{"name":"Unreliability",
+	 "expression":{
+		"fun":"max",
+		"op":"filter",
+		"states":{"op":"initial"},
+		"values":{
+			"op":"Pmax",
+			"exp":{"op":"F", "exp":"marked", "time-bounds":{"upper":1.0}}
+			}
+		}
+	},
+	{"name":"Unavailability",
+	 "expression":{
+		"fun":"max",
+		"op":"filter",
+		"states":{"op":"initial"},
+		"values":{
+			"op":"Smax",
+			"exp":"marked"
+			}
+		}
+	}
+]
+}

@@ -1,0 +1,98 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../breakdown-queues.jani",
+	"version": 2,
+	"log": "Storm.exact.8.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 8
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani breakdown-queues.jani --janiproperty --constants K=8 --exact --timemem",
+	"time": 1.569,
+	"memory": 67108864,
+	"property-times": [
+		{
+			"name": "Min",
+			"time": 0.179
+		},
+		{
+			"name": "Max",
+			"time": 0.183
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.125
+				},
+				{
+					"name": "states",
+					"value": 31620
+				},
+				{
+					"name": "branches",
+					"value": 108080
+				},
+				{
+					"name": "transitions",
+					"value": 58316
+				},
+				{
+					"name": "markovian-states",
+					"value": 27338
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "Min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.179
+				}
+			],
+			"value": {
+				"approx": 0.02800482792035489,
+				"num": 211962389022872416590640932031150430396575352443801212285314325840132940337949197388305063968343085736196153387006480746944918893472739766650177,
+				"den": 7568780269805219482966004397195041050586444075113392697945721648458188034273031103280009757146367502735099844731698337771746718750000000000000000
+			}
+		},
+		{
+			"property": "Max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.183
+				}
+			],
+			"value": {
+				"approx": 0.23177396051702714,
+				"num": 951474520762818913895062485864596365038594668535475255512430598367545336884676342940085117909512769610067903472340397019245470281753,
+				"den": 4105182992258180765059195470901518583136077718821391784009239719983887982015952967402774224593377646381593308519971308521390080000000
+			}
+		}
+	]
+}

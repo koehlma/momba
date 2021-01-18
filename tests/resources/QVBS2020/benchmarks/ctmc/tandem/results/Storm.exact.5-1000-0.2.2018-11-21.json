@@ -1,0 +1,79 @@
+{
+	"file": "../tandem.jani",
+	"version": 1,
+	"date": "2018-11-21",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.5-1000-0.2.2018-11-21.txt",
+	"open-parameter-values": [
+		{
+			"name": "c",
+			"value": 5
+		},
+		{
+			"name": "T",
+			"value": 1000
+		},
+		{
+			"name": "t",
+			"value": 0.2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani tandem.jani --janiproperty customers --constants c=5,T=1000,t=0.2 --exact --timemem",
+	"time": 0.24613690376281738,
+	"memory": 48234496,
+	"property-times": [
+		{
+			"name": "customers",
+			"time": 0.056
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.063
+				},
+				{
+					"name": "states",
+					"value": 66
+				},
+				{
+					"name": "branches",
+					"value": 189
+				}
+			]
+		},
+		{
+			"property": "customers",
+			"value": {
+				"num": 16557934983059838031215455023655274836602871190669283785615964212,
+				"approx": 5.679249959967679,
+				"den": 2915514390064647008533483983529316230817441799285053612509393093
+			},
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.056
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,65 @@
+toplevel "System";
+"System" or "triadA" "triadB" "triadC" "triadD";
+
+"triadA" 2of3 "aA" "bA" "cA";
+"aA" or "NEA" "aSA";
+"aSA" csp "TAA" "SA";
+"bA" or "NEB" "bSA";
+"bSA" csp "TAB" "SA";
+"cA" or "NEC" "cSA";
+"cSA" csp "TAC" "SA";
+"SA" or "TAS" "NED";
+
+"triadB" 2of3 "aB" "bB" "cB";
+"aB" or "NEA" "aSB";
+"aSB" csp "TBA" "SB";
+"bB" or "NEB" "bSB";
+"bSB" csp "TBB" "SB";
+"cB" or "NEC" "cSB";
+"cSB" csp "TBC" "SB";
+"SB" or "TBS" "NED";
+
+"triadC" 2of3 "aC" "bC" "cC";
+"aC" or "NEA" "aSC";
+"aSC" csp "TCA" "SC";
+"bC" or "NEB" "bSC";
+"bSC" csp "TCB" "SC";
+"cC" or "NEC" "cSC";
+"cSC" csp "TCC" "SC";
+"SC" or "TCS" "NED";
+
+"triadD" 2of3 "aD" "bD" "cD";
+"aD" or "NEA" "aSD";
+"aSD" csp "TDA" "SD";
+"bD" or "NEB" "bSD";
+"bSD" csp "TDB" "SD";
+"cD" or "NEC" "cSD";
+"cSD" csp "TDC" "SD";
+"SD" or "TDS" "NED";
+
+"NEA" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NEB" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NEC" lambda=0.000017 dorm=1 phases=2 interval=1;
+"NED" lambda=0.000017 dorm=1 phases=2 interval=1;
+
+"TAA" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAB" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAC" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TAS" lambda=0.00011 dorm=0 phases=2 interval=1;
+
+"TBA" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TBB" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TBC" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TBS" lambda=0.00011 dorm=0 phases=2 interval=1;
+
+"TCA" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TCB" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TCC" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TCS" lambda=0.00011 dorm=0 phases=2 interval=1;
+
+"TDA" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TDB" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TDC" lambda=0.00011 dorm=0 phases=2 interval=1;
+"TDS" lambda=0.00011 dorm=0 phases=2 interval=1;
+
+"I" 2insp4 "NEA" "NEB" "NEC" "NED" "TAA" "TAB" "TAC" "TAS" "TBA" "TBB" "TBC" "TBS" "TCA" "TCB" "TCC" "TCS" "TDA" "TDB" "TDC" "TDS";

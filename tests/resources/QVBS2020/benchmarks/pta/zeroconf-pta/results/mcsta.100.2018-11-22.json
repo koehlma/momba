@@ -1,0 +1,80 @@
+﻿{
+	"file": "../zeroconf-pta.jani",
+	"version": 1,
+	"date": "2018-11-22",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "T", "value": 100 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"variant": [],
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe zeroconf-pta.jani -S Memory -E \"T=100\" -O mcsta.100.2018-11-22.json Json",
+	"time": 1.058,
+	"memory": 42094592,
+	"property-times": [
+		{ "name": "deadline", "time": 0.042 },
+		{ "name": "incorrect", "time": 0.004 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 16, "unit": "B" },
+				{ "name": "States", "value": 498 },
+				{ "name": "Transitions", "value": 616 },
+				{ "name": "Branches", "value": 641 },
+				{ "name": "Rate", "value": 11066.666666666668 },
+				{ "name": "Time", "value": 0.063, "unit": "s" }
+			]
+		},
+		{
+			"property": "deadline",
+			"value": 0.0006516050000000002,
+			"values": [
+				{ "name": "Bounds", "value": "[0.000651605, 1]" },
+				{ "name": "CDF", "value": "{ (0, 0), ..., (99, 0), (100, 0.000651605) }" },
+				{ "name": "Time", "value": 0.042, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 203 },
+						{ "name": "Time", "value": 0.02, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "incorrect",
+			"value": 0.0013015131411825561,
+			"values": [
+				{ "name": "Bounds", "value": "[0.00130151314118256, 1]" },
+				{ "name": "Time", "value": 0.004, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.2543809898892832E-07 },
+						{ "name": "Iterations", "value": 26 },
+						{ "name": "Time", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,61 @@
+﻿{
+	"file": "../crowds.jani",
+	"version": 1,
+	"date": "2018-11-21",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "TotalRuns", "value": 4 },
+		{ "name": "CrowdSize", "value": 5 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"variant": [],
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe crowds.jani -S Memory -E \"TotalRuns=4, CrowdSize=5\" -O mcsta.4-5.2018-11-21.json Json",
+	"time": 1.022,
+	"memory": 45522944,
+	"property-times": [
+		{ "name": "positive", "time": 0.034 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 40, "unit": "B" },
+				{ "name": "States", "value": 3190 },
+				{ "name": "Transitions", "value": 3190 },
+				{ "name": "Branches", "value": 5500 },
+				{ "name": "Rate", "value": 63800 },
+				{ "name": "Time", "value": 0.068, "unit": "s" }
+			]
+		},
+		{
+			"property": "positive",
+			"value": 0.096199107383380986,
+			"values": [
+				{ "name": "Bounds", "value": "[0.096199107383381, 1]" },
+				{ "name": "Time", "value": 0.034, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 7.6713932984432443E-07 },
+						{ "name": "Iterations", "value": 58 },
+						{ "name": "Time", "value": 0.015, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

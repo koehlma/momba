@@ -1,0 +1,220 @@
+{
+	"name": "Erlang Stages",
+	"short": "erlang",
+	"type": "ma",
+	"original": "Modest",
+	"version": 2,
+	"date": "2018-10-24",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-13",
+			"notes": "Initial version."
+		},
+		{
+			"version": 2,
+			"date": "2018-10-24",
+			"notes": "Added properties `PmaxReachBound´ and `SmaxNotReach´."
+		}
+	],
+	"author": "Yuliya Butkova <butkova@depend.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/978-3-642-12002-2_5",
+	"description": "A simple interactive Markov chain model where the goal state can be reached via a path with an Erlang(`K´, `R´)-distributed delay. The original model was translated from a MAPA file.",
+	"notes": "scalable sanity check model",
+	"references": [],
+	"parameters": [
+		{
+			"name": "K",
+			"kind": "open",
+			"description": "The shape parameter of the Erlang distribution",
+			"type": "positive integer"
+		},
+		{
+			"name": "R",
+			"kind": "open",
+			"description": "The rate parameter of the Erlang distribution",
+			"type": "positive real number"
+		},
+		{	"name": "TIME_BOUND", 
+			"kind": "open", 
+			"description": "The time bound for property PminReachBound", 
+			"type": "positive real number" 
+		}
+	],
+	"files": [
+		{
+			"file": "erlang.jani",
+			"original-file": "erlang.modest",
+			"conversion": {
+				"tool": "moconv",
+				"version": "3.0.90",
+				"url": "http://www.modestchecker.net/",
+				"command": "moconv.exe erlang.modest -O erlang.jani"
+			},
+			"open-parameter-values": [
+				{
+					"values": [
+						{ "name": "K", "value": 10 },
+						{ "name": "R", "value": 10 },
+						{ "name": "TIME_BOUND", "value": 5 }
+					],
+					"states": [
+						{
+							"number": 29,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 67
+						}
+					],
+					"results": [
+						{
+							"property": "PminReach",
+							"value": {
+								"approx": 0.5,
+								"num": 1,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "TminReach",
+							"value": 2,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{ "name": "K", "value": 5000 },
+						{ "name": "R", "value": 10 },
+						{ "name": "TIME_BOUND", "value": 5 }
+					],
+					"states": [
+						{
+							"number": 10009,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 20027
+						}
+					],
+					"results": [
+						{
+							"property": "PminReach",
+							"value": {
+								"approx": 0.5,
+								"num": 1,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "TminReach",
+							"value": 501,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{ "name": "K", "value": 5000 },
+						{ "name": "R", "value": 100 },
+						{ "name": "TIME_BOUND", "value": 5 }
+					],
+					"states": [
+						{ "number": 10009, "note": "mcsta" }
+					]
+				},
+				{
+					"values": [
+						{ "name": "K", "value": 5000 },
+						{ "name": "R", "value": 100 },
+						{ "name": "TIME_BOUND", "value": 50 }
+					],
+					"states": [
+						{
+							"number": 10009,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 20027
+						}
+					],
+					"results": [
+						{
+							"property": "PminReach",
+							"value": {
+								"approx": 0.5,
+								"num": 1,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "TminReach",
+							"value": 51,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "PminReach",
+			"type": "prob-reach",
+			"description": "The minimum probability to reach the goal state."
+		},
+		{
+			"name": "TminReach",
+			"type": "exp-time",
+			"description": "The minimum expected time to reach the goal state."
+		},
+		{
+			"name": "PmaxReachBound",
+			"type": "prob-reach-time-bounded",
+			"description": "The minimum probability to reach the goal state within the TIME-BOUND."
+		},
+		{
+			"name": "SmaxNotReach",
+			"description": "Long-run probability that goal is not reached.",
+			"type": "steady-state-prob"
+		}
+	],
+	"results": [
+		{
+			"reference": false,
+			"file": "results/mcsta.10-10-5.2018-10-24.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.5000-10-5.2018-10-24.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.5000-100-5.2018-10-24.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.5000-100-50.2018-10-24.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.10-10.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5000-10.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5000-100.2018-10-03.json"
+		}
+	]
+}

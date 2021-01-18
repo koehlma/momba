@@ -1,0 +1,144 @@
+{
+	"name": "Polling System",
+	"short": "polling-system",
+	"type": "ma",
+	"original": "Modest",
+	"version": 3,
+	"date": "2018-10-24",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-14",
+			"notes": "Initial version."
+		},
+		{
+			"version": 2,
+			"date": "2018-08-22",
+			"notes": "Replaced query property `PminBothFull´ by probability-one assertion property `PminBothFullIsOne´."
+		},
+		{
+			"version": 3,
+			"date": "2018-10-24",
+			"notes": "Added properties `PmaxBothFullBound´ and `SmaxBothFull´."
+		}
+	],
+	"author": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/978-3-642-40196-1_5",
+	"description": "A polling system with two stations and a server. The station delivers jobs out of its queue with capacity `C´ to the server which completes the tasks. Each job is of one of `JOB_TYPES´ different types. The original model was translated from a MAPA file.",
+	"notes": "small nondeterministic queueing system",
+	"references": [],
+	"parameters": [
+		{
+			"name": "JOB_TYPES",
+			"kind": "open",
+			"description": "Number of job types",
+			"type": "positive integer"
+		},
+		{
+			"name": "C",
+			"kind": "open",
+			"description": "Capacity of each queue",
+			"type": "positive integer"
+		},
+		{ 
+			"name": "TIME_BOUND", 
+			"kind": "open", 
+			"description": "The time bound for property PminBothFullBound", 
+			"type": "positive real number" 
+		}
+	],
+	"files": [
+		{
+			"file": "polling-system.jani",
+			"original-file": "polling-system.modest",
+			"conversion": {
+				"tool": "moconv",
+				"version": "3.0.90",
+				"url": "http://www.modestchecker.net/",
+				"command": "moconv.exe polling-system.modest -O polling-system.jani"
+			},
+			"open-parameter-values": [
+				{
+					"values": [
+						{ "name": "JOB_TYPES", "value": 3 },
+						{ "name": "C", "value": 3 },
+						{ "name": "TIME_BOUND", "value": 5 }
+					],
+					"states": [
+						{
+							"number": 10934,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 32409
+						}
+					],
+					"results": [
+						{
+							"property": "PminBothFullIsOne",
+							"value": 1.0,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "TminBothFull",
+							"value": {
+								"approx": 10.9591064453125,
+								"num": 89777,
+								"den": 8192
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "TmaxBothFull",
+							"value": {
+								"approx": 6297835.465501567,
+								"num": 656520718285914541189633,
+								"den": 104245454153608704
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "PminBothFullIsOne",
+			"type": "prob-reach",
+			"description": "The minimum probability that both queues are full is one."
+		},
+		{
+			"name": "TminBothFull",
+			"type": "exp-time",
+			"description": "The minimum expected time until both queues are full."
+		},
+		{
+			"name": "TmaxBothFull",
+			"type": "exp-time",
+			"description": "The maximum expected time until both queues are full."
+		},
+		{
+			"name": "PmaxBothFullBound",
+			"type": "prob-reach-time-bounded",
+			"description": "The maximum probability that both queues are full within the TIME-BOUND."
+		},
+		{
+			"name": "SmaxBothFull",
+			"description": "Long-run probability that both queues are full.",
+			"type": "steady-state-prob"
+		}
+	],
+	"results": [
+		{
+			"reference": false,
+			"file": "results/mcsta.3-3-5.2018-10-24.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-3.2018-10-03.json"
+		}
+	]
+}

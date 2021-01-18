@@ -1,0 +1,59 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Oct 29 12:20:26 2018
+Command line arguments: --jani echoring.jani --janiproperty --constants ITERATIONS=2 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/echoring
+
+Time for model input parsing: 0.154s.
+
+Time for model construction: 7.158s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	109515
+Transitions: 	197153
+Choices: 	178396
+Reward Models:  none
+State Labels: 	7 labels
+   * deadlock -> 867 item(s)
+   * failed -> 8433 item(s)
+   * (iter <= 2) -> 62250 item(s)
+   * init -> 1 item(s)
+   * is_offline_1 -> 4928 item(s)
+   * is_offline_2 -> 3007 item(s)
+   * is_offline_3 -> 1228 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "MinFailed": Pmin=? [F (failed & (iter <= 2))] ...
+Result (for initial states): 14764129867773/50000000000000000000 (approx. 2.952825974e-07)
+Time for model checking: 0.350s.
+
+Model checking property "MinOffline1": Pmin=? [F (((is_offline_1 & !(is_offline_2)) & !(is_offline_3)) & (iter <= 2))] ...
+Result (for initial states): 12051845027829/50000000000000000000 (approx. 2.410369006e-07)
+Time for model checking: 0.302s.
+
+Model checking property "MaxOffline1": Pmax=? [F (((is_offline_1 & !(is_offline_2)) & !(is_offline_3)) & (iter <= 2))] ...
+Result (for initial states): 12051845027829/50000000000000000000 (approx. 2.410369006e-07)
+Time for model checking: 0.327s.
+
+Model checking property "MinOffline2": Pmin=? [F (((!(is_offline_1) & is_offline_2) & !(is_offline_3)) & (iter <= 2))] ...
+Result (for initial states): 2785589832249/100000000000000000000 (approx. 2.785589832e-08)
+Time for model checking: 0.218s.
+
+Model checking property "MaxOffline2": Pmax=? [F (((!(is_offline_1) & is_offline_2) & !(is_offline_3)) & (iter <= 2))] ...
+Result (for initial states): 2785589832249/100000000000000000000 (approx. 2.785589832e-08)
+Time for model checking: 0.224s.
+
+Model checking property "MinOffline3": Pmin=? [F (((!(is_offline_1) & !(is_offline_2)) & is_offline_3) & (iter <= 2))] ...
+Result (for initial states): 2638979847639/100000000000000000000 (approx. 2.638979848e-08)
+Time for model checking: 0.250s.
+
+Model checking property "MaxOffline3": Pmax=? [F (((!(is_offline_1) & !(is_offline_2)) & is_offline_3) & (iter <= 2))] ...
+Result (for initial states): 2638979847639/100000000000000000000 (approx. 2.638979848e-08)
+Time for model checking: 0.264s.
+
+Performance statistics:
+  * peak memory usage: 110MB
+  * CPU time: 9.362s
+  * wallclock time: 9.312s

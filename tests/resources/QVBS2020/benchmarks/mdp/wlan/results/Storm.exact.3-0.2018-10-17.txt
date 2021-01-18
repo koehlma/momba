@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 07:02:20 2018
+Command line arguments: --jani wlan.3.jani --janiproperty --constants COL=0 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/wlan
+
+Time for model construction: 12.837s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	96302
+Transitions: 	204576
+Choices: 	123730
+Reward Models:  time, collisions, cost
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (col = 0) -> 96302 item(s)
+   * (s2 = 12) -> 1324 item(s)
+   * (s1 = 12) -> 1324 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collisions": Pmax=? [F (col = 0)] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.241s.
+
+Model checking property "cost_max": R[exp]{"cost"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 30509216674858475/134226116608 (approx. 227297.1717)
+Time for model checking: 1.203s.
+
+Model checking property "cost_min": R[exp]{"cost"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 7625 (approx. 7625)
+Time for model checking: 1.119s.
+
+Model checking property "num_collisions": R[exp]{"collisions"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 5039517997/4194566144 (approx. 1.20143963)
+Time for model checking: 0.966s.
+
+Model checking property "sent": Pmin>=1 [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): true
+
+Time for model checking: 0.255s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 130322306383225/33558626304 (approx. 3883.421961)
+Time for model checking: 1.128s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1325 (approx. 1325)
+Time for model checking: 1.102s.
+
+Performance statistics:
+  * peak memory usage: 218MB
+  * CPU time: 18.989s
+  * wallclock time: 19.127s

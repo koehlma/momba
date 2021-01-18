@@ -1,0 +1,385 @@
+{
+    "actions": [],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p1 <- (p1 + 1)",
+                                    "ref": "p1",
+                                    "value": {
+                                        "left": "p1",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((30 / (1 + (p2 ^ 10))) / (30 / (1 + (p2 ^ 10))))",
+                                "exp": {
+                                    "left": {
+                                        "left": 30,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "+",
+                                            "right": {
+                                                "left": "p2",
+                                                "op": "pow",
+                                                "right": 10
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 30,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "+",
+                                            "right": {
+                                                "left": "p2",
+                                                "op": "pow",
+                                                "right": 10
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "(30 / (1 + (p2 ^ 10)))",
+                        "exp": {
+                            "left": 30,
+                            "op": "/",
+                            "right": {
+                                "left": 1,
+                                "op": "+",
+                                "right": {
+                                    "left": "p2",
+                                    "op": "pow",
+                                    "right": 10
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p2 <- (p2 + 1)",
+                                    "ref": "p2",
+                                    "value": {
+                                        "left": "p2",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((30 / (1 + (p1 ^ 10))) / (30 / (1 + (p1 ^ 10))))",
+                                "exp": {
+                                    "left": {
+                                        "left": 30,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "+",
+                                            "right": {
+                                                "left": "p1",
+                                                "op": "pow",
+                                                "right": 10
+                                            }
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 30,
+                                        "op": "/",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "+",
+                                            "right": {
+                                                "left": "p1",
+                                                "op": "pow",
+                                                "right": 10
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "(30 / (1 + (p1 ^ 10)))",
+                        "exp": {
+                            "left": 30,
+                            "op": "/",
+                            "right": {
+                                "left": 1,
+                                "op": "+",
+                                "right": {
+                                    "left": "p1",
+                                    "op": "pow",
+                                    "right": 10
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p1 <- (p1 - 1)",
+                                    "ref": "p1",
+                                    "value": {
+                                        "left": "p1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 * p1) / (1 * p1))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "*",
+                                        "right": "p1"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "*",
+                                        "right": "p1"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(p1 > 0)",
+                        "exp": {
+                            "left": "p1",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 * p1)",
+                        "exp": {
+                            "left": 1,
+                            "op": "*",
+                            "right": "p1"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "p2 <- (p2 - 1)",
+                                    "ref": "p2",
+                                    "value": {
+                                        "left": "p2",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 * p2) / (1 * p2))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "*",
+                                        "right": "p2"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "*",
+                                        "right": "p2"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(p2 > 0)",
+                        "exp": {
+                            "left": "p2",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 * p2)",
+                        "exp": {
+                            "left": 1,
+                            "op": "*",
+                            "right": "p2"
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "hill_toggle",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "a1",
+            "type": "real",
+            "value": 30
+        },
+        {
+            "name": "a2",
+            "type": "real",
+            "value": 30
+        },
+        {
+            "name": "b",
+            "type": "real",
+            "value": 10
+        },
+        {
+            "name": "g",
+            "type": "real",
+            "value": 10
+        },
+        {
+            "name": "d1",
+            "type": "real",
+            "value": 1
+        },
+        {
+            "name": "d2",
+            "type": "real",
+            "value": 1
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "hill-toggle",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "left": {
+                        "exp": {
+                            "left": true,
+                            "op": "U",
+                            "right": {
+                                "left": "p2",
+                                "op": ">",
+                                "right": 10
+                            },
+                            "time-bounds": {
+                                "upper": 10,
+                                "upper-exclusive": false
+                            }
+                        },
+                        "op": "Pmin"
+                    },
+                    "op": ">",
+                    "right": 5e-08
+                }
+            },
+            "name": "Switching"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "left": {
+                        "exp": {
+                            "left": true,
+                            "op": "U",
+                            "right": {
+                                "left": {
+                                    "left": "p2",
+                                    "op": ">",
+                                    "right": 5
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "p1",
+                                    "op": ">",
+                                    "right": 5
+                                }
+                            },
+                            "time-bounds": {
+                                "upper": 10,
+                                "upper-exclusive": false
+                            }
+                        },
+                        "op": "Pmin"
+                    },
+                    "op": ">",
+                    "right": 1e-33
+                }
+            },
+            "name": "RareEvent"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "hill_toggle"
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": 10,
+            "name": "p1",
+            "type": "int"
+        },
+        {
+            "initial-value": 0,
+            "name": "p2",
+            "type": "int"
+        }
+    ]
+}

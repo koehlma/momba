@@ -1,0 +1,39 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct 17 19:11:34 2018
+Command line arguments: --jani brp.jani --janiproperty --constants 'N=16,MAX=2' --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/dtmc/brp
+
+Time for model construction: 0.038s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	677
+Transitions: 	867
+Reward Models:  none
+State Labels: 	6 labels
+   * init -> 1 item(s)
+   * recv -> 663 item(s)
+   * deadlock -> 35 item(s)
+   * (s = 5) -> 32 item(s)
+   * (srep = 2) -> 6 item(s)
+   * (srep = 0) -> 578 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "p1": Pmin=? [F (s = 5)] ...
+Result (for initial states): 1503982516387544510687823213516750681753609533738014093985492327446021823341670745201522478360759626261166470522913554557570937367804047825330483938531949304640395637223627199/3552713678800500929355621337890625000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 0.0004233334438)
+Time for model checking: 0.003s.
+
+Model checking property "p2": Pmin=? [F ((s = 5) & (srep = 2))] ...
+Result (for initial states): 93980251563940138172004311347458744568245436896169728942195995143526850352452762314901825488783622398799995909461351243179986910158596657499638600983972028048927012223627199/3552713678800500929355621337890625000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 (approx. 2.645308912e-05)
+Time for model checking: 0.003s.
+
+Model checking property "p4": Pmin=? [F (!((srep = 0)) & !(recv))] ...
+Result (for initial states): 1/125000 (approx. 8e-06)
+Time for model checking: 0.001s.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.079s
+  * wallclock time: 0.053s

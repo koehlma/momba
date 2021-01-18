@@ -1,0 +1,610 @@
+{
+	"name": "Randomized Consensus Protocol",
+	"short": "consensus",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"James Aspnes <james.aspnes@yale.edu>",
+		"Maurice Herlihy <mph@cs.brown.edu>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1016/0196-6774(90)90021-6",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. The randomised consensus protocol consists of `N´ asynchronous processes that communicate via read/write shared registers. The processes proceed through possibly unboundedly many rounds. At each round, they read the status of all other processes and attempt to agree. The agreement attempt involves a distributed random walk (`K´ bounds on random walk): when the processes disagree, they use a shared coin-flipping protocol to decide their next preferred value. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/consensus.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of processes",
+			"type": "positive integer"
+		},
+		{
+			"name": "K",
+			"kind": "open",
+			"description": "Bounds on random walk",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "c1",
+			"description": "With probability 1, all processes finish the protocol.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "c2",
+			"description": "Minimum probability that the protocol finishes with all coins equal to v=1.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "disagree",
+			"description": "The max probability of finishing protocol with coins not all equal.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "steps_max",
+			"description": "The maximum expected steps to finish.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "steps_min",
+			"description": "Minimum expected steps to finish.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "consensus.2.jani",
+			"original-file": [
+				"consensus.2.prism",
+				"consensus.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism consensus.2.prism --tojani consensus.2.jani --prop consensus.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 272
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.3828125,
+								"num": 49,
+								"den": 128
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.10833333333333334,
+								"num": 13,
+								"den": 120
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 75,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 48,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 528
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.437744140625,
+								"num": 1793,
+								"den": 4096
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.06151960784313725,
+								"num": 251,
+								"den": 4080
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 243,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 192,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 8
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1040
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.4687504768371582,
+								"num": 983041,
+								"den": 2097152
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.031246185244525826,
+								"num": 65527,
+								"den": 2097120
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 867,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 768,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 16
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2064
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.484375000003638,
+								"num": 133143986177,
+								"den": 274877906944
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.015624999941792339,
+								"num": 4294967279,
+								"den": 274877906880
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 3267,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 3072,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "consensus.4.jani",
+			"original-file": [
+				"consensus.4.prism",
+				"consensus.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism consensus.4.prism --tojani consensus.4.jani --prop consensus.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 22656
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.3173828125,
+								"num": 325,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.29443185428958624,
+								"num": 170112531,
+								"den": 577765376
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 363,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 192,
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 43136
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"approx": 0.40627527236938477,
+								"num": 852021,
+								"den": 2097152
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"approx": 0.15607306398806395,
+								"num": 45666330762076479,
+								"den": 292595849630842880
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 1083,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 768,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "consensus.6.jani",
+			"original-file": [
+				"consensus.6.prism",
+				"consensus.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism consensus.6.prism --tojani consensus.6.jani --prop consensus.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1258240
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"num": 462973,
+								"approx": 0.2943503061930339,
+								"den": 1572864
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "disagree",
+							"value": {
+								"num": 37101798760906709,
+								"approx": 0.36364474956290604,
+								"den": 102027593703751680
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_max",
+							"value": 867,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "steps_min",
+							"value": 432,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "consensus.8.jani",
+			"original-file": [
+				"consensus.8.prism",
+				"consensus.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism consensus.8.prism --tojani consensus.8.jani --prop consensus.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 8
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 61018112
+						}
+					],
+					"results": [
+						{
+							"property": "c1",
+							"value": true,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "c2",
+							"value": {
+								"num": 4744005,
+								"approx": 0.282764732837677,
+								"den": 16777216
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "consensus.10.jani",
+			"original-file": [
+				"consensus.10.prism",
+				"consensus.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism consensus.10.prism --tojani consensus.10.jani --prop consensus.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 10
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 2761248768
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.2-2.2018-10-12.json",
+		"results/Storm.2-4.2018-10-12.json",
+		"results/Storm.2-8.2018-10-12.json",
+		"results/Storm.2-16.2018-10-12.json",
+		"results/Storm.4-2.2018-10-12.json",
+		"results/Storm.4-4.2018-10-12.json",
+		"results/Storm.6-2.2018-10-12.json",
+		"results/Storm.dd-bisim.6-2.2018-10-22.json",
+		"results/Storm.dd-bisim.8-2.2018-10-22.json",
+		"results/Storm.dd-bisim.10-2.2018-10-22.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-8.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-16.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-2.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.8-2.2018-11-22.json"
+		}
+	]
+}

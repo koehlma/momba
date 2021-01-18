@@ -1,0 +1,156 @@
+{
+	"name": "Exploding Blocksworld",
+	"short": "exploding-blocksworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-01",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://ldc.usb.ve/~bonet/ipc5/",
+	"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 [2] model of the blocks world with the modification that blocks can explode with a certain probability when put down and destroy the object beneath the block [1]. The model consists of `N´ blocks and was first introduced at IPPC 5 in 2006 [0].",
+	"references": [
+		"https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume24/younes05a-html/node16.html",
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of blocks",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "exploding-blocksworld.5.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01-n2-N5-s1.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01-n2-N5-s1.pddl --jani exploding-blocksworld.5.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 81693,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 81693
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.9,
+								"num": 9,
+								"den": 10
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "exploding-blocksworld.10.jani",
+			"original-file": [
+				"domain.pddl",
+				"p08-n8-N10-s8.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p08-n8-N10-s8.pddl --jani exploding-blocksworld.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 10
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "exploding-blocksworld.15.jani",
+			"original-file": [
+				"domain.pddl",
+				"p13-n13-N15-s13.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p13-n13-N15-s13.pddl --jani exploding-blocksworld.15.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 15
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "exploding-blocksworld.17.jani",
+			"original-file": [
+				"domain.pddl",
+				"p15-n15-N17-s15.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p15-n15-N17-s15.pddl --jani exploding-blocksworld.17.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 17
+				}
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the desired stacking order of the blocks."
+		}
+	],
+	"results": [
+		"results/mcsta.5.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-03.json"
+		}
+	]
+}

@@ -1,0 +1,173 @@
+{
+	"file": "../wlan.4.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.4-0.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "COL",
+			"value": 0
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani wlan.4.jani --janiproperty --constants COL=0 --exact --timemem",
+	"time": 64.618,
+	"memory": 644874240,
+	"property-times": [
+		{
+			"name": "collisions",
+			"time": 0.909
+		},
+		{
+			"name": "cost_max",
+			"time": 3.768
+		},
+		{
+			"name": "cost_min",
+			"time": 3.941
+		},
+		{
+			"name": "num_collisions",
+			"time": 3.138
+		},
+		{
+			"name": "sent",
+			"time": 1.012
+		},
+		{
+			"name": "time_max",
+			"time": 3.669
+		},
+		{
+			"name": "time_min",
+			"time": 3.887
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 43.409
+				},
+				{
+					"name": "states",
+					"value": 345000
+				},
+				{
+					"name": "branches",
+					"value": 762252
+				},
+				{
+					"name": "transitions",
+					"value": 440206
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "collisions",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.909
+				}
+			],
+			"value": 1
+		},
+		{
+			"property": "cost_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.768
+				}
+			],
+			"value": {
+				"approx": 227297.0264498327,
+				"num": 12949633130974550652875,
+				"den": 56972294504841216
+			}
+		},
+		{
+			"property": "cost_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.941
+				}
+			],
+			"value": 7625
+		},
+		{
+			"property": "num_collisions",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.138
+				}
+			],
+			"value": {
+				"approx": 1.2014394056809146,
+				"num": 83554324771603,
+				"den": 69545184198656
+			}
+		},
+		{
+			"property": "sent",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.012
+				}
+			],
+			"value": "true"
+		},
+		{
+			"property": "time_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.669
+				}
+			],
+			"value": {
+				"approx": 3883.4978474255736,
+				"num": 432132388813372475,
+				"den": 111274012704768
+			}
+		},
+		{
+			"property": "time_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 3.887
+				}
+			],
+			"value": 1325
+		}
+	]
+}

@@ -1,0 +1,11 @@
+/// The maximal probability that within 5 time units more than 80% of the processes request either the resource or the network.
+"pr_many_requests": Pmax=? [F p_r + p_w + p_lan_r + p_lan_w > K * 8 / 10];
+
+/// The minimal expected time until more than 80% of the processes request either the resource or the network.
+"exp_time_many_requests": Tmin=? [F p_r + p_w + p_lan_r + p_lan_w > K * 8 / 10];
+
+// The maximal probability that more processes request the network than the resource when first reaching a state where more than 80% of the processes are requesting."
+"pr_network": Pmax=? [(p_r + p_w + p_lan_r + p_lan_w <= 8 / 10 * K) U (p_r + p_w + p_lan_r + p_lan_w > 8 / 10 * K & p_lan_r + p_lan_w > p_r + p_w)];
+
+/// The maximal probability that within 5 time units more than 80% of the processes request either the resource or the network.
+"prtb_many_requests": Pmax=? [F<=5 p_r + p_w + p_lan_r + p_lan_w > K * 8 / 10];

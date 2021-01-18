@@ -1,0 +1,78 @@
+﻿{
+	"file": "../breakdown-queues.jani",
+	"version": 2,
+	"date": "2018-09-10",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "K", "value": 64 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe breakdown-queues.jani -S Memory -E K=64 -O mcsta.64.json Json",
+	"time": 1.079,
+	"memory": 84910080,
+	"property-times": [
+		{ "name": "Min", "time": 0.201 },
+		{ "name": "Max", "time": 0.191 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 10, "unit": "B" },
+				{ "name": "States", "value": 166743 },
+				{ "name": "Transitions", "value": 179945 },
+				{ "name": "Branches", "value": 300876 },
+				{ "name": "Rate", "value": 629218.86792452831 },
+				{ "name": "Time", "value": 0.28, "unit": "s" }
+			]
+		},
+		{
+			"property": "Min",
+			"value": 1.0560948624625023E-14,
+			"values": [
+				{ "name": "Bounds", "value": "[1.0560948624625E-14, 1]" },
+				{ "name": "Time", "value": 0.201, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 6.55092515394897E-07 },
+						{ "name": "Iterations", "value": 60 },
+						{ "name": "Time", "value": 0.194, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "Max",
+			"value": 3.29921743319185E-12,
+			"values": [
+				{ "name": "Bounds", "value": "[3.29921743319185E-12, 1]" },
+				{ "name": "Time", "value": 0.191, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.2865882278135266E-07 },
+						{ "name": "Iterations", "value": 59 },
+						{ "name": "Time", "value": 0.19, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

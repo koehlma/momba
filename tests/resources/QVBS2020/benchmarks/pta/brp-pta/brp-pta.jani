@@ -1,0 +1,2030 @@
+﻿{
+	"jani-version": 1,
+	"name": "brp-pta",
+	"type": "pta",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "s_ok"
+		},
+		{
+			"name": "put_k"
+		},
+		{
+			"name": "get_l"
+		},
+		{
+			"name": "s_nok"
+		},
+		{
+			"name": "s_dk"
+		},
+		{
+			"name": "s_restart"
+		},
+		{
+			"name": "get_k"
+		},
+		{
+			"name": "put_l"
+		},
+		{
+			"name": "r_ok"
+		},
+		{
+			"name": "r_fst"
+		},
+		{
+			"name": "r_inc"
+		},
+		{
+			"name": "r_timeout"
+		},
+		{
+			"name": "r_nok"
+		}
+	],
+	"constants": [
+		{
+			"name": "N",
+			"type": "int"
+		},
+		{
+			"name": "MAX",
+			"type": "int"
+		},
+		{
+			"name": "TD",
+			"type": "int"
+		},
+		{
+			"name": "TIME_BOUND",
+			"type": "int"
+		}
+	],
+	"variables": [
+		{
+			"name": "ff",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "lf",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "ab",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "i",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "N"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "inTransitK",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "inTransitL",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "first_file_done",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "get_k_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "s_ok_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "s_nok_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "s_dk_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "s_restart_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "r_ok_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "r_timeout_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "premature_timeout",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "channel_k_overflow",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "channel_l_overflow",
+			"type": "bool",
+			"initial-value": false
+		}
+	],
+	"properties": [
+		{
+			"name": "T_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∨",
+								"left": "channel_k_overflow",
+								"right": "channel_l_overflow"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_1_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∨",
+								"left": "channel_k_overflow",
+								"right": "channel_l_overflow"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_2",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "inTransitK",
+								"right": "inTransitL"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_2_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "inTransitK",
+								"right": "inTransitL"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_A1",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": "premature_timeout"
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_A1_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": "premature_timeout"
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_A2",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": "s_restart_seen",
+									"right": "get_k_seen"
+								},
+								"right": {
+									"op": "¬",
+									"exp": "r_timeout_seen"
+								}
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "T_A2_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": {
+									"op": "∧",
+									"left": "s_restart_seen",
+									"right": "get_k_seen"
+								},
+								"right": {
+									"op": "¬",
+									"exp": "r_timeout_seen"
+								}
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_A",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "s_nok_seen",
+								"right": "r_ok_seen"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_A_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "s_nok_seen",
+								"right": "r_ok_seen"
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_B",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "s_ok_seen",
+								"right": {
+									"op": "¬",
+									"exp": "r_ok_seen"
+								}
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_B_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "=",
+					"left": {
+						"op": "Pmax",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "s_ok_seen",
+								"right": {
+									"op": "¬",
+									"exp": "r_ok_seen"
+								}
+							}
+						}
+					},
+					"right": 0
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_1",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∨",
+							"left": "s_nok_seen",
+							"right": "s_dk_seen"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_2",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": "s_dk_seen"
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_3",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": "s_nok_seen",
+							"right": {
+								"op": ">",
+								"left": "i",
+								"right": 8
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_4",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∨",
+								"left": {
+									"op": "∨",
+									"left": "s_ok_seen",
+									"right": "s_nok_seen"
+								},
+								"right": "s_dk_seen"
+							},
+							"right": {
+								"op": "¬",
+								"exp": "get_k_seen"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "Dmax",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": "s_ok_seen",
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "Dmin",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": "s_ok_seen",
+						"time-bounds": {
+							"upper": "TIME_BOUND"
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "Emax",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": "first_file_done"
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "Emin",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Emin",
+					"exp": 1,
+					"accumulate": [
+						"time"
+					],
+					"reach": "first_file_done"
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "Sender",
+			"locations": [
+				{
+					"name": "loc_1",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "i",
+								"right": "N"
+							},
+							"right": {
+								"op": "≤",
+								"left": "c",
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_19",
+					"time-progress": {
+						"exp": false
+					}
+				},
+				{
+					"name": "loc_0"
+				},
+				{
+					"name": "loc_18",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_28",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": 2,
+									"right": "TD"
+								},
+								"right": 1
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_53",
+					"time-progress": {
+						"exp": false
+					}
+				},
+				{
+					"name": "loc_58",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "MAX"
+									},
+									"right": {
+										"op": "+",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "TD"
+										},
+										"right": 1
+									}
+								},
+								"right": {
+									"op": "*",
+									"left": 3,
+									"right": "TD"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_52",
+					"time-progress": {
+						"exp": false
+					}
+				},
+				{
+					"name": "loc_2",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "i",
+								"right": "N"
+							},
+							"right": {
+								"op": "≤",
+								"left": "c",
+								"right": 0
+							}
+						}
+					}
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "bit",
+					"type": "bool",
+					"initial-value": false
+				},
+				{
+					"name": "rc",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": "MAX"
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "c",
+					"type": "clock",
+					"initial-value": 0
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "i",
+							"right": "N"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "i",
+							"value": {
+								"op": "+",
+								"left": "i",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "s_ok",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "i",
+							"right": "N"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_19",
+						"assignments": [ {
+							"ref": "first_file_done",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_19",
+					"destinations": [ {
+						"location": "loc_0"
+					} ]
+				},
+				{
+					"location": "loc_18",
+					"action": "put_k",
+					"destinations": [ {
+						"location": "loc_28",
+						"assignments": [
+							{
+								"ref": "ff",
+								"value": {
+									"op": "=",
+									"left": "i",
+									"right": 1
+								}
+							},
+							{
+								"ref": "lf",
+								"value": {
+									"op": "=",
+									"left": "i",
+									"right": "N"
+								}
+							},
+							{
+								"ref": "ab",
+								"value": "bit"
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_28",
+					"action": "get_l",
+					"destinations": [ {
+						"location": "loc_52",
+						"assignments": [
+							{
+								"ref": "bit",
+								"value": {
+									"op": "¬",
+									"exp": "bit"
+								}
+							},
+							{
+								"ref": "rc",
+								"value": 0
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_28",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "<",
+								"left": "rc",
+								"right": "MAX"
+							},
+							"right": {
+								"op": "≥",
+								"left": "c",
+								"right": {
+									"op": "+",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "TD"
+									},
+									"right": 1
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [
+							{
+								"ref": "rc",
+								"value": {
+									"op": "+",
+									"left": "rc",
+									"right": 1
+								}
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_28",
+					"action": "s_nok",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "<",
+									"left": "i",
+									"right": "N"
+								},
+								"right": {
+									"op": "≥",
+									"left": "rc",
+									"right": "MAX"
+								}
+							},
+							"right": {
+								"op": "≥",
+								"left": "c",
+								"right": {
+									"op": "+",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "TD"
+									},
+									"right": 1
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53",
+						"assignments": [
+							{
+								"ref": "rc",
+								"value": 0
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_28",
+					"action": "s_dk",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "≥",
+									"left": "i",
+									"right": "N"
+								},
+								"right": {
+									"op": "≥",
+									"left": "rc",
+									"right": "MAX"
+								}
+							},
+							"right": {
+								"op": "≥",
+								"left": "c",
+								"right": {
+									"op": "+",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "TD"
+									},
+									"right": 1
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53",
+						"assignments": [
+							{
+								"ref": "rc",
+								"value": 0
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_53",
+					"destinations": [ {
+						"location": "loc_58"
+					} ]
+				},
+				{
+					"location": "loc_58",
+					"action": "s_restart",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "MAX"
+									},
+									"right": {
+										"op": "+",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "TD"
+										},
+										"right": 1
+									}
+								},
+								"right": {
+									"op": "*",
+									"left": 3,
+									"right": "TD"
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_0",
+						"assignments": [
+							{
+								"ref": "bit",
+								"value": false
+							},
+							{
+								"ref": "first_file_done",
+								"value": true
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_52",
+					"destinations": [ {
+						"location": "loc_2"
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"guard": {
+						"exp": {
+							"op": "<",
+							"left": "i",
+							"right": "N"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_18",
+						"assignments": [ {
+							"ref": "i",
+							"value": {
+								"op": "+",
+								"left": "i",
+								"right": 1
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_2",
+					"action": "s_ok",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": "i",
+							"right": "N"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_19",
+						"assignments": [ {
+							"ref": "first_file_done",
+							"value": true
+						} ]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Receiver",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_12"
+				},
+				{
+					"name": "loc_11",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_37",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_36",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "MAX"
+									},
+									"right": {
+										"op": "+",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "TD"
+										},
+										"right": 1
+									}
+								},
+								"right": {
+									"op": "*",
+									"left": 3,
+									"right": "TD"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_54",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "MAX"
+									},
+									"right": {
+										"op": "+",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "TD"
+										},
+										"right": 1
+									}
+								},
+								"right": {
+									"op": "*",
+									"left": 3,
+									"right": "TD"
+								}
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_53",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": {
+								"op": "+",
+								"left": {
+									"op": "*",
+									"left": {
+										"op": "*",
+										"left": 2,
+										"right": "MAX"
+									},
+									"right": {
+										"op": "+",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "TD"
+										},
+										"right": 1
+									}
+								},
+								"right": {
+									"op": "*",
+									"left": 3,
+									"right": "TD"
+								}
+							}
+						}
+					}
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "r_ff",
+					"type": "bool",
+					"initial-value": false
+				},
+				{
+					"name": "r_lf",
+					"type": "bool",
+					"initial-value": false
+				},
+				{
+					"name": "r_ab",
+					"type": "bool",
+					"initial-value": false
+				},
+				{
+					"name": "bit",
+					"type": "bool",
+					"initial-value": false
+				},
+				{
+					"name": "c",
+					"type": "clock",
+					"initial-value": 0
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "get_k",
+					"guard": {
+						"exp": "ff"
+					},
+					"destinations": [ {
+						"location": "loc_11",
+						"assignments": [
+							{
+								"ref": "c",
+								"value": 0
+							},
+							{
+								"ref": "bit",
+								"value": "ab"
+							},
+							{
+								"ref": "r_ff",
+								"value": "ff"
+							},
+							{
+								"ref": "r_lf",
+								"value": "lf"
+							},
+							{
+								"ref": "r_ab",
+								"value": "ab"
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "get_k",
+					"guard": {
+						"exp": {
+							"op": "¬",
+							"exp": "ff"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_12",
+						"assignments": [
+							{
+								"ref": "c",
+								"value": 0
+							},
+							{
+								"ref": "premature_timeout",
+								"value": true
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "put_l",
+					"guard": {
+						"exp": {
+							"op": "≠",
+							"left": "r_ab",
+							"right": "bit"
+						}
+					},
+					"destinations": [ {
+						"location": "loc_36"
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "r_ok",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": "r_lf",
+							"right": {
+								"op": "=",
+								"left": "r_ab",
+								"right": "bit"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_37"
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "r_fst",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": "r_ff",
+								"right": {
+									"op": "¬",
+									"exp": "r_lf"
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "r_ab",
+								"right": "bit"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_37"
+					} ]
+				},
+				{
+					"location": "loc_11",
+					"action": "r_inc",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "∧",
+								"left": {
+									"op": "¬",
+									"exp": "r_ff"
+								},
+								"right": {
+									"op": "¬",
+									"exp": "r_lf"
+								}
+							},
+							"right": {
+								"op": "=",
+								"left": "r_ab",
+								"right": "bit"
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_37"
+					} ]
+				},
+				{
+					"location": "loc_37",
+					"action": "put_l",
+					"destinations": [ {
+						"location": "loc_36",
+						"assignments": [ {
+							"ref": "bit",
+							"value": {
+								"op": "¬",
+								"exp": "bit"
+							}
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_36",
+					"action": "get_k",
+					"destinations": [ {
+						"location": "loc_11",
+						"assignments": [
+							{
+								"ref": "c",
+								"value": 0
+							},
+							{
+								"ref": "r_ff",
+								"value": "ff"
+							},
+							{
+								"ref": "r_lf",
+								"value": "lf"
+							},
+							{
+								"ref": "r_ab",
+								"value": "ab"
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_36",
+					"action": "r_timeout",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": "r_lf",
+							"right": {
+								"op": "=",
+								"left": "c",
+								"right": {
+									"op": "+",
+									"left": {
+										"op": "*",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "MAX"
+										},
+										"right": {
+											"op": "+",
+											"left": {
+												"op": "*",
+												"left": 2,
+												"right": "TD"
+											},
+											"right": 1
+										}
+									},
+									"right": {
+										"op": "*",
+										"left": 3,
+										"right": "TD"
+									}
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53"
+					} ]
+				},
+				{
+					"location": "loc_36",
+					"action": "r_nok",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "¬",
+								"exp": "r_lf"
+							},
+							"right": {
+								"op": "=",
+								"left": "c",
+								"right": {
+									"op": "+",
+									"left": {
+										"op": "*",
+										"left": {
+											"op": "*",
+											"left": 2,
+											"right": "MAX"
+										},
+										"right": {
+											"op": "+",
+											"left": {
+												"op": "*",
+												"left": 2,
+												"right": "TD"
+											},
+											"right": 1
+										}
+									},
+									"right": {
+										"op": "*",
+										"left": 3,
+										"right": "TD"
+									}
+								}
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_54"
+					} ]
+				},
+				{
+					"location": "loc_54",
+					"action": "r_timeout",
+					"destinations": [ {
+						"location": "loc_53"
+					} ]
+				},
+				{
+					"location": "loc_53",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "r_ff",
+								"value": false
+							},
+							{
+								"ref": "r_lf",
+								"value": false
+							},
+							{
+								"ref": "r_ab",
+								"value": false
+							},
+							{
+								"ref": "bit",
+								"value": false
+							},
+							{
+								"ref": "c",
+								"value": 0
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "ChannelK",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_6",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": "TD"
+						}
+					}
+				},
+				{
+					"name": "loc_13"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "c",
+				"type": "clock",
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "put_k",
+					"destinations": [
+						{
+							"location": "loc_6",
+							"probability": {
+								"exp": {
+									"op": "/",
+									"left": 49,
+									"right": 50
+								}
+							},
+							"assignments": [
+								{
+									"ref": "c",
+									"value": 0
+								},
+								{
+									"ref": "inTransitK",
+									"value": true
+								}
+							]
+						},
+						{
+							"location": "loc_1",
+							"probability": {
+								"exp": {
+									"op": "/",
+									"left": 1,
+									"right": 50
+								}
+							},
+							"assignments": [ {
+								"ref": "c",
+								"value": 0
+							} ]
+						}
+					]
+				},
+				{
+					"location": "loc_6",
+					"action": "get_k",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "inTransitK",
+								"value": false
+							},
+							{
+								"ref": "c",
+								"value": 0,
+								"index": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_6",
+					"action": "put_k",
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "channel_k_overflow",
+							"value": true
+						} ]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "ChannelL",
+			"locations": [
+				{
+					"name": "loc_1"
+				},
+				{
+					"name": "loc_6",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "c",
+							"right": "TD"
+						}
+					}
+				},
+				{
+					"name": "loc_13"
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [ {
+				"name": "c",
+				"type": "clock",
+				"initial-value": 0
+			} ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "put_l",
+					"destinations": [
+						{
+							"location": "loc_6",
+							"probability": {
+								"exp": {
+									"op": "/",
+									"left": 99,
+									"right": 100
+								}
+							},
+							"assignments": [
+								{
+									"ref": "c",
+									"value": 0
+								},
+								{
+									"ref": "inTransitL",
+									"value": true
+								}
+							]
+						},
+						{
+							"location": "loc_1",
+							"probability": {
+								"exp": {
+									"op": "/",
+									"left": 1,
+									"right": 100
+								}
+							},
+							"assignments": [ {
+								"ref": "c",
+								"value": 0
+							} ]
+						}
+					]
+				},
+				{
+					"location": "loc_6",
+					"action": "get_l",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "inTransitL",
+								"value": false
+							},
+							{
+								"ref": "c",
+								"value": 0,
+								"index": 1
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_6",
+					"action": "put_l",
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "channel_l_overflow",
+							"value": true
+						} ]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Observer",
+			"locations": [ {
+				"name": "loc_1"
+			} ],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "get_k",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "get_k_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "s_ok",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "s_ok_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "s_nok",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "s_nok_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "s_dk",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "s_dk_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "s_restart",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "s_restart_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "r_ok",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "r_ok_seen",
+							"value": true
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "r_timeout",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "r_timeout_seen",
+							"value": true
+						} ]
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "Sender"
+			},
+			{
+				"automaton": "Receiver"
+			},
+			{
+				"automaton": "ChannelK"
+			},
+			{
+				"automaton": "ChannelL"
+			},
+			{
+				"automaton": "Observer"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					null,
+					"r_fst",
+					null,
+					null,
+					null
+				],
+				"result": "r_fst"
+			},
+			{
+				"synchronise": [
+					null,
+					"r_inc",
+					null,
+					null,
+					null
+				],
+				"result": "r_inc"
+			},
+			{
+				"synchronise": [
+					null,
+					"r_nok",
+					null,
+					null,
+					null
+				],
+				"result": "r_nok"
+			},
+			{
+				"synchronise": [
+					"put_k",
+					null,
+					"put_k",
+					null,
+					null
+				],
+				"result": "put_k"
+			},
+			{
+				"synchronise": [
+					"get_l",
+					null,
+					null,
+					"get_l",
+					null
+				],
+				"result": "get_l"
+			},
+			{
+				"synchronise": [
+					null,
+					"put_l",
+					null,
+					"put_l",
+					null
+				],
+				"result": "put_l"
+			},
+			{
+				"synchronise": [
+					"s_nok",
+					null,
+					null,
+					null,
+					"s_nok"
+				],
+				"result": "s_nok"
+			},
+			{
+				"synchronise": [
+					"s_dk",
+					null,
+					null,
+					null,
+					"s_dk"
+				],
+				"result": "s_dk"
+			},
+			{
+				"synchronise": [
+					"s_ok",
+					null,
+					null,
+					null,
+					"s_ok"
+				],
+				"result": "s_ok"
+			},
+			{
+				"synchronise": [
+					"s_restart",
+					null,
+					null,
+					null,
+					"s_restart"
+				],
+				"result": "s_restart"
+			},
+			{
+				"synchronise": [
+					null,
+					"get_k",
+					"get_k",
+					null,
+					"get_k"
+				],
+				"result": "get_k"
+			},
+			{
+				"synchronise": [
+					null,
+					"r_ok",
+					null,
+					null,
+					"r_ok"
+				],
+				"result": "r_ok"
+			},
+			{
+				"synchronise": [
+					null,
+					"r_timeout",
+					null,
+					null,
+					"r_timeout"
+				],
+				"result": "r_timeout"
+			}
+		]
+	}
+}

@@ -1,0 +1,38 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 13:14:01 2018
+Command line arguments: --jani tandem.jani --janiproperty --constants 'c=4095,T=1000,t=0.2' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/tandem
+
+Time for model construction: 420.055s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	33550336
+Transitions: 	117395459
+Reward Models:  customers
+State Labels: 	6 labels
+   * (sm = 4095) -> 8191 item(s)
+   * init -> 1 item(s)
+   * (sm < 4095) -> 33542145 item(s)
+   * (ph = 2) -> 16773120 item(s)
+   * deadlock -> 0 item(s)
+   * (sc = 4095) -> 8192 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "customers": R[exp]{"customers"}min=? [LRA] ...
+Result (for initial states): 4098.433488
+Time for model checking: 164.538s.
+
+Model checking property "customers_T": R[exp]{"customers"}min=? [I=1/5] ...
+Result (for initial states): 3275.896773
+Time for model checking: 3086.445s.
+
+Model checking property "first_queue": Pmin=? [true U<=1/5 (sc = 4095)] ...
+Result (for initial states): 0
+Time for model checking: 2974.752s.
+
+Model checking property "network": Pmin=? [true U<=1000 (((sc = 4095) & (sm = 4095)) & (ph = 2))] ...
+
+Aborted after 7200 seconds.

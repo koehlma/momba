@@ -1,0 +1,25 @@
+// Geva‐Zatorsky, Naama, et al. "Oscillations and variability in the
+// p53 system." Molecular systems biology 2.1 (2006).
+
+
+ctmc
+
+const double k1 = 90;
+const double k2 = 0.002;
+const double k3 = 1.7;
+const double k4 = 1.1;
+const double k5 = 0.93;
+const double k6 = 0.96;
+const double k7 = 0.01;
+
+module p53
+  p53   : int init 70;
+  pMdm2 : int init 30;
+  Mdm2  : int init 60;
+
+  [] true    -> k1 : (p53'=p53+1);
+  [] p53>0   -> k2*p53 + k3*((p53*Mdm2)/(p53+k7)) : (p53'=p53-1);
+  [] p53>0   -> k4*p53 : (pMdm2'=pMdm2+1);
+  [] pMdm2>0 -> k5*pMdm2 : (Mdm2'=Mdm2+1) & (pMdm2'=pMdm2-1);
+  [] Mdm2>0  -> k6*Mdm2 : (Mdm2'=Mdm2-1);
+endmodule

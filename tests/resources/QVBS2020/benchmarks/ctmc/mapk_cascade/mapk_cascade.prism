@@ -1,0 +1,206 @@
+// MAPK cascade 
+// taken from: C.-Y. Huang and J. Ferrell
+// Ultrasensitivity in the mitgen-activated protein kinase cascade
+// Proc. Natl. Acad. Sci. 93:10078-13100, 1996
+// gxn/dxp 19/12/07
+
+ctmc
+
+// constants (number of elements of each species)
+const int E1=1; // initial amount of E1
+const int E2=1; // initial amount of E2
+const int M=1;  // initial amount of MAPK phosphatase and MAPKK phosphatase
+const int N;  // initial amount of MAPK/MAPKK and MAPKKK
+
+// reaction rates (suppose volume proportional to the number of elements of MAPK)
+const double a1=1/N;
+const double d1=150;
+const double k1=150;
+const double a2=1/N;
+const double d2=150;
+const double k2=150;
+const double a3=1/N;
+const double d3=150;
+const double k3=150;
+const double a4=1/N;
+const double d4=150;
+const double k4=150;
+const double a5=1/N;
+const double d5=150;
+const double k5=150;
+const double a6=1/N;
+const double d6=150;
+const double k6=150;
+const double a7=1/N;
+const double d7=150;
+const double k7=150;
+const double a8=1/N;
+const double d8=150;
+const double k8=150;
+const double a9=1/N;
+const double d9=150;
+const double k9=150;
+const double a10=1/N;
+const double d10=150;
+const double k10=150;
+
+//------------------------------------------------------------------------------
+// enzymes
+
+module E1
+	
+	e1 : [0..E1] init E1; // amount of enzyme E1
+	
+	// reaction 1 (MAPKKK is activated by E1)
+	[a_kkk_e1] e1>0  -> e1 : (e1'=e1-1);
+	[d_kkk_e1] e1<E1 ->  1 : (e1'=e1+1);
+	[k_kkk_e1] e1<E1 ->  1 : (e1'=e1+1);
+	
+endmodule
+
+// construct E2 by renaming E1
+module E2 = E1[
+	e1=e2,
+	E1=E2,
+	a_kkk_e1=a_kkk_e2,
+	d_kkk_e1=d_kkk_e2,
+	k_kkk_e1=k_kkk_e2 ]
+endmodule
+
+//------------------------------------------------------------------------------
+// phosphatases
+
+// mapk phosphatases
+module KPTASE
+	
+	kptase : [0..M] init M; // amount of MAPK Phosphatase
+	
+	// reactions 8 and 10 (MAPK/MAPK-P is deactivated by MAPK Phosphatase)
+	[a_k_ptase] kptase>0 -> kptase : (kptase'=kptase-1);
+	[d_k_ptase] kptase<M -> 1 : (kptase'=kptase+1);
+	[k_k_ptase] kptase<M -> 1 : (kptase'=kptase+1);
+	
+endmodule
+
+// construct mapkk phosphatases by renaming module for mapk phosphatases
+module KKPTASE = KPTASE[
+	kptase= kkptase,
+	a_k_ptase=a_kk_ptase,
+	d_k_ptase=d_kk_ptase,
+	k_k_ptase=k_kk_ptase ]
+endmodule
+
+//------------------------------------------------------------------------------
+// mapks
+
+// mapk
+module MAPK
+	
+	k         : [0..N] init N; // quantity of MAPK
+	k_kkpp    : [0..N] init 0; // quantity of MAPK:MAPKK-PP
+	kp        : [0..N] init 0; // quantity of MAPK-P
+	kp_kkpp   : [0..N] init 0; // quantity of MAPK-P:MAPKK-PP
+	kp_ptase  : [0..N] init 0; // quantity of MAPK-P:MAPK Phosphatase
+	kpp       : [0..N] init 0; // quantity of MAPK-PP
+	kpp_ptase : [0..N] init 0; // quantity of MAPK-PP:MAPK Phosphatase
+	
+	// reaction 7 (MAPK is activated by MAPKK-PP)
+	[a_k_kk] k>0 & k_kkpp<N  -> a7*k      : (k_kkpp'=k_kkpp+1) & (k'=k-1);
+	[d_k_kk] k<N & k_kkpp>0  -> d7*k_kkpp : (k_kkpp'=k_kkpp-1) & (k'=k+1);
+	[k_k_kk] k_kkpp>0 & kp<N -> k7*k_kkpp : (k_kkpp'=k_kkpp-1) & (kp'=kp+1);
+	// reaction 8 (MAPK-P is deactivated by MAPK Phosphatase)
+	[a_k_ptase] kp>0 & kp_ptase<N -> a8*kp       : (kp_ptase'=kp_ptase+1) & (kp'=kp-1);
+	[d_k_ptase] kp<N & kp_ptase>0 -> d8*kp_ptase : (kp_ptase'=kp_ptase-1) & (kp'=kp+1);
+	[k_k_ptase] kp_ptase>0 & k<N  -> k8*kp_ptase : (kp_ptase'=kp_ptase-1) & (k'=k+1);
+	// reaction 9 (MAPK-P is activated by MAPKK-PP)
+	[a_k_kk] kp>0 & kp_kkpp<N  -> a9*kp      : (kp_kkpp'=kp_kkpp+1) & (kp'=kp-1);
+	[d_k_kk] kp<N & kp_kkpp>0  -> d9*kp_kkpp : (kp_kkpp'=kp_kkpp-1) & (kp'=kp+1);
+	[k_k_kk] kp_kkpp>0 & kpp<N -> k9*kp_kkpp : (kp_kkpp'=kp_kkpp-1) & (kpp'=kpp+1);
+	// reaction 10 (MAPK-P is deactivated by MAPK Phosphatase)
+	[a_k_ptase] kpp>0 & kpp_ptase<N -> a10*kpp       : (kpp_ptase'=kpp_ptase+1) & (kpp'=kpp-1);
+	[d_k_ptase] kpp<N & kpp_ptase>0 -> d10*kpp_ptase : (kpp_ptase'=kpp_ptase-1) & (kpp'=kpp+1);
+	[k_k_ptase] kpp_ptase>0 & kp<N  -> k10*kpp_ptase : (kpp_ptase'=kpp_ptase-1) & (kp'=kp+1);
+	
+endmodule
+
+// mapkk
+module MAPKK
+	
+	kk         : [0..N] init N; // quantity of MAPKK
+	kk_kkkp    : [0..N] init 0; // quantity of MAPKK:MAPKKK-P
+	kkp        : [0..N] init 0; // quantity of MAPKK-P
+	kkp_kkkp   : [0..N] init 0; // quantity of MAPKK-P:MAPKKK-P
+	kkp_ptase  : [0..N] init 0; // quantity of MAPKK-P:MAPKK Phosphatase
+	kkpp       : [0..N] init 0; // quantity of MAPKK-PP
+	kkpp_ptase : [0..N] init 0; // quantity of MAPKK-PP:MAPKK Phosphatase
+	
+	// reaction 3 (MAPKK is activated by MAPKKK*)
+	[a_kk_kkk] kk>0 & kk_kkkp<N  -> a3*kk      : (kk_kkkp'=kk_kkkp+1) & (kk'=kk-1);
+	[d_kk_kkk] kk<N & kk_kkkp>0  -> d3*kk_kkkp : (kk_kkkp'=kk_kkkp-1) & (kk'=kk+1);
+	[k_kk_kkk] kk_kkkp>0 & kkp<N -> k3*kk_kkkp : (kk_kkkp'=kk_kkkp-1) & (kkp'=kkp+1);
+	// reaction 4 (MAPKK-P is deactivated by MAPKK Phosphatase)
+	[a_kk_ptase] kkp>0 & kkp_ptase<N -> a4*kkp       : (kkp_ptase'=kkp_ptase+1) & (kkp'=kkp-1);
+	[d_kk_ptase] kkp<N & kkp_ptase>0 -> d4*kkp_ptase : (kkp_ptase'=kkp_ptase-1) & (kkp'=kkp+1);
+	[k_kk_ptase] kkp_ptase>0 & kk<N  -> k4*kkp_ptase : (kkp_ptase'=kkp_ptase-1) & (kk'=kk+1);
+	// reaction 5 (MAPKK-P is activated by MAPKKK*)
+	[a_kk_kkk] kkp>0 & kkp_kkkp<N  -> a5*kkp      : (kkp_kkkp'=kkp_kkkp+1) & (kkp'=kkp-1);
+	[d_kk_kkk] kkp<N & kkp_kkkp>0  -> d5*kkp_kkkp : (kkp_kkkp'=kkp_kkkp-1) & (kkp'=kkp+1);
+	[k_kk_kkk] kkp_kkkp>0 & kkpp<N -> k5*kkp_kkkp : (kkp_kkkp'=kkp_kkkp-1) & (kkpp'=kkpp+1);
+	// reaction 6 (MAPKK-P is deactivated by MAPKK Phosphatase)
+	[a_kk_ptase] kkpp>0 & kkpp_ptase<N -> a6*kkpp       : (kkpp_ptase'=kkpp_ptase+1) & (kkpp'=kkpp-1);
+	[d_kk_ptase] kkpp<N & kkpp_ptase>0 -> d6*kkpp_ptase : (kkpp_ptase'=kkpp_ptase-1) & (kkpp'=kkpp+1);
+	[k_kk_ptase] kkpp_ptase>0 & kkp<N  -> k6*kkpp_ptase : (kkpp_ptase'=kkpp_ptase-1) & (kkp'=kkp+1);
+	// reactions 7 and 9 (MAPK/MAPK-P is activated by MAPKPP)
+	[a_k_kk] kkpp>0 -> kkpp : (kkpp'=kkpp-1);
+	[d_k_kk] kkpp<N -> 1 : (kkpp'=kkpp+1);
+	[k_k_kk] kkpp<N -> 1 : (kkpp'=kkpp+1);
+	
+endmodule
+
+// mapkkk
+module MAPKKK
+	
+	kkk     : [0..N] init N; // quantity of MAPKKK
+	kkk_e1  : [0..N] init 0; // quantity of MAPKKK:E1
+	kkkp    : [0..N] init 0; // quantity of MAPKKK*
+	kkkp_e2 : [0..N] init 0; // quantity of MAPKKK*:E2
+	
+	// reaction 1 (MAPKKK is activated by E1)
+	[a_kkk_e1] kkk>0 & kkk_e1<N  -> a1*kkk    : (kkk_e1'=kkk_e1+1) & (kkk'=kkk-1);
+	[d_kkk_e1] kkk<N & kkk_e1>0  -> d1*kkk_e1 : (kkk_e1'=kkk_e1-1) & (kkk'=kkk+1);
+	[k_kkk_e1] kkk_e1>0 & kkkp<N -> k1*kkk_e1 : (kkk_e1'=kkk_e1-1) & (kkkp'=kkkp+1);
+	// reaction 2 (MAPKKK* is deactivated by E2)
+	[a_kkk_e2] kkkp>0 & kkkp_e2<N -> a2*kkkp    : (kkkp_e2'=kkkp_e2+1) & (kkkp'=kkkp-1);
+	[d_kkk_e2] kkkp<N & kkkp_e2>0 -> d2*kkkp_e2 : (kkkp_e2'=kkkp_e2-1) & (kkkp'=kkkp+1);
+	[k_kkk_e2] kkkp_e2>0 & kkk<N  -> k2*kkkp_e2 : (kkkp_e2'=kkkp_e2-1) & (kkk'=kkk+1);
+	// reactions 3 and 5 (MAPKK/MAPKK-P is activated by MAPKKP)
+	[a_kk_kkk] kkkp>0 -> kkkp : (kkkp'=kkkp-1);
+	[d_kk_kkk] kkkp<N -> 1 : (kkkp'=kkkp+1);
+	[k_kk_kkk] kkkp<N -> 1 : (kkkp'=kkkp+1);
+	
+endmodule
+
+//------------------------------------------------------------------------------
+// reward structures
+
+rewards "activated" // activated mapk
+	true : kpp;
+endrewards
+
+rewards "activated_squared" // activated mapk squared (used to calculate standard deviation)
+	true : kpp*kpp;
+endrewards
+
+rewards "percentage" //percentage activated mapk
+	true : 100*(kpp/N);
+endrewards
+
+rewards "reactions" // reactions between mapk and mapkk
+	[a_k_kk] true : 1;
+	[d_k_kk] true : 1;
+	[k_k_kk] true : 1;
+endrewards
+
+rewards "time" // time
+	true : 1;
+endrewards

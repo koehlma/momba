@@ -1,0 +1,67 @@
+{
+	"file": "../rabin.10.jani",
+	"version": 1,
+	"date": "2018-11-26",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd.exact.10.2018-11-26.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani rabin.10.jani --janiproperty  --engine dd --ddlib sylvan --exact --timemem",
+	"time": 4.896850109100342,
+	"memory": 3361734656,
+	"property-times": [
+		{
+			"name": "live",
+			"time": 0.251
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"unit": "s",
+					"value": 4.42,
+					"name": "time"
+				},
+				{
+					"value": 358055586147376,
+					"name": "states"
+				},
+				{
+					"value": 696028935338720,
+					"name": "transitions"
+				},
+				{
+					"value": 2908346849726720,
+					"name": "branches"
+				}
+			]
+		},
+		{
+			"property": "live",
+			"value": 1,
+			"values": [
+				{
+					"unit": "s",
+					"value": 0.251,
+					"name": "time"
+				}
+			]
+		}
+	]
+}

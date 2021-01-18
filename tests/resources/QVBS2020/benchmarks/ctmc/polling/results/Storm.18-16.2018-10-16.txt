@@ -1,0 +1,48 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 07:30:25 2018
+Command line arguments: --jani polling.18.jani --janiproperty --constants T=16 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/polling
+
+Time for model construction: 280.485s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	7077888
+Transitions: 	69599232
+Reward Models:  waiting, served
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (a = 1) -> 2359296 item(s)
+   * (s = 2) -> 393216 item(s)
+   * (s1 = 1) -> 3604480 item(s)
+   * (a = 0) -> 4718592 item(s)
+   * init -> 1 item(s)
+   * (s = 1) -> 393216 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "s1": LRAmin=? [((s1 = 1) & !(((s = 1) & (a = 1))))] ...
+Result (for initial states): 0.1395842492
+Time for model checking: 107.044s.
+
+Model checking property "s1_before_s2": Pmin=? [!(((s = 2) & (a = 1))) U ((s = 1) & (a = 1))] ...
+Result (for initial states): 0.539005252
+Time for model checking: 37.489s.
+
+Model checking property "served": R[exp]{"served"}min=? [C<=16] ...
+Result (for initial states): 0.635205045
+Time for model checking: 1501.186s.
+
+Model checking property "station1_polled": Pmin=? [true U<=16 ((s = 1) & (a = 0))] ...
+Result (for initial states): 1
+Time for model checking: 1270.620s.
+
+Model checking property "waiting": R[exp]{"waiting"}min=? [C<=16] ...
+Result (for initial states): 1.16612887
+Time for model checking: 1468.882s.
+
+Performance statistics:
+  * peak memory usage: 9423MB
+  * CPU time: 4654.712s
+  * wallclock time: 4665.813s

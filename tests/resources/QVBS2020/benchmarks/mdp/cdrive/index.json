@@ -1,0 +1,240 @@
+{
+	"name": "City Driving",
+	"short": "cdrive",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-08-01",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-08-01",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/",
+	"part-of": {
+		"name": "the IPPC 2006 Benchmark Set",
+		"url": "http://idm-lab.org/wiki/icaps/ipc2006/probabilistic/"
+	},
+	"description": "An IPPC 2006 model of a car driving around in a city with `c´ coordinates, i.e. locations. There are roads connecting coordinates with traffic lights. The car should reach a certain destination without an accident.",
+	"references": [],
+	"notes": "IPPC 2006 benchmark",
+	"parameters": [
+		{
+			"name": "c",
+			"kind": "file",
+			"description": "Number of coordinates",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "cdrive.2.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01.pddl --jani cdrive.2.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 38,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 38
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.8645657798255073,
+								"num": 27560736,
+								"den": 31878125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "cdrive.3.jani",
+			"original-file": [
+				"domain.pddl",
+				"p05.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p05.pddl --jani cdrive.3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 143,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 143
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.8385276582153681,
+								"num": 144559568840589,
+								"den": 172396900000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "cdrive.6.jani",
+			"original-file": [
+				"domain.pddl",
+				"p10.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p10.pddl --jani cdrive.6.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 737,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 737
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.6070826102773691,
+								"num": 17974196617861650388466372243448627,
+								"den": 29607497091128086914062500000000000
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "cdrive.10.jani",
+			"original-file": [
+				"domain.pddl",
+				"p15.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p15.pddl --jani cdrive.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "c",
+					"value": 10
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 2193,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 2193
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": {
+								"approx": 0.45110511853947965,
+								"num": 16260601593960618913613025056679317621984446952972621692796928,
+								"den": 36046147395992202285496701448338297268492169678211212158203125
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the desired coordinate without an accident."
+		}
+	],
+	"results": [
+		"results/mcsta.2.json",
+		"results/mcsta.3.json",
+		"results/mcsta.6.json",
+		"results/mcsta.10.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6.2018-10-03.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.10.2018-10-03.json"
+		}
+	]
+}

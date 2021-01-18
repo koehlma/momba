@@ -1,0 +1,2284 @@
+{
+    "actions": [
+        {
+            "name": "down"
+        },
+        {
+            "name": "left"
+        },
+        {
+            "name": "right"
+        },
+        {
+            "name": "top"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "action": "down",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(above_of_home)) | above_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "above_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "above_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(above_of_home)) | above_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "above_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "above_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "y <- (y - 1)",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": "y",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((above_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((above_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(!(above_of_enemy) & (y > 1))",
+                        "exp": {
+                            "left": {
+                                "exp": {
+                                    "args": [],
+                                    "function": "above_of_enemy",
+                                    "op": "call"
+                                },
+                                "op": "¬"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": ">",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "down",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- false",
+                                    "ref": "gold",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "gem <- false",
+                                    "ref": "gem",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "attacked <- true",
+                                    "ref": "attacked",
+                                    "value": true
+                                },
+                                {
+                                    "comment": "x <- 3",
+                                    "ref": "x",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "y <- 1",
+                                    "ref": "y",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "rew_gold <- ((above_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((above_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 10)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 10
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(above_of_home)) | above_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "above_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "above_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(above_of_home)) | above_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "above_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "above_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "y <- (y - 1)",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": "y",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((above_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((above_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "above_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - (1 / 10))",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "-",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 10
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(above_of_enemy & (y > 1))",
+                        "exp": {
+                            "left": {
+                                "args": [],
+                                "function": "above_of_enemy",
+                                "op": "call"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": ">",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "left",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- false",
+                                    "ref": "gold",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "gem <- false",
+                                    "ref": "gem",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "attacked <- true",
+                                    "ref": "attacked",
+                                    "value": true
+                                },
+                                {
+                                    "comment": "x <- 3",
+                                    "ref": "x",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "y <- 1",
+                                    "ref": "y",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "rew_gold <- ((right_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((right_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 10)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 10
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(right_of_home)) | right_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "right_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "right_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(right_of_home)) | right_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "right_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "right_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "x <- (x - 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((right_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((right_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - (1 / 10))",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "-",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 10
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(right_of_enemy & (x > 1))",
+                        "exp": {
+                            "left": {
+                                "args": [],
+                                "function": "right_of_enemy",
+                                "op": "call"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "left",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(right_of_home)) | right_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "right_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "right_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(right_of_home)) | right_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "right_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "right_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "x <- (x - 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((right_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((right_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "right_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(!(right_of_enemy) & (x > 1))",
+                        "exp": {
+                            "left": {
+                                "exp": {
+                                    "args": [],
+                                    "function": "right_of_enemy",
+                                    "op": "call"
+                                },
+                                "op": "¬"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "right",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(left_of_home)) | left_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "left_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "left_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(left_of_home)) | left_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "left_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "left_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "x <- (x + 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((left_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((left_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(!(left_of_enemy) & (x < 5))",
+                        "exp": {
+                            "left": {
+                                "exp": {
+                                    "args": [],
+                                    "function": "left_of_enemy",
+                                    "op": "call"
+                                },
+                                "op": "¬"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 5
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "right",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- false",
+                                    "ref": "gold",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "gem <- false",
+                                    "ref": "gem",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "attacked <- true",
+                                    "ref": "attacked",
+                                    "value": true
+                                },
+                                {
+                                    "comment": "x <- 3",
+                                    "ref": "x",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "y <- 1",
+                                    "ref": "y",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "rew_gold <- ((left_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((left_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 10)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 10
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(left_of_home)) | left_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "left_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "left_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(left_of_home)) | left_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "left_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "left_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "x <- (x + 1)",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": "x",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((left_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((left_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "left_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - (1 / 10))",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "-",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 10
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(left_of_enemy & (x < 5))",
+                        "exp": {
+                            "left": {
+                                "args": [],
+                                "function": "left_of_enemy",
+                                "op": "call"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 5
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "top",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(below_of_home)) | below_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "below_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "below_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(below_of_home)) | below_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "below_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "below_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "y <- (y + 1)",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": "y",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((below_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((below_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(!(below_of_enemy) & (y < 5))",
+                        "exp": {
+                            "left": {
+                                "exp": {
+                                    "args": [],
+                                    "function": "below_of_enemy",
+                                    "op": "call"
+                                },
+                                "op": "¬"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "<",
+                                "right": 5
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "top",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- false",
+                                    "ref": "gold",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "gem <- false",
+                                    "ref": "gem",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "attacked <- true",
+                                    "ref": "attacked",
+                                    "value": true
+                                },
+                                {
+                                    "comment": "x <- 3",
+                                    "ref": "x",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "y <- 1",
+                                    "ref": "y",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "rew_gold <- ((below_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((below_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 10)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 10
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "gold <- ((gold & !(below_of_home)) | below_of_gold)",
+                                    "ref": "gold",
+                                    "value": {
+                                        "left": {
+                                            "left": "gold",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "below_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "below_of_gold",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "gem <- ((gem & !(below_of_home)) | below_of_gem)",
+                                    "ref": "gem",
+                                    "value": {
+                                        "left": {
+                                            "left": "gem",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": {
+                                                    "args": [],
+                                                    "function": "below_of_home",
+                                                    "op": "call"
+                                                },
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "args": [],
+                                            "function": "below_of_gem",
+                                            "op": "call"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "attacked <- false",
+                                    "ref": "attacked",
+                                    "value": false
+                                },
+                                {
+                                    "comment": "y <- (y + 1)",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": "y",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gold <- ((below_of_home & gold) ? 1 : 0)",
+                                    "ref": "rew_gold",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gold"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                },
+                                {
+                                    "comment": "rew_gem <- ((below_of_home & gem) ? 1 : 0)",
+                                    "ref": "rew_gem",
+                                    "value": {
+                                        "else": 0.0,
+                                        "if": {
+                                            "left": {
+                                                "args": [],
+                                                "function": "below_of_home",
+                                                "op": "call"
+                                            },
+                                            "op": "∧",
+                                            "right": "gem"
+                                        },
+                                        "op": "ite",
+                                        "then": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - (1 / 10))",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "-",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 10
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(below_of_enemy & (y < 5))",
+                        "exp": {
+                            "left": {
+                                "args": [],
+                                "function": "below_of_enemy",
+                                "op": "call"
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "<",
+                                "right": 5
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "success <- ((required_gold = 0) & (required_gem = 0))",
+                            "ref": "success",
+                            "value": {
+                                "left": {
+                                    "left": "required_gold",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "required_gem",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            }
+                        },
+                        {
+                            "comment": "attacks <- (attacked ? 1 : 0)",
+                            "ref": "attacks",
+                            "value": {
+                                "else": 0.0,
+                                "if": "attacked",
+                                "op": "ite",
+                                "then": 1
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "robot",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "down",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gold <- (max(0, (required_gold - ((above_of_home & gold) ? 1 : 0))))",
+                                    "ref": "required_gold",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gold",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "above_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gold"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "left",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gold <- (max(0, (required_gold - ((right_of_home & gold) ? 1 : 0))))",
+                                    "ref": "required_gold",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gold",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "right_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gold"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "right",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gold <- (max(0, (required_gold - ((left_of_home & gold) ? 1 : 0))))",
+                                    "ref": "required_gold",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gold",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "left_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gold"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "top",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gold <- (max(0, (required_gold - ((below_of_home & gold) ? 1 : 0))))",
+                                    "ref": "required_gold",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gold",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "below_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gold"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "goldcounter",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "down",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gem <- (max(0, (required_gem - ((above_of_home & gem) ? 1 : 0))))",
+                                    "ref": "required_gem",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gem",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "above_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gem"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "left",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gem <- (max(0, (required_gem - ((right_of_home & gem) ? 1 : 0))))",
+                                    "ref": "required_gem",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gem",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "right_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gem"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "right",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gem <- (max(0, (required_gem - ((left_of_home & gem) ? 1 : 0))))",
+                                    "ref": "required_gem",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gem",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "left_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gem"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "top",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "required_gem <- (max(0, (required_gem - ((below_of_home & gem) ? 1 : 0))))",
+                                    "ref": "required_gem",
+                                    "value": {
+                                        "left": 0,
+                                        "op": "max",
+                                        "right": {
+                                            "left": "required_gem",
+                                            "op": "-",
+                                            "right": {
+                                                "else": 0,
+                                                "if": {
+                                                    "left": {
+                                                        "args": [],
+                                                        "function": "below_of_home",
+                                                        "op": "call"
+                                                    },
+                                                    "op": "∧",
+                                                    "right": "gem"
+                                                },
+                                                "op": "ite",
+                                                "then": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "gemcounter",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "WIDTH",
+            "type": "int",
+            "value": 5
+        },
+        {
+            "name": "HEIGHT",
+            "type": "int",
+            "value": 5
+        },
+        {
+            "name": "XINIT",
+            "type": "int",
+            "value": 3
+        },
+        {
+            "name": "YINIT",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "GOLD_TO_COLLECT",
+            "type": "int"
+        },
+        {
+            "name": "GEM_TO_COLLECT",
+            "type": "int"
+        },
+        {
+            "name": "B",
+            "type": "int"
+        },
+        {
+            "name": "pAttack",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 10
+            }
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "functions"
+    ],
+    "functions": [
+        {
+            "body": false,
+            "name": "below_of_home",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 3
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 5
+                    }
+                },
+                "op": "∨",
+                "right": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 2
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 4
+                    }
+                }
+            },
+            "name": "left_of_enemy",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 3
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 2
+                }
+            },
+            "name": "above_of_home",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 5
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 3
+                }
+            },
+            "name": "below_of_gem",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 5
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 5
+                    }
+                },
+                "op": "∨",
+                "right": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 4
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 4
+                    }
+                }
+            },
+            "name": "right_of_enemy",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 2
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 1
+                }
+            },
+            "name": "left_of_home",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 3
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 5
+                }
+            },
+            "name": "above_of_enemy",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": false,
+            "name": "right_of_gem",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 4
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 1
+                }
+            },
+            "name": "right_of_home",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 4
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 4
+                }
+            },
+            "name": "left_of_gem",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 2
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 5
+                }
+            },
+            "name": "left_of_gold",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 4
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 5
+                }
+            },
+            "name": "right_of_gold",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": false,
+            "name": "above_of_gold",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 5
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 5
+                }
+            },
+            "name": "above_of_gem",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": "x",
+                    "op": "=",
+                    "right": 3
+                },
+                "op": "∧",
+                "right": {
+                    "left": "y",
+                    "op": "=",
+                    "right": 4
+                }
+            },
+            "name": "below_of_gold",
+            "parameters": [],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 3
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 3
+                    }
+                },
+                "op": "∨",
+                "right": {
+                    "left": {
+                        "left": "x",
+                        "op": "=",
+                        "right": 4
+                    },
+                    "op": "∧",
+                    "right": {
+                        "left": "y",
+                        "op": "=",
+                        "right": 4
+                    }
+                }
+            },
+            "name": "below_of_enemy",
+            "parameters": [],
+            "type": "bool"
+        }
+    ],
+    "jani-version": 1,
+    "name": "resource-gathering",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "steps"
+                    ],
+                    "exp": "rew_gold",
+                    "op": "Emax",
+                    "step-instant": "B"
+                }
+            },
+            "name": "expgold"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "steps"
+                    ],
+                    "exp": 1,
+                    "op": "Emin",
+                    "reach": "success"
+                }
+            },
+            "name": "expsteps"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": "success",
+                        "step-bounds": {
+                            "upper": "B",
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmax"
+                }
+            },
+            "name": "prgoldgem"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "robot"
+            },
+            {
+                "automaton": "goldcounter"
+            },
+            {
+                "automaton": "gemcounter"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "down",
+                "synchronise": [
+                    "down",
+                    "down",
+                    "down"
+                ]
+            },
+            {
+                "result": "left",
+                "synchronise": [
+                    "left",
+                    "left",
+                    "left"
+                ]
+            },
+            {
+                "result": "right",
+                "synchronise": [
+                    "right",
+                    "right",
+                    "right"
+                ]
+            },
+            {
+                "result": "top",
+                "synchronise": [
+                    "top",
+                    "top",
+                    "top"
+                ]
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "success",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "attacks",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "rew_gold",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "rew_gem",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 3,
+            "name": "x",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 1,
+                "upper-bound": 5
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "y",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 1,
+                "upper-bound": 5
+            }
+        },
+        {
+            "initial-value": false,
+            "name": "gold",
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "gem",
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "attacked",
+            "type": "bool"
+        },
+        {
+            "initial-value": "GOLD_TO_COLLECT",
+            "name": "required_gold",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "GOLD_TO_COLLECT"
+            }
+        },
+        {
+            "initial-value": "GEM_TO_COLLECT",
+            "name": "required_gem",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "GEM_TO_COLLECT"
+            }
+        }
+    ]
+}

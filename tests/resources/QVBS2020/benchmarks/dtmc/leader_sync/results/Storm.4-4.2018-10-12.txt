@@ -1,0 +1,33 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:32:26 2018
+Command line arguments: --jani leader_sync.4-4.jani --janiproperty --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/dtmc/leader_sync
+
+Time for model construction: 0.040s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	812
+Transitions: 	1067
+Reward Models:  num_rounds
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * elected -> 1 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "eventually_elected": Pmin>=1 [F "elected"] ...
+Result (for initial states): true
+
+Time for model checking: 0.000s.
+
+Model checking property "time": R[exp]{"num_rounds"}min=? [F "elected"] ...
+Result (for initial states): 1.185185185
+Time for model checking: 0.001s.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.084s
+  * wallclock time: 0.050s

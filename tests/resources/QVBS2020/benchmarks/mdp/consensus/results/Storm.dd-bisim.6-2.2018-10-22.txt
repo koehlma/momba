@@ -1,0 +1,68 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Oct 22 21:19:54 2018
+Command line arguments: --jani consensus.6.jani --janiproperty --constants K=2 --engine dd --bisimulation '--bisimulation:quot' sparse --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/consensus
+
+Time for model construction: 0.122s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (symbolic)
+States: 	1258240 (224 nodes)
+Transitions: 	6236736 (7148 nodes)
+Choices: 	5008128
+Reward Models:  steps
+Variables: 	rows: 19 meta variables (30 DD variables), columns: 19 meta variables (30 DD variables), nondeterminism: 4 meta variables (4 DD variables)
+Labels: 	5
+   * deadlock -> 0 state(s) (1 nodes)
+   * init -> 1 state(s) (31 nodes)
+   * agree
+   * all_coins_equal_1
+   * finished
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 30.423s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	9328
+Transitions: 	51481
+Choices: 	41198
+Reward Models:  steps
+State Labels: 	8 labels
+   * ((((coin5 = coin6) & (coin2 = coin3)) & (coin3 = coin4)) & ((coin4 = coin5) & (coin1 = coin2))) -> 2242 item(s)
+   * ((((coin6 = 1) & (coin2 = 1)) & ((coin4 = 1) & (coin3 = 1))) & ((coin5 = 1) & (coin1 = 1))) -> 139 item(s)
+   * deadlock -> 0 item(s)
+   * agree -> 2242 item(s)
+   * init -> 1 item(s)
+   * ((((pc6 = 3) & (pc2 = 3)) & ((pc4 = 3) & (pc3 = 3))) & ((pc5 = 3) & (pc1 = 3))) -> 3 item(s)
+   * all_coins_equal_1 -> 139 item(s)
+   * finished -> 3 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "c1": Pmin>=1 [F "finished"] ...
+Result (for initial states): true
+
+Time for model checking: 0.015s.
+
+Model checking property "c2": Pmin=? [F ("finished" & "all_coins_equal_1")] ...
+Result (for initial states): 0.294336661
+Time for model checking: 0.663s.
+
+Model checking property "disagree": Pmax=? [F ("finished" & !("agree"))] ...
+Result (for initial states): 0.3636191132
+Time for model checking: 0.715s.
+
+Model checking property "steps_max": R[exp]{"steps"}max=? [F "finished"] ...
+Result (for initial states): 866.8841097
+Time for model checking: 1.386s.
+
+Model checking property "steps_min": R[exp]{"steps"}min=? [F "finished"] ...
+Result (for initial states): 432.0218045
+Time for model checking: 0.772s.
+
+Performance statistics:
+  * peak memory usage: 265MB
+  * CPU time: 33.940s
+  * wallclock time: 34.114s

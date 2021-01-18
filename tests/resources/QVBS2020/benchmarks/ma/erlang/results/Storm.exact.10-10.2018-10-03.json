@@ -1,0 +1,98 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../erlang.jani",
+	"version": 1,
+	"log": "Storm.exact.10-10.2018-10-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 10
+		},
+		{
+			"name": "R",
+			"value": 10
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani erlang.jani --janiproperty --constants K=10,R=10 --exact --timemem",
+	"time": 0.029,
+	"memory": 47185920,
+	"property-times": [
+		{
+			"name": "PminReach",
+			"time": 0.0
+		},
+		{
+			"name": "TminReach",
+			"time": 0.0
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.023
+				},
+				{
+					"name": "states",
+					"value": 67
+				},
+				{
+					"name": "branches",
+					"value": 73
+				},
+				{
+					"name": "transitions",
+					"value": 70
+				},
+				{
+					"name": "markovian-states",
+					"value": 34
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "PminReach",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": {
+				"approx": 0.5,
+				"num": 1,
+				"den": 2
+			}
+		},
+		{
+			"property": "TminReach",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": 2
+		}
+	]
+}

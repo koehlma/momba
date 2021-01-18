@@ -1,0 +1,564 @@
+{
+	"name": "Railway cabinets",
+	"short": "cabinets",
+	"type": "ma",
+	"original": "Galileo",
+	"version": 1,
+	"date": "2018-10-29",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-10-29",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"submitter": "Enno Ruijters <e.j.j.ruijters@utwente.nl>",
+	"source": "https://doi.org/10.1007/978-3-319-25423-4_19",
+	"part-of": {
+		"name": "the Twente Arberretum",
+		"url": "https://dftbenchmarks.utwente.nl/"
+	},
+	"description": "The railway cabinets model is a dynamic fault tree modelling high-voltage and relay cabinets along a railway. Multiple cabinets provide N-1 redundancy (i.e., any single cabinet of both types can fail without causing a system failure). Periodic inspections repair any worn or failed cabinets. This model was introduced in [0] as an industrial case study, and modified to remove nondeterminism in the repair policy in [1] (for the repairable, `R´=true models). The modelled railway corridor has `2N´ cabinets (`N´ high voltage cabinets and `N´ relay cabinets), and failure times are governed by `P´-phase Erlang distributions. The original model was translated by the DFTRES tool [2] using the DFTCalc tool [0]. Note that the construction by DFTCalc introduces spurious nondeterminism, while the quotient of this model under weak bisimulation is a CTMC (i.e., has no nondeterminism).",
+	"challenge": "rare event, small weak bisimulation quotient",
+	"references": [
+		"https://doi.org/10.1007/978-3-319-66266-4_2",
+		"https://github.com/utwente-fmt/DFTRES"
+	],
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of cabinet pairs",
+			"type": "positive integer"
+		},
+		{
+			"name": "P",
+			"kind": "file",
+			"description": "Number phases in the Erlang distribution of failure times",
+			"type": "positive integer"
+		},
+		{
+			"name": "R",
+			"kind": "file",
+			"description": "Whether the components are periodically repaired or not",
+			"type": "Boolean"
+		}
+	],
+	"properties": [
+		{
+			"name": "Unreliability",
+			"type": "prob-reach-time-bounded",
+			"description": "Probability that a system failure occurs before time 1."
+		},
+		{
+			"name": "Unavailability",
+			"type": "steady-state-prob",
+			"description": "Steady state probability of being in a failed state (only useful for repairable instances)."
+		}
+	],
+	"files": [
+		{
+			"file": "cabinets.2-1-false.jani",
+			"original-file": "cabinets.2-1-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-1-false.jani -a -r 1 cabinets.2-1-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 28324
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.2-1-true.jani",
+			"original-file": "cabinets.2-1-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-1-true.jani -a -r 1 cabinets.2-1-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.2-2-false.jani",
+			"original-file": "cabinets.2-2-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-2-false.jani -a -r 1 cabinets.2-2-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 198660
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.2-2-true.jani",
+			"original-file": "cabinets.2-2-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-2-true.jani -a -r 1 cabinets.2-2-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.2-3-false.jani",
+			"original-file": "cabinets.2-3-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-3-false.jani -a -r 1 cabinets.2-3-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.2-3-true.jani",
+			"original-file": "cabinets.2-3-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.2-3-true.jani -a -r 1 cabinets.2-3-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-1-false.jani",
+			"original-file": "cabinets.3-1-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-1-false.jani -a -r 1 cabinets.3-1-false.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1170172
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-1-true.jani",
+			"original-file": "cabinets.3-1-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-1-true.jani -a -r 1 cabinets.3-1-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-2-false.jani",
+			"original-file": "cabinets.3-2-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-2-false.jani -a -r 1 cabinets.3-2-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-2-true.jani",
+			"original-file": "cabinets.3-2-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-2-true.jani -a -r 1 cabinets.3-2-true.dft"
+			},
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm",
+							"number": 4427421
+						}
+					],
+					"results": [
+						{
+							"property": "Unreliability",
+							"value": {
+								"lower": 5.67352732e-08,
+								"upper": 7.67352732e-08
+							},
+							"note": "Storm"
+						}
+					]
+				}
+			],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-3-false.jani",
+			"original-file": "cabinets.3-3-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-3-false.jani -a -r 1 cabinets.3-3-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.3-3-true.jani",
+			"original-file": "cabinets.3-3-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.3-3-true.jani -a -r 1 cabinets.3-3-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-1-false.jani",
+			"original-file": "cabinets.4-1-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-1-false.jani -a -r 1 cabinets.4-1-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-1-true.jani",
+			"original-file": "cabinets.4-1-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-1-true.jani -a -r 1 cabinets.4-1-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 1
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-2-false.jani",
+			"original-file": "cabinets.4-2-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-2-false.jani -a -r 1 cabinets.4-2-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-2-true.jani",
+			"original-file": "cabinets.4-2-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-2-true.jani -a -r 1 cabinets.4-2-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 2
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-3-false.jani",
+			"original-file": "cabinets.4-3-false.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-3-false.jani -a -r 1 cabinets.4-3-false.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": false
+				}
+			]
+		},
+		{
+			"file": "cabinets.4-3-true.jani",
+			"original-file": "cabinets.4-3-true.dft",
+			"conversion": {
+				"tool": "DFTRES",
+				"version": "7ba4d5bd",
+				"url": "https://github.com/utwente-fmt/DFTRES",
+				"command": "java -jar DFTRES.jar --json --export-jani cabinets.4-3-true.jani -a -r 1 cabinets.4-3-true.dft"
+			},
+			"open-parameter-values": [],
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "P",
+					"value": 3
+				},
+				{
+					"name": "R",
+					"value": true
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": true,
+			"file": "results/Storm.3-2-true.2018-12-03.json"
+		}
+	]
+}

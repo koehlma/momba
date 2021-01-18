@@ -1,0 +1,75 @@
+{
+	"file": "../nand.jani",
+	"version": 1,
+	"date": "2018-10-17",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.20-2.2018-10-17.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 20
+		},
+		{
+			"name": "K",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani nand.jani --janiproperty --constants N=20,K=2 --exact --timemem",
+	"time": 9.038,
+	"memory": 177209344,
+	"property-times": [
+		{
+			"name": "reliable",
+			"time": 1.159
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 7.856
+				},
+				{
+					"name": "states",
+					"value": 154942
+				},
+				{
+					"name": "branches",
+					"value": 239832
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "reliable",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.159
+				}
+			],
+			"value": {
+				"approx": 0.4128626239673106,
+				"num": 2194974688808488055424508277308731491759855468938970202969488797908761894476812508369389774856612630215525485926848858903537587811049771143274343755845368296314570667710474176164598619399,
+				"den": 5316477107364120698473441922057214404170674202069463137948043796477945775679108186261508907874916552941615372157992269577569868083122273105800559278577566146850585937500000000000000000000
+			}
+		}
+	]
+}

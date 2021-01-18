@@ -1,0 +1,47 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:27 2018
+Command line arguments: --jani reentrant-queues.3-3-3_removed-disc-nondet.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/reentrant-queues
+
+Time for model construction: 5.711s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	126801
+Transitions: 	419346
+Choices: 	320026
+Markovian St.: 	120001
+Max. Rate.: 	61/10
+Reward Models:  none
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * ((sizeLeft = 3) & (sizeRight = 3)) -> 43200 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.306s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	90033
+Transitions: 	206729
+Choices: 	145149
+Markovian St.: 	41518
+Max. Rate.: 	61/10
+Reward Models:  none
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * ((sizeLeft = 3) & (sizeRight = 3)) -> 34560 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "PminBothQueuesFullIsOne": Pmin>=1 [F ((sizeLeft = 3) & (sizeRight = 3))] ...
+Result (for initial states): 1
+Time for model checking: 0.267s.
+
+Model checking property "TminBothQueuesFull": T[exp]min=? [F ((sizeLeft = 3) & (sizeRight = 3))] ...
+
+Aborted after 18000 seconds.

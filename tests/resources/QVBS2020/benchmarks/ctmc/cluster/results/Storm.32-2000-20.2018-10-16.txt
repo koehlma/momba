@@ -1,0 +1,57 @@
+Storm 1.2.4 (dev)
+
+Date: Tue Oct 16 06:26:22 2018
+Command line arguments: --jani cluster.jani --janiproperty --constants 'N=32,T=2000,t=20' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/cluster
+
+Time for model construction: 0.910s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (sparse)
+States: 	38676
+Transitions: 	186400
+Reward Models:  time_not_min, num_repairs, percent_op
+State Labels: 	4 labels
+   * deadlock -> 0 item(s)
+   * label_minimum -> 9465 item(s)
+   * init -> 1 item(s)
+   * premium -> 2269 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "below_min": R[exp]{"time_not_min"}min=? [C<=2000] ...
+Result (for initial states): 0.004169395852
+Time for model checking: 112.125s.
+
+Model checking property "operational": R[exp]{"percent_op"}min=? [I=20] ...
+Result (for initial states): 99.86839667
+Time for model checking: 1.085s.
+
+Model checking property "premium_steady": LRAmin=? ["premium"] ...
+Result (for initial states): 0.999288661
+Time for model checking: 1.886s.
+
+Model checking property "qos1": Pmin=? [true U<=2000 !("label_minimum")] ...
+Result (for initial states): 0.001033611741
+Time for model checking: 15.482s.
+
+Model checking property "qos2": Pmin=? [true U[20, 20] !("label_minimum")] ...
+Result (for initial states): 1.993482081e-06
+Time for model checking: 1.109s.
+
+Model checking property "qos3": Pmin=? ["label_minimum" U<=20 "premium"] ...
+Result (for initial states): 1
+Time for model checking: 0.189s.
+
+Model checking property "qos4": Pmin=? [!("label_minimum") U>=20 "label_minimum"] ...
+Result (for initial states): 0
+Time for model checking: 0.900s.
+
+Model checking property "repairs": R[exp]{"num_repairs"}min=? [C<=2000] ...
+Result (for initial states): 256.9705207
+Time for model checking: 112.831s.
+
+Performance statistics:
+  * peak memory usage: 85MB
+  * CPU time: 246.361s
+  * wallclock time: 246.530s

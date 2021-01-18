@@ -1,0 +1,97 @@
+{
+	"file": "../philosophers.12.jani",
+	"version": 1,
+	"date": "2018-10-25",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.hybrid.12-1.2018-10-25.txt",
+	"open-parameter-values": [
+		{
+			"name": "TIME_BOUND",
+			"value": 1
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"hybrid"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani philosophers.12.jani --janiproperty --constants TIME_BOUND=1 --engine hybrid --timemem",
+	"time": 1.997,
+	"memory": 87031808,
+	"property-times": [
+		{
+			"name": "MaxPrReachDeadlock",
+			"time": 0.018
+		},
+		{
+			"name": "MaxPrReachDeadlockTB",
+			"time": 1.183
+		},
+		{
+			"name": "MinExpTimeDeadlock",
+			"time": 0.594
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.185
+				},
+				{
+					"name": "states",
+					"value": 39202
+				},
+				{
+					"name": "branches",
+					"value": 304105
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "MaxPrReachDeadlock",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.018
+				}
+			],
+			"value": 1
+		},
+		{
+			"property": "MaxPrReachDeadlockTB",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.183
+				}
+			],
+			"value": 0.000759393967
+		},
+		{
+			"property": "MinExpTimeDeadlock",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.594
+				}
+			],
+			"value": 9.557359896
+		}
+	]
+}

@@ -1,0 +1,121 @@
+{
+	"file": "../resource-gathering.jani",
+	"version": 2,
+	"date": "2018-11-22",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.400-30-30.2018-11-22.txt",
+	"open-parameter-values": [
+		{
+			"name": "B",
+			"value": 400
+		},
+		{
+			"name": "GOLD_TO_COLLECT",
+			"value": 30
+		},
+		{
+			"name": "GEM_TO_COLLECT",
+			"value": 30
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "Intel Core i5-5257U",
+		"ram": 16,
+		"os": "macOS 10.14.1",
+		"runtime": "Apple LLVM version 10.0.0 (clang-1000.11.45.5)"
+	},
+	"command": "storm --jani resource-gathering.jani --janiproperty  --constants B=400,GOLD_TO_COLLECT=30,GEM_TO_COLLECT=30 --exact --timemem",
+	"time": 424.5476291179657,
+	"memory": 198180864,
+	"property-times": [
+		{
+			"name": "expgold",
+			"time": 247.387
+		},
+		{
+			"name": "expsteps",
+			"time": 15.598
+		},
+		{
+			"name": "prgoldgem",
+			"time": 147.793
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 13.466,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 90334
+				},
+				{
+					"name": "transitions",
+					"value": 290222
+				},
+				{
+					"name": "branches",
+					"value": 313286
+				}
+			]
+		},
+		{
+			"property": "expgold",
+			"value": {
+				"num": 2223069286897035336984392597056847016890586783579314864269796120502251854579941477462685566055157610998958027136282413703655174244046896796834763279969733490943,
+				"den": 50000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+				"approx": 44.46138573794071
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 247.387,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "expsteps",
+			"value": {
+				"num": 3490,
+				"den": 9,
+				"approx": 387.77777777777777
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 15.598,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "prgoldgem",
+			"value": {
+				"num": 8647565951595304254437539859537432101902224915260115854978175107719078553743,
+				"den": 10000000000000000000000000000000000000000000000000000000000000000000000000000,
+				"approx": 0.8647565951595304
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 147.793,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}

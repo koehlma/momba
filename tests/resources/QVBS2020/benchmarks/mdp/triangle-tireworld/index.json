@@ -1,0 +1,172 @@
+{
+	"name": "Triangle Tireworld",
+	"short": "triangle-tireworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://users.cecs.anu.edu.au/~iain/icaps07.pdf",
+	"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 model [1] described in [2] of the triangle tireworld [0]. A car has to move between two of the `l´ locations. When the car drives a segment of the route, there is the chance of getting a flat tire. Spare tires are only available in some locations. Like the original tireworld but with slight differences in the definition to permit short but dangerous paths.",
+	"references": [
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html",
+		"https://onlinelibrary.wiley.com/doi/pdf/10.1111/exsy.12037"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{
+			"name": "l",
+			"kind": "file",
+			"description": "Number of locations",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "triangle-tireworld.9.jani",
+			"original-file": [
+				"domain.pddl",
+				"p01.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p01.pddl --jani triangle-tireworld.9.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "l",
+					"value": 9
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 80,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 80
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "triangle-tireworld.441.jani",
+			"original-file": [
+				"domain.pddl",
+				"p10.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p10.pddl --jani triangle-tireworld.441.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "l",
+					"value": 441
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "triangle-tireworld.1681.jani",
+			"original-file": [
+				"domain.pddl",
+				"p20.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p20.pddl --jani triangle-tireworld.1681.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "l",
+					"value": 1681
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "triangle-tireworld.3721.jani",
+			"original-file": [
+				"domain.pddl",
+				"p30.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p30.pddl --jani triangle-tireworld.3721.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "l",
+					"value": 3721
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "triangle-tireworld.6561.jani",
+			"original-file": [
+				"domain.pddl",
+				"p40.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py domain.pddl p40.pddl --jani triangle-tireworld.6561.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "l",
+					"value": 6561
+				}
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the destination."
+		}
+	],
+	"results": [
+		"results/mcsta.9.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.9.2018-10-03.json"
+		}
+	]
+}

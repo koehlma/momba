@@ -1,0 +1,21 @@
+const int T;
+
+// Maximum probability that both stations have sent their packets within time T
+// RESULT (K=1,T=1000): 0.0
+// RESULT (K=1,T=1750): 0.583332
+// RESULT (K=1,T=1800): 0.729165
+// RESULT (K=1,T=2000): 0.929362
+// RESULT (K=1,T=3000): 0.999985
+"deadline_max": Pmax=? [ F<=T "done" ];
+
+// Minimum probability that both stations have sent their packets within time T
+// RESULT (K=1,T=1000): 0.0
+// RESULT (K=1,T=1750): 0.333328
+// RESULT (K=1,T=1800): 0.583332
+// RESULT (K=1,T=2000): 0.869791
+// RESULT (K=1,T=3000): 0.999820
+"deadline_min": Pmin=? [ F<=T "done" ];
+
+// Minimum probability that both stations eventually send their packets
+// RESULT (K=1): 1.0
+"eventually": Pmin=? [ F "done" ];

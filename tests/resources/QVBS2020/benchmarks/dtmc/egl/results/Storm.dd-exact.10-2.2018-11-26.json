@@ -1,0 +1,95 @@
+{
+	"file": "../egl.jani",
+	"version": 1,
+	"date": "2018-11-26",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd-exact.10-2.2018-11-26.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 10
+		},
+		{
+			"name": "L",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani egl.jani --janiproperty messagesB,unfairA --constants N=10,L=2 --engine dd --exact --timemem",
+	"time": 3.430037260055542,
+	"memory": 3180331008,
+	"property-times": [
+		{
+			"name": "messagesB",
+			"time": 1.302
+		},
+		{
+			"name": "unfairA",
+			"time": 0.423
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 1.564,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 66060286
+				},
+				{
+					"name": "branches",
+					"value": 67108861
+				}
+			]
+		},
+		{
+			"property": "messagesB",
+			"value": {
+				"num": 2102779,
+				"approx": 4.010732650756836,
+				"den": 524288
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 1.302,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "unfairA",
+			"value": {
+				"num": 1025,
+				"approx": 0.50048828125,
+				"den": 2048
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 0.423,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,38 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 25 19:28:47 2018
+Command line arguments: --jani philosophers.12.jani --janiproperty --constants TIME_BOUND=1 --engine hybrid --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ctmc/philosopoers
+
+Time for model input parsing: 0.009s.
+
+Time for model construction: 0.185s.
+
+-------------------------------------------------------------- 
+Model type: 	CTMC (symbolic)
+States: 	39202 (198 nodes)
+Transitions: 	304105 (1597 nodes)
+Reward Models:  none
+Variables: 	rows: 49 meta variables (49 DD variables), columns: 49 meta variables (49 DD variables)
+Labels: 	3
+   * deadlock -> 1 state(s) (50 nodes)
+   * init -> 1 state(s) (50 nodes)
+   * deadl
+-------------------------------------------------------------- 
+
+Model checking property "MaxPrReachDeadlock": Pmax=? [F "deadl"] ...
+Result (for initial states): 1
+Time for model checking: 0.018s.
+
+Model checking property "MaxPrReachDeadlockTB": Pmax=? [true U<=1 "deadl"] ...
+Result (for initial states): 0.000759393967
+Time for model checking: 1.183s.
+
+Model checking property "MinExpTimeDeadlock": T[exp]min=? [F "deadl"] ...
+Result (for initial states): 9.557359896
+Time for model checking: 0.594s.
+
+Performance statistics:
+  * peak memory usage: 83MB
+  * CPU time: 2.023s
+  * wallclock time: 1.997s

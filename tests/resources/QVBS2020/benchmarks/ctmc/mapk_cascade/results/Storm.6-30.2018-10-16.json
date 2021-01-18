@@ -1,0 +1,82 @@
+{
+	"file": "../mapk_cascade.jani",
+	"version": 1,
+	"date": "2018-10-16",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.6-30.2018-10-16.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 6
+		},
+		{
+			"name": "T",
+			"value": 30
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani mapk_cascade.jani --janiproperty --constants N=6,T=30  --timemem",
+	"time": 6374.393000000001,
+	"property-times": [
+		{
+			"name": "activated_T",
+			"time": 6260.144
+		},
+		{
+			"name": "activated_time",
+			"time": 27.27
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 86.979
+				},
+				{
+					"name": "states",
+					"value": 1373026
+				},
+				{
+					"name": "branches",
+					"value": 15015264
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "activated_T",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 6260.144
+				}
+			],
+			"value": 4.121133676
+		},
+		{
+			"property": "activated_time",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 27.27
+				}
+			],
+			"value": 35.96844199
+		}
+	]
+}

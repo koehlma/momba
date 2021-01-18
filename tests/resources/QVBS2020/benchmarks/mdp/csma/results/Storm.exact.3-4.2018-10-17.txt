@@ -1,0 +1,47 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 05:11:42 2018
+Command line arguments: --jani csma.3-4.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/csma
+
+Time for model construction: 56.867s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	1460287
+Transitions: 	2396727
+Choices: 	1471059
+Reward Models:  time
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * collision_max_backoff -> 1427 item(s)
+   * ((min((min(((s1 = 4) ? cd1 : 5), ((s2 = 4) ? cd2 : 5))), ((s3 = 4) ? cd3 : 5))) < 4) -> 51876 item(s)
+   * all_delivered -> 13 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "all_before_max": Pmax=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 2599282671417859453572130598089066646673439/2787593149816327892691964784081045188247552 (approx. 0.9324469288)
+Time for model checking: 9.203s.
+
+Model checking property "all_before_min": Pmin=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 10087646543393640088681602841876196716990569/11150372599265311570767859136324180752990208 (approx. 0.904691431)
+Time for model checking: 7.633s.
+
+Model checking property "some_before": Pmin=? [F ((min((min(((s1 = 4) ? cd1 : 5), ((s2 = 4) ? cd2 : 5))), ((s3 = 4) ? cd3 : 5))) < 4)] ...
+Result (for initial states): 2392518835976157452229363/2417851639229258349412352 (approx. 0.9895225981)
+Time for model checking: 4.694s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "all_delivered"] ...
+Result (for initial states): 166122942688484522122222831070293418963831808920856249617133764705825669222172375796788473650081795725931645/1422063199867123919195021167725985101479111788846785036704887421368371275362579041459447439142249285287936 (approx. 116.8182558)
+Time for model checking: 40.958s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F "all_delivered"] ...
+Result (for initial states): 2509374424415801914177659161450455318827631746556399/23384026197294446691258957323460528314494920687616 (approx. 107.3114785)
+Time for model checking: 31.383s.
+
+Performance statistics:
+  * peak memory usage: 1531MB
+  * CPU time: 150.568s
+  * wallclock time: 151.711s

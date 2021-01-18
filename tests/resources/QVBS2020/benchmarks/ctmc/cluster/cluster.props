@@ -1,0 +1,20 @@
+const double T;
+const double t;
+
+// Expected time the system spends below minimum QoS until time T
+"below_min": R{"time_not_min"}=? [ C<=T ];
+// Percentage of operational workstations at time t
+"operational": R{"percent_op"}=? [ I=t ];
+// Long-run probability that premium QoS will be delivered
+"premium_steady": S=? [ "premium" ];
+// Probability that QoS drops below minimum quality within T time units
+"qos1": P=? [ F<=T !"minimum" ];
+// Probability of facing insufficient QoS after t time units
+"qos2": P=? [ F[t,t] !"minimum" ];
+// Probability of going from minimum QoS to premium QoS
+// within t time units without violating the minimum QoS constraint along the way
+"qos3": P=? [ "minimum" U<=t "premium" ];
+// Probability that it takes more than T time units to recover from insufficient QoS
+"qos4": P=? [ !"minimum" U>=t "minimum" ];
+// Expected number of repairs by time T
+"repairs": R{"num_repairs"}=? [ C<=T ];

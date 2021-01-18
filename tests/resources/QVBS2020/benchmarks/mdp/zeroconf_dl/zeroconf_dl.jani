@@ -1,0 +1,2966 @@
+{
+    "actions": [
+        {
+            "name": "done"
+        },
+        {
+            "name": "rec"
+        },
+        {
+            "name": "reset"
+        },
+        {
+            "name": "send"
+        },
+        {
+            "name": "time"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip7 <- 0",
+                                    "ref": "b_ip7",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip6 <- b_ip7",
+                                    "ref": "b_ip6",
+                                    "value": "b_ip7"
+                                },
+                                {
+                                    "comment": "b_ip5 <- b_ip6",
+                                    "ref": "b_ip5",
+                                    "value": "b_ip6"
+                                },
+                                {
+                                    "comment": "b_ip4 <- b_ip5",
+                                    "ref": "b_ip4",
+                                    "value": "b_ip5"
+                                },
+                                {
+                                    "comment": "b_ip3 <- b_ip4",
+                                    "ref": "b_ip3",
+                                    "value": "b_ip4"
+                                },
+                                {
+                                    "comment": "b_ip2 <- b_ip3",
+                                    "ref": "b_ip2",
+                                    "value": "b_ip3"
+                                },
+                                {
+                                    "comment": "b_ip1 <- b_ip2",
+                                    "ref": "b_ip1",
+                                    "value": "b_ip2"
+                                },
+                                {
+                                    "comment": "b_ip0 <- b_ip1",
+                                    "ref": "b_ip0",
+                                    "value": "b_ip1"
+                                },
+                                {
+                                    "comment": "n <- (n - 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "b <- 1",
+                                    "ref": "b",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "ip_mess <- b_ip0",
+                                    "ref": "ip_mess",
+                                    "value": "b_ip0"
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/10)",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip7 <- 0",
+                                    "ref": "b_ip7",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip6 <- b_ip7",
+                                    "ref": "b_ip6",
+                                    "value": "b_ip7"
+                                },
+                                {
+                                    "comment": "b_ip5 <- b_ip6",
+                                    "ref": "b_ip5",
+                                    "value": "b_ip6"
+                                },
+                                {
+                                    "comment": "b_ip4 <- b_ip5",
+                                    "ref": "b_ip4",
+                                    "value": "b_ip5"
+                                },
+                                {
+                                    "comment": "b_ip3 <- b_ip4",
+                                    "ref": "b_ip3",
+                                    "value": "b_ip4"
+                                },
+                                {
+                                    "comment": "b_ip2 <- b_ip3",
+                                    "ref": "b_ip2",
+                                    "value": "b_ip3"
+                                },
+                                {
+                                    "comment": "b_ip1 <- b_ip2",
+                                    "ref": "b_ip1",
+                                    "value": "b_ip2"
+                                },
+                                {
+                                    "comment": "b_ip0 <- b_ip1",
+                                    "ref": "b_ip0",
+                                    "value": "b_ip1"
+                                },
+                                {
+                                    "comment": "n <- (n - 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 0)) & (n > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n0 <- (n0 - 1)",
+                                    "ref": "n0",
+                                    "value": {
+                                        "left": "n0",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "b <- 2",
+                                    "ref": "b",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/10)",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n0 <- (n0 - 1)",
+                                    "ref": "n0",
+                                    "value": {
+                                        "left": "n0",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 0)) & (n0 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n0",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n1 <- (n1 - 1)",
+                                    "ref": "n1",
+                                    "value": {
+                                        "left": "n1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "b <- 2",
+                                    "ref": "b",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip_mess <- 1",
+                                    "ref": "ip_mess",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/10)",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n1 <- (n1 - 1)",
+                                    "ref": "n1",
+                                    "value": {
+                                        "left": "n1",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 0)) & (n1 > 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n1",
+                                "op": ">",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n0 <- (min((n0 + 1), 20))",
+                                    "ref": "n0",
+                                    "value": {
+                                        "left": {
+                                            "left": "n0",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 20
+                                    }
+                                },
+                                {
+                                    "comment": "b <- 0",
+                                    "ref": "b",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "z <- 0",
+                                    "ref": "z",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 1)) & (ip_mess = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n1 <- (min((n1 + 1), 8))",
+                                    "ref": "n1",
+                                    "value": {
+                                        "left": {
+                                            "left": "n1",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 8
+                                    }
+                                },
+                                {
+                                    "comment": "b <- 0",
+                                    "ref": "b",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "z <- 0",
+                                    "ref": "z",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 1)) & (ip_mess = 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b <- 0",
+                                    "ref": "b",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "z <- 0",
+                                    "ref": "z",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b = 1)) & (ip_mess = 2))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": "=",
+                                    "right": 1
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "=",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b <- 0",
+                                    "ref": "b",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "z <- 0",
+                                    "ref": "z",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (b = 2))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "b",
+                                "op": "=",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "reset",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip7 <- 0",
+                                    "ref": "b_ip7",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip6 <- 0",
+                                    "ref": "b_ip6",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip5 <- 0",
+                                    "ref": "b_ip5",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip4 <- 0",
+                                    "ref": "b_ip4",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip3 <- 0",
+                                    "ref": "b_ip3",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip2 <- 0",
+                                    "ref": "b_ip2",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip1 <- 0",
+                                    "ref": "b_ip1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "b_ip0 <- 0",
+                                    "ref": "b_ip0",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "n <- (reset ? 0 : n)",
+                                    "ref": "n",
+                                    "value": {
+                                        "else": "n",
+                                        "if": "reset",
+                                        "op": "ite",
+                                        "then": 0
+                                    }
+                                },
+                                {
+                                    "comment": "n0 <- (min(20, (n0 + n1)))",
+                                    "ref": "n0",
+                                    "value": {
+                                        "left": 20,
+                                        "op": "min",
+                                        "right": {
+                                            "left": "n0",
+                                            "op": "+",
+                                            "right": "n1"
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "n1 <- 0",
+                                    "ref": "n1",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip_mess <- 0",
+                                    "ref": "ip_mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip4 <- ip",
+                                    "ref": "b_ip4",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 4))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip2 <- ip",
+                                    "ref": "b_ip2",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 2))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip5 <- ip",
+                                    "ref": "b_ip5",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 5))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 5
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip6 <- ip",
+                                    "ref": "b_ip6",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 6))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 6
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip1 <- ip",
+                                    "ref": "b_ip1",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 1))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip7 <- ip",
+                                    "ref": "b_ip7",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 7))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 7
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip3 <- ip",
+                                    "ref": "b_ip3",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 3))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 3
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "n <- n",
+                                    "ref": "n",
+                                    "value": "n"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 8))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 8
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b_ip0 <- ip",
+                                    "ref": "b_ip0",
+                                    "value": "ip"
+                                },
+                                {
+                                    "comment": "n <- (n + 1)",
+                                    "ref": "n",
+                                    "value": {
+                                        "left": "n",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l > 0) & (n = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "n",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "z <- (min((z + 1), 1))",
+                                    "ref": "z",
+                                    "value": {
+                                        "left": {
+                                            "left": "z",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l > 0) & (b > 0)) & (z < 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "b",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "z",
+                                "op": "<",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "b <- b",
+                                    "ref": "b",
+                                    "value": "b"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((((l > 0) & (b = 0)) & (n = 0)) & (n0 = 0)) & (n1 = 0))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "n1",
+                                        "op": "=",
+                                        "right": 0
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": "b",
+                                        "op": "=",
+                                        "right": 0
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "n",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "n0",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": ">",
+                                    "right": 0
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "environment",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 1",
+                                    "ref": "x",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 2",
+                                    "ref": "x",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 1",
+                                    "ref": "x",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 2",
+                                    "ref": "x",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l = 1) & (coll < 10))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "coll",
+                                "op": "<",
+                                "right": 10
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 1",
+                                    "ref": "x",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 2",
+                                    "ref": "x",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip <- 1",
+                                    "ref": "ip",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (N / 65024))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": "N",
+                                        "op": "/",
+                                        "right": 65024
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 1",
+                                    "ref": "x",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 2",
+                                    "ref": "x",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "ip <- 2",
+                                    "ref": "ip",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "l <- 2",
+                                    "ref": "l",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 3) * (1 - (N / 65024)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 3
+                                    },
+                                    "op": "*",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "-",
+                                        "right": {
+                                            "left": "N",
+                                            "op": "/",
+                                            "right": 65024
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l = 1) & (coll = 10)) & (x = 60))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coll",
+                                    "op": "=",
+                                    "right": 10
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "=",
+                                "right": 60
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "coll <- 0",
+                                    "ref": "coll",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "probes <- 0",
+                                    "ref": "probes",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "l <- 3",
+                                    "ref": "l",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l = 2) & (x = 2)) & (probes = K))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": 2
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "probes",
+                                "op": "=",
+                                "right": "K"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(l = 4)",
+                        "exp": {
+                            "left": "l",
+                            "op": "=",
+                            "right": 4
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "l <- l",
+                                    "ref": "l",
+                                    "value": "l"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l = 2) & (ip_mess != ip))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "≠",
+                                "right": "ip"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "coll <- (min((coll + 1), 10))",
+                                    "ref": "coll",
+                                    "value": {
+                                        "left": {
+                                            "left": "coll",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 10
+                                    }
+                                },
+                                {
+                                    "comment": "probes <- 0",
+                                    "ref": "probes",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "l <- 0",
+                                    "ref": "l",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l = 2) & (ip_mess = ip))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "=",
+                                "right": "ip"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "mess <- 1",
+                                    "ref": "mess",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "defend <- 1",
+                                    "ref": "defend",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (ip_mess = ip)) & ((defend = 0) | (y >= 10)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "defend",
+                                        "op": "=",
+                                        "right": 0
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": "y",
+                                        "op": "≥",
+                                        "right": 10
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "ip_mess",
+                                    "op": "=",
+                                    "right": "ip"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "probes <- 0",
+                                    "ref": "probes",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "defend <- 0",
+                                    "ref": "defend",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "l <- 0",
+                                    "ref": "l",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (ip_mess = ip)) & ((defend = 0) | (y < 10)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": "defend",
+                                        "op": "=",
+                                        "right": 0
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": "y",
+                                        "op": "<",
+                                        "right": 10
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "ip_mess",
+                                    "op": "=",
+                                    "right": "ip"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "l <- l",
+                                    "ref": "l",
+                                    "value": "l"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l = 3) & (mess = 0)) & (ip_mess != ip))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ip_mess",
+                                "op": "≠",
+                                "right": "ip"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "rec",
+                    "destinations": [
+                        {
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(l = 1)",
+                        "exp": {
+                            "left": "l",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "reset",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "l <- 1",
+                                    "ref": "l",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(l = 0)",
+                        "exp": {
+                            "left": "l",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "probes <- (probes + 1)",
+                                    "ref": "probes",
+                                    "value": {
+                                        "left": "probes",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l = 2) & (x = 2)) & (probes < K))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": 2
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "probes",
+                                "op": "<",
+                                "right": "K"
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "probes <- (probes + 1)",
+                                    "ref": "probes",
+                                    "value": {
+                                        "left": "probes",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (x = 2)) & (probes < 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "probes",
+                                    "op": "<",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "probes <- 0",
+                                    "ref": "probes",
+                                    "value": 0
+                                },
+                                {
+                                    "comment": "l <- 4",
+                                    "ref": "l",
+                                    "value": 4
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (x = 2)) & (probes = 1))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "probes",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "send",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "mess <- 0",
+                                    "ref": "mess",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l = 3) & (mess = 1))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": "=",
+                                "right": 3
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "mess",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (min((x + 1), 60))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 60
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (defend = 0)) & (x < 2))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "<",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "defend",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (min((x + 1), 60))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 60
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(((l = 1) & (coll = 10)) & (x < 60))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "coll",
+                                    "op": "=",
+                                    "right": 10
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 60
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (min((x + 1), 2))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 2
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((l = 2) & (x < 2))",
+                        "exp": {
+                            "left": {
+                                "left": "l",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "<",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x <- (min((x + 1), 60))",
+                                    "ref": "x",
+                                    "value": {
+                                        "left": {
+                                            "left": "x",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 60
+                                    }
+                                },
+                                {
+                                    "comment": "y <- (min((y + 1), 10))",
+                                    "ref": "y",
+                                    "value": {
+                                        "left": {
+                                            "left": "y",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": 10
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((((l = 3) & (mess = 0)) & (defend = 1)) & (x < 2))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "<",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "mess",
+                                    "op": "=",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "defend",
+                                    "op": "=",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 3
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "host0",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "done",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t <- (deadline + 1)",
+                                    "ref": "t",
+                                    "value": {
+                                        "left": "deadline",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(l = 4)",
+                        "exp": {
+                            "left": "l",
+                            "op": "=",
+                            "right": 4
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "time",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "t <- (min((t + 1), (deadline + 1)))",
+                                    "ref": "t",
+                                    "value": {
+                                        "left": {
+                                            "left": "t",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "deadline",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(t <= deadline)",
+                        "exp": {
+                            "left": "t",
+                            "op": "≤",
+                            "right": "deadline"
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "timer",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "reset",
+            "type": "bool"
+        },
+        {
+            "name": "deadline",
+            "type": "int"
+        },
+        {
+            "name": "N",
+            "type": "int"
+        },
+        {
+            "name": "K",
+            "type": "int"
+        },
+        {
+            "name": "loss",
+            "type": "real",
+            "value": 0.1
+        },
+        {
+            "name": "old",
+            "type": "real",
+            "value": {
+                "left": "N",
+                "op": "/",
+                "right": 65024
+            }
+        },
+        {
+            "name": "new",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "-",
+                "right": {
+                    "left": "N",
+                    "op": "/",
+                    "right": 65024
+                }
+            }
+        },
+        {
+            "name": "CONSEC",
+            "type": "int",
+            "value": 2
+        },
+        {
+            "name": "TRANSTIME",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "LONGWAIT",
+            "type": "int",
+            "value": 60
+        },
+        {
+            "name": "DEFEND",
+            "type": "int",
+            "value": 10
+        },
+        {
+            "name": "TIME_MAX_X",
+            "type": "int",
+            "value": 60
+        },
+        {
+            "name": "TIME_MAX_Y",
+            "type": "int",
+            "value": 10
+        },
+        {
+            "name": "TIME_MAX_Z",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "MAXCOLL",
+            "type": "int",
+            "value": 10
+        },
+        {
+            "name": "B0",
+            "type": "int",
+            "value": 20
+        },
+        {
+            "name": "B1",
+            "type": "int",
+            "value": 8
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "zeroconf_dl",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "ip",
+                                    "op": "=",
+                                    "right": 2
+                                }
+                            },
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": {
+                            "left": "t",
+                            "op": "≥",
+                            "right": "deadline"
+                        }
+                    },
+                    "op": "Pmax"
+                }
+            },
+            "name": "deadline_max"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": {
+                                "left": {
+                                    "left": "l",
+                                    "op": "=",
+                                    "right": 4
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "ip",
+                                    "op": "=",
+                                    "right": 2
+                                }
+                            },
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": {
+                            "left": "t",
+                            "op": "≥",
+                            "right": "deadline"
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "deadline_min"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "environment"
+            },
+            {
+                "automaton": "host0"
+            },
+            {
+                "automaton": "timer"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "done",
+                "synchronise": [
+                    null,
+                    null,
+                    "done"
+                ]
+            },
+            {
+                "result": "rec",
+                "synchronise": [
+                    "rec",
+                    "rec",
+                    null
+                ]
+            },
+            {
+                "result": "reset",
+                "synchronise": [
+                    "reset",
+                    "reset",
+                    null
+                ]
+            },
+            {
+                "result": "send",
+                "synchronise": [
+                    "send",
+                    "send",
+                    null
+                ]
+            },
+            {
+                "result": "time",
+                "synchronise": [
+                    "time",
+                    "time",
+                    "time"
+                ]
+            }
+        ]
+    },
+    "type": "mdp",
+    "variables": [
+        {
+            "initial-value": 0,
+            "name": "b_ip7",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip6",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip5",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip4",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b_ip0",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "n",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 8
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "n0",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 20
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "n1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 8
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "b",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "z",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "ip_mess",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "x",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 60
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "y",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 10
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "coll",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 10
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "probes",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "K"
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "mess",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "defend",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "ip",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 1,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "l",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 4
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "t",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": {
+                    "left": "deadline",
+                    "op": "+",
+                    "right": 1
+                }
+            }
+        }
+    ]
+}

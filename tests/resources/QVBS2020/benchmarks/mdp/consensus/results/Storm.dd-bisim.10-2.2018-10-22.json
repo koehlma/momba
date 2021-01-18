@@ -1,0 +1,154 @@
+{
+	"file": "../consensus.10.jani",
+	"version": 1,
+	"date": "2018-10-22",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd-bisim.10-2.2018-10-22.txt",
+	"open-parameter-values": [
+		{
+			"name": "K",
+			"value": 2
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"bisim"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani consensus.10.jani --janiproperty --constants K=2 --engine dd --bisimulation --bisimulation:quot sparse --timemem",
+	"time": 4743.178,
+	"memory": 1027604480,
+	"property-times": [
+		{
+			"name": "c1",
+			"time": 0.298
+		},
+		{
+			"name": "c2",
+			"time": 22.883
+		},
+		{
+			"name": "disagree",
+			"time": 25.668
+		},
+		{
+			"name": "steps_max",
+			"time": 45.17
+		},
+		{
+			"name": "steps_min",
+			"time": 34.601
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.538
+				},
+				{
+					"name": "states",
+					"value": 2761248768
+				},
+				{
+					"name": "branches",
+					"value": 22876380160
+				},
+				{
+					"name": "transitions",
+					"value": 18341416960
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 4613.936
+				},
+				{
+					"name": "states",
+					"value": 84118
+				},
+				{
+					"name": "branches",
+					"value": 791574
+				},
+				{
+					"name": "transitions",
+					"value": 633130
+				}
+			],
+			"group": "Strong bisimulation"
+		},
+		{
+			"property": "c1",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.298
+				}
+			],
+			"value": true
+		},
+		{
+			"property": "c2",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 22.883
+				}
+			],
+			"value": 0.2758435936
+		},
+		{
+			"property": "disagree",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 25.668
+				}
+			],
+			"value": 0.4206941111
+		},
+		{
+			"property": "steps_max",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 45.17
+				}
+			],
+			"value": 2521.253148
+		},
+		{
+			"property": "steps_min",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 34.601
+				}
+			],
+			"value": 1200.270881
+		}
+	]
+}

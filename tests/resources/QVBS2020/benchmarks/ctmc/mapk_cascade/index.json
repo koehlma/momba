@@ -1,0 +1,267 @@
+{
+	"name": "MAPK Cascade",
+	"short": "mapk_cascade",
+	"type": "ctmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Chi-Ying F. Huang <cyhuang5@ym.edu.tw>",
+		"James E. Ferrell <James.Ferrell@stanford.edu>"
+	],
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1073/pnas.93.19.10078",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. The MAP (Mitogen-Activated Protien) Kinases are involved in a pathway through which information is sent to the nucleus. It is one of the most important signalling pathways since it plays a pivotal role in the molecular-signalling that governs the growth, proliferation and survival of many cell types. The MAPK cascade consists of a MAPK Kinase Kinase (MAPKKK), MAPK Kinase (MAPKK) and a MAPK. The cascade is initialised through the phosphorylation of MAPKKK, which then activates MAPKK through the phosphorylation at two serine residues and this then activates MAPK through the phosphorylation at theronine and tyrosine residues. To reduce the state space we employ a population-based approach where the number of each type of molecule or species is modelled. The initial amount of MAPK, MAPKK and MAPKKK is specified as a parameter `N´. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/mapk_cascade.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "open",
+			"description": "Initial amount of MAPK, MAPKK, and MAPKKK",
+			"type": "positive integer"
+		},
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time parameter for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "activated_T",
+			"description": "The expected amount of activated MAPK at time T.",
+			"type": "exp-reward-time-instant"
+		},
+		{
+			"name": "activated_time",
+			"description": "The expected time until all MAPK are activated at the same time instant.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "reactions",
+			"description": "The expected number of reactions between MAPK and MAKK by time T.",
+			"type": "exp-reward-time-bounded"
+		}
+	],
+	"files": [
+		{
+			"file": "mapk_cascade.jani",
+			"original-file": [
+				"mapk_cascade.prism",
+				"mapk_cascade.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism mapk_cascade.prism --tojani mapk_cascade.jani --prop mapk_cascade.props --globalvars --prismcompat"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 1
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 118
+						}
+					],
+					"results": [
+						{
+							"property": "activated_time",
+							"value": {
+								"approx": 66.18981054789236,
+								"num": 3914582430427568423218267765012785245017765784290219366306020212248124142524832173701,
+								"den": 59141768166795548314461317389304859636300010464634225134555497637721643167764049800
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 2
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2172
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 3
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 18292
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 4
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 99535
+						}
+					],
+					"results": [
+						{
+							"property": "activated_time",
+							"value": {
+								"lower": 40.67650299593235,
+								"upper": 40.67650300406765
+							},
+							"note": "Storm/sound"
+						},
+						{
+							"property": "reactions",
+							"value": {
+								"lower": 48.4910276,
+								"upper": 48.49102762
+							},
+							"note": "Storm"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 5
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 408366
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 6
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1373026
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 7
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 3979348
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 8
+						},
+						{
+							"name": "T",
+							"value": 30
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.1-30.2018-10-16.json",
+		"results/Storm.2-30.2018-10-16.json",
+		"results/Storm.3-30.2018-10-16.json",
+		"results/Storm.4-30.2018-10-16.json",
+		"results/Storm.5-30.2018-10-16.json",
+		"results/Storm.6-30.2018-10-16.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1-30.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.4-30.2018-11-29.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.sound.4-30.2018-12-02.json"
+		}
+	]
+}

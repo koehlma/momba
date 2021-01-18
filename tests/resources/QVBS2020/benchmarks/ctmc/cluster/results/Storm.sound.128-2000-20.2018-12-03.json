@@ -1,0 +1,83 @@
+{
+	"file": "../cluster.jani",
+	"version": 1,
+	"date": "2018-12-03",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.sound.128-2000-20.2018-12-03.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 128
+		},
+		{
+			"name": "T",
+			"value": 2000
+		},
+		{
+			"name": "t",
+			"value": 20
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"sound"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani cluster.jani --janiproperty premium_steady --constants N=128,T=2000,t=20  --timemem --sound --precision 1e-10 --to-nondet",
+	"time": 1157.6608216762543,
+	"memory": 307232768,
+	"property-times": [
+		{
+			"name": "premium_steady",
+			"time": 1144.49
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"unit": "s",
+					"value": 12.905
+				},
+				{
+					"name": "states",
+					"value": 597012
+				},
+				{
+					"name": "transitions",
+					"value": 597012
+				},
+				{
+					"name": "branches",
+					"value": 2908192
+				},
+				{
+					"name": "Markovian-states",
+					"value": 597012
+				}
+			]
+		},
+		{
+			"property": "premium_steady",
+			"value": 0.9979378911,
+			"values": [
+				{
+					"name": "time",
+					"unit": "s",
+					"value": 1144.49
+				}
+			]
+		}
+	]
+}

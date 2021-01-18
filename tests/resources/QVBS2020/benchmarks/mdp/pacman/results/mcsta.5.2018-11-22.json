@@ -1,0 +1,60 @@
+﻿{
+	"file": "../pacman.jani",
+	"version": 1,
+	"date": "2018-11-22",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "MAXSTEPS", "value": 5 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.97",
+		"variant": [],
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i5-6600T",
+		"ram": 16,
+		"os": "Windows 10 Pro 1803 (x64)",
+		"runtime": ".NET Framework 4.7.2"
+	},
+	"command": "mcsta.exe pacman.jani -S Memory -E \"MAXSTEPS=5\" -O mcsta.5.2018-11-22.json Json",
+	"time": 1.415,
+	"memory": 68202496,
+	"property-times": [
+		{ "name": "crash", "time": 0.030 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 16, "unit": "B" },
+				{ "name": "States", "value": 235 },
+				{ "name": "Transitions", "value": 295 },
+				{ "name": "Branches", "value": 303 },
+				{ "name": "Rate", "value": 5000 },
+				{ "name": "Time", "value": 0.064, "unit": "s" }
+			]
+		},
+		{
+			"property": "crash",
+			"value": 0.5511,
+			"values": [
+				{ "name": "Bounds", "value": "[0.5511, 0.5511]" },
+				{ "name": "Time", "value": 0.03, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 2 },
+						{ "name": "Time", "value": 0.012, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

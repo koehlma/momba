@@ -1,0 +1,156 @@
+{
+	"name": "Wireless LAN",
+	"short": "wlan-large",
+	"type": "pta",
+	"original": "Modest",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"source": "https://doi.org/10.1007/978-3-319-24953-7_10",
+	"description": "A Modest PTA model of IEEE 802.11 Wireless LAN with the original timing parameters from the standard, based on the PRISM case study with reduced timing parameters [1]. It models two stations trying to send a single packet each. The maximum value of their backoff counters is `K´.",
+	"challenge": "very long time bounds",
+	"references": [
+		"http://www.prismmodelchecker.org/casestudies/wlan.php"
+	],
+	"parameters": [
+		{
+			"name": "K",
+			"kind": "open",
+			"description": "Maximum value of backoff counters",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "wlan-large.jani",
+			"original-file": "wlan-large.modest",
+			"conversion": {
+				"tool": "moconv",
+				"version": "3.0.72",
+				"url": "http://www.modestchecker.net/",
+				"command": "moconv.exe wlan-large.modest -O wlan-large.jani"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "K",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"number": 3283371,
+							"note": "mcsta, digital clocks"
+						},
+						{
+							"note": "Storm",
+							"number": 3283371
+						}
+					],
+					"results": [
+						{
+							"property": "P_1",
+							"value": 1.0,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "P_min",
+							"value": {
+								"approx": 0.0390625,
+								"num": 5,
+								"den": 128
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "P_max",
+							"value": {
+								"approx": 0.0625,
+								"num": 1,
+								"den": 16
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "E_or",
+							"value": {
+								"approx": 33692.457341269845,
+								"num": 33961997,
+								"den": 1008
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties": [
+		{
+			"name": "P_1",
+			"type": "prob-reach",
+			"description": "Verifies that eventually both stations have sent their packet correctly with probability 1."
+		},
+		{
+			"name": "P_min",
+			"type": "prob-reach",
+			"description": "The minimum probability that either station's backoff counter reaches `K´."
+		},
+		{
+			"name": "P_max",
+			"type": "prob-reach",
+			"description": "The maximum probability that either station's backoff counter reaches `K´."
+		},
+		{
+			"name": "D_and",
+			"type": "prob-reach-time-bounded",
+			"description": "The minimum probability of both stations correctly delivering their packets within a time bound."
+		},
+		{
+			"name": "D_or",
+			"type": "prob-reach-time-bounded",
+			"description": "The minimum probability of either station correctly delivering its packet within a time bound."
+		},
+		{
+			"name": "D_1",
+			"type": "prob-reach-time-bounded",
+			"description": "The minimum probability of station 1 correctly delivering its packet within a time bound."
+		},
+		{
+			"name": "E_and",
+			"type": "exp-time",
+			"description": "The maximum expected time until both stations correctly deliver their packets."
+		},
+		{
+			"name": "E_or",
+			"type": "exp-time",
+			"description": "The maximum expected time until either station correctly delivers its packet."
+		},
+		{
+			"name": "E_1",
+			"type": "exp-reward",
+			"description": "The maximum expected time until station 1 correctly delivers its packet."
+		}
+	],
+	"results": [
+		"results/mcsta.2.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2.2018-10-08.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact-ViToPi.2.2018-12-03.json"
+		}
+	]
+}

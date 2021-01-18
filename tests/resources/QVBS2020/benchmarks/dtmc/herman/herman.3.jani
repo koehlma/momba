@@ -1,0 +1,440 @@
+{
+    "actions": [
+        {
+            "name": "step"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x1 <- 0",
+                                    "ref": "x1",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x1 <- 1",
+                                    "ref": "x1",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(x1 = x3)",
+                        "exp": {
+                            "left": "x1",
+                            "op": "=",
+                            "right": "x3"
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x1 <- x3",
+                                    "ref": "x1",
+                                    "value": "x3"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "!((x1 = x3))",
+                        "exp": {
+                            "exp": {
+                                "left": "x1",
+                                "op": "=",
+                                "right": "x3"
+                            },
+                            "op": "¬"
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "stable <- (num_tokens(x1, x2, x3) = 1)",
+                            "ref": "stable",
+                            "value": {
+                                "left": {
+                                    "args": [
+                                        "x1",
+                                        "x2",
+                                        "x3"
+                                    ],
+                                    "function": "num_tokens",
+                                    "op": "call"
+                                },
+                                "op": "=",
+                                "right": 1
+                            }
+                        },
+                        {
+                            "comment": "steps <- 1",
+                            "ref": "steps",
+                            "value": 1
+                        }
+                    ]
+                }
+            ],
+            "name": "process1",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x2 <- 0",
+                                    "ref": "x2",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x2 <- 1",
+                                    "ref": "x2",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(x2 = x1)",
+                        "exp": {
+                            "left": "x2",
+                            "op": "=",
+                            "right": "x1"
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x2 <- x1",
+                                    "ref": "x2",
+                                    "value": "x1"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "!((x2 = x1))",
+                        "exp": {
+                            "exp": {
+                                "left": "x2",
+                                "op": "=",
+                                "right": "x1"
+                            },
+                            "op": "¬"
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process2",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x3 <- 0",
+                                    "ref": "x3",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/2",
+                                "exp": 0.5
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x3 <- 1",
+                                    "ref": "x3",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 - 1/2)",
+                                "exp": 0.5
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(x3 = x2)",
+                        "exp": {
+                            "left": "x3",
+                            "op": "=",
+                            "right": "x2"
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "step",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "x3 <- x2",
+                                    "ref": "x3",
+                                    "value": "x2"
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "!((x3 = x2))",
+                        "exp": {
+                            "exp": {
+                                "left": "x3",
+                                "op": "=",
+                                "right": "x2"
+                            },
+                            "op": "¬"
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "process3",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "p",
+            "type": "real",
+            "value": 0.5
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "functions",
+        "state-exit-rewards"
+    ],
+    "functions": [
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "else": 0,
+                        "if": {
+                            "left": "num_tokens__param__x1",
+                            "op": "=",
+                            "right": "num_tokens__param__x2"
+                        },
+                        "op": "ite",
+                        "then": 1
+                    },
+                    "op": "+",
+                    "right": {
+                        "else": 0,
+                        "if": {
+                            "left": "num_tokens__param__x2",
+                            "op": "=",
+                            "right": "num_tokens__param__x3"
+                        },
+                        "op": "ite",
+                        "then": 1
+                    }
+                },
+                "op": "+",
+                "right": {
+                    "else": 0,
+                    "if": {
+                        "left": "num_tokens__param__x3",
+                        "op": "=",
+                        "right": "num_tokens__param__x1"
+                    },
+                    "op": "ite",
+                    "then": 1
+                }
+            },
+            "name": "num_tokens",
+            "parameters": [
+                {
+                    "name": "num_tokens__param__x1",
+                    "type": "int"
+                },
+                {
+                    "name": "num_tokens__param__x2",
+                    "type": "int"
+                },
+                {
+                    "name": "num_tokens__param__x3",
+                    "type": "int"
+                }
+            ],
+            "type": "int"
+        }
+    ],
+    "jani-version": 1,
+    "name": "herman.3",
+    "properties": [
+        {
+            "expression": {
+                "fun": "max",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "exit"
+                    ],
+                    "exp": "steps",
+                    "op": "Emin",
+                    "reach": "stable"
+                }
+            },
+            "name": "steps"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "process1"
+            },
+            {
+                "automaton": "process2"
+            },
+            {
+                "automaton": "process3"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "step",
+                "synchronise": [
+                    "step",
+                    "step",
+                    "step"
+                ]
+            }
+        ]
+    },
+    "type": "dtmc",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "stable",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "steps",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "name": "x1",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "name": "x2",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "name": "x3",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        }
+    ]
+}

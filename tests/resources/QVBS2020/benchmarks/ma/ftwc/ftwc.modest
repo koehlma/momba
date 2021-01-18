@@ -1,0 +1,87 @@
+const int N; // number of workstations
+
+const int LEFT = 0;
+const int RIGHT = 1;
+const int TIME_BOUND;
+
+bool backboneDown = false;
+int(0..N)[] workstations_up = [N,N]; // workstations_up[0] ~ left, workstations_up[1] ~ right
+bool[] switches_down = [false,false]; // switches_down[0] ~ left, switches_down[1] ~ right
+
+binary action startRepairBackbone, finishRepairBackbone;
+binary action startRepairWorkstation, finishRepairWorkstation, startRepairLeftWorkstation, finishRepairLeftWorkstation, startRepairRightWorkstation, finishRepairRightWorkstation;
+binary action startRepairSwitch, finishRepairSwitch, startRepairLeftSwitch, finishRepairLeftSwitch, startRepairRightSwitch, finishRepairRightSwitch;
+
+property ReachMinIsOne = Pmin(<> ((workstations_up[LEFT] == 0 || switches_down[LEFT]) && (workstations_up[RIGHT] == 0 || switches_down[RIGHT]))) == 1;
+property TimeMax = Xmax(T, (workstations_up[LEFT] == 0 || switches_down[LEFT]) && (workstations_up[RIGHT] == 0 || switches_down[RIGHT]));
+property TimeMin = Xmin(T, (workstations_up[LEFT] == 0 || switches_down[LEFT]) && (workstations_up[RIGHT] == 0 || switches_down[RIGHT]));
+property PmaxReachBound = Pmax(<>[T<=TIME_BOUND] ((workstations_up[LEFT] == 0 || switches_down[LEFT]) && (workstations_up[RIGHT] == 0 || switches_down[RIGHT])));
+property SmaxReach = Smax((workstations_up[LEFT] == 0 || switches_down[LEFT]) && (workstations_up[RIGHT] == 0 || switches_down[RIGHT]));
+
+process Backbone()
+{
+   alt {
+   :: when(!backboneDown) rate(0.0002) {= backboneDown = true =}
+   :: when(backboneDown) startRepairBackbone?;
+      finishRepairBackbone? {= backboneDown = false =}
+   };
+   Backbone()
+}
+
+process Switch(int(0..1) id)
+{
+   alt {
+   :: when(!switches_down[id]) rate(0.00025) tau {= switches_down[id] = true =}
+   :: when(switches_down[id]) startRepairSwitch?;
+      finishRepairSwitch? {= switches_down[id] = false =}
+   };
+   Switch(id)
+}
+
+// left(0) or right(1)
+process Workstation(int(0..1) id)
+{
+   alt {
+   :: when(workstations_up[id] > 0) rate(workstations_up[id] / 500.0) tau {= workstations_up[id]-- =}; Workstation(id) 
+   :: when(workstations_up[id] < N) startRepairWorkstation?; Workstation(id)
+   :: when(workstations_up[id] < N) finishRepairWorkstation? {= workstations_up[id]++ =}; Workstation(id)
+   }
+}
+
+process RepairUnit()
+{
+   alt {
+   :: startRepairBackbone!; rate(0.125) tau; finishRepairBackbone!
+   :: startRepairLeftWorkstation!; rate(2.0) tau; finishRepairLeftWorkstation!
+   :: startRepairRightWorkstation!; rate(2.0) tau; finishRepairRightWorkstation!
+   :: startRepairRightSwitch!; rate(0.25) tau; finishRepairRightSwitch!
+   :: startRepairLeftSwitch!; rate(0.25) tau; finishRepairLeftSwitch!
+   };
+   RepairUnit()
+}
+
+restrict {
+   startRepairLeftWorkstation?, startRepairLeftWorkstation!,
+   startRepairRightWorkstation?, startRepairRightWorkstation!,
+   finishRepairLeftWorkstation?, finishRepairLeftWorkstation!,
+   finishRepairRightWorkstation?, finishRepairRightWorkstation!,
+   startRepairLeftSwitch?, startRepairLeftSwitch!,
+   startRepairRightSwitch?, startRepairRightSwitch!,
+   finishRepairLeftSwitch?, finishRepairLeftSwitch!,
+   finishRepairRightSwitch?, finishRepairRightSwitch!,
+   startRepairBackbone?, startRepairBackbone!,
+   finishRepairBackbone?, finishRepairBackbone!
+} {
+   par {
+   :: Backbone()
+   :: relabel { startRepairSwitch, finishRepairSwitch} by {startRepairLeftSwitch, finishRepairLeftSwitch }
+      Switch(LEFT)
+   :: relabel { startRepairSwitch, finishRepairSwitch} by {startRepairRightSwitch, finishRepairRightSwitch }
+      Switch(RIGHT)
+   :: relabel { startRepairWorkstation, finishRepairWorkstation} by {startRepairLeftWorkstation, finishRepairLeftWorkstation }
+      Workstation(LEFT)
+   :: relabel { startRepairWorkstation, finishRepairWorkstation} by {startRepairRightWorkstation, finishRepairRightWorkstation }
+      Workstation(RIGHT)
+   :: RepairUnit()
+   }
+}

@@ -1,0 +1,76 @@
+{
+	"name": "p53 System",
+	"short": "p53",
+	"type": "ctmc",
+	"original": "PRISM-∞",
+	"version": 1,
+	"date": "2018-10-28",
+	"version-history": [
+		{
+			"date": "2018-10-28",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Naama Geva-Zatorsky <naama_gz@technion.ac.il>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1038/msb4100068",
+	"description": "The negative feedback loop between the tumor suppressor `p53´ and the oncogene `Mdm2´ results in an oscillatory behavior following exposure to gamma irradiation. The parameters `k´ are reaction rate constants and `pMdm2´ is the `Mdm2´ precursor.",
+	"references": [
+	],
+	"notes": "infinite-state biological model",
+	"parameters": [],
+	"properties": [
+		{
+			"name": "RareEvent1",
+			"description": "The probability to reach a concentration of p53 greater than 120 within <= 5 steps",
+			"type": "prob-reach-step-bounded"
+		},
+		{
+			"name": "RareEvent2",
+			"description": "The probability to reach a concentration of 0 for Mdm2 within <= 100 steps",
+			"type": "prob-reach-step-bounded"
+		},
+		{
+			"name": "RareEvent3",
+			"description": "The probability to reach a concentration of p53, pMdm2 and Mdm2 >150 within <= 100 steps",
+			"type": "prob-reach-step-bounded"
+		},
+		{
+			"name": "Steady1",
+			"description": "Long-run probability to reach a concentration of 0 for p53",
+			"type": "steady-state-prob"
+		}
+	],
+	"files": [
+		{
+			"file": "p53.jani",
+			"original-file": [
+				"p53.prism",
+				"p53.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism p53.prism --tojani p53.jani --prop p53.props --globalvars --prismcompat",
+				"note": "since PRISM files with unbounded integers can currently not be parsed, bounds have been introduced manually and removed afterwards"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"number": "∞"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+	]
+}

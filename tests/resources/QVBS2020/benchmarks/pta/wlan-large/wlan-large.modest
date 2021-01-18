@@ -1,0 +1,315 @@
+﻿// Modest model of IEEE 802.11 Wireless LAN
+// with the original timing parameters from the standard,
+// based on the PRISM case study with reduced timing parameters available at
+// http://www.prismmodelchecker.org/casestudies/wlan.php
+action send1, send2;
+action finish1, finish2;
+
+// Max. value of backoff counters
+const int K;
+
+// Parameters for the physical layer
+const int ASLOT = 50;
+const int DIFS = 128;
+const int VULN = 48;
+const int TTMAX = 15717;
+const int TTMIN = 224;
+const int ACK_TO = 300; 
+const int ACK = 205;
+const int SIFS = 28;
+
+// Packet status
+// 0: nothing sent
+// 1: sending correctly
+// 2: sending garbled
+int(0..2) c1; // first station's packet
+int(0..2) c2; // second station's packet
+
+// Backoff counters
+int(0..K) bc1; // station 1
+int(0..K) bc2; // station 2
+
+// Properties
+bool success1_seen, success2_seen;
+
+// Probabilistic reachability
+property P_1 = Pmin(<> (success1_seen && success2_seen)) >= 1.0; // "with probability 1, eventually both stations have sent their packet correctly"
+property P_min = Pmin(<> (bc1 == K || bc2 == K)); // "the minimum probability that either station's backoff counter reaches K"
+property P_max = Pmax(<> (bc1 == K || bc2 == K)); // "the maximum probability that either station's backoff counter reaches K"
+
+// Time-bounded probabilistic reachability
+const int DEADLINE = TTMAX * 5;
+property D_and = Pmin(<>[T<=DEADLINE] (success1_seen && success2_seen)); // "the minimum probability of both stations correctly delivering their packets within time DEADLINE"
+property D_or = Pmin(<>[T<=DEADLINE] (success1_seen || success2_seen)); // "the minimum probability of either station correctly delivering its packet within time DEADLINE"
+property D_1 = Pmin(<>[T<=DEADLINE] success1_seen); // "the minimum probability of station 1 correctly delivering its packet within time DEADLINE"
+
+// Expected reachability
+// "the maximum expected time until both stations correctly deliver their packets"
+property E_and = Xmax(T, success1_seen && success2_seen);
+// "the maximum expected time until either station correctly delivers its packet"
+property E_or = Xmax(T, success1_seen || success2_seen);
+// "the maximum expected time until station 1 correctly delivers its packet"
+property E_1 = Xmax(T, success1_seen);
+
+process Channel()
+{
+	alt {
+		:: finish1 {= c1 = 0 =}
+		:: finish2 {= c2 = 0 =}
+		:: send1 {= c1 = min(c2 + 1, 2), c2 = min(c2 + c2, 2) =}
+		:: send2 {= c1 = min(c1 + c1, 2), c2 = min(c1 + 1, 2) =}
+	};
+	Channel()
+}
+
+process Sender1()
+{
+	int(0..2) status;
+	int(0..(int)pow(2, K + 4) - 1) backoff;
+	clock x;
+	
+	process SENSE() // 0
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) {= x = 0 =};
+				VULN()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREE()
+		}
+	}
+	
+	process VULN() // 1
+	{
+		invariant(x <= VULN)
+		when(x >= VULN) send1 {= x = 0 =};
+		TRANSMIT()
+	}
+	
+	process TRANSMIT() // 2
+	{
+		invariant(x <= TTMAX)
+		when(x >= TTMIN) finish1 {= x = 0, status = c1 =};
+		TEST_CHAN()
+	}
+	
+	process TEST_CHAN() // 3
+	{
+		urgent
+		alt {
+			:: when(c1 + c2 > 0) {==};
+				WAIT_FREE()
+			:: when(c1 + c2 == 0 && status == 2) {==};
+				NO_ACK()
+			:: when(c1 + c2 == 0 && status == 1) {==};
+				SEND_ACK()
+		}
+	}
+	
+	process SEND_ACK() // 4
+	{
+		invariant(x <= SIFS)
+		when(x >= SIFS) send1 {= x = 0 =};
+		ACK()
+	}
+	
+	process ACK()
+	{
+		invariant(x <= ACK)
+		when(x >= ACK) finish1 {= x = 0, success1_seen = true =}
+	}
+	
+	process NO_ACK() // 6
+	{
+		invariant(x <= ACK_TO)
+		when(x >= ACK_TO) {= x = 0 =};
+		WAIT_DIFS()
+	}
+		
+	process WAIT_FREE() // 7
+	{
+		when(c1 + c2 == 0) urgent(c1 + c2 == 0) {= x = 0 =};
+		WAIT_DIFS()
+	}
+
+	process WAIT_DIFS() // 8
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) 
+				alt {
+				::	when(bc1 == 0) {= backoff = DiscreteUniform(0,  15), bc1 = min(bc1 + 1, K), x = 0 =}
+				::	when(bc1 == 1) {= backoff = DiscreteUniform(0,  31), bc1 = min(bc1 + 1, K), x = 0 =}
+				::	when(bc1 == 2) {= backoff = DiscreteUniform(0,  63), bc1 = min(bc1 + 1, K), x = 0 =}
+				::	when(bc1 == 3) {= backoff = DiscreteUniform(0, 127), bc1 = min(bc1 + 1, K), x = 0 =}
+				::	when(bc1 == 4) {= backoff = DiscreteUniform(0, 255), bc1 = min(bc1 + 1, K), x = 0 =}
+				//::	when(bc1 == 5) {= backoff = DiscreteUniform(0, 511), bc1 = min(bc1 + 1, K), x = 0 =}
+				//::	when(bc1 == 6) {= backoff = DiscreteUniform(0, 1023), bc1 = min(bc1 + 1, K), x = 0 =}
+				};
+			   BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREE()
+		}
+	}
+	
+	process BACKOFF() // 9
+	{
+		invariant(x <= ASLOT)
+		alt {
+			:: when(x >= ASLOT && backoff == 0) {= x = 0 =};
+				VULN()
+			:: when(x >= ASLOT && backoff > 0) {= backoff = backoff - 1, x = 0 =};
+				BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREEII()
+		}
+	}
+	
+	process WAIT_FREEII() // 10
+	{
+		when(c1 + c2 == 0) urgent(c1 + c2 == 0) {= x = 0 =};
+		WAIT_DIFSII()
+	}
+	
+	process WAIT_DIFSII() // 11
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) {= x = 0 =};
+				BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREEII()
+		}
+	}
+	
+	SENSE()
+}
+
+process Sender2()
+{
+	int(0..2) status;
+	int(0..(int)pow(2, K + 4) - 1) backoff;
+	clock x;
+	
+	process SENSE() // 0
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) {= x = 0 =};
+				VULN()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREE()
+		}
+	}
+	
+	process VULN() // 1
+	{
+		invariant(x <= VULN)
+		when(x >= VULN) send2 {= x = 0 =};
+		TRANSMIT()
+	}
+	
+	process TRANSMIT() // 2
+	{
+		invariant(x <= TTMAX)
+		when(x >= TTMIN) finish2 {= x = 0, status = c2 =};
+		TEST_CHAN()
+	}
+	
+	process TEST_CHAN() // 3
+	{
+		urgent
+		alt {
+			:: when(c1 + c2 > 0) {==};
+				WAIT_FREE()
+			:: when(c1 + c2 == 0 && status == 2) {==};
+				NO_ACK()
+			:: when(c1 + c2 == 0 && status == 1) {==};
+				SEND_ACK()
+		}
+	}
+	
+	process SEND_ACK() // 4
+	{
+		invariant(x <= SIFS)
+		when(x >= SIFS) send2 {= x = 0 =};
+		ACK()
+	}
+	
+	process ACK()
+	{
+		invariant(x <= ACK)
+		when(x >= ACK) finish2 {= x = 0, success2_seen = true =}
+	}
+	
+	process NO_ACK() // 6
+	{
+		invariant(x <= ACK_TO)
+		when(x >= ACK_TO) {= x = 0 =};
+		WAIT_DIFS()
+	}
+		
+	process WAIT_FREE() // 7
+	{
+		when(c1 + c2 == 0) urgent(c1 + c2 == 0) {= x = 0 =};
+		WAIT_DIFS()
+	}
+
+	process WAIT_DIFS() // 8
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) 
+				alt {
+				::	when(bc2 == 0) {= backoff = DiscreteUniform(0,  15), bc2 = min(bc2 + 1, K), x = 0 =}
+				::	when(bc2 == 1) {= backoff = DiscreteUniform(0,  31), bc2 = min(bc2 + 1, K), x = 0 =}
+				::	when(bc2 == 2) {= backoff = DiscreteUniform(0,  63), bc2 = min(bc2 + 1, K), x = 0 =}
+				::	when(bc2 == 3) {= backoff = DiscreteUniform(0, 127), bc2 = min(bc2 + 1, K), x = 0 =}
+				::	when(bc2 == 4) {= backoff = DiscreteUniform(0, 255), bc2 = min(bc2 + 1, K), x = 0 =}
+				//::	when(bc2 == 5) {= backoff = DiscreteUniform(0, 511), bc2 = min(bc2 + 1, K), x = 0 =}
+				//::	when(bc2 == 6) {= backoff = DiscreteUniform(0, 1023), bc2 = min(bc2 + 1, K), x = 0 =}
+				};
+			   BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREE()
+		}
+	}
+	
+	process BACKOFF() // 9
+	{
+		invariant(x <= ASLOT)
+		alt {
+			:: when(x >= ASLOT && backoff == 0) {= x = 0 =};
+				VULN()
+			:: when(x >= ASLOT && backoff > 0) {= backoff = backoff - 1, x = 0 =};
+				BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREEII()
+		}
+	}
+	
+	process WAIT_FREEII() // 10
+	{
+		when(c1 + c2 == 0) urgent(c1 + c2 == 0) {= x = 0 =};
+		WAIT_DIFSII()
+	}
+	
+	process WAIT_DIFSII() // 11
+	{
+		invariant(x <= DIFS)
+		alt {
+			:: when(x >= DIFS) {= x = 0 =};
+				BACKOFF()
+			:: when(c1 + c2 > 0) urgent(c1 + c2 > 0) {= x = 0 =};
+				WAIT_FREEII()
+		}
+	}
+	
+	SENSE()
+}
+
+par {
+	:: Channel()
+	:: Sender1()
+	:: Sender2()
+}

@@ -1,0 +1,386 @@
+{
+	"name": "Dining Philosophers",
+	"short": "philosophers",
+	"type": "ctmc",
+	"original": "GreatSPN",
+	"version": 1,
+	"date": "2018-10-19",
+	"version-history": [
+		{
+			"date": "2018-10-19",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "GreatSPN <greatspn@di.unito.it>",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"source": "https://doi.org/10.1007/BF00289519",
+	"description": "This model is a variant of the classical dining Philosophers problem. There are `N´ philosophers that share `N´ forks. Each philosopher is either thinking or eating. Eating requires two forks. If only the first fork is available, a philosopher graps the first fork and waits for the second one to become free. This eventually results in a deadlock in which all philosophers wait for the second fork to become free. This model is accompanied by GreatSPN [1]",
+	"references": [
+		"https://doi.org/10.1007/978-3-319-30599-8_9"
+	],
+	"notes": "small symbolic representation",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of philosophers",
+			"type": "positive integer"
+		},
+		{
+			"name": "TIME_BOUND",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive real"
+		}
+	],
+	"properties": [
+		{
+			"name": "MaxPrReachDeadlock",
+			"description": "The maximum probability for reaching a deadlock eventually.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "MaxPrReachDeadlockTB",
+			"description": "The maximum probability for reaching a deadlock within `TIME_BOUND´ time units.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "MinExpTimeDeadlock",
+			"description": "The minimum expected time to reach a deadlock.",
+			"type": "exp-time"
+		}
+	],
+	"files": [
+		{
+			"file": "philosophers.4.jani",
+			"original-file": "philosophers.4.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.4.PNPRO --to-jani philosophers.4.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 34
+						}
+					],
+					"results": [
+						{
+							"property": "MaxPrReachDeadlock",
+							"value": 1,
+							"note": "Storm/hybrid/exact"
+						},
+						{
+							"property": "MinExpTimeDeadlock",
+							"value": {
+								"approx": 5.445544554455446,
+								"num": 550,
+								"den": 101
+							},
+							"note": "Storm/hybrid/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.12.jani",
+			"original-file": "philosophers.12.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.12.PNPRO --to-jani philosophers.12.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 12
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 39202
+						}
+					],
+					"results": [
+						{
+							"property": "MaxPrReachDeadlock",
+							"value": 1,
+							"note": "Storm/hybrid/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.16.jani",
+			"original-file": "philosophers.16.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.16.PNPRO --to-jani philosophers.16.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 16
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 1331714
+						}
+					],
+					"results": [
+						{
+							"property": "MaxPrReachDeadlock",
+							"value": 1,
+							"note": "Storm/hybrid/exact"
+						},
+						{
+							"property": "MaxPrReachDeadlockTB",
+							"value": {
+								"lower": 6.928228934e-05,
+								"upper": 6.928248934e-05
+							},
+							"note": "Storm"
+						},
+						{
+							"property": "MinExpTimeDeadlock",
+							"value": {
+								"lower": 10.782973448921704,
+								"upper": 10.782973451078297
+							},
+							"note": "Storm/hybrid/sound"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.20.jani",
+			"original-file": "philosophers.20.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.20.PNPRO --to-jani philosophers.20.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 20
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 45239074
+						}
+					],
+					"results": [
+						{
+							"property": "MaxPrReachDeadlock",
+							"value": 1,
+							"note": "Storm/hybrid/sound"
+						},
+						{
+							"property": "MaxPrReachDeadlockTB",
+							"value": {
+								"lower": 6.320794925e-06,
+								"upper": 6.320994925e-06
+							},
+							"note": "Storm"
+						},
+						{
+							"property": "MinExpTimeDeadlock",
+							"value": {
+								"lower": 11.763581268823643,
+								"upper": 11.763581271176358
+							},
+							"note": "Storm/hybrid/sound"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.24.jani",
+			"original-file": "philosophers.24.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.24.PNPRO --to-jani philosophers.24.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 24
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 1536796802
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.28.jani",
+			"original-file": "philosophers.28.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.28.PNPRO --to-jani philosophers.28.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 28
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 52205852194
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "philosophers.32.jani",
+			"original-file": "philosophers.32.PNPRO",
+			"conversion": {
+				"tool": "Storm-GSPN",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-gspn --gspnfile philosophers.32.PNPRO --to-jani philosophers.32.jani --addprops --capacity 1"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 32
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "TIME_BOUND",
+							"value": 1
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 1773462177794
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.hybrid.4-1.2018-10-25.json",
+		"results/Storm.hybrid.12-1.2018-10-25.json",
+		"results/Storm.hybrid.16-1.2018-10-25.json",
+		"results/Storm.hybrid.20-1.2018-10-25.json",
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-exact.4-1.2018-10-25.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-exact.12-1.2018-10-25.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-exact.16-1.2018-10-25.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.16-1.2018-11-29.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.20-1.2018-11-29.json"
+		},
+		"results/mcsta.4-1.2018-11-21.json",
+		"results/mcsta.12-1.2018-11-21.json",
+		"results/mcsta.16-1.2018-11-21.json",
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-sound.16-1.2018-12-02.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.hybrid-sound.20-1.2018-12-02.json"
+		}
+	]
+}

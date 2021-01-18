@@ -1,0 +1,607 @@
+{
+	"name": "Probabilistic Contract Signing Protocol",
+	"short": "egl",
+	"type": "dtmc",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Shimon Even <even@cs.technion.ac.il >",
+		"Oded Goldreich <oded.goldreich@weizman.ac.il>",
+		"Abraham Lempel <lempel@cs.technion.ac.il>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1145/3812.3818",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. Fair exchange is the problem of exchanging data in a way that guarantees that either all participants obtain what they want, or none do. Contract signing is a particular form of fair exchange, in which the parties exchange commitments to a contract. Commitment is often identified with the party's digital signature on the contract. In the EGL protocol, each party starts by generating a sequence of `N´ pairs of secrets and revealing the encryptions of the contract under each secret. A party is considered committed if the opponent knows both secrets in at least one pair. In the first phase, the parties use oblivious transfer to probabilistically reveal one secret from each pair. In the second phase, they release all secrets bit by bit, where each secret has `L´ bits. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/contract_egl.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "open",
+			"description": "Number of pairs of secrets",
+			"type": "positive integer"
+		},
+		{
+			"name": "L",
+			"kind": "open",
+			"description": "Number of bits per secret",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "messagesA",
+			"description": "The expected number of messages from B that A needs to knows a pair once B knows a pair.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "messagesB",
+			"description": "The expected number of messages from A that B needs to knows a pair once A knows a pair.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "unfairA",
+			"description": "The probability that party A is unfairly disadvantaged.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "unfairB",
+			"description": "The probability that party B is unfairly disadvantaged.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "egl.jani",
+			"original-file": [
+				"egl.prism",
+				"egl.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism egl.prism --tojani egl.jani --prop egl.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 5
+						},
+						{
+							"name": "L",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 33790
+						}
+					],
+					"results": [
+						{
+							"property": "messagesA",
+							"value": {
+								"approx": 1.1513671875,
+								"num": 1179,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "messagesB",
+							"value": {
+								"approx": 1.6826171875,
+								"num": 1723,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"approx": 0.515625,
+								"num": 33,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairB",
+							"value": {
+								"approx": 0.484375,
+								"num": 31,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 5
+						},
+						{
+							"name": "L",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 74750
+						}
+					],
+					"results": [
+						{
+							"property": "messagesA",
+							"value": {
+								"approx": 1.4541015625,
+								"num": 1489,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "messagesB",
+							"value": {
+								"approx": 1.9853515625,
+								"num": 2033,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"approx": 0.515625,
+								"num": 33,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairB",
+							"value": {
+								"approx": 0.484375,
+								"num": 31,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 5
+						},
+						{
+							"name": "L",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 115710
+						}
+					],
+					"results": [
+						{
+							"property": "messagesA",
+							"value": {
+								"approx": 1.7568359375,
+								"num": 1799,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "messagesB",
+							"value": {
+								"approx": 2.2880859375,
+								"num": 2343,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"approx": 0.515625,
+								"num": 33,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairB",
+							"value": {
+								"approx": 0.484375,
+								"num": 31,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 5
+						},
+						{
+							"name": "L",
+							"value": 8
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 156670
+						}
+					],
+					"results": [
+						{
+							"property": "messagesA",
+							"value": {
+								"approx": 2.0595703125,
+								"num": 2109,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "messagesB",
+							"value": {
+								"approx": 2.5908203125,
+								"num": 2653,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"approx": 0.515625,
+								"num": 33,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "unfairB",
+							"value": {
+								"approx": 0.484375,
+								"num": 31,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 10
+						},
+						{
+							"name": "L",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 66060286
+						}
+					],
+					"results": [
+						{
+							"property": "messagesB",
+							"value": {
+								"num": 2102779,
+								"approx": 4.010732650756836,
+								"den": 524288
+							},
+							"note": "Storm/dd/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"num": 1025,
+								"approx": 0.50048828125,
+								"den": 2048
+							},
+							"note": "Storm/dd/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 10
+						},
+						{
+							"name": "L",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 149946366
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 10
+						},
+						{
+							"name": "L",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 233832446
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 10
+						},
+						{
+							"name": "L",
+							"value": 8
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 317718526
+						},
+						{
+							"note": "mcsta",
+							"number": 317718526
+						}
+					],
+					"results": [
+						{
+							"property": "messagesB",
+							"value": {
+								"num": 2133469,
+								"approx": 4.069269180297852,
+								"den": 524288
+							},
+							"note": "Storm/dd/exact"
+						},
+						{
+							"property": "unfairA",
+							"value": {
+								"num": 1025,
+								"approx": 0.50048828125,
+								"den": 2048
+							},
+							"note": "Storm/dd/exact"
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 15
+						},
+						{
+							"name": "L",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 99857989630
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 15
+						},
+						{
+							"name": "L",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 228707008510
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 15
+						},
+						{
+							"name": "L",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 357556027390
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 15
+						},
+						{
+							"name": "L",
+							"value": 8
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 486405046270
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 20
+						},
+						{
+							"name": "L",
+							"value": 2
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 135239930216446
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 20
+						},
+						{
+							"name": "L",
+							"value": 4
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 311161790660606
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 20
+						},
+						{
+							"name": "L",
+							"value": 6
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 487083651104766
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "N",
+							"value": 20
+						},
+						{
+							"name": "L",
+							"value": 8
+						}
+					],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 663005511548926
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.5-2.2018-10-12.json",
+		"results/Storm.5-4.2018-10-12.json",
+		"results/Storm.5-6.2018-10-12.json",
+		"results/Storm.5-8.2018-10-12.json",
+		"results/Storm.10-2.2018-10-12.json",
+		"results/Storm.10-4.2018-10-12.json",
+		"results/Storm.10-6.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-6.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-8.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd-exact.10-2.2018-11-26.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd-exact.10-8.2018-11-26.json"
+		},
+		"results/mcsta.5-2.2018-11-21.json",
+		"results/mcsta.5-4.2018-11-21.json",
+		"results/mcsta.5-6.2018-11-21.json",
+		"results/mcsta.5-8.2018-11-21.json"
+	]
+}

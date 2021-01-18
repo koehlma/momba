@@ -1,0 +1,35 @@
+Storm 1.2.4 (dev)
+
+Date: Sun Oct 28 05:37:27 2018
+Command line arguments: --jani eajs.6.jani --janiproperty --constants 'energy_capacity=300,B=13' --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/eajs
+
+Time for model input parsing: 0.016s.
+
+Time for model construction: 357.119s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	7901694
+Transitions: 	19722777
+Choices: 	11897412
+Reward Models:  utilityLocal
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * (battery_load = 0) -> 28620 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "ExpUtil": R[exp]{"utilityLocal"}max=? [F (battery_load = 0)] ...
+Result (for initial states): 12.05111082
+Time for model checking: 16.781s.
+
+Model checking property "ProbUtil": Pmax=? [true Urew{"utilityLocal"}>=13 (battery_load = 0)] ...
+Result (for initial states): 0.05331444298
+Time for model checking: 113.691s.
+
+Performance statistics:
+  * peak memory usage: 4908MB
+  * CPU time: 484.145s
+  * wallclock time: 487.680s

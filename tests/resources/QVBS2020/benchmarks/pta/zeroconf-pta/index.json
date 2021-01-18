@@ -1,0 +1,132 @@
+{
+	"name": "IPv4 Zeroconf Protocol PTA",
+	"short": "zeroconf-pta",
+	"type": "pta",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Stuart Cheshire <>",
+		"Bernard Aboba <bernarda@microsoft.com>",
+		"Erik Guttman <>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://www.rfc-editor.org/info/rfc3927",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. Upon being connected to the network, a device is first required to choose randomly an IP address from a pool of 65024 available addresses. Then the device sends messages to the other devices connected to the network, asking whether any of those devices are currently using the chosen IP address. If no reply is received even after the devices resend such messages three more times, then the device starts using the IP address, initially sending two more messages asserting that the device is claiming the address. `probes_max´ is the maximal number of probes allowed. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/zeroconf.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "T",
+			"kind": "open",
+			"description": "Time bound for properties",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "deadline",
+			"description": "The maximum probability of configuring IP address incorrectly by time `T´.",
+			"type": "prob-reach-time-bounded"
+		},
+		{
+			"name": "incorrect",
+			"description": "The maximum probability of configuring IP address incorrectly.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "zeroconf-pta.jani",
+			"original-file": [
+				"zeroconf-pta.prism",
+				"zeroconf-pta.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism zeroconf-pta.prism --tojani zeroconf-pta.jani --prop zeroconf-pta.props --globalvars"
+			},
+			"file-parameter-values": [],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 100
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 498
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 150
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 498
+						}
+					]
+				},
+				{
+					"values": [
+						{
+							"name": "T",
+							"value": 200
+						}
+					],
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 498
+						}
+					],
+					"results": [
+						{
+							"property": "incorrect",
+							"value": {
+								"approx": 0.001301513854130159,
+								"num": 130321,
+								"den": 100130321
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.100.2018-11-22.json",
+		"results/mcsta.150.2018-11-22.json",
+		"results/mcsta.200.2018-11-22.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.200.2018-12-03.json"
+		}
+	]
+}

@@ -1,0 +1,2048 @@
+{
+    "actions": [
+        {
+            "name": "input_reboot"
+        },
+        {
+            "name": "output_reboot"
+        },
+        {
+            "name": "timeout"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "s <- (s - 1)",
+                                    "ref": "s",
+                                    "value": {
+                                        "left": "s",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((s * (1 / (((30 * 24) * 60) * 60))) / (s * (1 / (((30 * 24) * 60) * 60))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "s",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": 2592000
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "s",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": 2592000
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(s > 1)",
+                        "exp": {
+                            "left": "s",
+                            "op": ">",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(s * (1 / (((30 * 24) * 60) * 60)))",
+                        "exp": {
+                            "left": "s",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "/",
+                                "right": 2592000
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "fail_sensors <- ((i = 2) & (s < 2))",
+                            "ref": "fail_sensors",
+                            "value": {
+                                "left": {
+                                    "left": "i",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "s",
+                                    "op": "<",
+                                    "right": 2
+                                }
+                            }
+                        },
+                        {
+                            "comment": "fail_actuators <- ((o = 2) & (a < 1))",
+                            "ref": "fail_actuators",
+                            "value": {
+                                "left": {
+                                    "left": "o",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "a",
+                                    "op": "<",
+                                    "right": 1
+                                }
+                            }
+                        },
+                        {
+                            "comment": "fail_io <- (count = (MAX_COUNT + 1))",
+                            "ref": "fail_io",
+                            "value": {
+                                "left": "count",
+                                "op": "=",
+                                "right": {
+                                    "left": "MAX_COUNT",
+                                    "op": "+",
+                                    "right": 1
+                                }
+                            }
+                        },
+                        {
+                            "comment": "fail_main <- (m = 0)",
+                            "ref": "fail_main",
+                            "value": {
+                                "left": "m",
+                                "op": "=",
+                                "right": 0
+                            }
+                        },
+                        {
+                            "comment": "label_down <- (((((i = 2) & (s < 2)) | (count = (MAX_COUNT + 1))) | ((o = 2) & (a < 1))) | (m = 0))",
+                            "ref": "label_down",
+                            "value": {
+                                "left": {
+                                    "left": {
+                                        "left": "m",
+                                        "op": "=",
+                                        "right": 0
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": "count",
+                                        "op": "=",
+                                        "right": {
+                                            "left": "MAX_COUNT",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                "op": "∨",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 2
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "a",
+                                            "op": "<",
+                                            "right": 1
+                                        }
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": {
+                                            "left": "i",
+                                            "op": "=",
+                                            "right": 2
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "s",
+                                            "op": "<",
+                                            "right": 2
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "label_danger <- (!(down(s, i, a, o, 2, 1)) & ((i = 1) | (o = 1)))",
+                            "ref": "label_danger",
+                            "value": {
+                                "left": {
+                                    "exp": {
+                                        "args": [
+                                            "s",
+                                            "i",
+                                            "a",
+                                            "o",
+                                            2,
+                                            1
+                                        ],
+                                        "function": "down",
+                                        "op": "call"
+                                    },
+                                    "op": "¬"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "i",
+                                        "op": "=",
+                                        "right": 1
+                                    },
+                                    "op": "∨",
+                                    "right": {
+                                        "left": "o",
+                                        "op": "=",
+                                        "right": 1
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "comment": "label_up <- (!(down(s, i, a, o, 2, 1)) & !(danger(s, i, a, o, 2, 1)))",
+                            "ref": "label_up",
+                            "value": {
+                                "left": {
+                                    "exp": {
+                                        "args": [
+                                            "s",
+                                            "i",
+                                            "a",
+                                            "o",
+                                            2,
+                                            1
+                                        ],
+                                        "function": "down",
+                                        "op": "call"
+                                    },
+                                    "op": "¬"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "exp": {
+                                        "args": [
+                                            "s",
+                                            "i",
+                                            "a",
+                                            "o",
+                                            2,
+                                            1
+                                        ],
+                                        "function": "danger",
+                                        "op": "call"
+                                    },
+                                    "op": "¬"
+                                }
+                            }
+                        },
+                        {
+                            "comment": "rewardmodel_up <- (up(s, i, a, o, 2, 1) ? (1 / 3600) : 0)",
+                            "ref": "rewardmodel_up",
+                            "value": {
+                                "else": 0.0,
+                                "if": {
+                                    "args": [
+                                        "s",
+                                        "i",
+                                        "a",
+                                        "o",
+                                        2,
+                                        1
+                                    ],
+                                    "function": "up",
+                                    "op": "call"
+                                },
+                                "op": "ite",
+                                "then": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3600
+                                }
+                            }
+                        },
+                        {
+                            "comment": "rewardmodel_danger <- (danger(s, i, a, o, 2, 1) ? (1 / 3600) : 0)",
+                            "ref": "rewardmodel_danger",
+                            "value": {
+                                "else": 0.0,
+                                "if": {
+                                    "args": [
+                                        "s",
+                                        "i",
+                                        "a",
+                                        "o",
+                                        2,
+                                        1
+                                    ],
+                                    "function": "danger",
+                                    "op": "call"
+                                },
+                                "op": "ite",
+                                "then": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3600
+                                }
+                            }
+                        },
+                        {
+                            "comment": "rewardmodel_down <- (down(s, i, a, o, 2, 1) ? (1 / 3600) : 0)",
+                            "ref": "rewardmodel_down",
+                            "value": {
+                                "else": 0.0,
+                                "if": {
+                                    "args": [
+                                        "s",
+                                        "i",
+                                        "a",
+                                        "o",
+                                        2,
+                                        1
+                                    ],
+                                    "function": "down",
+                                    "op": "call"
+                                },
+                                "op": "ite",
+                                "then": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 3600
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "sensors",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "i <- 0",
+                                    "ref": "i",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / (((365 * 24) * 60) * 60)) / (1 / (((365 * 24) * 60) * 60)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((i > 0) & (s >= 2))",
+                        "exp": {
+                            "left": {
+                                "left": "i",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "s",
+                                "op": "≥",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / (((365 * 24) * 60) * 60))",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 31536000
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "i <- 1",
+                                    "ref": "i",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / ((24 * 60) * 60)) / (1 / ((24 * 60) * 60)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 86400
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 86400
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((i = 2) & (s >= 2))",
+                        "exp": {
+                            "left": {
+                                "left": "i",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "s",
+                                "op": "≥",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / ((24 * 60) * 60))",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 86400
+                        }
+                    }
+                },
+                {
+                    "action": "input_reboot",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "i <- 2",
+                                    "ref": "i",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 30) / (1 / 30))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 30
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 30
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((i = 1) & (s >= 2))",
+                        "exp": {
+                            "left": {
+                                "left": "i",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "s",
+                                "op": "≥",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 30)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 30
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "proci",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "a <- (a - 1)",
+                                    "ref": "a",
+                                    "value": {
+                                        "left": "a",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((a * (1 / ((((2 * 30) * 24) * 60) * 60))) / (a * (1 / ((((2 * 30) * 24) * 60) * 60))))",
+                                "exp": {
+                                    "left": {
+                                        "left": "a",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": 5184000
+                                        }
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": "a",
+                                        "op": "*",
+                                        "right": {
+                                            "left": 1,
+                                            "op": "/",
+                                            "right": 5184000
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(a > 0)",
+                        "exp": {
+                            "left": "a",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(a * (1 / ((((2 * 30) * 24) * 60) * 60)))",
+                        "exp": {
+                            "left": "a",
+                            "op": "*",
+                            "right": {
+                                "left": 1,
+                                "op": "/",
+                                "right": 5184000
+                            }
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "actuators",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 0",
+                                    "ref": "o",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / (((365 * 24) * 60) * 60)) / (1 / (((365 * 24) * 60) * 60)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o > 0) & (a >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "a",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / (((365 * 24) * 60) * 60))",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 31536000
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 1",
+                                    "ref": "o",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / ((24 * 60) * 60)) / (1 / ((24 * 60) * 60)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 86400
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 86400
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 2) & (a >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "a",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / ((24 * 60) * 60))",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 86400
+                        }
+                    }
+                },
+                {
+                    "action": "output_reboot",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 2",
+                                    "ref": "o",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 30) / (1 / 30))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 30
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 30
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 1) & (a >= 1))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "a",
+                                "op": "≥",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 30)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 30
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "proco",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "m <- 0",
+                                    "ref": "m",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / (((365 * 24) * 60) * 60)) / (1 / (((365 * 24) * 60) * 60)))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 31536000
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(m = 1)",
+                        "exp": {
+                            "left": "m",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / (((365 * 24) * 60) * 60))",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 31536000
+                        }
+                    }
+                },
+                {
+                    "action": "timeout",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "count <- 0",
+                                    "ref": "count",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "comp",
+                        "exp": "comp"
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                },
+                {
+                    "action": "timeout",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "count <- (min((count + 1), (MAX_COUNT + 1)))",
+                                    "ref": "count",
+                                    "value": {
+                                        "left": {
+                                            "left": "count",
+                                            "op": "+",
+                                            "right": 1
+                                        },
+                                        "op": "min",
+                                        "right": {
+                                            "left": "MAX_COUNT",
+                                            "op": "+",
+                                            "right": 1
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1 / 60) / (1 / 60))",
+                                "exp": {
+                                    "left": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 1,
+                                        "op": "/",
+                                        "right": 60
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "!(comp)",
+                        "exp": {
+                            "exp": "comp",
+                            "op": "¬"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1 / 60)",
+                        "exp": {
+                            "left": 1,
+                            "op": "/",
+                            "right": 60
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "procm",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "input_reboot",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "comp <- (comp | ((m = 1) & !(reqo)))",
+                                    "ref": "comp",
+                                    "value": {
+                                        "left": "comp",
+                                        "op": "∨",
+                                        "right": {
+                                            "left": {
+                                                "left": "m",
+                                                "op": "=",
+                                                "right": 1
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": "reqo",
+                                                "op": "¬"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "reqi <- true",
+                                    "ref": "reqi",
+                                    "value": true
+                                },
+                                {
+                                    "comment": "reqo <- (!(((o = 2) & (a >= 1))) & (reqo | (m = 1)))",
+                                    "ref": "reqo",
+                                    "value": {
+                                        "left": {
+                                            "exp": {
+                                                "left": {
+                                                    "left": "o",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "a",
+                                                    "op": "≥",
+                                                    "right": 1
+                                                }
+                                            },
+                                            "op": "¬"
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "reqo",
+                                            "op": "∨",
+                                            "right": {
+                                                "left": "m",
+                                                "op": "=",
+                                                "right": 1
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "output_reboot",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "comp <- (comp | (reqi & (m = 1)))",
+                                    "ref": "comp",
+                                    "value": {
+                                        "left": "comp",
+                                        "op": "∨",
+                                        "right": {
+                                            "left": "reqi",
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "m",
+                                                "op": "=",
+                                                "right": 1
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "reqi <- (((i = 2) & (s >= 2)) | (reqi & (m = 0)))",
+                                    "ref": "reqi",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "left": "i",
+                                                "op": "=",
+                                                "right": 2
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "s",
+                                                "op": "≥",
+                                                "right": 2
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "left": "reqi",
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "m",
+                                                "op": "=",
+                                                "right": 0
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "reqo <- false",
+                                    "ref": "reqo",
+                                    "value": false
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                },
+                {
+                    "action": "timeout",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "comp <- ((reqi & !(reqo)) & (m = 1))",
+                                    "ref": "comp",
+                                    "value": {
+                                        "left": {
+                                            "left": "reqi",
+                                            "op": "∧",
+                                            "right": {
+                                                "exp": "reqo",
+                                                "op": "¬"
+                                            }
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "m",
+                                            "op": "=",
+                                            "right": 1
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "reqi <- (((i = 2) & (s >= 2)) | (reqi & (reqo | (m = 0))))",
+                                    "ref": "reqi",
+                                    "value": {
+                                        "left": {
+                                            "left": {
+                                                "left": "i",
+                                                "op": "=",
+                                                "right": 2
+                                            },
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "s",
+                                                "op": "≥",
+                                                "right": 2
+                                            }
+                                        },
+                                        "op": "∨",
+                                        "right": {
+                                            "left": "reqi",
+                                            "op": "∧",
+                                            "right": {
+                                                "left": "reqo",
+                                                "op": "∨",
+                                                "right": {
+                                                    "left": "m",
+                                                    "op": "=",
+                                                    "right": 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "comment": "reqo <- (!(((o = 2) & (a >= 1))) & (reqo | (reqi & (m = 1))))",
+                                    "ref": "reqo",
+                                    "value": {
+                                        "left": {
+                                            "exp": {
+                                                "left": {
+                                                    "left": "o",
+                                                    "op": "=",
+                                                    "right": 2
+                                                },
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "a",
+                                                    "op": "≥",
+                                                    "right": 1
+                                                }
+                                            },
+                                            "op": "¬"
+                                        },
+                                        "op": "∧",
+                                        "right": {
+                                            "left": "reqo",
+                                            "op": "∨",
+                                            "right": {
+                                                "left": "reqi",
+                                                "op": "∧",
+                                                "right": {
+                                                    "left": "m",
+                                                    "op": "=",
+                                                    "right": 1
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "bus",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "MAX_COUNT",
+            "type": "int"
+        },
+        {
+            "name": "MIN_SENSORS",
+            "type": "int",
+            "value": 2
+        },
+        {
+            "name": "MIN_ACTUATORS",
+            "type": "int",
+            "value": 1
+        },
+        {
+            "name": "lambda_p",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 31536000
+            }
+        },
+        {
+            "name": "lambda_s",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 2592000
+            }
+        },
+        {
+            "name": "lambda_a",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 5184000
+            }
+        },
+        {
+            "name": "tau",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 60
+            }
+        },
+        {
+            "name": "delta_f",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 86400
+            }
+        },
+        {
+            "name": "delta_r",
+            "type": "real",
+            "value": {
+                "left": 1,
+                "op": "/",
+                "right": 30
+            }
+        },
+        {
+            "name": "T",
+            "type": "real"
+        }
+    ],
+    "features": [
+        "derived-operators",
+        "functions"
+    ],
+    "functions": [
+        {
+            "body": {
+                "left": {
+                    "exp": {
+                        "args": [
+                            "up__param__s",
+                            "up__param__i",
+                            "up__param__a",
+                            "up__param__o",
+                            "up__param__MIN_SENSORS",
+                            "up__param__MIN_ACTUATORS"
+                        ],
+                        "function": "down",
+                        "op": "call"
+                    },
+                    "op": "¬"
+                },
+                "op": "∧",
+                "right": {
+                    "exp": {
+                        "args": [
+                            "up__param__s",
+                            "up__param__i",
+                            "up__param__a",
+                            "up__param__o",
+                            "up__param__MIN_SENSORS",
+                            "up__param__MIN_ACTUATORS"
+                        ],
+                        "function": "danger",
+                        "op": "call"
+                    },
+                    "op": "¬"
+                }
+            },
+            "name": "up",
+            "parameters": [
+                {
+                    "name": "up__param__s",
+                    "type": "int"
+                },
+                {
+                    "name": "up__param__i",
+                    "type": "int"
+                },
+                {
+                    "name": "up__param__a",
+                    "type": "int"
+                },
+                {
+                    "name": "up__param__o",
+                    "type": "int"
+                },
+                {
+                    "name": "up__param__MIN_SENSORS",
+                    "type": "int"
+                },
+                {
+                    "name": "up__param__MIN_ACTUATORS",
+                    "type": "int"
+                }
+            ],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "left": {
+                        "left": "m",
+                        "op": "=",
+                        "right": 0
+                    },
+                    "op": "∨",
+                    "right": {
+                        "left": "count",
+                        "op": "=",
+                        "right": {
+                            "left": "MAX_COUNT",
+                            "op": "+",
+                            "right": 1
+                        }
+                    }
+                },
+                "op": "∨",
+                "right": {
+                    "left": {
+                        "left": {
+                            "left": "down__param__o",
+                            "op": "=",
+                            "right": 2
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "down__param__a",
+                            "op": "<",
+                            "right": "down__param__MIN_ACTUATORS"
+                        }
+                    },
+                    "op": "∨",
+                    "right": {
+                        "left": {
+                            "left": "down__param__i",
+                            "op": "=",
+                            "right": 2
+                        },
+                        "op": "∧",
+                        "right": {
+                            "left": "down__param__s",
+                            "op": "<",
+                            "right": "down__param__MIN_SENSORS"
+                        }
+                    }
+                }
+            },
+            "name": "down",
+            "parameters": [
+                {
+                    "name": "down__param__s",
+                    "type": "int"
+                },
+                {
+                    "name": "down__param__i",
+                    "type": "int"
+                },
+                {
+                    "name": "down__param__a",
+                    "type": "int"
+                },
+                {
+                    "name": "down__param__o",
+                    "type": "int"
+                },
+                {
+                    "name": "down__param__MIN_SENSORS",
+                    "type": "int"
+                },
+                {
+                    "name": "down__param__MIN_ACTUATORS",
+                    "type": "int"
+                }
+            ],
+            "type": "bool"
+        },
+        {
+            "body": {
+                "left": {
+                    "exp": {
+                        "args": [
+                            "danger__param__s",
+                            "danger__param__i",
+                            "danger__param__a",
+                            "danger__param__o",
+                            "danger__param__MIN_SENSORS",
+                            "danger__param__MIN_ACTUATORS"
+                        ],
+                        "function": "down",
+                        "op": "call"
+                    },
+                    "op": "¬"
+                },
+                "op": "∧",
+                "right": {
+                    "left": {
+                        "left": "danger__param__i",
+                        "op": "=",
+                        "right": 1
+                    },
+                    "op": "∨",
+                    "right": {
+                        "left": "danger__param__o",
+                        "op": "=",
+                        "right": 1
+                    }
+                }
+            },
+            "name": "danger",
+            "parameters": [
+                {
+                    "name": "danger__param__s",
+                    "type": "int"
+                },
+                {
+                    "name": "danger__param__i",
+                    "type": "int"
+                },
+                {
+                    "name": "danger__param__a",
+                    "type": "int"
+                },
+                {
+                    "name": "danger__param__o",
+                    "type": "int"
+                },
+                {
+                    "name": "danger__param__MIN_SENSORS",
+                    "type": "int"
+                },
+                {
+                    "name": "danger__param__MIN_ACTUATORS",
+                    "type": "int"
+                }
+            ],
+            "type": "bool"
+        }
+    ],
+    "jani-version": 1,
+    "name": "embedded",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_actuators"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "actuators"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_sensors",
+                        "time-bounds": {
+                            "upper": {
+                                "left": "T",
+                                "op": "*",
+                                "right": 3600
+                            },
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "actuators_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "rewardmodel_danger",
+                    "op": "Emin",
+                    "time-instant": {
+                        "left": "T",
+                        "op": "*",
+                        "right": 3600
+                    }
+                }
+            },
+            "name": "danger_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "rewardmodel_danger",
+                    "op": "Emin",
+                    "reach": "label_down"
+                }
+            },
+            "name": "danger_time"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "rewardmodel_down",
+                    "op": "Emin",
+                    "time-instant": {
+                        "left": "T",
+                        "op": "*",
+                        "right": 3600
+                    }
+                }
+            },
+            "name": "down_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": "label_down",
+                        "time-bounds": {
+                            "upper": {
+                                "left": "T",
+                                "op": "*",
+                                "right": 3600
+                            },
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "failure_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_io"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "io"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_io",
+                        "time-bounds": {
+                            "upper": {
+                                "left": "T",
+                                "op": "*",
+                                "right": 3600
+                            },
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "io_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_main"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "main"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_main",
+                        "time-bounds": {
+                            "upper": {
+                                "left": "T",
+                                "op": "*",
+                                "right": 3600
+                            },
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "main_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_sensors"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "sensors"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "exp": "label_down",
+                            "op": "¬"
+                        },
+                        "op": "U",
+                        "right": "fail_sensors",
+                        "time-bounds": {
+                            "upper": {
+                                "left": "T",
+                                "op": "*",
+                                "right": 3600
+                            },
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "sensors_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "rewardmodel_up",
+                    "op": "Emin",
+                    "time-instant": {
+                        "left": "T",
+                        "op": "*",
+                        "right": 3600
+                    }
+                }
+            },
+            "name": "up_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "accumulate": [
+                        "time"
+                    ],
+                    "exp": "rewardmodel_up",
+                    "op": "Emin",
+                    "reach": "label_down"
+                }
+            },
+            "name": "up_time"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "sensors"
+            },
+            {
+                "automaton": "proci"
+            },
+            {
+                "automaton": "actuators"
+            },
+            {
+                "automaton": "proco"
+            },
+            {
+                "automaton": "procm"
+            },
+            {
+                "automaton": "bus"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "input_reboot",
+                "synchronise": [
+                    null,
+                    "input_reboot",
+                    null,
+                    null,
+                    null,
+                    "input_reboot"
+                ]
+            },
+            {
+                "result": "output_reboot",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    "output_reboot",
+                    null,
+                    "output_reboot"
+                ]
+            },
+            {
+                "result": "timeout",
+                "synchronise": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    "timeout",
+                    "timeout"
+                ]
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "fail_sensors",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "fail_actuators",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "fail_io",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "fail_main",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_down",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_danger",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "label_up",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "rewardmodel_up",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "rewardmodel_danger",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0.0,
+            "name": "rewardmodel_down",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 3,
+            "name": "s",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "i",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "a",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 2,
+            "name": "o",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "m",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 1
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "count",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": {
+                    "left": "MAX_COUNT",
+                    "op": "+",
+                    "right": 1
+                }
+            }
+        },
+        {
+            "initial-value": true,
+            "name": "comp",
+            "type": "bool"
+        },
+        {
+            "initial-value": true,
+            "name": "reqi",
+            "type": "bool"
+        },
+        {
+            "initial-value": false,
+            "name": "reqo",
+            "type": "bool"
+        }
+    ]
+}

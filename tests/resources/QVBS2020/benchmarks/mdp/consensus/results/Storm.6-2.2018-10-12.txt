@@ -1,0 +1,48 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:37:35 2018
+Command line arguments: --jani consensus.6.jani --janiproperty --constants K=2 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/consensus
+
+Time for model construction: 25.949s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	1258240
+Transitions: 	6236736
+Choices: 	5008128
+Reward Models:  steps
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * finished -> 384 item(s)
+   * agree -> 114258 item(s)
+   * all_coins_equal_1 -> 1641 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "c1": Pmin>=1 [F "finished"] ...
+Result (for initial states): true
+
+Time for model checking: 2.323s.
+
+Model checking property "c2": Pmin=? [F ("finished" & "all_coins_equal_1")] ...
+Result (for initial states): 0.2943375674
+Time for model checking: 24.514s.
+
+Model checking property "disagree": Pmax=? [F ("finished" & !("agree"))] ...
+Result (for initial states): 0.3636232291
+Time for model checking: 35.351s.
+
+Model checking property "steps_max": R[exp]{"steps"}max=? [F "finished"] ...
+Result (for initial states): 866.9036049
+Time for model checking: 69.195s.
+
+Model checking property "steps_min": R[exp]{"steps"}min=? [F "finished"] ...
+Result (for initial states): 432.0161778
+Time for model checking: 49.350s.
+
+Performance statistics:
+  * peak memory usage: 852MB
+  * CPU time: 206.236s
+  * wallclock time: 206.699s

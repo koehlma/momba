@@ -1,0 +1,72 @@
+{
+	"file": "../firewire.true.jani",
+	"version": 1,
+	"date": "2018-10-12",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.3-600.2018-10-12.txt",
+	"open-parameter-values": [
+		{
+			"name": "delay",
+			"value": 3
+		},
+		{
+			"name": "deadline",
+			"value": 600
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani firewire.true.jani --janiproperty --constants delay=3,deadline=600  --timemem",
+	"time": 22.749,
+	"memory": 174063616,
+	"property-times": [
+		{
+			"name": "deadline",
+			"time": 1.357
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 21.378
+				},
+				{
+					"name": "states",
+					"value": 1093658
+				},
+				{
+					"name": "branches",
+					"value": 1504347
+				},
+				{
+					"name": "transitions",
+					"value": 1483807
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "deadline",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 1.357
+				}
+			],
+			"value": 0.931640625
+		}
+	]
+}

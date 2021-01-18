@@ -1,0 +1,78 @@
+Storm 1.2.4 (dev)
+
+Date: Sat Oct 27 11:14:27 2018
+Command line arguments: --jani flexible-manufacturing.9.jani --janiproperty --constants T=1 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/flexible-manufacturing
+
+Time for model input parsing: 0.006s.
+
+Time for model construction: 1.961s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	107670
+Transitions: 	508356
+Choices: 	196521
+Markovian St.: 	106946
+Max. Rate.: 	7.99
+Reward Models:  none
+State Labels: 	7 labels
+   * deadlock -> 0 item(s)
+   * (Spares = 0) -> 28585 item(s)
+   * (M2go = 0) -> 76935 item(s)
+   * init -> 1 item(s)
+   * (M2on > 0) -> 61470 item(s)
+   * (M3go = 0) -> 79095 item(s)
+   * (M3on > 0) -> 64770 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.080s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	56989
+Transitions: 	131224
+Choices: 	56989
+Markovian St.: 	18095
+Max. Rate.: 	7.99
+Reward Models:  none
+State Labels: 	7 labels
+   * (M3on > 0) -> 43048 item(s)
+   * (Spares = 0) -> 17348 item(s)
+   * deadlock -> 0 item(s)
+   * (M2on > 0) -> 36385 item(s)
+   * (M3go = 0) -> 37882 item(s)
+   * (M2go = 0) -> 33808 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "M2Fail_S": LRAmin=? [(((M2on > 0) & (M2go = 0)) & (Spares = 0))] ...
+Result (for initial states): 5.388921794e-05
+Time for model checking: 13.164s.
+
+Model checking property "M3Fail_S": LRAmin=? [((M3on > 0) & (M3go = 0))] ...
+Result (for initial states): 0.2288397247
+Time for model checking: 17.641s.
+
+Model checking property "M2Fail_E": T[exp]min=? [F (((M2on > 0) & (M2go = 0)) & (Spares = 0))] ...
+Result (for initial states): 291787.3019
+Time for model checking: 3425.253s.
+
+Model checking property "M3Fail_E": T[exp]min=? [F ((M3on > 0) & (M3go = 0))] ...
+Result (for initial states): 34.23735438
+Time for model checking: 0.535s.
+
+Model checking property "M2Fail_Pb": Pmin=? [true U<1 (((M2on > 0) & (M2go = 0)) & (Spares = 0))] ...
+Result (for initial states): 2.352620681e-10
+Time for model checking: 3.657s.
+
+Model checking property "M3Fail_Pb": Pmin=? [true U<1 ((M3on > 0) & (M3go = 0))] ...
+Result (for initial states): 0.004751735998
+Time for model checking: 3.499s.
+
+Performance statistics:
+  * peak memory usage: 199MB
+  * CPU time: 3464.342s
+  * wallclock time: 3465.806s

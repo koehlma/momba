@@ -1,0 +1,37 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Nov 22 09:39:02 2018
+Command line arguments: --jani philosophers-mdp.3.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.010s.
+
+Time for model construction: 0.096s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	956
+Transitions: 	3696
+Choices: 	3342
+Reward Models:  none
+State Labels: 	8 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (p1 >= 8) -> 216 item(s)
+   * (p2 >= 8) -> 216 item(s)
+   * (p1 <= 9) -> 820 item(s)
+   * (p2 <= 9) -> 820 item(s)
+   * (p3 <= 9) -> 820 item(s)
+   * (p3 >= 8) -> 216 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "eat": Pmax=? [F ((((p1 >= 8) & (p1 <= 9)) | ((p2 >= 8) & (p2 <= 9))) | ((p3 >= 8) & (p3 <= 9)))] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.006s.
+
+Performance statistics:
+  * peak memory usage: 46MB
+  * CPU time: 0.169s
+  * wallclock time: 0.118s
+

@@ -1,0 +1,47 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 10:14:24 2018
+Command line arguments: --jani csma.4-2.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/csma
+
+Time for model construction: 32.721s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	761962
+Transitions: 	1327068
+Choices: 	825504
+Reward Models:  time
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * collision_max_backoff -> 3444 item(s)
+   * deadlock -> 0 item(s)
+   * ((min((min(((s4 = 4) ? cd4 : 3), ((s2 = 4) ? cd2 : 3))), (min(((s3 = 4) ? cd3 : 3), ((s1 = 4) ? cd1 : 3))))) < 2) -> 161696 item(s)
+   * all_delivered -> 9 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "all_before_max": Pmax=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 283699444885771093844545259966420317194574918841/365375409332725729550921208179070754913983135744 (approx. 0.7764601493)
+Time for model checking: 6.501s.
+
+Model checking property "all_before_min": Pmin=? [!("collision_max_backoff") U "all_delivered"] ...
+Result (for initial states): 4222393045579897971202136832710978665823083309/45671926166590716193865151022383844364247891968 (approx. 0.09245051391)
+Time for model checking: 5.163s.
+
+Model checking property "some_before": Pmin=? [F ((min((min(((s4 = 4) ? cd4 : 3), ((s2 = 4) ? cd2 : 3))), (min(((s3 = 4) ? cd3 : 3), ((s1 = 4) ? cd1 : 3))))) < 2)] ...
+Result (for initial states): 91/256 (approx. 0.35546875)
+Time for model checking: 1.676s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "all_delivered"] ...
+Result (for initial states): 32315623775306742465754992904772086856590387189461759497043751326444129883/227235292031546136552071621151990131110732434575780471525732909819363328 (approx. 142.2121691)
+Time for model checking: 11.151s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F "all_delivered"] ...
+Result (for initial states): 4395955219329273673062617265149460096433442950632067103167/35319233168393532282477529141354781966213128206575206400 (approx. 124.4634955)
+Time for model checking: 10.629s.
+
+Performance statistics:
+  * peak memory usage: 886MB
+  * CPU time: 67.563s
+  * wallclock time: 68.424s

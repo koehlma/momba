@@ -1,0 +1,710 @@
+{
+	"name": "IEEE 802.11 Wireless LAN",
+	"short": "wlan",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Marta Kwiatkowska <Marta.Kwiatkowska@cs.ox.ac.uk>",
+		"Gethin Norman <gethin.norman@glasgow.ac.uk>",
+		"Jeremy Sproston <sproston@di.unito.it>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1007/3-540-45605-8_11",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. We consider an MDP representing the IEEE 802.11 Wireless LAN which models two stations colliding - trying to send messages at the same time over one channel - and then entering the randomised exponential backoff procedure. The timing constraints (values of parameters not listed here) of the model correspond to the Frequency Hopping Spread Spectrum (FHSS) physical layer, rounded by a factor of 50 (i.e. 1 time unit equals 50 μs) to reduce complexity. We used the integer semantics given in [0]. `COL´ is the maximum number of collisions, `MAX_BACKOFF´ the maximum backoff counter and `TRANS_TIME_MAX/MIN´ the transition times.  See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/wlan.php"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "MAX_BACKOFF",
+			"kind": "file",
+			"description": "Maximum backoff counter",
+			"type": "positive integer"
+		},
+		{
+			"name": "COL",
+			"kind": "open",
+			"description": "Maximum collision counter",
+			"type": "integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "collisions",
+			"description": "The maximum probability of `COL´ collisions.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "cost_max",
+			"description": "The maximum expected cost for both stations to send correctly.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "cost_min",
+			"description": "Minimum expected cost for both stations to send correctly.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "num_collisions",
+			"description": "The maximum expected collisions before both stations to send correctly.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "sent",
+			"description": "With probability 1, eventually both stations have sent their packet correctly.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "time_max",
+			"description": "The maximum expected time for both stations to send correctly.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_min",
+			"description": "Minimum expected time for both stations to send correctly.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "wlan.0.jani",
+			"original-file": [
+				"wlan.0.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.0.prism --tojani wlan.0.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 0
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 2954
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 28000.956937799045,
+								"num": 5852200,
+								"den": 209
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2248803827751196,
+								"num": 256,
+								"den": 209
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3791.904761904762,
+								"num": 79630,
+								"den": 21
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.1.jani",
+			"original-file": [
+				"wlan.1.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.1.prism --tojani wlan.1.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 1
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 8625
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 228206.30718514533,
+								"num": 1696029275,
+								"den": 7432
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.202368137782562,
+								"num": 1117,
+								"den": 929
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3865.1377688172042,
+								"num": 5751325,
+								"den": 1488
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.2.jani",
+			"original-file": [
+				"wlan.2.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.2.prism --tojani wlan.2.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 28480
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 227315.32459918424,
+								"num": 727176267825,
+								"den": 3198976
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2014594670294494,
+								"num": 240215,
+								"den": 199936
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3881.809882707493,
+								"num": 1478690075,
+								"den": 380928
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.3.jani",
+			"original-file": [
+				"wlan.3.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.3.prism --tojani wlan.3.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 96302
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 227297.17171181348,
+								"num": 30509216674858475,
+								"den": 134226116608
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2014396302246033,
+								"num": 5039517997,
+								"den": 4194566144
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3883.4219613957,
+								"num": 130322306383225,
+								"den": 33558626304
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.4.jani",
+			"original-file": [
+				"wlan.4.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.4.prism --tojani wlan.4.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 345000
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 227297.0264498327,
+								"num": 12949633130974550652875,
+								"den": 56972294504841216
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2014394056809146,
+								"num": 83554324771603,
+								"den": 69545184198656
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3883.4978474255736,
+								"num": 432132388813372475,
+								"den": 111274012704768
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.5.jani",
+			"original-file": [
+				"wlan.5.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.5.prism --tojani wlan.5.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1295218
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 227297.02701182602,
+								"num": 26677467903150239524795325,
+								"den": 117368309888902496256
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2014394043875687,
+								"num": 5508217626823953517,
+								"den": 4584682012849209344
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3883.49962540938,
+								"num": 79796881563110097825,
+								"den": 20547673299877888
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "wlan.6.jani",
+			"original-file": [
+				"wlan.6.prism",
+				"wlan.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism wlan.6.prism --tojani wlan.6.jani --prop wlan.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "MAX_BACKOFF",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [
+						{
+							"name": "COL",
+							"value": 0
+						}
+					],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 5007548
+						}
+					],
+					"results": [
+						{
+							"property": "collisions",
+							"value": 1,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_max",
+							"value": {
+								"approx": 227297.02702975084,
+								"num": 1669977806705340623589741851475,
+								"den": 7347116803629629894033408
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "cost_min",
+							"value": 7625,
+							"note": "Storm/exact"
+						},
+						{
+							"property": "num_collisions",
+							"value": {
+								"approx": 1.2014394043838117,
+								"num": 289639454789298300673463,
+								"den": 241077039534796309528576
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "sent",
+							"value": "true",
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 3883.499646229621,
+								"num": 37448939728860673819103673575,
+								"den": 9643090804763889235918848
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": 1325,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/Storm.0-0.2018-10-12.json",
+		"results/Storm.1-0.2018-10-12.json",
+		"results/Storm.2-0.2018-10-12.json",
+		"results/Storm.3-0.2018-10-12.json",
+		"results/Storm.4-0.2018-10-12.json",
+		"results/Storm.5-0.2018-10-12.json",
+		"results/Storm.6-0.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.0-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.1-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5-0.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.6-0.2018-10-17.json"
+		}
+	]
+}

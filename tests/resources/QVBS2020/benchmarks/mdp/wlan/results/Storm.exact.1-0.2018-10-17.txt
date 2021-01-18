@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Thu Oct 18 07:02:11 2018
+Command line arguments: --jani wlan.1.jani --janiproperty --constants COL=0 --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/wlan
+
+Time for model construction: 1.391s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	8625
+Transitions: 	16196
+Choices: 	11356
+Reward Models:  time, collisions, cost
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (col = 0) -> 8625 item(s)
+   * (s2 = 12) -> 257 item(s)
+   * (s1 = 12) -> 257 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collisions": Pmax=? [F (col = 0)] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.018s.
+
+Model checking property "cost_max": R[exp]{"cost"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1696029275/7432 (approx. 228206.3072)
+Time for model checking: 0.163s.
+
+Model checking property "cost_min": R[exp]{"cost"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 7625 (approx. 7625)
+Time for model checking: 0.118s.
+
+Model checking property "num_collisions": R[exp]{"collisions"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1117/929 (approx. 1.202368138)
+Time for model checking: 0.125s.
+
+Model checking property "sent": Pmin>=1 [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): true
+
+Time for model checking: 0.018s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 5751325/1488 (approx. 3865.137769)
+Time for model checking: 0.149s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1325 (approx. 1325)
+Time for model checking: 0.112s.
+
+Performance statistics:
+  * peak memory usage: 64MB
+  * CPU time: 2.150s
+  * wallclock time: 2.139s

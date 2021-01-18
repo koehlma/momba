@@ -1,0 +1,2184 @@
+﻿{
+	"jani-version": 1,
+	"name": "wlan-large",
+	"type": "sta",
+	"features": [ "derived-operators" ],
+	"actions": [
+		{
+			"name": "finish1"
+		},
+		{
+			"name": "finish2"
+		},
+		{
+			"name": "send1"
+		},
+		{
+			"name": "send2"
+		}
+	],
+	"constants": [ {
+		"name": "K",
+		"type": "int"
+	} ],
+	"variables": [
+		{
+			"name": "c1",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": 2
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "c2",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": 2
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "bc1",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "K"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "bc2",
+			"type": {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound": 0,
+				"upper-bound": "K"
+			},
+			"initial-value": 0
+		},
+		{
+			"name": "success1_seen",
+			"type": "bool",
+			"initial-value": false
+		},
+		{
+			"name": "success2_seen",
+			"type": "bool",
+			"initial-value": false
+		}
+	],
+	"properties": [
+		{
+			"name": "P_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∀",
+				"values": {
+					"op": "≥",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "success1_seen",
+								"right": "success2_seen"
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_1_1",
+			"expression": {
+				"op": "filter",
+				"fun": "∃",
+				"values": {
+					"op": "≥",
+					"left": {
+						"op": "Pmin",
+						"exp": {
+							"op": "F",
+							"exp": {
+								"op": "∧",
+								"left": "success1_seen",
+								"right": "success2_seen"
+							}
+						}
+					},
+					"right": 1
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_min",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∨",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": "K"
+							},
+							"right": {
+								"op": "=",
+								"left": "bc2",
+								"right": "K"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "P_max",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Pmax",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∨",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": "K"
+							},
+							"right": {
+								"op": "=",
+								"left": "bc2",
+								"right": "K"
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "D_and",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∧",
+							"left": "success1_seen",
+							"right": "success2_seen"
+						},
+						"time-bounds": {
+							"upper": {
+								"op": "*",
+								"left": 15717,
+								"right": 5
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "D_or",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": {
+							"op": "∨",
+							"left": "success1_seen",
+							"right": "success2_seen"
+						},
+						"time-bounds": {
+							"upper": {
+								"op": "*",
+								"left": 15717,
+								"right": 5
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "D_1",
+			"expression": {
+				"op": "filter",
+				"fun": "min",
+				"values": {
+					"op": "Pmin",
+					"exp": {
+						"op": "F",
+						"exp": "success1_seen",
+						"time-bounds": {
+							"upper": {
+								"op": "*",
+								"left": 15717,
+								"right": 5
+							}
+						}
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "E_and",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [ "time" ],
+					"reach": {
+						"op": "∧",
+						"left": "success1_seen",
+						"right": "success2_seen"
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "E_or",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [ "time" ],
+					"reach": {
+						"op": "∨",
+						"left": "success1_seen",
+						"right": "success2_seen"
+					}
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		},
+		{
+			"name": "E_1",
+			"expression": {
+				"op": "filter",
+				"fun": "max",
+				"values": {
+					"op": "Emax",
+					"exp": 1,
+					"accumulate": [ "time" ],
+					"reach": "success1_seen"
+				},
+				"states": {
+					"op": "initial"
+				}
+			}
+		}
+	],
+	"automata": [
+		{
+			"name": "Channel",
+			"locations": [ {
+				"name": "loc_1"
+			} ],
+			"initial-locations": [ "loc_1" ],
+			"edges": [
+				{
+					"location": "loc_1",
+					"action": "finish1",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "c1",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "finish2",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [ {
+							"ref": "c2",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "send1",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "c1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "c2",
+										"right": 1
+									},
+									"right": 2
+								}
+							},
+							{
+								"ref": "c2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "c2",
+										"right": "c2"
+									},
+									"right": 2
+								}
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"action": "send2",
+					"destinations": [ {
+						"location": "loc_1",
+						"assignments": [
+							{
+								"ref": "c1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "c1",
+										"right": "c1"
+									},
+									"right": 2
+								}
+							},
+							{
+								"ref": "c2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "c1",
+										"right": 1
+									},
+									"right": 2
+								}
+							}
+						]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Sender1",
+			"locations": [
+				{
+					"name": "loc_1",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_13",
+					"time-progress": {
+						"exp": {
+							"op": "≠",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_23",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_45",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_65",
+					"time-progress": {
+						"exp": {
+							"op": "≠",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_74",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_9",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 48
+						}
+					}
+				},
+				{
+					"name": "loc_19",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 15717
+						}
+					}
+				},
+				{
+					"name": "loc_29",
+					"time-progress": {
+						"exp": false
+					}
+				},
+				{
+					"name": "loc_56",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 28
+						}
+					}
+				},
+				{
+					"name": "loc_72",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 205
+						}
+					}
+				},
+				{
+					"name": "loc_0"
+				},
+				{
+					"name": "loc_53",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 300
+						}
+					}
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "status",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": 2
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "backoff",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": {
+							"op": "-",
+							"left": {
+								"op": "trc",
+								"exp": {
+									"op": "pow",
+									"left": 2,
+									"right": {
+										"op": "+",
+										"left": "K",
+										"right": 4
+									}
+								}
+							},
+							"right": 1
+						}
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "x",
+					"type": "clock",
+					"initial-value": 0
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 128
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_13",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_23",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": 0
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										15
+									]
+								}
+							},
+							{
+								"ref": "bc1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc1",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": 1
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										31
+									]
+								}
+							},
+							{
+								"ref": "bc1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc1",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": 2
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										63
+									]
+								}
+							},
+							{
+								"ref": "bc1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc1",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": 3
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										127
+									]
+								}
+							},
+							{
+								"ref": "bc1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc1",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc1",
+								"right": 4
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										255
+									]
+								}
+							},
+							{
+								"ref": "bc1",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc1",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": "=",
+								"left": "backoff",
+								"right": 0
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": ">",
+								"left": "backoff",
+								"right": 0
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"op": "-",
+									"left": "backoff",
+									"right": 1
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_65",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_65",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_74",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_74",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 128
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_74",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_65",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_9",
+					"action": "send1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 48
+						}
+					},
+					"destinations": [ {
+						"location": "loc_19",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_19",
+					"action": "finish1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 224
+						}
+					},
+					"destinations": [ {
+						"location": "loc_29",
+						"assignments": [
+							{
+								"ref": "x",
+								"value": 0
+							},
+							{
+								"ref": "status",
+								"value": "c1"
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							},
+							"right": {
+								"op": "=",
+								"left": "status",
+								"right": 2
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							},
+							"right": {
+								"op": "=",
+								"left": "status",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_56"
+					} ]
+				},
+				{
+					"location": "loc_56",
+					"action": "send1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 28
+						}
+					},
+					"destinations": [ {
+						"location": "loc_72",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_72",
+					"action": "finish1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 205
+						}
+					},
+					"destinations": [ {
+						"location": "loc_0",
+						"assignments": [
+							{
+								"ref": "x",
+								"value": 0
+							},
+							{
+								"ref": "success1_seen",
+								"value": true
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_53",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 300
+						}
+					},
+					"destinations": [ {
+						"location": "loc_23",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				}
+			]
+		},
+		{
+			"name": "Sender2",
+			"locations": [
+				{
+					"name": "loc_1",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_13",
+					"time-progress": {
+						"exp": {
+							"op": "≠",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_23",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_45",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_65",
+					"time-progress": {
+						"exp": {
+							"op": "≠",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					}
+				},
+				{
+					"name": "loc_74",
+					"time-progress": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≤",
+								"left": "x",
+								"right": 128
+							},
+							"right": {
+								"op": "≤",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							}
+						}
+					}
+				},
+				{
+					"name": "loc_9",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 48
+						}
+					}
+				},
+				{
+					"name": "loc_19",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 15717
+						}
+					}
+				},
+				{
+					"name": "loc_29",
+					"time-progress": {
+						"exp": false
+					}
+				},
+				{
+					"name": "loc_56",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 28
+						}
+					}
+				},
+				{
+					"name": "loc_72",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 205
+						}
+					}
+				},
+				{
+					"name": "loc_0"
+				},
+				{
+					"name": "loc_53",
+					"time-progress": {
+						"exp": {
+							"op": "≤",
+							"left": "x",
+							"right": 300
+						}
+					}
+				}
+			],
+			"initial-locations": [ "loc_1" ],
+			"variables": [
+				{
+					"name": "status",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": 2
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "backoff",
+					"type": {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound": 0,
+						"upper-bound": {
+							"op": "-",
+							"left": {
+								"op": "trc",
+								"exp": {
+									"op": "pow",
+									"left": 2,
+									"right": {
+										"op": "+",
+										"left": "K",
+										"right": 4
+									}
+								}
+							},
+							"right": 1
+						}
+					},
+					"initial-value": 0
+				},
+				{
+					"name": "x",
+					"type": "clock",
+					"initial-value": 0
+				}
+			],
+			"edges": [
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 128
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_1",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_13",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_23",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc2",
+								"right": 0
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										15
+									]
+								}
+							},
+							{
+								"ref": "bc2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc2",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc2",
+								"right": 1
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										31
+									]
+								}
+							},
+							{
+								"ref": "bc2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc2",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc2",
+								"right": 2
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										63
+									]
+								}
+							},
+							{
+								"ref": "bc2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc2",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc2",
+								"right": 3
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										127
+									]
+								}
+							},
+							{
+								"ref": "bc2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc2",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": "bc2",
+								"right": 4
+							},
+							"right": {
+								"op": "≥",
+								"left": "x",
+								"right": 128
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"distribution": "DiscreteUniform",
+									"args": [
+										0,
+										255
+									]
+								}
+							},
+							{
+								"ref": "bc2",
+								"value": {
+									"op": "min",
+									"left": {
+										"op": "+",
+										"left": "bc2",
+										"right": 1
+									},
+									"right": "K"
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_23",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": "=",
+								"left": "backoff",
+								"right": 0
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_9",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "≥",
+								"left": "x",
+								"right": 50
+							},
+							"right": {
+								"op": ">",
+								"left": "backoff",
+								"right": 0
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [
+							{
+								"ref": "backoff",
+								"value": {
+									"op": "-",
+									"left": "backoff",
+									"right": 1
+								}
+							},
+							{
+								"ref": "x",
+								"value": 0
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_45",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_65",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_65",
+					"guard": {
+						"exp": {
+							"op": "=",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_74",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_74",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 128
+						}
+					},
+					"destinations": [ {
+						"location": "loc_45",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_74",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_65",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_9",
+					"action": "send2",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 48
+						}
+					},
+					"destinations": [ {
+						"location": "loc_19",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_19",
+					"action": "finish2",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 224
+						}
+					},
+					"destinations": [ {
+						"location": "loc_29",
+						"assignments": [
+							{
+								"ref": "x",
+								"value": 0
+							},
+							{
+								"ref": "status",
+								"value": "c2"
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": ">",
+							"left": {
+								"op": "+",
+								"left": "c1",
+								"right": "c2"
+							},
+							"right": 0
+						}
+					},
+					"destinations": [ {
+						"location": "loc_13"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							},
+							"right": {
+								"op": "=",
+								"left": "status",
+								"right": 2
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_53"
+					} ]
+				},
+				{
+					"location": "loc_29",
+					"guard": {
+						"exp": {
+							"op": "∧",
+							"left": {
+								"op": "=",
+								"left": {
+									"op": "+",
+									"left": "c1",
+									"right": "c2"
+								},
+								"right": 0
+							},
+							"right": {
+								"op": "=",
+								"left": "status",
+								"right": 1
+							}
+						}
+					},
+					"destinations": [ {
+						"location": "loc_56"
+					} ]
+				},
+				{
+					"location": "loc_56",
+					"action": "send2",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 28
+						}
+					},
+					"destinations": [ {
+						"location": "loc_72",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				},
+				{
+					"location": "loc_72",
+					"action": "finish2",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 205
+						}
+					},
+					"destinations": [ {
+						"location": "loc_0",
+						"assignments": [
+							{
+								"ref": "x",
+								"value": 0
+							},
+							{
+								"ref": "success2_seen",
+								"value": true
+							}
+						]
+					} ]
+				},
+				{
+					"location": "loc_53",
+					"guard": {
+						"exp": {
+							"op": "≥",
+							"left": "x",
+							"right": 300
+						}
+					},
+					"destinations": [ {
+						"location": "loc_23",
+						"assignments": [ {
+							"ref": "x",
+							"value": 0
+						} ]
+					} ]
+				}
+			]
+		}
+	],
+	"system": {
+		"elements": [
+			{
+				"automaton": "Channel"
+			},
+			{
+				"automaton": "Sender1"
+			},
+			{
+				"automaton": "Sender2"
+			}
+		],
+		"syncs": [
+			{
+				"synchronise": [
+					"finish1",
+					"finish1",
+					null
+				],
+				"result": "finish1"
+			},
+			{
+				"synchronise": [
+					"send1",
+					"send1",
+					null
+				],
+				"result": "send1"
+			},
+			{
+				"synchronise": [
+					"finish2",
+					null,
+					"finish2"
+				],
+				"result": "finish2"
+			},
+			{
+				"synchronise": [
+					"send2",
+					null,
+					"send2"
+				],
+				"result": "send2"
+			}
+		]
+	}
+}

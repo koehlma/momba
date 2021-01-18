@@ -1,0 +1,78 @@
+﻿{
+	"file": "../beb.3-4.jani",
+	"version": 1,
+	"date": "2018-08-30",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "N", "value": 3 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe beb.3-4.jani -S Memory -E \"N=3\" -O mcsta.3-4-3.json Json",
+	"time": 0.509,
+	"memory": 48578560,
+	"property-times": [
+		{ "name": "LineSeized", "time": 0.010 },
+		{ "name": "GaveUp", "time": 0.001 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 16, "unit": "B" },
+				{ "name": "States", "value": 4528 },
+				{ "name": "Transitions", "value": 4874 },
+				{ "name": "Branches", "value": 6899 },
+				{ "name": "Rate", "value": 141500 },
+				{ "name": "Time", "value": 0.039, "unit": "s" }
+			]
+		},
+		{
+			"property": "LineSeized",
+			"value": 0.9166259765625,
+			"values": [
+				{ "name": "Bounds", "value": "[0.9166259765625, 0.9166259765625]" },
+				{ "name": "Time", "value": 0.01, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 8 },
+						{ "name": "Time", "value": 0.004, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "GaveUp",
+			"value": 0.0833740234375,
+			"values": [
+				{ "name": "Bounds", "value": "[0.0833740234375, 0.0833740234375]" },
+				{ "name": "Time", "value": 0.001, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 9 },
+						{ "name": "Time", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

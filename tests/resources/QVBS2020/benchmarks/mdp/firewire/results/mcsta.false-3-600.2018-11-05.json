@@ -1,0 +1,163 @@
+﻿{
+	"file": "../firewire.false.jani",
+	"version": 2,
+	"date": "2018-11-05",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"open-parameter-values": [
+		{ "name": "delay", "value": 3 },
+		{ "name": "deadline", "value": 600 }
+	],
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.94",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.16.0.179"
+	},
+	"command": "mcsta.exe firewire.false.jani -S Memory -E \"delay=3, deadline=600\" -O mcsta.false-3-600.2018-11-05.json Json",
+	"time": 0.784,
+	"memory": 50647040,
+	"property-times": [
+		{ "name": "elected", "time": 0.009 },
+		{ "name": "time_max", "time": 0.010 },
+		{ "name": "time_min", "time": 0.026 },
+		{ "name": "time_sending", "time": 0.005 },
+		{ "name": "deadline", "time": 0.157 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 14, "unit": "B" },
+				{ "name": "States", "value": 4093 },
+				{ "name": "Transitions", "value": 5515 },
+				{ "name": "Branches", "value": 5581 },
+				{ "name": "Rate", "value": 113694.44444444445 },
+				{ "name": "Time", "value": 0.043, "unit": "s" }
+			]
+		},
+		{
+			"property": "elected",
+			"value": true,
+			"values": [
+				{ "name": "Time", "value": 0.009, "unit": "s" },
+				{ "name": "Probability", "value": 1 }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.004, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 4093 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_max",
+			"value": 298.99999977907282,
+			"values": [
+				{ "name": "Bounds", "value": "[298.999999779073, ∞)" },
+				{ "name": "Time", "value": 0.01, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.001, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 4093 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.001, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 8.1836773919725051E-07 },
+						{ "name": "Iterations", "value": 58 },
+						{ "name": "Time", "value": 0.006, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_min",
+			"value": 138.25,
+			"values": [
+				{ "name": "Bounds", "value": "[138.25, ∞)" },
+				{ "name": "Time", "value": 0.026, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 4093 },
+						{ "name": "Time for max. prob. 1 states", "value": 0.025, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 6 },
+						{ "name": "Time", "value": 0.001, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "time_sending",
+			"value": 17.999992668628693,
+			"values": [
+				{ "name": "Bounds", "value": "[17.9999926686287, ∞)" },
+				{ "name": "Time", "value": 0.005, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Min. prob. 0 states", "value": 0 },
+						{ "name": "Time for min. prob. 0 states", "value": 0.001, "unit": "s" },
+						{ "name": "Min. prob. 1 states", "value": 4093 },
+						{ "name": "Time for min. prob. 1 states", "value": 0.001, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.9035584145620759E-07 },
+						{ "name": "Iterations", "value": 42 },
+						{ "name": "Time", "value": 0.003, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "deadline",
+			"value": 0.931640625,
+			"values": [
+				{ "name": "Bounds", "value": "[0.931640625, 1]" },
+				{ "name": "CDF", "value": "{ (0, 0), ..., (169, 0), (170, 0.5), ..., (257, 0.5), (258, 0.625), ..., (339, 0.625), (340, 0.75), ..., (345, 0.75), (346, 0.78125), ..., (427, 0.78125), (428, 0.84375), ..., (433, 0.84375), (434, 0.8515625), ..., (509, 0.8515625), (510, 0.8828125), ..., (515, 0.8828125), (516, 0.90625), ..., (521, 0.90625), (522, 0.908203125), ..., (597, 0.908203125), (598, 0.931640625), ..., (600, 0.931640625) }" },
+				{ "name": "Time", "value": 0.157, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 0 },
+						{ "name": "Iterations", "value": 1330 },
+						{ "name": "Time", "value": 0.155, "unit": "s" }
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,58 @@
+Storm 1.2.4 (dev)
+
+Date: Sat Aug 11 11:31:10 2018
+Command line arguments: --jani ../ma/jobs/jobs.15-3.jani -jprop -tm
+Current working directory: /Users/tim/git/qmcc/generate_Meta
+
+Time for model construction: 217.649s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1896568
+Transitions: 	7455066
+Choices: 	3727601
+Markovian St.: 	1863801
+Max. Rate.: 	9
+Reward Models:  avg_waiting_time
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * half_of_jobs_finished -> 231660 item(s)
+   * deadlock -> 1 item(s)
+   * all_jobs_finished -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.000s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1896568
+Transitions: 	7455066
+Choices: 	3727601
+Markovian St.: 	1863801
+Max. Rate.: 	9
+Reward Models:  avg_waiting_time
+State Labels: 	4 labels
+   * init -> 1 item(s)
+   * half_of_jobs_finished -> 231660 item(s)
+   * deadlock -> 1 item(s)
+   * all_jobs_finished -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "avgtime": R[exp]{"avg_waiting_time"}max=? [F "all_jobs_finished"] ...
+Result (for initial states): 1.952302669
+Time for model checking: 1.507s.
+
+Model checking property "completiontime": T[exp]min=? [F "all_jobs_finished"] ...
+Result (for initial states): 3.440139111
+Time for model checking: 4.991s.
+
+Model checking property "prhalfdone": Pmax=? [true U<=(15 / 12) "half_of_jobs_finished"] ...
+Result (for initial states): 0.7205571343
+Time for model checking: 63.646s.
+
+Performance statistics:
+  * peak memory usage: 6763MB
+  * CPU time: 283.799s
+  * wallclock time: 288.070s

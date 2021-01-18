@@ -1,0 +1,19 @@
+const double T;
+
+// The average probability that machine 2 fails
+"M2Fail_S": Smin=? [M2on > 0 & M2go = 0 & Spares=0];
+
+// The average probability that machine 3 fails
+"M3Fail_S": Smin=? [M3on > 0 & M3go = 0];
+
+// The expected time until machine 2 fails
+"M2Fail_E": Tmin=? [F M2on > 0 & M2go = 0 & Spares=0];
+
+// The expected time until machine 3 fails
+"M3Fail_E": Tmin=? [F M3on > 0 & M3go = 0];
+
+// The probability that machine 2 fails within T time units
+"M2Fail_Pb": Pmin=? [F<T M2on > 0 & M2go = 0 & Spares=0];
+
+// The probability that machine 3 fails within T time units
+"M3Fail_Pb": Pmin=? [F<T M3on > 0 & M3go = 0];

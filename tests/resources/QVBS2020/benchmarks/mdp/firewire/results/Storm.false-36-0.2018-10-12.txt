@@ -1,0 +1,42 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:32:14 2018
+Command line arguments: --jani firewire.false.jani --janiproperty --constants delay=36 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/firewire
+
+Time for model construction: 5.586s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	212268
+Transitions: 	481792
+Choices: 	478756
+Reward Models:  time_sending, time
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * done -> 2 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "elected": Pmin>=1 [F "done"] ...
+Result (for initial states): true
+
+Time for model checking: 0.227s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F "done"] ...
+Result (for initial states): 364.9999999
+Time for model checking: 0.717s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F "done"] ...
+Result (for initial states): 138.25
+Time for model checking: 0.822s.
+
+Model checking property "time_sending": R[exp]{"time_sending"}max=? [F "done"] ...
+Result (for initial states): 202.25
+Time for model checking: 0.748s.
+
+Performance statistics:
+  * peak memory usage: 132MB
+  * CPU time: 8.031s
+  * wallclock time: 8.124s

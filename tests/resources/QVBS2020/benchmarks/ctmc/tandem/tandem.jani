@@ -1,0 +1,560 @@
+{
+    "actions": [
+        {
+            "name": "route"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "sc <- (sc + 1)",
+                                    "ref": "sc",
+                                    "value": {
+                                        "left": "sc",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((4 * c) / (4 * c))",
+                                "exp": {
+                                    "left": {
+                                        "left": 4,
+                                        "op": "*",
+                                        "right": "c"
+                                    },
+                                    "op": "/",
+                                    "right": {
+                                        "left": 4,
+                                        "op": "*",
+                                        "right": "c"
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(sc < c)",
+                        "exp": {
+                            "left": "sc",
+                            "op": "<",
+                            "right": "c"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(4 * c)",
+                        "exp": {
+                            "left": 4,
+                            "op": "*",
+                            "right": "c"
+                        }
+                    }
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "ph <- 2",
+                                    "ref": "ph",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((1/10 * 2) / (1/10 * 2))",
+                                "exp": {
+                                    "left": 0.2,
+                                    "op": "/",
+                                    "right": 0.2
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((sc > 0) & (ph = 1))",
+                        "exp": {
+                            "left": {
+                                "left": "sc",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ph",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(1/10 * 2)",
+                        "exp": 0.2
+                    }
+                },
+                {
+                    "action": "route",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "sc <- (sc - 1)",
+                                    "ref": "sc",
+                                    "value": {
+                                        "left": "sc",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "((9/10 * 2) / (9/10 * 2))",
+                                "exp": {
+                                    "left": 1.8,
+                                    "op": "/",
+                                    "right": 1.8
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((sc > 0) & (ph = 1))",
+                        "exp": {
+                            "left": {
+                                "left": "sc",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ph",
+                                "op": "=",
+                                "right": 1
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "(9/10 * 2)",
+                        "exp": 1.8
+                    }
+                },
+                {
+                    "action": "route",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "sc <- (sc - 1)",
+                                    "ref": "sc",
+                                    "value": {
+                                        "left": "sc",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                },
+                                {
+                                    "comment": "ph <- 1",
+                                    "ref": "ph",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(2 / 2)",
+                                "exp": {
+                                    "left": 2,
+                                    "op": "/",
+                                    "right": 2
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((sc > 0) & (ph = 2))",
+                        "exp": {
+                            "left": {
+                                "left": "sc",
+                                "op": ">",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ph",
+                                "op": "=",
+                                "right": 2
+                            }
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "2",
+                        "exp": 2
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "transient-values": [
+                        {
+                            "comment": "customers <- (sc + sm)",
+                            "ref": "customers",
+                            "value": {
+                                "left": "sc",
+                                "op": "+",
+                                "right": "sm"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "serverC",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "sm <- (sm - 1)",
+                                    "ref": "sm",
+                                    "value": {
+                                        "left": "sm",
+                                        "op": "-",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(4 / 4)",
+                                "exp": {
+                                    "left": 4,
+                                    "op": "/",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(sm > 0)",
+                        "exp": {
+                            "left": "sm",
+                            "op": ">",
+                            "right": 0
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "4",
+                        "exp": 4
+                    }
+                },
+                {
+                    "action": "route",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "sm <- (sm + 1)",
+                                    "ref": "sm",
+                                    "value": {
+                                        "left": "sm",
+                                        "op": "+",
+                                        "right": 1
+                                    }
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "(1 / 1)",
+                                "exp": {
+                                    "left": 1,
+                                    "op": "/",
+                                    "right": 1
+                                }
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(sm < c)",
+                        "exp": {
+                            "left": "sm",
+                            "op": "<",
+                            "right": "c"
+                        }
+                    },
+                    "location": "l",
+                    "rate": {
+                        "comment": "1",
+                        "exp": 1
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l"
+                }
+            ],
+            "name": "serverM",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "c",
+            "type": "int"
+        },
+        {
+            "name": "lambda",
+            "type": "real",
+            "value": {
+                "left": 4,
+                "op": "*",
+                "right": "c"
+            }
+        },
+        {
+            "name": "mu1a",
+            "type": "real",
+            "value": 0.2
+        },
+        {
+            "name": "mu1b",
+            "type": "real",
+            "value": 1.8
+        },
+        {
+            "name": "mu2",
+            "type": "real",
+            "value": 2
+        },
+        {
+            "name": "kappa",
+            "type": "real",
+            "value": 4
+        },
+        {
+            "name": "t",
+            "type": "real"
+        },
+        {
+            "name": "T",
+            "type": "real"
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "tandem",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": "customers",
+                    "op": "Smin"
+                }
+            },
+            "name": "customers"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": "customers",
+                    "op": "Emin",
+                    "time-instant": "t"
+                }
+            },
+            "name": "customers_T"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": "sc",
+                            "op": "=",
+                            "right": "c"
+                        },
+                        "time-bounds": {
+                            "upper": "t",
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "first_queue"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": {
+                            "left": {
+                                "left": {
+                                    "left": "sc",
+                                    "op": "=",
+                                    "right": "c"
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "sm",
+                                    "op": "=",
+                                    "right": "c"
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "ph",
+                                "op": "=",
+                                "right": 2
+                            }
+                        },
+                        "time-bounds": {
+                            "upper": "T",
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "network"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": {
+                            "left": "sm",
+                            "op": "=",
+                            "right": "c"
+                        },
+                        "op": "U",
+                        "right": {
+                            "left": "sm",
+                            "op": "<",
+                            "right": "c"
+                        },
+                        "time-bounds": {
+                            "upper": "t",
+                            "upper-exclusive": false
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "second_queue"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "serverC"
+            },
+            {
+                "automaton": "serverM"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "route",
+                "synchronise": [
+                    "route",
+                    "route"
+                ]
+            }
+        ]
+    },
+    "type": "ctmc",
+    "variables": [
+        {
+            "initial-value": 0.0,
+            "name": "customers",
+            "transient": true,
+            "type": "real"
+        },
+        {
+            "initial-value": 0,
+            "name": "sc",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "c"
+            }
+        },
+        {
+            "initial-value": 1,
+            "name": "ph",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 1,
+                "upper-bound": 2
+            }
+        },
+        {
+            "initial-value": 0,
+            "name": "sm",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": "c"
+            }
+        }
+    ]
+}

@@ -1,0 +1,100 @@
+﻿{
+	"file": "../readers-writers.40.jani",
+	"version": 1,
+	"date": "2018-08-30",
+	"submitter": "Arnd Hartmanns <a.hartmanns@utwente.nl>",
+	"tool": {
+		"name": "mcsta",
+		"version": "3.0.86",
+		"url": "http://www.modestchecker.net/",
+		"part-of": "the Modest Toolset",
+		"part-of-url": "http://www.modestchecker.net/"
+	},
+	"system": {
+		"cpu": "Intel Core i7-4790",
+		"ram": 8,
+		"os": "Ubuntu 18.04 (x64)",
+		"runtime": "Mono 5.14.0.177"
+	},
+	"command": "mcsta.exe readers-writers.40.jani -S Memory --p1 -O mcsta.40.json Json -Y",
+	"time": 2591.458,
+	"memory": 562671616,
+	"property-times": [
+		{ "name": "pr_many_requests", "time": 3.577 },
+		{ "name": "exp_time_many_requests", "time": 10.853 },
+		{ "name": "prtb_many_requests", "time": 2573.041 }
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{ "name": "State size", "value": 14, "unit": "B" },
+				{ "name": "States", "value": 1884366 },
+				{ "name": "Transitions", "value": 1884366 },
+				{ "name": "Branches", "value": 3815040 },
+				{ "name": "Rate", "value": 768188.34080717491 },
+				{ "name": "Time", "value": 2.574, "unit": "s" }
+			]
+		},
+		{
+			"property": "pr_many_requests",
+			"value": 1,
+			"values": [ { "name": "Time", "value": 3.577, "unit": "s" } ],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 1 states", "value": 1884366 },
+						{ "name": "Time for max. prob. 1 states", "value": 3.573, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "exp_time_many_requests",
+			"value": 3.7292230127533981,
+			"values": [
+				{ "name": "Bounds", "value": "[3.7292230127534, ∞)" },
+				{ "name": "Time", "value": 10.853, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Precomputations",
+					"values": [
+						{ "name": "Max. prob. 0 states", "value": 0 },
+						{ "name": "Time for max. prob. 0 states", "value": 0.154, "unit": "s" },
+						{ "name": "Max. prob. 1 states", "value": 1884366 },
+						{ "name": "Time for max. prob. 1 states", "value": 3.567, "unit": "s" }
+					]
+				},
+				{
+					"group": "Value iteration",
+					"values": [
+						{ "name": "Final error", "value": 9.62977663077294E-07 },
+						{ "name": "Iterations", "value": 170 },
+						{ "name": "Time", "value": 7.128, "unit": "s" }
+					]
+				}
+			]
+		},
+		{
+			"property": "prtb_many_requests",
+			"value": 0.8288843653101019,
+			"values": [
+				{ "name": "Bounds", "value": "[0.828884315310102, 0.828884415310101]" },
+				{ "name": "Time", "value": 2573.041, "unit": "s" }
+			],
+			"data": [
+				{
+					"group": "Unif+",
+					"values": [
+						{ "name": "Time", "value": 2573.039, "unit": "s" },
+						{ "name": "Max. exit rate", "value": 400 },
+						{ "name": "Iterations", "value": 1 },
+						{ "name": "Final unif. rate", "value": 400 }
+					]
+				}
+			]
+		}
+	]
+}

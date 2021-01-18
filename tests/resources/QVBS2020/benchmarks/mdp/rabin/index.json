@@ -1,0 +1,177 @@
+{
+	"name": "Rabin Mutual Exclusion Protocol",
+	"short": "rabin",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-11-12",
+	"version-history": [
+		{
+			"date": "2018-11-12",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": [
+		"Michael O. Rabin <rabin@seas.harvard.edu>"
+	],
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1016/0022-0000(82)90010-1",
+	"part-of": {
+		"name": "the PRISM Case Studies",
+		"url": "http://www.prismmodelchecker.org/casestudies/"
+	},
+	"description": "This is a PRISM case study [1]. A mutual exclusion protocol describes a set of agents trying to access a shared resource, which can only be used by a single agent at once. Rabin's protocol is implemented using bounded waiting. See [2] for more details.",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"https://www.prismmodelchecker.org/casestudies/rabin.php"
+	],
+	"notes": "PRISM case study",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of agents",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "live",
+			"description": "The maximal probability that the critical section is eventually reached by one of the waiting processes.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "rabin.3.jani",
+			"original-file": [
+				"rabin.3.prism",
+				"rabin.3.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism rabin.3.prism --prop rabin.3.props --prism2jani --jani-output rabin.3.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 1088
+						}
+					],
+					"results": [
+						{
+							"property": "live",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "rabin.5.jani",
+			"original-file": [
+				"rabin.5.prism",
+				"rabin.5.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism rabin.5.prism --prop rabin.5.props --prism2jani --jani-output rabin.5.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "mcsta",
+							"number": 157464
+						}
+					],
+					"results": [
+						{
+							"property": "live",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "rabin.10.jani",
+			"original-file": [
+				"rabin.10.prism",
+				"rabin.10.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.1 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm --prism rabin.10.prism --prop rabin.10.props --prism2jani --jani-output rabin.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 10
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 358055586147376
+						}
+					],
+					"results": [
+						{
+							"property": "live",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		{
+			"reference": false,
+			"file": "results/mcsta.3.2018-11-13.json"
+		},
+		{
+			"reference": false,
+			"file": "results/mcsta.5.2018-11-13.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-11-22.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.dd.exact.10.2018-11-26.json"
+		}
+	]
+}

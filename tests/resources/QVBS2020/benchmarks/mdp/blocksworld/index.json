@@ -1,0 +1,151 @@
+{
+	"name": "Blocksworld",
+	"short": "blocksworld",
+	"type": "mdp",
+	"original": "PPDDL",
+	"version": 1,
+	"date": "2018-07-31",
+	"version-history": [
+		{
+			"version": 1,
+			"date": "2018-07-31",
+			"notes": "Initial version."
+		}
+	],
+	"author": "Marcel Steinmetz <steinmetz@cs.uni-saarland.de>",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "https://doi.org/10.1016/0004-3702(92)90028-V",
+	"part-of": {
+		"name": "the IPPC 2008 Benchmark Set",
+		"url": "http://ippc-2008.loria.fr/wiki/index.html"
+	},
+	"description": "An IPPC 2008 [1] model of the blocks world. A set of `n´ wooden blocks is sitting on a table. Several vertical stacks should be build but only one block which does not have a block on top can be moved at a time.",
+	"references": [
+		"http://icaps-conference.org/ipc2008/probabilistic/wiki/index.php/Results.html"
+	],
+	"notes": "IPPC 2008 benchmark",
+	"parameters": [
+		{
+			"name": "n",
+			"kind": "file",
+			"description": "Number of blocks",
+			"type": "positive integer"
+		}
+	],
+	"files": [
+		{
+			"file": "blocksworld.5.jani",
+			"original-file": [
+				"p01-c0-C0-g1-n5-domain.pddl",
+				"p01-c0-C0-g1-n5-problem.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p01-c0-C0-g1-n5-domain.pddl p01-c0-C0-g1-n5-problem.pddl --jani blocksworld.5.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 5
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [
+						{
+							"number": 1125,
+							"note": "mcsta"
+						},
+						{
+							"note": "Storm",
+							"number": 1125
+						}
+					],
+					"results": [
+						{
+							"property": "goal",
+							"value": 1,
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "blocksworld.10.jani",
+			"original-file": [
+				"p05-c0-C0-g1-n10-domain.pddl",
+				"p05-c0-C0-g1-n10-problem.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p05-c0-C0-g1-n10-domain.pddl p05-c0-C0-g1-n10-problem.pddl --jani blocksworld.10.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 10
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "blocksworld.14.jani",
+			"original-file": [
+				"p09-c0-C0-g1-n14-domain.pddl",
+				"p09-c0-C0-g1-n14-problem.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p09-c0-C0-g1-n14-domain.pddl p09-c0-C0-g1-n14-problem.pddl --jani blocksworld.14.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 14
+				}
+			],
+			"open-parameter-values": []
+		},
+		{
+			"file": "blocksworld.18.jani",
+			"original-file": [
+				"p13-c0-C0-g1-n18-domain.pddl",
+				"p13-c0-C0-g1-n18-problem.pddl"
+			],
+			"conversion": {
+				"tool": "ppddl2jani",
+				"version": "31.07.2018",
+				"url": "https://fai.cs.uni-saarland.de/downloads/ppddl2jani.zip",
+				"command": "ppddl2jani.py p13-c0-C0-g1-n18-domain.pddl p13-c0-C0-g1-n18-problem.pddl --jani blocksworld.18.jani"
+			},
+			"file-parameter-values": [
+				{
+					"name": "n",
+					"value": 18
+				}
+			],
+			"open-parameter-values": []
+		}
+	],
+	"properties": [
+		{
+			"name": "goal",
+			"type": "prob-reach",
+			"description": "The maximum probability to reach the desired stacking order of the blocks."
+		}
+	],
+	"results": [
+		"results/mcsta.5.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.5.2018-10-03.json"
+		}
+	]
+}

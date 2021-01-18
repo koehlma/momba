@@ -1,0 +1,748 @@
+{
+	"name": "IEEE 802.3 CSMA/CD Protocol",
+	"short": "csma",
+	"type": "mdp",
+	"original": "PRISM",
+	"version": 1,
+	"date": "2018-10-11",
+	"version-history": [
+		{
+			"date": "2018-10-11",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "IEEE",
+	"submitter": "Michaela Klauck <klauck@depend.uni-saarland.de>",
+	"source": "http://www.cs.bilkent.edu.tr/~tugrul/CS518/Papers/802.3-2000.pdf",
+	"part-of": {
+		"name": "the PRISM Benchmark Suite",
+		"url": "http://www.prismmodelchecker.org/benchmarks/"
+	},
+	"description": "This is a PRISM case study [1]. The CSMA/CD (Carrier Sense, Multiple Access with Collision Detection) IEEE protocol is designed for networks with a single channel and specifies the behaviour of `N´ stations with the aim of minimising simultaneous use of the channel (data collision). When a station has data to send, it listens to the medium, after which, if the medium was free (no one transmitting), the station starts to send its data. On the other hand, if the medium was sensed busy, the station waits a random amount of time and then repeats this process. `K´ is the maximum backoff count. The model we consider here is a probabilistic extension of the timed automata model given in [3]. See [2] for more details",
+	"references": [
+		"https://doi.org/10.1109/QEST.2012.14",
+		"http://www.prismmodelchecker.org/casestudies/csma.php",
+		"https://doi.org/10.1109/32.159837"
+	],
+	"notes": "PRISM benchmark",
+	"parameters": [
+		{
+			"name": "N",
+			"kind": "file",
+			"description": "Number of stations",
+			"type": "positive integer"
+		},
+		{
+			"name": "K",
+			"kind": "file",
+			"description": "Maximum backoff count",
+			"type": "positive integer"
+		}
+	],
+	"properties": [
+		{
+			"name": "all_before_max",
+			"description": "The maximum probability all stations send successfully before a collision with max backoff.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "all_before_min",
+			"description": "Minimum probability all stations send successfully before a collision with max backoff.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "some_before",
+			"description": "Minimum probability that some station eventually delivers with less than K backoffs.",
+			"type": "prob-reach"
+		},
+		{
+			"name": "time_max",
+			"description": "The maximum expected time for all messages to be sent.",
+			"type": "exp-reward"
+		},
+		{
+			"name": "time_min",
+			"description": "Minimum expected time for all messages to be sent.",
+			"type": "exp-reward"
+		}
+	],
+	"files": [
+		{
+			"file": "csma.2-2.jani",
+			"original-file": [
+				"csma.2-2.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.2-2.prism --tojani csma.2-2.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1038
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.875,
+								"num": 7,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.875,
+								"num": 7,
+								"den": 8
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.5,
+								"num": 1,
+								"den": 2
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 70.66575976616393,
+								"num": 227630345357,
+								"den": 3221225472
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 66.99932286267479,
+								"num": 53954981353,
+								"den": 805306368
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.2-4.jani",
+			"original-file": [
+				"csma.2-4.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.2-4.prism --tojani csma.2-4.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 7958
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.9990234375,
+								"num": 1023,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.9990234375,
+								"num": 1023,
+								"den": 1024
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.984375,
+								"num": 63,
+								"den": 64
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 78.97127495477508,
+								"num": 2913525796530569665727,
+								"den": 36893488147419103232
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 75.6507832907687,
+								"num": 2616582446888387288353,
+								"den": 34587645138205409280
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.2-6.jani",
+			"original-file": [
+				"csma.2-6.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.2-6.prism --tojani csma.2-6.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 2
+				},
+				{
+					"name": "K",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 66718
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.9999995231628418,
+								"num": 2097151,
+								"den": 2097152
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.9999995231628418,
+								"num": 2097151,
+								"den": 2097152
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.999969482421875,
+								"num": 32767,
+								"den": 32768
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 89.26394168264682,
+								"num": 16294390452395265243978309897466615,
+								"den": 182541686432865033815525261574144
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 84.59041297282278,
+								"num": 1688889632512203490021373794436225,
+								"den": 19965496953594613073573075484672
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.3-2.jani",
+			"original-file": [
+				"csma.3-2.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.3-2.prism --tojani csma.3-2.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 36850
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.8596150364756961,
+								"num": 247767165309057317,
+								"den": 288230376151711744
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.43496662487687193,
+								"num": 16047436019417766735,
+								"den": 36893488147419103232
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.5859375,
+								"num": 75,
+								"den": 128
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 105.21135384074029,
+								"num": 11202988443130019828763430733667877,
+								"den": 106480793509112341655310720565248
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 93.62411801295093,
+								"num": 21731445812064664998498391777,
+								"den": 232113757366008801543585792
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.3-4.jani",
+			"original-file": [
+				"csma.3-4.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.3-4.prism --tojani csma.3-4.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 1460287
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.9324469288458124,
+								"num": 2599282671417859453572130598089066646673439,
+								"den": 2787593149816327892691964784081045188247552
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.9046914310341796,
+								"num": 10087646543393640088681602841876196716990569,
+								"den": 11150372599265311570767859136324180752990208
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.9895225981437074,
+								"num": 2392518835976157452229363,
+								"den": 2417851639229258349412352
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 116.81825582998482,
+								"num": 166122942688484522122222831070293418963831808920856249617133764705825669222172375796788473650081795725931645,
+								"den": 1422063199867123919195021167725985101479111788846785036704887421368371275362579041459447439142249285287936
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 107.31147849578353,
+								"num": 2509374424415801914177659161450455318827631746556399,
+								"den": 23384026197294446691258957323460528314494920687616
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.3-6.jani",
+			"original-file": [
+				"csma.3-6.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.3-6.prism --tojani csma.3-6.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 3
+				},
+				{
+					"name": "K",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 84856004
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.9988350900161441,
+								"num": 1425585077619291382058879556199022035448444737,
+								"den": 1427247692705959881058285969449495136382746624
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.9971509368647593,
+								"num": 27528331342820564137926242860602786111511899965645013934676796870783315,
+								"den": 27606985387162255149739023449108101809804435888681546220650096895197184
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.9999940257337531,
+								"num": 1346586745880576713996270758494327463129361368549831931704359556401524271653017993499288199098174785388284668703466892271071647196750637447372511122949632363243284557400892710812986359183351420796669430746857030211,
+								"den": 1346594790796383617853693410017312938380886989522732508031559911185595431500052690461098633287062643514107640027181623734532974656047053788960720581286881497588537259808881817137065922018386615621451072444360032256
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.4-2.jani",
+			"original-file": [
+				"csma.4-2.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.4-2.prism --tojani csma.4-2.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 2
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 761962
+						}
+					],
+					"results": [
+						{
+							"property": "all_before_max",
+							"value": {
+								"approx": 0.7764601493129573,
+								"num": 283699444885771093844545259966420317194574918841,
+								"den": 365375409332725729550921208179070754913983135744
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "all_before_min",
+							"value": {
+								"approx": 0.0924505139147953,
+								"num": 4222393045579897971202136832710978665823083309,
+								"den": 45671926166590716193865151022383844364247891968
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "some_before",
+							"value": {
+								"approx": 0.35546875,
+								"num": 91,
+								"den": 256
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_max",
+							"value": {
+								"approx": 142.2121690974855,
+								"num": 32315623775306742465754992904772086856590387189461759497043751326444129883,
+								"den": 227235292031546136552071621151990131110732434575780471525732909819363328
+							},
+							"note": "Storm/exact"
+						},
+						{
+							"property": "time_min",
+							"value": {
+								"approx": 124.46349552297544,
+								"num": 4395955219329273673062617265149460096433442950632067103167,
+								"den": 35319233168393532282477529141354781966213128206575206400
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.4-4.jani",
+			"original-file": [
+				"csma.4-4.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.4-4.prism --tojani csma.4-4.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 4
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm",
+							"number": 133301572
+						}
+					],
+					"results": [
+						{
+							"property": "some_before",
+							"value": {
+								"num": 10129562966608802995402849809805227,
+								"approx": 0.9754414320473948,
+								"den": 10384593717069655257060992658440192
+							},
+							"note": "Storm/exact"
+						}
+					]
+				}
+			]
+		},
+		{
+			"file": "csma.4-6.jani",
+			"original-file": [
+				"csma.4-6.prism",
+				"csma.props"
+			],
+			"conversion": {
+				"tool": "Storm-conv",
+				"version": "1.2.4 (dev)",
+				"url": "http://www.stormchecker.org",
+				"command": "storm-conv --prism csma.4-6.prism --tojani csma.4-6.jani --prop csma.props --globalvars"
+			},
+			"file-parameter-values": [
+				{
+					"name": "N",
+					"value": 4
+				},
+				{
+					"name": "K",
+					"value": 6
+				}
+			],
+			"open-parameter-values": [
+				{
+					"values": [],
+					"states": [
+						{
+							"note": "Storm/dd",
+							"number": 39051159469
+						}
+					]
+				}
+			]
+		}
+	],
+	"results": [
+		"results/mcsta.2-2.2018-11-22.json",
+		"results/mcsta.2-4.2018-11-22.json",
+		"results/mcsta.2-6.2018-11-22.json",
+		"results/mcsta.3-2.2018-11-22.json",
+		"results/mcsta.3-4.2018-11-22.json",
+		"results/mcsta.4-2.2018-11-22.json",
+		"results/Storm.2-2.2018-10-12.json",
+		"results/Storm.2-4.2018-10-12.json",
+		"results/Storm.2-6.2018-10-12.json",
+		"results/Storm.3-2.2018-10-12.json",
+		"results/Storm.3-4.2018-10-12.json",
+		"results/Storm.3-6.2018-10-12.json",
+		"results/Storm.4-2.2018-10-12.json",
+		"results/Storm.4-4.2018-10-12.json",
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.2-6.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-4.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.3-6.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-2.2018-10-17.json"
+		},
+		{
+			"reference": true,
+			"file": "results/Storm.exact.4-4.2018-11-22.json"
+		}
+	]
+}

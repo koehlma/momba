@@ -1,0 +1,75 @@
+{
+	"file": "../pacman.jani",
+	"version": 1,
+	"date": "2018-10-29",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.exact.5.2018-10-29.txt",
+	"open-parameter-values": [
+		{
+			"name": "MAXSTEPS",
+			"value": 5
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani pacman.jani --janiproperty --constants MAXSTEPS=5 --exact --timemem",
+	"time": 0.342,
+	"memory": 50331648,
+	"property-times": [
+		{
+			"name": "crash",
+			"time": 0.001
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.064
+				},
+				{
+					"name": "states",
+					"value": 235
+				},
+				{
+					"name": "branches",
+					"value": 303
+				},
+				{
+					"name": "transitions",
+					"value": 295
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "crash",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": {
+				"approx": 0.5511,
+				"num": 5511,
+				"den": 10000
+			}
+		}
+	]
+}

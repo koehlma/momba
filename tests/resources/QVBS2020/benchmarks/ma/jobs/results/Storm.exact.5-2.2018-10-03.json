@@ -1,0 +1,93 @@
+{
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": 192,
+		"os": "Debian GNU/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516"
+	},
+	"date": "2018-10-03",
+	"file": "../jobs.5-2.jani",
+	"version": 1,
+	"log": "Storm.exact.5-2.2018-10-03.txt",
+	"open-parameter-values": [],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org",
+		"variant": [
+			"exact"
+		]
+	},
+	"command": "storm --jani jobs.5-2.jani --janiproperty --exact --timemem",
+	"time": 0.04,
+	"memory": 47185920,
+	"property-times": [
+		{
+			"name": "completiontime",
+			"time": 0.001
+		},
+		{
+			"name": "avgtime",
+			"time": 0.001
+		}
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.03
+				},
+				{
+					"name": "states",
+					"value": 117
+				},
+				{
+					"name": "branches",
+					"value": 251
+				},
+				{
+					"name": "transitions",
+					"value": 171
+				},
+				{
+					"name": "markovian-states",
+					"value": 86
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "completiontime",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": {
+				"approx": 1.6,
+				"num": 8,
+				"den": 5
+			}
+		},
+		{
+			"property": "avgtime",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": {
+				"approx": 0.9,
+				"num": 9,
+				"den": 10
+			}
+		}
+	]
+}

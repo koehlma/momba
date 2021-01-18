@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:24 2018
+Command line arguments: --jani polling-system.3-3_removed-disc-nondet.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/polling-system
+
+Time for model construction: 1.291s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	32409
+Transitions: 	119892
+Choices: 	112046
+Markovian St.: 	26168
+Max. Rate.: 	44/5
+Reward Models:  none
+State Labels: 	3 labels
+   * deadlock -> 0 item(s)
+   * ((size[0] = 3) & (size[1] = 3)) -> 10692 item(s)
+   * init -> 1 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.055s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	13121
+Transitions: 	27686
+Choices: 	24244
+Markovian St.: 	5044
+Max. Rate.: 	44/5
+Reward Models:  none
+State Labels: 	3 labels
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+   * ((size[0] = 3) & (size[1] = 3)) -> 4374 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "PminBothFullIsOne": Pmin>=1 [F ((size[0] = 3) & (size[1] = 3))] ...
+Result (for initial states): 1
+Time for model checking: 0.031s.
+
+Model checking property "TminBothFull": T[exp]min=? [F ((size[0] = 3) & (size[1] = 3))] ...
+Result (for initial states): 89777/8192 (approx. 10.95910645)
+Time for model checking: 48.662s.
+
+Model checking property "TmaxBothFull": T[exp]max=? [F ((size[0] = 3) & (size[1] = 3))] ...
+Result (for initial states): 656520718285914541189633/104245454153608704 (approx. 6297835.466)
+Time for model checking: 1.093s.
+
+Performance statistics:
+  * peak memory usage: 120MB
+  * CPU time: 51.116s
+  * wallclock time: 51.148s

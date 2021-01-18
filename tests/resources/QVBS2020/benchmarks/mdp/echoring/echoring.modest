@@ -1,0 +1,460 @@
+const int NRSTATIONS = 3; // fixed.
+const int ITERATIONS;
+const int MAXITER = ITERATIONS + 1;
+
+const int CFG_BROKEN = 0;
+const int CFG_DET = 1;
+const int CFG_SIMPLE = 2;
+
+const int C1T2_CONFIG = CFG_SIMPLE;
+const int C2T1_CONFIG = CFG_SIMPLE;
+const int C1T3_CONFIG = CFG_SIMPLE;
+const int C3T1_CONFIG = CFG_SIMPLE;
+const int C2T3_CONFIG = CFG_SIMPLE;
+const int C3T2_CONFIG = CFG_SIMPLE;
+
+
+// Recovery mechanism
+const bool RECOVERY_ONE = true;
+const bool RECOVERY_TWO = true;
+
+
+const int DELIVER_DELAY = 1;
+const int SEND_DELAY  = 1;
+
+// Parameters for transmission
+const int N = 1;                        // Allowed nr of repetitions for intermediate token sending
+const int M = 0;                        // Allowed nr of repetitions for payload sending
+const int OPT = 1;
+const int HL = 1;                   // Header length
+const int PL = 1;                   // Payload length
+const int PTT = M * (2 * HL + PL) + HL;     // Payload Transmission Time
+const int TPT = (N+1) * (2 * HL);       // Token Passing Time
+const int THT = TPT - HL + PTT;                 // Token Holding Time
+const int TRT = NRSTATIONS * (THT);   // Token Rotation Time (under the assumption that
+                                                                    //      all stations are in the same ring)
+// Message types
+const int MSGTYPES = 6;
+const int MSG_NONE = 0;
+const int MSG_TOKEN_INT_ACK = 1;
+const int MSG_TOKEN_INT = 2;
+const int MSG_TOKEN = 3;
+const int MSG_SEND_NO_DATA = 4;
+const int MSG_CLAIMTOKEN = 5;
+const int MSG_SETSUCC = 6;
+
+const int ERR_TX = 2;
+const int ERR_REC = 1;
+const int ERR_NONE = 0;
+
+
+
+int(0..NRSTATIONS) msg_sender;
+int(0..NRSTATIONS) msg_receiver;
+int(0..MSGTYPES) msg_type;
+int(0..N) msg_content;
+int(0..NRSTATIONS) msg_ring;
+
+
+// Identifiers for actions
+
+action send_done;
+action send_done1, send_done2, send_done3, send_done4, send_done5, send_done6, send_done7, send_done8;
+
+action reset;
+action reset1t2, reset1t3, reset1t4, reset2t3, reset2t4, reset3t4;
+action send, receive;
+action fail;
+action msg_arrives, msg_arrives_Y, msg_arrives_N;
+action send1, receive1;
+action c1t1, c1t2, c1t3, c1t4, c1t5, c1t6, c1t7, c1t8;
+action receive1a, receive1b, receive1c, receive1d, receive1e, receive1f, receive1g, receive1h;
+action send2, receive2;
+action c2t1, c2t2, c2t3, c2t4, c2t5, c2t6, c2t7, c2t8;
+action receive2a, receive2b, receive2c, receive2d, receive2e, receive2f, receive2g, receive2h;
+action send3, receive3;
+action c3t1, c3t2, c3t3, c3t4, c3t5, c3t6, c3t7, c3t8;
+action receive3a, receive3b, receive3c, receive3d, receive3e, receive3f, receive3g, receive3h;
+action send4, receive4;
+action c4t1, c4t2, c4t3, c4t4, c4t5, c4t6, c4t7, c4t8;
+action receive4a, receive4b, receive4c, receive4d, receive4e, receive4f, receive4g, receive4h;
+action send5, receive5;
+action c5t1, c5t2, c5t3, c5t4, c5t5, c5t6, c5t7, c5t8;
+action receive5a, receive5b, receive5c, receive5d, receive5e, receive5f, receive5g, receive5h;
+action to1, to2, to3, to4, to5, to6, to7, to8;
+action fail1, fail2, fail3, fail4, fail5, fail6, fail7, fail8;
+action inFw, outFw, inBw, outBw;
+
+action reseto, reseto1, reseto2, reseto3, reseto4, reseto5;
+action a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22,a23,a24;
+
+clock deliverClock;
+
+bool failed = false;
+
+bool is_offline_1 = false;
+bool is_offline_2 = false;
+bool is_offline_3 = false;
+
+
+
+property MinFailed = Pmin(<> (failed && iter<=ITERATIONS));
+property MinOffline1 = Pmin(<> (is_offline_1 && !is_offline_2 && !is_offline_3  && iter<=ITERATIONS));
+property MaxOffline1 = Pmax(<> (is_offline_1 && !is_offline_2 && !is_offline_3 && iter<=ITERATIONS));
+property MinOffline2 = Pmin(<> (!is_offline_1 && is_offline_2 && !is_offline_3 && iter<=ITERATIONS));
+property MaxOffline2 = Pmax(<> (!is_offline_1 && is_offline_2 && !is_offline_3 && iter<=ITERATIONS));
+property MinOffline3 = Pmin(<> (!is_offline_1 && !is_offline_2 && is_offline_3 && iter<=ITERATIONS));
+property MaxOffline3 = Pmax(<> (!is_offline_1 && !is_offline_2 && is_offline_3 && iter<=ITERATIONS));
+
+
+int(0..MAXITER) iter = 0;
+
+process Station(int(1..NRSTATIONS) id, int(1..NRSTATIONS) prec, int(1..NRSTATIONS) succ, bool initToken, int(0..TRT) itd) {
+    bool receives = false;
+    bool currentlySending = false;
+    clock stationClock = 0;
+    clock cRcvInt = 0;
+    int(1..NRSTATIONS) ring = 1;
+    bool safe = true;
+    bool has_token = initToken;
+    bool is_offline = false;
+
+    process HasToken() {
+        urgent {= has_token = true, cRcvInt = 0, itd = TRT - THT - HL =};
+        invariant(cRcvInt <= 0) alt {
+        :: when(id == 1 && iter < MAXITER)   {= iter++ =}
+        :: when(id != 1 || iter == MAXITER)  {==}
+        };
+        invariant(cRcvInt <= 0)
+        send {= msg_sender = id, msg_receiver = prec, msg_type = MSG_SEND_NO_DATA, msg_ring = ring, currentlySending = true =};
+        send_done {= currentlySending = false =};
+        invariant(stationClock <= PTT)
+        when (stationClock >= PTT) reseto; TransmitToken(0, false)
+    }
+
+
+    process TransmitToken(int(0..N) retries, bool rcvAck) {
+
+       process WaitForAck()  {
+            invariant(cRcvInt <= 2*HL)  alt {
+            ::  when ((deliverClock <= DELIVER_DELAY - 1 || deliverClock >= DELIVER_DELAY + 1  || msg_type == 0) && cRcvInt == 2*HL) {==}
+            ::  when(msg_type == MSG_TOKEN_INT_ACK && msg_receiver == id && msg_ring == ring)
+                receive {= receives = true,  rcvAck = true =};
+                msg_arrives_Y {= receives = false =}
+            ::  when(msg_type != MSG_TOKEN_INT_ACK || msg_receiver != id || msg_ring != ring)
+                receive {= receives = true =};
+                msg_arrives_Y {= receives = false =};
+                WaitForAck()
+          }
+        }
+
+
+        process WaitForImplicitAck() {
+            invariant(cRcvInt <= 2*HL) alt {
+            :: when( ((deliverClock <= DELIVER_DELAY - 1 || deliverClock >= DELIVER_DELAY + 1) || msg_type == 0)  && cRcvInt == 2*HL) {==}
+            :: when(msg_sender == succ && msg_ring == ring && msg_type != MSG_CLAIMTOKEN)
+                     receive {= receives = true =};
+                     msg_arrives_Y {= receives = false, rcvAck = true =}
+            :: when(msg_sender != succ || msg_ring != ring)
+                     receive {= receives = true =};
+                     msg_arrives_Y {= receives = false =};
+                 WaitForImplicitAck()
+            }
+
+        }
+
+        urgent {= stationClock = 0, cRcvInt = 0 =};
+        urgent  alt { // 
+        	// While we do not the last token transmission.
+        ::  when(retries < N)
+            urgent {= cRcvInt = 0 =};
+            invariant(cRcvInt <= 0) send {= msg_sender = id, msg_receiver = succ, msg_type = MSG_TOKEN_INT, msg_ring = ring, currentlySending = true =};
+            par {
+            :: WaitForAck()
+            :: send_done {= currentlySending = false =}
+            };
+            TransmitToken(retries + 1, rcvAck)
+          	// If it is the last token transmission
+        ::  when(retries == N)
+			invariant(cRcvInt <= 0) send {= msg_sender = id, msg_receiver = succ, msg_type = MSG_TOKEN, msg_ring = ring, currentlySending = true,  has_token = false =};
+			par {
+			:: 	WaitForImplicitAck()
+			:: 	send_done {= currentlySending = false =}
+			};
+			EnterIdle(!rcvAck)
+		}
+
+    }
+    
+        
+	process EnterIdle(bool txError) {
+	  	urgent {= stationClock = 0, safe = safe || !txError =};
+		invariant(stationClock <= 0) reseto;
+		Idle(false, txError ? ERR_TX : ERR_NONE)
+	}
+
+	process Offline() {
+		// Offline process
+		urgent {= is_offline = true, failed=true, stationClock = 0 =};
+		invariant(stationClock <= 0) alt {
+		:: when(id == 1) {= is_offline_1 = true =}
+		:: when(id == 2) {= is_offline_2 = true =}
+		:: when(id == 3) {= is_offline_3 = true =}
+		};
+		do {
+		:: receive
+		:: {= =} // This avoids possible deadlocks if station 1 goes offline. The model currently does not handle that situation correctly.
+		}
+	}
+
+	process Idle(bool receivedIntToken, int(0..2) errmode) {
+        int(0..NRSTATIONS) rcvTokenFrom = 0;
+
+
+		 process MsgFromOtherRing() {
+            when(msg_ring != ring && msg_ring != 0 && (!RECOVERY_TWO || msg_ring != succ ))
+            receive {= receives = true =};
+            msg_arrives_Y {= receives = false =}
+        }
+
+        process ReceiveData() {
+          	when(msg_ring == ring && ((msg_receiver != id && msg_type != MSG_CLAIMTOKEN) || msg_type == MSG_SEND_NO_DATA) )
+            receive {= receives = true, ring = msg_ring, errmode = ((RECOVERY_TWO && msg_ring == succ) || RECOVERY_ONE && msg_ring == ring)  ? min(ERR_REC, errmode) : errmode =};
+            msg_arrives_Y {= receives = false =}
+        }
+
+        process ReceiveToken() {
+            when(msg_ring == ring  && msg_receiver == id && msg_type == MSG_TOKEN)
+            receive {= receives = true, ring = msg_ring, errmode = ((RECOVERY_TWO && msg_ring == succ) || RECOVERY_ONE && msg_ring == ring)  ? min(ERR_REC, errmode) : errmode =};
+            msg_arrives_Y {= receives = false =}
+        }
+        
+        process ReceiveIntToken() {
+            when((msg_ring == ring  || (RECOVERY_TWO && msg_ring == succ) ) && msg_receiver == id && msg_type == MSG_TOKEN_INT)
+            receive {= rcvTokenFrom = msg_sender, receives = true, ring = msg_ring, errmode = ((RECOVERY_TWO && msg_ring == succ) || RECOVERY_ONE && msg_ring == ring)  ? min(ERR_REC, errmode) : errmode  =};
+            msg_arrives_Y {=  receives = false, cRcvInt = 0 =};
+            invariant(cRcvInt <= 0) send {= msg_sender = id, msg_receiver = rcvTokenFrom, msg_type = MSG_TOKEN_INT_ACK, msg_ring = ring, currentlySending = true =};
+            send_done {= currentlySending = false, rcvTokenFrom = 0 =}
+        }
+        
+        process UpdateRing() {
+            when((msg_ring == ring  || (RECOVERY_TWO && msg_ring == succ) ) && msg_type == MSG_CLAIMTOKEN)
+            receive {= receives = true, ring = msg_sender, errmode = ((RECOVERY_TWO && msg_ring == succ) || RECOVERY_ONE && msg_ring == ring)  ? min(ERR_REC, errmode) : errmode  =};
+            msg_arrives_Y {= receives = false =}
+        }
+        
+        process ClaimToken() {
+            invariant(stationClock <= 0) send {= msg_sender = id, msg_receiver = id, msg_type = MSG_CLAIMTOKEN, msg_ring = ring, currentlySending = true =};
+            send_done {= currentlySending = false, ring = id, safe = false =}
+        }
+
+
+        invariant(stationClock <= itd)
+        alt {
+        	// If we receive the token, we break.
+        ::  ReceiveToken();  
+        	urgent alt {
+                :: when(errmode == ERR_TX || !safe) tau; Offline()
+                :: when(errmode != ERR_TX && safe) {= stationClock = 0 =}; HasToken()
+            }
+        	// Handle intermediate tokens
+        ::  ReceiveIntToken(); Idle(true, errmode)
+        	// Handle data
+        ::  ReceiveData(); Idle(receivedIntToken,  errmode)
+        
+        :: 	UpdateRing(); Idle(receivedIntToken, errmode)
+        
+        ::  MsgFromOtherRing(); Idle(receivedIntToken, errmode)
+        	// If we require too much time, fail.
+        :: 	when((deliverClock <= DELIVER_DELAY - 1 || deliverClock >= DELIVER_DELAY + 1 || msg_type == 0) && stationClock >= itd && receivedIntToken && errmode != ERR_TX && safe)
+        	tau {= stationClock = 0 =}; HasToken()
+        :: 	when( (deliverClock <= DELIVER_DELAY - 1 || deliverClock >= DELIVER_DELAY + 1 || msg_type == 0)&& stationClock >= itd  && (errmode == ERR_TX || !safe) )
+        	 tau {= stationClock = 0 =}; Offline()
+        :: 	when((deliverClock <= DELIVER_DELAY - 1 || deliverClock >= DELIVER_DELAY + 1 || msg_type == 0) && stationClock >= itd && !receivedIntToken && errmode != ERR_TX && safe)
+            //invariant(stationClock <= itd) {= stationClock = 0 =}; ClaimToken(); HasToken()
+            tau {= stationClock = 0 =}; ClaimToken(); HasToken()
+        }
+    }
+
+
+    par {
+    :: 	do {
+        :: when(!receives) msg_arrives_N
+    	}
+    :: 	invariant(stationClock <= 0)
+        alt {
+        // Start in the idle state when we do not have the token.
+        ::  when(!has_token)
+ 			EnterIdle(false)
+        // As soon as we get the token
+        ::  when(has_token)
+            HasToken()
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////
+////////////// CHANNEL PROCESSES //////////////////////////////////
+///////////////////////////////////////////////////////////////////
+clock c;
+
+
+
+process BrokenChannel3() {
+    alt {
+    :: inFw; BrokenChannel3()
+    :: inBw; BrokenChannel3()
+    :: alt { :: a1 :: a2 :: a3 :: a4 };  BrokenChannel3()
+    :: msg_arrives;  BrokenChannel3()
+    }
+}
+
+process SDDetChannel3() {
+    alt {
+    :: inFw {= c = 0 =}; invariant(c <= 0) outFw;  SDDetChannel3()
+    :: inBw;   SDDetChannel3()
+    :: alt { :: a1 :: a2 :: a3 :: a4 };   SDDetChannel3()
+    :: msg_arrives;   SDDetChannel3()
+    }
+}
+
+
+process SDChannel3(int(0..100) pFw) {
+    alt {
+    :: inFw {= c = 0 =}; urgent palt {
+            :pFw: invariant(c <= 0) outFw; SDChannel3(pFw)
+            :100-pFw:  SDChannel3(pFw)
+            }
+    :: inBw;  SDChannel3(pFw)
+    :: alt { :: a1 :: a2 :: a3 :: a4 };  SDChannel3(pFw)
+    :: msg_arrives;  SDChannel3(pFw)
+    }
+}
+
+
+
+
+
+process SimpleChannel3() {
+    alt {
+    :: inFw {= c = 0 =}; invariant(c <= 0) outFw;  SimpleChannel3()
+    :: inBw {= c = 0 =}; invariant(c <= 0) outBw;  SimpleChannel3()
+    :: a1;  SimpleChannel3()
+    :: a2;  SimpleChannel3()
+    :: a3;  SimpleChannel3()
+    :: a4;  SimpleChannel3()
+    :: msg_arrives;  SimpleChannel3()
+    }
+}
+
+process Channel1t2() {
+    SDChannel3(90)
+}
+
+process Channel2t1() {
+    SDChannel3(90)
+}
+
+process Channel1t3() {
+	SDChannel3(90)
+}
+
+process Channel3t1() {
+	SDChannel3(90)
+}
+
+process Channel2t3() {
+	SDChannel3(90)
+}
+
+process Channel3t2() {
+	SDChannel3(90)
+}
+
+
+process Channels3() {
+    par {
+        :: relabel { inFw, outFw,      inBw,  reset, a1, a2, a3, a4}
+                 by { c1t2, receive2a, c2t1, reseto1, c1t3, c3t1, c2t3, c3t2 }
+                 Channel1t2()
+        :: relabel { inFw, outFw,      inBw, reset, a1, a2, a3, a4}
+                 by { c2t1, receive1a, c1t2, reseto1, c1t3, c3t1, c2t3, c3t2 }
+                 Channel2t1()
+        :: relabel { inFw, outFw,      inBw,  reset, a1, a2, a3, a4}
+                 by { c1t3, receive3a, c3t1, reseto1, c1t2, c2t1, c2t3, c3t2 }
+                 Channel1t3()
+        :: relabel { inFw, outFw,      inBw, reset, a1, a2, a3, a4}
+                 by { c3t1, receive1b, c1t3, reseto1, c1t2, c2t1, c2t3, c3t2 }
+                 Channel3t1()
+        :: relabel { inFw, outFw,      inBw,  reset, a1, a2, a3, a4}
+                 by { c2t3, receive3b, c3t2, reseto1, c1t2, c2t1, c1t3, c3t1 }
+                 Channel2t3()
+        :: relabel { inFw, outFw,      inBw, reset, a1, a2, a3, a4}
+                 by { c3t2, receive2b, c2t3, reseto1, c1t2, c2t1, c1t3, c3t1 }
+                 Channel3t2()
+    }
+}
+
+
+
+process Uplinks3() {
+
+
+    process Link() {
+            invariant(deliverClock <= SEND_DELAY) when(deliverClock == SEND_DELAY) send_done;
+            invariant(deliverClock <= DELIVER_DELAY)
+            alt { :: when(msg_sender != 1) to1
+                  :: when(msg_sender == 1) {==}
+            };
+            invariant(deliverClock <= DELIVER_DELAY)
+            alt { :: when(msg_sender != 2) to2
+                  :: when(msg_sender == 2) {==}
+            };
+            invariant(deliverClock <= DELIVER_DELAY)
+            alt { :: when(msg_sender != 3) to3
+                  :: when(msg_sender == 3) {==}
+            };
+          invariant(deliverClock <= DELIVER_DELAY)
+          msg_arrives {= msg_sender = 0, msg_receiver = 0, msg_type = 0, msg_ring = 0 =}
+    }
+
+
+    /*
+     *  If a station sends something, use the link to distribute it to the appropriate channels.
+     */
+    do {
+        :: send1 {= deliverClock = 0 =};
+           relabel  { to1 , to2 , to3,  send_done  }
+           by       { c1t1, c1t2, c1t3, send_done1 }
+           Link()
+        :: send2 {= deliverClock = 0 =};
+           relabel  { to1 , to2 , to3,  send_done   }
+           by       { c2t1, c2t2, c2t3, send_done2  }
+           Link()
+        :: send3 {= deliverClock = 0 =};
+           relabel  { to1 , to2 , to3,  send_done   }
+           by       { c3t1, c3t2, c3t3, send_done3  }
+           Link()
+     }
+}
+
+
+par {
+::  relabel { send, receive   , msg_arrives_Y, msg_arrives_N, send_done, fail , reseto}
+        by          { send1, receive1 , msg_arrives, msg_arrives  , send_done1, fail1 , reseto1 }
+        Station(1, 3, 2, true, TRT-THT-1)
+::  relabel { send, receive   , msg_arrives_Y, msg_arrives_N, send_done, fail , reseto}
+        by          { send2, receive2 , msg_arrives, msg_arrives  , send_done2, fail2 , reseto2 }
+        Station(2, 1, 3, false, PTT + TPT)
+::  relabel { send, receive   , msg_arrives_Y, msg_arrives_N, send_done, fail , reseto}
+        by          { send3, receive3 , msg_arrives, msg_arrives  , send_done3 , fail3, reseto3 }
+        Station(3, 2, 1, false, THT + PTT + TPT)
+:: Uplinks3()
+:: relabel 		{receive1a, receive1b, receive1c,
+                 receive2a, receive2b, receive2c,
+                 receive3a, receive3b, receive3c}
+   by 			{receive1, receive1, receive1,
+                 receive2, receive2, receive2,
+                 receive3, receive3, receive3 }
+   Channels3()
+}

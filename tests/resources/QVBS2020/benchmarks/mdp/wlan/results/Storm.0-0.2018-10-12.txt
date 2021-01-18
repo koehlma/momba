@@ -1,0 +1,56 @@
+Storm 1.2.4 (dev)
+
+Date: Fri Oct 12 16:32:41 2018
+Command line arguments: --jani wlan.0.jani --janiproperty --constants COL=0 --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/mdp/wlan
+
+Time for model construction: 0.086s.
+
+-------------------------------------------------------------- 
+Model type: 	MDP (sparse)
+States: 	2954
+Transitions: 	5202
+Choices: 	3972
+Reward Models:  time, collisions, cost
+State Labels: 	5 labels
+   * deadlock -> 0 item(s)
+   * init -> 1 item(s)
+   * (col = 0) -> 2954 item(s)
+   * (s2 = 12) -> 139 item(s)
+   * (s1 = 12) -> 139 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collisions": Pmax=? [F (col = 0)] ...
+Result (for initial states): 1
+Time for model checking: 0.001s.
+
+Model checking property "cost_max": R[exp]{"cost"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 28000.93901
+Time for model checking: 0.005s.
+
+Model checking property "cost_min": R[exp]{"cost"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 7625
+Time for model checking: 0.005s.
+
+Model checking property "num_collisions": R[exp]{"collisions"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1.22487994
+Time for model checking: 0.005s.
+
+Model checking property "sent": Pmin>=1 [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): true
+
+Time for model checking: 0.001s.
+
+Model checking property "time_max": R[exp]{"time"}max=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 3791.901629
+Time for model checking: 0.005s.
+
+Model checking property "time_min": R[exp]{"time"}min=? [F ((s1 = 12) & (s2 = 12))] ...
+Result (for initial states): 1325
+Time for model checking: 0.005s.
+
+Performance statistics:
+  * peak memory usage: 47MB
+  * CPU time: 0.172s
+  * wallclock time: 0.141s

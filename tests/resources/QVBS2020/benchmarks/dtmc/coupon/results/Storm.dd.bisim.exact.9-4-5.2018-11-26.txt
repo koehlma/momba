@@ -1,0 +1,88 @@
+Storm 1.2.4 (dev)
+
+Date: Mon Nov 26 16:29:20 2018
+Command line arguments: --jani coupon.9-4.jani --janiproperty --constants B=5 --engine dd --ddlib sylvan --bisimulation '--bisimulation:quot' sparse --exact --timemem
+Current working directory: /home/tim.quatmann/storm/build/bin
+
+Time for model input parsing: 0.005s.
+
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+ WARN (DdJaniModelBuilder.cpp:1521): Guard of an edge in a DTMC overlaps with previous guards.
+Time for model construction: 0.905s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (symbolic)
+States: 	27642923 (9842 nodes)
+Transitions: 	55677355 (39783 nodes)
+Reward Models:  numberDraws
+Variables: 	rows: 14 meta variables (30 DD variables), columns: 14 meta variables (30 DD variables)
+Labels: 	3
+   * deadlock -> 0 state(s) (1 nodes)
+   * init -> 1 state(s) (31 nodes)
+   * _ret0_
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 1.910s.
+
+-------------------------------------------------------------- 
+Model type: 	DTMC (sparse)
+States: 	211
+Transitions: 	307
+Reward Models:  numberDraws
+State Labels: 	4 labels
+   * _ret0_ -> 1 item(s)
+   * (_loc_main = 23) -> 1 item(s)
+   * init -> 1 item(s)
+   * deadlock -> 0 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "collect_all": Pmin=? [F "_ret0_"] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.000s.
+
+Model checking property "exp_draws": R[exp]{"numberDraws"}min=? [F "_ret0_"] ...
+Result (for initial states): 112175240050457/16643031685280 (approx. 6.740072492)
+Time for model checking: 0.015s.
+
+Model checking property "collect_all_bounded": Pmin=? [true Urew{"numberDraws"}<=5 "_ret0_"] ...
+Result (for initial states): 1992983194384000/5559060566555523 (approx. 0.3585107898)
+Time for model checking: 0.006s.
+
+Performance statistics:
+  * peak memory usage: 3124MB
+  * CPU time: 126.900s
+  * wallclock time: 2.886s
+

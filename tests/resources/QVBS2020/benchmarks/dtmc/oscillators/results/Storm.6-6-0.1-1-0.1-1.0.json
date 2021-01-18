@@ -1,0 +1,93 @@
+{
+	"file": "../oscillators.6-6-0.1-1.jani",
+	"version": 1,
+	"date": "2018-09-21",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.6-6-0.1-1-0.1-1.0.txt",
+	"open-parameter-values": [
+		{
+			"name": "N",
+			"value": 6
+		},
+		{
+			"name": "T",
+			"value": 6
+		},
+		{
+			"name": "epsilon",
+			"value": 0.1
+		},
+		{
+			"name": "R",
+			"value": 1
+		},
+		{
+			"name": "mu",
+			"value": 0.1
+		},
+		{
+			"name": "lambda",
+			"value": 1.0
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "Intel Core i5-5257U",
+		"ram": "16",
+		"os": "macOS 10.13.5",
+		"runtime": "Apple LLVM version 9.1.0 (clang-902.0.39.2)"
+	},
+	"command": "storm --jani oscillators.6-6-0.1-1.jani -jprop --constants mu=0.1,lambda=1.0 -tm",
+	"time": 0.29,
+	"memory": 45088768,
+	"property-times": [
+		{ "name": "power_consumption", "time": 0.001 },
+		{ "name": "time_to_synch", "time": 0.001 }
+	],
+	"data": [
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.112
+				},
+				{
+					"name": "states",
+					"value": 463
+				},
+				{
+					"name": "branches",
+					"value": 1277
+				}
+			],
+			"group": "State space exploration"
+		},
+		{
+			"property": "power_consumption",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.001
+				}
+			],
+			"value": "0.001618853312"
+		},
+		{
+			"property": "time_to_synch",
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.0
+				}
+			],
+			"value": "2.413548662"
+		}
+	]
+}

@@ -1,0 +1,63 @@
+Storm 1.2.4 (dev)
+
+Date: Wed Oct  3 15:28:25 2018
+Command line arguments: --jani readers-writers.5.jani --janiproperty --exact --timemem
+Current working directory: /home/tim.quatmann/qcomp/benchmarks/ma/readers-writers
+
+Time for model construction: 0.230s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	1609
+Transitions: 	4532
+Choices: 	2820
+Markovian St.: 	1412
+Max. Rate.: 	50
+Reward Models:  none
+State Labels: 	5 labels
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (40 / 10)) -> 44 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 5)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 27 item(s)
+   * deadlock -> 0 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 5)) -> 1565 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Time for model preprocessing: 0.002s.
+
+-------------------------------------------------------------- 
+Model type: 	Markov Automaton (sparse)
+States: 	842
+Transitions: 	1528
+Choices: 	842
+Markovian St.: 	201
+Max. Rate.: 	50
+Reward Models:  none
+State Labels: 	5 labels
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 5)) -> 826 item(s)
+   * deadlock -> 0 item(s)
+   * ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 5)) & ((p_lan_r + p_lan_w) > (p_r + p_w))) -> 10 item(s)
+   * init -> 1 item(s)
+   * (((p_lan_w + p_w) + (p_lan_r + p_r)) > (40 / 10)) -> 16 item(s)
+Choice Labels: 	none
+-------------------------------------------------------------- 
+
+Model checking property "pr_many_requests": Pmax=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (40 / 10))] ...
+Result (for initial states): 1 (approx. 1)
+Time for model checking: 0.001s.
+
+Model checking property "exp_time_many_requests": T[exp]min=? [F (((p_lan_w + p_w) + (p_lan_r + p_r)) > (40 / 10))] ...
+Result (for initial states): 957243805203889665971913968351286930584262258261937840396892673655347015541763074378053119970506483264608299408760626834162029985341958950793571079120856379188198522314600894348247547161760266979364315588767485863679454418542786352078834352737651231215658222861647/3639300696105733895475396422590525469413281692684669636522983858982376303903906405959608743424708841082210676410520857771433992787975085184765941162603736347410512666347734109467311297041100895317051441617417355628596685681370084459269760924711958024459343380000 (approx. 263.0295997)
+Time for model checking: 3.501s.
+
+Model checking property "pr_network": Pmax=? [(((p_lan_w + p_w) + (p_lan_r + p_r)) <= ((8 / 10) * 5)) U ((((p_lan_w + p_w) + (p_lan_r + p_r)) > ((8 / 10) * 5)) & ((p_lan_r + p_lan_w) > (p_r + p_w)))] ...
+Result (for initial states): 391492683134741004487826436814919764940155664069111182904512881333520891190917336158202972846366268688781241832590043113303805154763471672534706566483330743000715314474359539534727797465632922295966842479317916137965611995414377246598693913650606339862475/1237857379627800644719522592717865805922884929484581509021423081286522552348267485020275082797520013973541046398136346180759861492508532375770728286599910322248473696036644254920854182667041120856139946128373250213808396490261933489547537729493863273625627 (approx. 0.3162663887)
+Time for model checking: 3.479s.
+
+Model checking property "prtb_many_requests": Pmax=? [true U<=5 (((p_lan_w + p_w) + (p_lan_r + p_r)) > (40 / 10))] ...
+ failed, property is unsupported by selected engine/settings.
+
+Performance statistics:
+  * peak memory usage: 56MB
+  * CPU time: 7.237s
+  * wallclock time: 7.223s

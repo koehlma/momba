@@ -1,0 +1,1176 @@
+{
+    "actions": [
+        {
+            "name": "ack"
+        },
+        {
+            "name": "decode"
+        },
+        {
+            "name": "decoded_last"
+        },
+        {
+            "name": "decoded_random"
+        },
+        {
+            "name": "error"
+        },
+        {
+            "name": "finished"
+        },
+        {
+            "name": "message"
+        },
+        {
+            "name": "req"
+        },
+        {
+            "name": "stop"
+        }
+    ],
+    "automata": [
+        {
+            "edges": [
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 1",
+                                    "ref": "o",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "9/10",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 3",
+                                    "ref": "o",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 2) & (x > 4))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 8",
+                                    "ref": "o",
+                                    "value": 8
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 8)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 8
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 9",
+                                    "ref": "o",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 9)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 9
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 10",
+                                    "ref": "o",
+                                    "value": 10
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 10)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 10
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "ack",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 1",
+                                    "ref": "o",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "9/10",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 3",
+                                    "ref": "o",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 2) & ((x >= 1) & (x <= 4)))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≤",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "ack",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 1",
+                                    "ref": "o",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 11) & ((x >= 1) & (x <= 4)))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 11
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≤",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "ack",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 3",
+                                    "ref": "o",
+                                    "value": 3
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 12) & ((x >= 1) & (x <= 4)))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 12
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "x",
+                                    "op": "≥",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "x",
+                                    "op": "≤",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decode",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 6",
+                                    "ref": "o",
+                                    "value": 6
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "9/10",
+                                "exp": 0.9
+                            }
+                        },
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 7",
+                                    "ref": "o",
+                                    "value": 7
+                                }
+                            ],
+                            "location": "l",
+                            "probability": {
+                                "comment": "1/10",
+                                "exp": 0.1
+                            }
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 2)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 2
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decoded_last",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 12",
+                                    "ref": "o",
+                                    "value": 12
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 7)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 7
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decoded_random",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 11",
+                                    "ref": "o",
+                                    "value": 11
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 6)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 6
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "error",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 10",
+                                    "ref": "o",
+                                    "value": 10
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 5)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 5
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "finished",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 8",
+                                    "ref": "o",
+                                    "value": 8
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 3)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "message",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 2",
+                                    "ref": "o",
+                                    "value": 2
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 1) & (x <= 0))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 1
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": "≤",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "req",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 1",
+                                    "ref": "o",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 0)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 0
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "stop",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 9",
+                                    "ref": "o",
+                                    "value": 9
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(o = 4)",
+                        "exp": {
+                            "left": "o",
+                            "op": "=",
+                            "right": 4
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "stop",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 9",
+                                    "ref": "o",
+                                    "value": 9
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 11) & (x > 4))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 11
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "stop",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "o <- 10",
+                                    "ref": "o",
+                                    "value": 10
+                                },
+                                {
+                                    "comment": "x <- 0",
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((o = 12) & (x > 4))",
+                        "exp": {
+                            "left": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 12
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "x",
+                                "op": ">",
+                                "right": 4
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "time-progress": {
+                        "comment": "((((((((((((((o = 0) => true) & ((o = 1) => (x <= 0))) & ((o = 2) => (x <= 5))) & ((o = 3) => (x <= 0))) & ((o = 4) => (x <= 0))) & ((o = 5) => (x <= 0))) & ((o = 6) => true)) & ((o = 7) => true)) & ((o = 8) => true)) & ((o = 9) => true)) & ((o = 10) => true)) & ((o = 11) => (x <= 5))) & ((o = 12) => (x <= 5)))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 12
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 5
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 2
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 5
+                                        }
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": "o",
+                                        "op": "=",
+                                        "right": 4
+                                    },
+                                    "op": "⇒",
+                                    "right": {
+                                        "left": "x",
+                                        "op": "≤",
+                                        "right": 0
+                                    }
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 11
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 5
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 1
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 0
+                                        }
+                                    }
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 5
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 0
+                                        }
+                                    },
+                                    "op": "∧",
+                                    "right": {
+                                        "left": {
+                                            "left": "o",
+                                            "op": "=",
+                                            "right": 3
+                                        },
+                                        "op": "⇒",
+                                        "right": {
+                                            "left": "x",
+                                            "op": "≤",
+                                            "right": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "transient-values": [
+                        {
+                            "comment": "terminated_successfully <- (o = 8)",
+                            "ref": "terminated_successfully",
+                            "value": {
+                                "left": "o",
+                                "op": "=",
+                                "right": 8
+                            }
+                        }
+                    ]
+                }
+            ],
+            "name": "originator",
+            "variables": []
+        },
+        {
+            "edges": [
+                {
+                    "action": "ack",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 1",
+                                    "ref": "r",
+                                    "value": 1
+                                },
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((r = 2) & ((y >= 1) & (y <= 4)))",
+                        "exp": {
+                            "left": {
+                                "left": "r",
+                                "op": "=",
+                                "right": 2
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "y",
+                                    "op": "≥",
+                                    "right": 1
+                                },
+                                "op": "∧",
+                                "right": {
+                                    "left": "y",
+                                    "op": "≤",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decode",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 3",
+                                    "ref": "r",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(r = 3)",
+                        "exp": {
+                            "left": "r",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decoded_last",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 3",
+                                    "ref": "r",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(r = 3)",
+                        "exp": {
+                            "left": "r",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "decoded_random",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 3",
+                                    "ref": "r",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(r = 3)",
+                        "exp": {
+                            "left": "r",
+                            "op": "=",
+                            "right": 3
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "finished",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 3",
+                                    "ref": "r",
+                                    "value": 3
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(r = 1)",
+                        "exp": {
+                            "left": "r",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "message",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 2",
+                                    "ref": "r",
+                                    "value": 2
+                                },
+                                {
+                                    "comment": "y <- 0",
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "(r = 1)",
+                        "exp": {
+                            "left": "r",
+                            "op": "=",
+                            "right": 1
+                        }
+                    },
+                    "location": "l"
+                },
+                {
+                    "action": "req",
+                    "destinations": [
+                        {
+                            "assignments": [
+                                {
+                                    "comment": "r <- 1",
+                                    "ref": "r",
+                                    "value": 1
+                                }
+                            ],
+                            "location": "l"
+                        }
+                    ],
+                    "guard": {
+                        "comment": "((r = 0) & (y = 0))",
+                        "exp": {
+                            "left": {
+                                "left": "r",
+                                "op": "=",
+                                "right": 0
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": "y",
+                                "op": "=",
+                                "right": 0
+                            }
+                        }
+                    },
+                    "location": "l"
+                }
+            ],
+            "initial-locations": [
+                "l"
+            ],
+            "locations": [
+                {
+                    "name": "l",
+                    "time-progress": {
+                        "comment": "(((((r = 0) => (y <= 0)) & ((r = 1) => true)) & ((r = 2) => (y <= 4))) & ((r = 3) => true))",
+                        "exp": {
+                            "left": {
+                                "left": {
+                                    "left": "r",
+                                    "op": "=",
+                                    "right": 0
+                                },
+                                "op": "⇒",
+                                "right": {
+                                    "left": "y",
+                                    "op": "≤",
+                                    "right": 0
+                                }
+                            },
+                            "op": "∧",
+                            "right": {
+                                "left": {
+                                    "left": "r",
+                                    "op": "=",
+                                    "right": 2
+                                },
+                                "op": "⇒",
+                                "right": {
+                                    "left": "y",
+                                    "op": "≤",
+                                    "right": 4
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+            "name": "recipient",
+            "variables": []
+        }
+    ],
+    "constants": [
+        {
+            "name": "T",
+            "type": "int"
+        }
+    ],
+    "features": [
+        "derived-operators"
+    ],
+    "jani-version": 1,
+    "name": "repudiation_honest",
+    "properties": [
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": "terminated_successfully",
+                        "time-bounds": {
+                            "upper": "T",
+                            "upper-exclusive": true
+                        }
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "deadline"
+        },
+        {
+            "expression": {
+                "fun": "values",
+                "op": "filter",
+                "states": {
+                    "op": "initial"
+                },
+                "values": {
+                    "exp": {
+                        "left": true,
+                        "op": "U",
+                        "right": "terminated_successfully"
+                    },
+                    "op": "Pmin"
+                }
+            },
+            "name": "eventually"
+        }
+    ],
+    "restrict-initial": {
+        "exp": true
+    },
+    "system": {
+        "elements": [
+            {
+                "automaton": "originator"
+            },
+            {
+                "automaton": "recipient"
+            }
+        ],
+        "syncs": [
+            {
+                "result": "ack",
+                "synchronise": [
+                    "ack",
+                    "ack"
+                ]
+            },
+            {
+                "result": "decode",
+                "synchronise": [
+                    "decode",
+                    "decode"
+                ]
+            },
+            {
+                "result": "decoded_last",
+                "synchronise": [
+                    "decoded_last",
+                    "decoded_last"
+                ]
+            },
+            {
+                "result": "decoded_random",
+                "synchronise": [
+                    "decoded_random",
+                    "decoded_random"
+                ]
+            },
+            {
+                "result": "error",
+                "synchronise": [
+                    "error",
+                    null
+                ]
+            },
+            {
+                "result": "finished",
+                "synchronise": [
+                    "finished",
+                    "finished"
+                ]
+            },
+            {
+                "result": "message",
+                "synchronise": [
+                    "message",
+                    "message"
+                ]
+            },
+            {
+                "result": "req",
+                "synchronise": [
+                    "req",
+                    "req"
+                ]
+            },
+            {
+                "result": "stop",
+                "synchronise": [
+                    "stop",
+                    null
+                ]
+            }
+        ]
+    },
+    "type": "pta",
+    "variables": [
+        {
+            "initial-value": false,
+            "name": "terminated_successfully",
+            "transient": true,
+            "type": "bool"
+        },
+        {
+            "initial-value": 0,
+            "name": "o",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 12
+            }
+        },
+        {
+            "initial-value": 0.0,
+            "name": "x",
+            "type": "clock"
+        },
+        {
+            "initial-value": 0,
+            "name": "r",
+            "type": {
+                "base": "int",
+                "kind": "bounded",
+                "lower-bound": 0,
+                "upper-bound": 3
+            }
+        },
+        {
+            "initial-value": 0.0,
+            "name": "y",
+            "type": "clock"
+        }
+    ]
+}

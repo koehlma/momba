@@ -1,0 +1,125 @@
+{
+	"file": "../coupon.5-2.jani",
+	"version": 1,
+	"date": "2018-11-26",
+	"submitter": "Tim Quatmann <tim.quatmann@cs.rwth-aachen.de>",
+	"log": "Storm.dd.bisim.exact.5-2-5.2018-11-26.txt",
+	"open-parameter-values": [
+		{
+			"name": "B",
+			"value": 5
+		}
+	],
+	"tool": {
+		"name": "Storm",
+		"variant": [
+			"dd",
+			"bisim",
+			"exact"
+		],
+		"version": "1.2.4 (dev)",
+		"url": "http://www.stormchecker.org"
+	},
+	"system": {
+		"cpu": "4x AMD Opteron 6172",
+		"ram": "192",
+		"os": "Debian Gnu/Linux 9 (stretch)",
+		"runtime": "gcc (Debian 6.4.018+deb9u1) 6.3.0 20170516"
+	},
+	"command": "storm --jani coupon.5-2.jani --janiproperty  --constants B=5 --engine dd --ddlib sylvan --bisimulation --bisimulation:quot sparse --exact --timemem",
+	"time": 1.431495189666748,
+	"memory": 3140485120,
+	"property-times": [
+		{
+			"name": "collect_all",
+			"time": 0.0
+		},
+		{
+			"name": "exp_draws",
+			"time": 0.005
+		},
+		{
+			"name": "collect_all_bounded",
+			"time": 0.002
+		}
+	],
+	"data": [
+		{
+			"group": "State space exploration",
+			"values": [
+				{
+					"name": "time",
+					"value": 0.858,
+					"unit": "s"
+				},
+				{
+					"name": "states",
+					"value": 5397
+				},
+				{
+					"name": "branches",
+					"value": 7781
+				}
+			]
+		},
+		{
+			"values": [
+				{
+					"unit": "s",
+					"name": "time",
+					"value": 0.418
+				},
+				{
+					"name": "states",
+					"value": 60
+				},
+				{
+					"name": "branches",
+					"value": 72
+				}
+			],
+			"group": "Strong bisimulation"
+		},
+		{
+			"property": "collect_all",
+			"value": 1,
+			"values": [
+				{
+					"name": "time",
+					"value": 0.0,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "exp_draws",
+			"value": {
+				"den": 126,
+				"approx": 5.9603174603174605,
+				"num": 751
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 0.005,
+					"unit": "s"
+				}
+			]
+		},
+		{
+			"property": "collect_all_bounded",
+			"value": {
+				"den": 78125,
+				"approx": 0.5225472,
+				"num": 40824
+			},
+			"values": [
+				{
+					"name": "time",
+					"value": 0.002,
+					"unit": "s"
+				}
+			]
+		}
+	]
+}
