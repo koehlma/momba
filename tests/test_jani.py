@@ -16,7 +16,7 @@ from momba.model import types
 DIE_MODEL = pathlib.Path(__file__).parent / "resources" / "die.jani"
 
 QVBS_MODELS = list(
-    (pathlib.Path(__file__).parent / "resources" / "QVBS2020").glob("**/*.jani")
+    (pathlib.Path(__file__).parent / "resources" / "QVBS2019").glob("**/*.jani")
 )
 
 
