@@ -40,15 +40,6 @@ In particular, the crate [momba-explore](https://crates.io/crates/momba-explore)
 The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sidekick) directly exposes some of this functionality.
 
 
-## Stability
-
-The packages `momba.model` and `momba.jani` are stable and backwards incompatible changes will be introduced according to [Semantic Versioning](https://semver.org/), i.e., with Momba version 1.0 at the earliest.
-Together `momba.model` and `momba.jani` comprise the core functionality for working with JANI models.
-The APIs of `momba.analysis`, `momba.tools`, and `momba.moml` are provisional, i.e., backwards incompatible changes are not expected but may occur if deemed necessary.
-The APIs of `momba.explore` are unstable and will change in the future as we are working on a faster model exploration engine.
-In case you are using `momba.explore`, we recommend depending on a precise version of Momba.
-
-
 ## Rationale
 
 The idea to harvest a general purpose programming environment for formal modelling is not new at all.
