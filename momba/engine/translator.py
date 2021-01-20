@@ -674,6 +674,19 @@ def _translate_link(
     return {"slots": list(slots), "vector": vector, "result": result}
 
 
+def _extract_constant_value(expr: expressions.Expression) -> t.Any:
+    if isinstance(expr, expressions.IntegerConstant):
+        return expr.integer
+    elif isinstance(expr, expressions.BooleanConstant):
+        return expr.boolean
+    elif isinstance(expr, expressions.RealConstant):
+        return expr.as_float
+    elif isinstance(expr, expressions.ArrayValue):
+        return [_extract_constant_value(element) for element in expr.elements]
+    else:
+        raise CompileError(f"Unable to extract constant value from {expr}.")
+
+
 def _update_initial_values(
     initial_values: _JSONObject,
     clock_constraints: t.List[_JSONObject],
@@ -682,18 +695,7 @@ def _update_initial_values(
     for declaration in declarations:
         initial_value = declaration.initial_value
         assert initial_value is not None
-        value: t.Union[int, bool, float]
-        if isinstance(initial_value, expressions.IntegerConstant):
-            value = initial_value.integer
-        elif isinstance(initial_value, expressions.BooleanConstant):
-            value = initial_value.boolean
-        elif isinstance(initial_value, expressions.RealConstant):
-            value = initial_value.as_float
-        else:
-            raise CompileError(
-                f"Invalid initial value {initial_value!r} for "
-                f"variable {declaration.identifier!r}."
-            )
+        value = _extract_constant_value(initial_value)
 
         if declaration.is_transient:
             continue
