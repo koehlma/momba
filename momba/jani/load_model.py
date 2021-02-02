@@ -12,6 +12,7 @@ import warnings
 from momba import model
 from momba.model import (
     effects,
+    functions,
     automata,
     context,
     distributions,
@@ -185,6 +186,14 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                 _check_fields(jani_expression, required={"op", "var"})
                 variable = jani_expression["var"]
                 return expressions.Derivative(variable)
+            elif op == "call":
+                _check_fields(jani_expression, required={"op", "function", "args"})
+                return functions.CallExpression(
+                    function=jani_expression["function"],
+                    arguments=tuple(
+                        _expression(argument) for argument in jani_expression["args"]
+                    ),
+                )
         elif "distribution" in jani_expression:
             _check_fields(jani_expression, required={"args", "distribution"})
             arguments = tuple(map(_expression, jani_expression["args"]))
@@ -619,6 +628,32 @@ def _action(jani_action: t.Any) -> model.ActionType:
 JANIModel = t.Union[bytes, str]
 
 
+JSONObject = t.Mapping[str, t.Any]
+
+
+def _load_parameter(jani_parameter: JSONObject) -> functions.FunctionParameter:
+    _check_fields(jani_parameter, required={"name", "type"})
+    return functions.FunctionParameter(
+        name=jani_parameter["name"], typ=_type(jani_parameter["type"])
+    )
+
+
+def _load_functions(
+    scope: context.Scope, jani_functions: t.Sequence[JSONObject]
+) -> None:
+    for jani_function in jani_functions:
+        _check_fields(jani_function, required={"name", "type", "parameters", "body"})
+        scope.define_function(
+            name=jani_function["name"],
+            parameters=[
+                _load_parameter(jani_parameter)
+                for jani_parameter in jani_function["parameters"]
+            ],
+            returns=_type(jani_function["type"]),
+            body=_expression(jani_function["body"]),
+        )
+
+
 def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.Network:
     """
     Constructs a Momba automata network based on the provided JANI model.
@@ -637,6 +672,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
         {
             ModelFeature.ARRAYS,
             ModelFeature.DERIVED_OPERATORS,
+            ModelFeature.FUNCTIONS,
             # ModelFeature.NONDET_SELECTION,
             ModelFeature.TRIGONOMETRIC_FUNCTIONS,
         }
@@ -655,6 +691,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
             "restrict-initial",
             "properties",
             "comment",
+            "functions",
         },
         unsupported={"comment"},
     )
@@ -679,11 +716,18 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
     if "actions" in jani_model:
         for jani_action in jani_model["actions"]:
             network.ctx.add_action_type(_action(jani_action))
+    _load_functions(network.ctx.global_scope, jani_model.get("functions", ()))
     for jani_automaton in jani_model["automata"]:
         _check_fields(
             jani_automaton,
             required={"name", "locations", "initial-locations", "edges"},
-            optional={"variables", "restrict-initial", "comment", "x-momba-anonymous"},
+            optional={
+                "variables",
+                "functions",
+                "restrict-initial",
+                "comment",
+                "x-momba-anonymous",
+            },
         )
         name: t.Optional[str]
         if jani_automaton.get("x-momba-anonymous", False):
@@ -701,6 +745,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
             jani_location["name"]: _location(jani_location)
             for jani_location in jani_automaton["locations"]
         }
+        _load_functions(automaton.scope, jani_automaton.get("functions", ()))
         if "restrict-initial" in jani_automaton:
             _check_fields(
                 jani_automaton["restrict-initial"],

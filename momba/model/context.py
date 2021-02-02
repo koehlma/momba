@@ -9,7 +9,7 @@ import typing as t
 
 import enum
 
-from . import actions, errors, expressions, properties, types
+from . import actions, errors, functions, expressions, properties, types
 
 from .automata import Automaton
 from .networks import Network
@@ -133,12 +133,14 @@ class Scope:
     parent: t.Optional[Scope]
 
     _declarations: t.Dict[str, Declaration]
+    _functions: t.Dict[str, functions.FunctionDefinition]
     _cache: t.Dict[Typed, types.Type]
 
     def __init__(self, ctx: Context, parent: t.Optional[Scope] = None):
         self.ctx = ctx
         self.parent = parent
         self._declarations = {}
+        self._functions = {}
         self._cache = {}
 
     @property
@@ -185,6 +187,16 @@ class Scope:
             inferred_type.validate_in(self)
             self._cache[typed] = inferred_type
         return self._cache[typed]
+
+    def get_function(self, identifier: str) -> functions.FunctionDefinition:
+        try:
+            return self._functions[identifier]
+        except KeyError:
+            if self.parent is None:
+                raise errors.UnboundIdentifierError(
+                    f"no function with name {identifier} found"
+                )
+            return self.parent.get_function(identifier)
 
     def is_constant(self, expression: expressions.Expression) -> bool:
         return expression.is_constant_in(self)
@@ -270,6 +282,19 @@ class Scope:
                     value=expressions.ensure_expr(value),
                 )
             )
+
+    def define_function(
+        self,
+        name: str,
+        parameters: t.Sequence[functions.FunctionParameter],
+        returns: types.Type,
+        body: expressions.Expression,
+    ) -> functions.FunctionDefinition:
+        definition = functions.FunctionDefinition(
+            name, tuple(parameters), returns, body
+        )
+        self._functions[name] = definition
+        return definition
 
 
 class Context:
