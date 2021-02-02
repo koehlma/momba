@@ -40,7 +40,8 @@ class MDPDestination:
     @functools.cached_property
     def successor(self) -> MDPState:
         return MDPState(
-            self._explorer, self._destination.successor(self._state, self._transition),
+            self._explorer,
+            self._destination.successor(self._state, self._transition),
         )
 
 
@@ -66,7 +67,8 @@ class MDPTransition:
         assert isinstance(label, str)
         arguments = rust_action.arguments()
         return Action(
-            self._explorer.network.ctx.get_action_type_by_name(label), tuple(arguments),
+            self._explorer.network.ctx.get_action_type_by_name(label),
+            tuple(arguments),
         )
 
 
