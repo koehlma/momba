@@ -30,6 +30,8 @@ Momba is available from the [Python Package Index](https://pypi.org/):
 pip install momba[all]
 ```
 Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
+You can either [construct your own models](https://koehlma.github.io/momba/guide/construction/index.html) or [load existing JANI models](https://koehlma.github.io/momba/guide/jani.html).
+Momba supports all models of the [Quantitative Verification Benchmark Set](https://qcomp.org/benchmarks/index.html).
 
 
 ## Supported JANI Extensions
