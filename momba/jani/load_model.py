@@ -673,6 +673,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
             ModelFeature.ARRAYS,
             ModelFeature.DERIVED_OPERATORS,
             ModelFeature.FUNCTIONS,
+            ModelFeature.STATE_EXIT_REWARDS,
             # ModelFeature.NONDET_SELECTION,
             ModelFeature.TRIGONOMETRIC_FUNCTIONS,
         }
