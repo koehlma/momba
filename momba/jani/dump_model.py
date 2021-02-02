@@ -138,7 +138,7 @@ checks.check_singledispatch(
 
 
 @functools.singledispatch
-def _dump_prop(prop: model.Property, ctx: JANIContext) -> JSON:
+def _dump_prop(prop: model.Expression, ctx: JANIContext) -> JSON:
     raise NotImplementedError(f"dump has not been implemented for property {prop}")
 
 
@@ -437,7 +437,7 @@ def _dump_unary_path_formula(
     return jani_prop
 
 
-checks.check_singledispatch(_dump_prop, model.Property)
+checks.check_singledispatch(_dump_prop, model.Expression)
 
 
 @functools.singledispatch
@@ -634,7 +634,7 @@ def dump_structure(
     network: model.Network,
     *,
     allow_momba_operators: bool = False,
-    properties: t.Optional[t.Mapping[str, model.Property]] = None,
+    properties: t.Optional[t.Mapping[str, model.Expression]] = None,
 ) -> JSON:
     ctx = JANIContext(allow_momba_operators=allow_momba_operators)
     jani_metadata: t.Dict[str, str] = {}
@@ -689,7 +689,7 @@ def dump_model(
     *,
     indent: t.Optional[int] = None,
     allow_momba_operators: bool = False,
-    properties: t.Optional[t.Mapping[str, model.Property]] = None,
+    properties: t.Optional[t.Mapping[str, model.Expression]] = None,
 ) -> bytes:
     """
     Takes a Momba automata network and exports it to the JANI format.

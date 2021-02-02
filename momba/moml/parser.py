@@ -189,7 +189,7 @@ _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, expressions.BinaryConstructor] 
 
 
 _BuiltinExpressionConstructor = t.Callable[[t.List[model.Expression]], model.Expression]
-_BuiltinPropertyConstructor = t.Callable[[t.List[model.Property]], model.Property]
+_BuiltinPropertyConstructor = t.Callable[[t.List[model.Expression]], model.Expression]
 
 
 @d.dataclass
@@ -241,29 +241,29 @@ def _construct_max(arguments: t.List[model.Expression]) -> model.Expression:
     return expressions.maximum(arguments[0], arguments[1])
 
 
-def _construct_probability_min(arguments: t.List[model.Property]) -> model.Property:
+def _construct_probability_min(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(f"Pmin takes exactly 1 argument but {len(arguments)} are given")
     return properties.min_prob(arguments[0])
 
 
-def _construct_probability_max(arguments: t.List[model.Property]) -> model.Property:
+def _construct_probability_max(arguments: t.List[model.Expression]) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(f"Pmax takes exactly 1 argument but {len(arguments)} are given")
     return properties.max_prob(arguments[0])
 
 
 def _construct_finally(
-    arguments: t.List[model.Property],
-) -> model.Property:
+    arguments: t.List[model.Expression],
+) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(f"F takes exactly 1 argument but {len(arguments)} are given")
     return properties.eventually(arguments[0])
 
 
 def _construct_globally(
-    arguments: t.List[model.Property],
-) -> model.Property:
+    arguments: t.List[model.Expression],
+) -> model.Expression:
     if len(arguments) != 1:
         raise Exception(f"G takes exactly 1 argument but {len(arguments)} are given")
     return properties.globally(arguments[0])
@@ -321,8 +321,8 @@ def _parse_property_function(
     constructor: _BuiltinPropertyConstructor,
     stream: TokenStream,
     environment: Environment,
-) -> model.Property:
-    arguments: t.List[model.Property] = []
+) -> model.Expression:
+    arguments: t.List[model.Expression] = []
     if not stream.accept(lexer.TokenType.RIGHT_PAR):
         arguments.append(parse_property(stream, environment=environment))
         while not stream.accept(lexer.TokenType.RIGHT_PAR):
@@ -345,7 +345,7 @@ def _parse_builtin_function(
     return constructor(arguments)
 
 
-def _parse_primary(stream: TokenStream, environment: Environment) -> model.Property:
+def _parse_primary(stream: TokenStream, environment: Environment) -> model.Expression:
     if stream.accept(lexer.TokenType.INTEGER, consume=False):
         return expressions.ensure_expr(int(stream.consume().text))
     elif stream.accept(lexer.TokenType.REAL, consume=False):
@@ -407,7 +407,7 @@ def _parse_primary(stream: TokenStream, environment: Environment) -> model.Prope
         raise stream.make_error("expected primary expression or property")
 
 
-def _parse_unary(stream: TokenStream, environment: Environment) -> model.Property:
+def _parse_unary(stream: TokenStream, environment: Environment) -> model.Expression:
     if stream.accept(lexer.TokenType.LOGIC_NOT):
         operand = _parse_unary(stream, environment=environment)
         # FIXME: proper error reporting
@@ -429,7 +429,7 @@ def parse_property(
     *,
     min_precedence: int = 0,
     environment: Environment = DEFAULT_ENVIRONMENT,
-) -> model.Property:
+) -> model.Expression:
     left = _parse_unary(stream, environment=environment)
     while _PRECEDENCE.get(stream.current_token.token_type, -1) >= min_precedence:
         operator = stream.consume()

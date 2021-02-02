@@ -14,13 +14,17 @@ import fractions
 import math
 import warnings
 
-from . import errors, operators, properties, types
+from . import errors, operators, types
 
 if t.TYPE_CHECKING:
     from . import context, distributions
 
 
-class Expression(properties.Property, abc.ABC):
+class Expression(abc.ABC):
+    @abc.abstractmethod
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        raise NotImplementedError()
+
     @property
     @abc.abstractmethod
     def children(self) -> t.Sequence[Expression]:

@@ -207,7 +207,7 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                 jani_expression["distribution"]
             )
             return expressions.Sample(distribution, arguments)
-    raise InvalidJANIError(f"{jani_expression!r} is not a valid JANI expression")
+    return _property(jani_expression)
 
 
 def _property_interval(jani_property: t.Any) -> properties.Interval:
@@ -256,23 +256,19 @@ def _reward_bound(jani_property: t.Any) -> properties.RewardBound:
 
 
 def _property(jani_property: t.Any) -> properties.Property:
-    try:
-        return _expression(jani_property)
-    except InvalidJANIError:
-        pass
     if "op" not in jani_property:
         raise InvalidJANIError(f"{jani_property!r} is not a valid JANI property")
     if jani_property["op"] == "filter":
         _check_fields(jani_property, required={"op", "fun", "values", "states"})
         return properties.Aggregate(
             _AGGREGATION_FUNCTIONS[jani_property["fun"]],
-            _property(jani_property["values"]),
-            _property(jani_property["states"]),
+            _expression(jani_property["values"]),
+            _expression(jani_property["states"]),
         )
     if jani_property["op"] in {"Pmin", "Pmax"}:
         _check_fields(jani_property, required={"op", "exp"})
         return properties.Probability(
-            _MIN_MAX_OPERATORS[jani_property["op"]], _property(jani_property["exp"])
+            _MIN_MAX_OPERATORS[jani_property["op"]], _expression(jani_property["exp"])
         )
     if jani_property["op"] in {"∀", "∃"}:
         _check_fields(jani_property, required={"op", "exp"})
@@ -280,7 +276,7 @@ def _property(jani_property: t.Any) -> properties.Property:
             operators.Quantifier.FORALL
             if jani_property["op"] == "∀"
             else operators.Quantifier.EXISTS,
-            _property(jani_property["exp"]),
+            _expression(jani_property["exp"]),
         )
     if jani_property["op"] in {"Emin", "Emax"}:
         _check_fields(
@@ -295,7 +291,7 @@ def _property(jani_property: t.Any) -> properties.Property:
             },
         )
         accumulate: t.Optional[t.FrozenSet[properties.AccumulationInstant]]
-        reachability: t.Optional[properties.Property]
+        reachability: t.Optional[expressions.Expression]
         step_instant: t.Optional[expressions.Expression]
         time_instant: t.Optional[expressions.Expression]
         reward_instants: t.Optional[t.Sequence[properties.RewardInstant]]
@@ -306,7 +302,7 @@ def _property(jani_property: t.Any) -> properties.Property:
         else:
             accumulate = None
         if "reach" in jani_property:
-            reachability = _property(jani_property["reach"])
+            reachability = _expression(jani_property["reach"])
         else:
             reachability = None
         if "step-instant" in jani_property:
@@ -325,7 +321,7 @@ def _property(jani_property: t.Any) -> properties.Property:
             reward_instants = None
         return properties.ExpectedReward(
             operator=_MIN_MAX_OPERATORS[jani_property["op"]],
-            reward=_property(jani_property["exp"]),
+            reward=_expression(jani_property["exp"]),
             accumulate=accumulate,
             reachability=reachability,
             step_instant=step_instant,
@@ -337,12 +333,13 @@ def _property(jani_property: t.Any) -> properties.Property:
         if "accumulate" in jani_property:
             return properties.SteadyState(
                 _MIN_MAX_OPERATORS[jani_property["op"]],
-                _property(jani_property["exp"]),
+                _expression(jani_property["exp"]),
                 jani_property["accumulate"],
             )
         else:
             return properties.SteadyState(
-                _MIN_MAX_OPERATORS[jani_property["op"]], _property(jani_property["exp"])
+                _MIN_MAX_OPERATORS[jani_property["op"]],
+                _expression(jani_property["exp"]),
             )
     step_bounds: t.Optional[properties.Interval]
     time_bounds: t.Optional[properties.Interval]
@@ -368,8 +365,8 @@ def _property(jani_property: t.Any) -> properties.Property:
             reward_bounds = None
         return properties.BinaryPathFormula(
             time_operator,
-            _property(jani_property["left"]),
-            _property(jani_property["right"]),
+            _expression(jani_property["left"]),
+            _expression(jani_property["right"]),
             step_bounds,
             time_bounds,
             reward_bounds,
@@ -394,15 +391,14 @@ def _property(jani_property: t.Any) -> properties.Property:
             reward_bounds = None
         return properties.UnaryPathFormula(
             _UNARY_PATH_OPERATORS[jani_property["op"]],
-            _property(jani_property["exp"]),
+            _expression(jani_property["exp"]),
             step_bounds,
             time_bounds,
             reward_bounds,
         )
     if jani_property["op"] in _STATE_SELECTORS:
         return _STATE_SELECTORS[jani_property["op"]]
-    return _expression(jani_property)
-    # raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
+    raise ValueError(f"{jani_property} does not seem to be a valid JANI property")
 
 
 def _type(typ: t.Any) -> types.Type:

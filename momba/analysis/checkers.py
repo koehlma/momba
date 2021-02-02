@@ -13,7 +13,7 @@ import fractions
 from .. import model
 
 
-Properties = t.Mapping[str, model.Property]
+Properties = t.Mapping[str, model.Expression]
 Result = t.Mapping[str, fractions.Fraction]
 
 

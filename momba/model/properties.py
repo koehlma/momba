@@ -11,23 +11,22 @@ import typing as t
 import abc
 import enum
 
-from . import errors, operators, types
+from . import errors, expressions, operators, types
 
 if t.TYPE_CHECKING:
-    from . import context, expressions
+    from . import context
 
 
-class Property(abc.ABC):
-    @abc.abstractmethod
-    def infer_type(self, scope: context.Scope) -> types.Type:
-        raise NotImplementedError()
+class Property(expressions.Expression, abc.ABC):
+    def is_constant_in(self, scope: context.Scope) -> bool:
+        return False
 
 
 @d.dataclass(frozen=True)
 class Aggregate(Property):
     function: operators.AggregationFunction
-    values: Property
-    predicate: Property
+    values: expressions.Expression
+    predicate: expressions.Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         predicate_type = self.predicate.infer_type(scope)
@@ -41,6 +40,10 @@ class Aggregate(Property):
                 f"invalid type {values_type} of values in filter function"
             )
         return self.function.infer_result_type(values_type)
+
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return (self.predicate,)
 
 
 class StatePredicate(enum.Enum):
@@ -56,6 +59,10 @@ class StateSelector(Property):
     def infer_type(self, scope: context.Scope) -> types.Type:
         return types.BOOL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return ()
+
 
 INITIAL_STATES = StateSelector(StatePredicate.INITIAL)
 DEADLOCK_STATES = StateSelector(StatePredicate.DEADLOCK)
@@ -65,7 +72,7 @@ TIMELOCK_STATES = StateSelector(StatePredicate.TIMELOCK)
 @d.dataclass(frozen=True)
 class Probability(Property):
     operator: operators.MinMax
-    formula: Property
+    formula: expressions.Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         formula_type = self.formula.infer_type(scope)
@@ -73,17 +80,25 @@ class Probability(Property):
             raise errors.InvalidTypeError(f"expected types.BOOL but got {formula_type}")
         return types.REAL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return (self.formula,)
+
 
 @d.dataclass(frozen=True)
 class PathQuantifier(Property):
     quantifier: operators.Quantifier
-    formula: Property
+    formula: expressions.Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         formula_type = self.formula.infer_type(scope)
         if not formula_type == types.BOOL:
             raise errors.InvalidTypeError(f"expected types.BOOL but got {formula_type}")
         return types.BOOL
+
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return (self.formula,)
 
 
 class AccumulationInstant(enum.Enum):
@@ -95,9 +110,9 @@ class AccumulationInstant(enum.Enum):
 @d.dataclass(frozen=True)
 class ExpectedReward(Property):
     operator: operators.MinMax
-    reward: Property
+    reward: expressions.Expression
     accumulate: t.Optional[t.FrozenSet[AccumulationInstant]] = None
-    reachability: t.Optional[Property] = None
+    reachability: t.Optional[expressions.Expression] = None
     step_instant: t.Optional[expressions.Expression] = None
     time_instant: t.Optional[expressions.Expression] = None
     reward_instants: t.Optional[t.Sequence[RewardInstant]] = None
@@ -106,6 +121,20 @@ class ExpectedReward(Property):
         # TODO: check the types of the provided arguments
         return types.REAL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        children: t.List[expressions.Expression] = []
+        if self.reachability is not None:
+            children.append(self.reachability)
+        if self.step_instant is not None:
+            children.append(self.step_instant)
+        if self.time_instant is not None:
+            children.append(self.time_instant)
+        if self.reward_instants is not None:
+            for reward_instant in self.reward_instants:
+                children.extend(reward_instant.children)
+        return children
+
 
 @d.dataclass(frozen=True)
 class RewardInstant:
@@ -113,23 +142,31 @@ class RewardInstant:
     accumulate: t.FrozenSet[AccumulationInstant]
     instant: expressions.Expression
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return (self.expression, self.instant)
+
 
 @d.dataclass(frozen=True)
 class SteadyState(Property):
     operator: operators.MinMax
-    formula: Property
+    formula: expressions.Expression
     accumulate: t.Optional[t.FrozenSet[AccumulationInstant]] = None
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         # TODO: check the types of the provided arguments
         return types.REAL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        return (self.formula,)
+
 
 @d.dataclass(frozen=True)
 class BinaryPathFormula(Property):
     operator: operators.BinaryPathOperator
-    left: Property
-    right: Property
+    left: expressions.Expression
+    right: expressions.Expression
     step_bounds: t.Optional[Interval] = None
     time_bounds: t.Optional[Interval] = None
     reward_bounds: t.Optional[t.Sequence[RewardBound]] = None
@@ -144,11 +181,23 @@ class BinaryPathFormula(Property):
         # TODO: check the types of the other arguments
         return types.BOOL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        children: t.List[expressions.Expression] = [self.left, self.right]
+        if self.step_bounds is not None:
+            children.extend(self.step_bounds.expressions)
+        if self.time_bounds is not None:
+            children.extend(self.time_bounds.expressions)
+        if self.reward_bounds is not None:
+            for reward_bound in self.reward_bounds:
+                children.extend(reward_bound.expressions)
+        return children
+
 
 @d.dataclass(frozen=True)
 class UnaryPathFormula(Property):
     operator: operators.UnaryPathOperator
-    formula: Property
+    formula: expressions.Expression
     step_bounds: t.Optional[Interval] = None
     time_bounds: t.Optional[Interval] = None
     reward_bounds: t.Optional[t.Sequence[RewardBound]] = None
@@ -160,6 +209,18 @@ class UnaryPathFormula(Property):
         # TODO: check the types of the other arguments
         return types.BOOL
 
+    @property
+    def children(self) -> t.Sequence[expressions.Expression]:
+        children: t.List[expressions.Expression] = [self.formula]
+        if self.step_bounds is not None:
+            children.extend(self.step_bounds.expressions)
+        if self.time_bounds is not None:
+            children.extend(self.time_bounds.expressions)
+        if self.reward_bounds is not None:
+            for reward_bound in self.reward_bounds:
+                children.extend(reward_bound.expressions)
+        return children
+
 
 @d.dataclass(frozen=True)
 class Interval:
@@ -168,6 +229,19 @@ class Interval:
     lower_exclusive: t.Optional[expressions.Expression] = None
     upper_exclusive: t.Optional[expressions.Expression] = None
 
+    @property
+    def expressions(self) -> t.Sequence[expressions.Expression]:
+        return [
+            expr
+            for expr in [
+                self.lower,
+                self.upper,
+                self.lower_exclusive,
+                self.upper_exclusive,
+            ]
+            if expr is not None
+        ]
+
 
 @d.dataclass(frozen=True)
 class RewardBound:
@@ -175,28 +249,34 @@ class RewardBound:
     accumulate: t.FrozenSet[AccumulationInstant]
     bounds: Interval
 
+    @property
+    def expressions(self) -> t.Sequence[expressions.Expression]:
+        expressions = [self.expression]
+        expressions.extend(self.bounds.expressions)
+        return expressions
+
 
 def aggregate(
     function: operators.AggregationFunction,
-    values: Property,
-    states: Property = INITIAL_STATES,
+    values: expressions.Expression,
+    states: expressions.Expression = INITIAL_STATES,
 ) -> Property:
     return Aggregate(function, values, states)
 
 
-def min_prob(formula: Property) -> Property:
+def min_prob(formula: expressions.Expression) -> Property:
     return Probability(operators.MinMax.MIN, formula)
 
 
-def max_prob(formula: Property) -> Property:
+def max_prob(formula: expressions.Expression) -> Property:
     return Probability(operators.MinMax.MAX, formula)
 
 
-def forall_paths(formula: Property) -> Property:
+def forall_paths(formula: expressions.Expression) -> Property:
     return PathQuantifier(operators.Quantifier.FORALL, formula)
 
 
-def exists_path(formula: Property) -> Property:
+def exists_path(formula: expressions.Expression) -> Property:
     return PathQuantifier(operators.Quantifier.EXISTS, formula)
 
 
@@ -241,7 +321,7 @@ def max_expected_reward(
 
 
 def min_steady_state(
-    formula: Property,
+    formula: expressions.Expression,
     *,
     accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
 ) -> Property:
@@ -253,7 +333,7 @@ def min_steady_state(
 
 
 def max_steady_state(
-    formula: Property,
+    formula: expressions.Expression,
     *,
     accumulate: t.Optional[t.AbstractSet[AccumulationInstant]] = None,
 ) -> Property:
@@ -265,8 +345,8 @@ def max_steady_state(
 
 
 def until(
-    left: Property,
-    right: Property,
+    left: expressions.Expression,
+    right: expressions.Expression,
     *,
     step_bounds: t.Optional[Interval] = None,
     time_bounds: t.Optional[Interval] = None,
@@ -283,8 +363,8 @@ def until(
 
 
 def weak_until(
-    left: Property,
-    right: Property,
+    left: expressions.Expression,
+    right: expressions.Expression,
     *,
     step_bounds: t.Optional[Interval] = None,
     time_bounds: t.Optional[Interval] = None,
@@ -301,8 +381,8 @@ def weak_until(
 
 
 def release(
-    left: Property,
-    right: Property,
+    left: expressions.Expression,
+    right: expressions.Expression,
     *,
     step_bounds: t.Optional[Interval] = None,
     time_bounds: t.Optional[Interval] = None,
@@ -319,7 +399,7 @@ def release(
 
 
 def eventually(
-    formula: Property,
+    formula: expressions.Expression,
     *,
     step_bounds: t.Optional[Interval] = None,
     time_bounds: t.Optional[Interval] = None,
@@ -335,7 +415,7 @@ def eventually(
 
 
 def globally(
-    formula: Property,
+    formula: expressions.Expression,
     *,
     step_bounds: t.Optional[Interval] = None,
     time_bounds: t.Optional[Interval] = None,

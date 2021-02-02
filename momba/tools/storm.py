@@ -93,7 +93,7 @@ class StormChecker(checkers.Checker):
     ) -> checkers.Result:
         with tempfile.TemporaryDirectory(prefix="modest") as directory_name:
             input_file = pathlib.Path(directory_name) / "input.jani"
-            named_properties: t.Dict[str, model.Property] = {}
+            named_properties: t.Dict[str, model.Expression] = {}
             if properties is None and property_names is None:
                 named_properties.update(
                     {

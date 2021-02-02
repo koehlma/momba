@@ -34,7 +34,7 @@ def expr(source: str, **macros: expressions.ValueOrExpression) -> model.Expressi
     )
 
 
-def prop(source: str, **macros: expressions.ValueOrExpression) -> model.Property:
+def prop(source: str, **macros: expressions.ValueOrExpression) -> model.Expression:
     return parser.parse_property(
         parser.TokenStream(source.strip()),
         environment=parser.Environment(
