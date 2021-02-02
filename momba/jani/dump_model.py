@@ -303,7 +303,7 @@ def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
     ctx.require(ModelFeature.NONDET_SELECTION)
     return {
         "op": "nondet",
-        "var": expr.name,
+        "var": expr.variable,
         "exp": _dump_prop(expr.condition, ctx),
     }
 

@@ -381,12 +381,12 @@ class Sample(Expression):
 # requires JANI extension `nondet-selection`
 @d.dataclass(frozen=True)
 class Selection(Expression):
-    name: str
+    variable: str
     condition: Expression
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         condition_scope = scope.create_child_scope()
-        condition_scope.declare_variable(self.name, typ=types.REAL)
+        condition_scope.declare_variable(self.variable, typ=types.REAL)
         condition_type = condition_scope.get_type(self.condition)
         if condition_type != types.BOOL:
             raise errors.InvalidTypeError("condition must have type `types.BOOL`")

@@ -194,6 +194,12 @@ def _expression(jani_expression: t.Any) -> expressions.Expression:
                         _expression(argument) for argument in jani_expression["args"]
                     ),
                 )
+            elif op == "nondet":
+                _check_fields(jani_expression, required={"op", "var", "exp"})
+                return expressions.Selection(
+                    variable=jani_expression["var"],
+                    condition=_expression(jani_expression["exp"]),
+                )
         elif "distribution" in jani_expression:
             _check_fields(jani_expression, required={"args", "distribution"})
             arguments = tuple(map(_expression, jani_expression["args"]))
@@ -674,7 +680,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
             ModelFeature.DERIVED_OPERATORS,
             ModelFeature.FUNCTIONS,
             ModelFeature.STATE_EXIT_REWARDS,
-            # ModelFeature.NONDET_SELECTION,
+            ModelFeature.NONDET_SELECTION,
             ModelFeature.TRIGONOMETRIC_FUNCTIONS,
         }
     )
