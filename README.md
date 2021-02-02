@@ -32,6 +32,11 @@ pip install momba[all]
 Check out the [examples](./examples) or read the [documentation](https://koehlma.github.io/momba/) to learn how to use Momba.
 
 
+## Supported JANI Extensions
+
+Momba supports the full JANI core specification and furthermore has support for the following JANI extensions: `arrays`, `derived-operators`, `functions`, `nondet-selection`, `state-exit-rewards`, and `trigonometric-functions`.
+
+
 ## Rust Crates
 
 The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
