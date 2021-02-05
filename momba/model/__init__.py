@@ -14,7 +14,7 @@ on a model, e.g., analyzing it, the model must not be modified.
 
 from __future__ import annotations
 
-from . import effects, errors, expressions, operators, properties, types
+from . import errors, expressions, operators, properties, types
 
 from .actions import (
     ActionType,
@@ -27,6 +27,7 @@ from .actions import (
 )
 
 from .automata import (
+    Assignment,
     Instance,
     Automaton,
     Location,
@@ -57,7 +58,6 @@ from .types import Type
 
 
 __all__ = [
-    "effects",
     "errors",
     "expressions",
     "operators",
@@ -72,6 +72,7 @@ __all__ = [
     "WriteArgument",
     "GuardArgument",
     # from `.automata`
+    "Assignment",
     "Instance",
     "Automaton",
     "Location",

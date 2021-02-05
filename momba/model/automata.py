@@ -11,7 +11,7 @@ import collections
 
 from mxu.maps import FrozenMap
 
-from . import actions, effects, errors, expressions, types
+from . import actions, errors, expressions, types
 
 if t.TYPE_CHECKING:
     from . import context
@@ -30,7 +30,7 @@ class Instance:
 
 
 ProgressInvariant = t.Optional[expressions.Expression]
-TransientValues = t.AbstractSet["effects.Assignment"]
+TransientValues = t.AbstractSet["Assignment"]
 
 
 @d.dataclass(frozen=True, eq=False)
@@ -68,7 +68,7 @@ class Location:
             #     raise errors.ModelingError(
             #         f"transient values are not allowed for model type {scope.ctx.model_type}"
             #     )
-            if not effects.are_compatible(self.transient_values):
+            if not are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
                     "incompatible assignments for transient values"
                 )
@@ -81,13 +81,40 @@ class Location:
 
 
 @d.dataclass(frozen=True)
+class Assignment:
+    target: expressions.Expression
+    value: expressions.Expression
+    index: int = 0
+
+    def validate(self, scope: context.Scope) -> None:
+        target_type = self.target.infer_target_type(scope)
+        value_type = scope.get_type(self.value)
+        if not target_type.is_assignable_from(value_type):
+            raise errors.InvalidTypeError(
+                f"cannot assign {value_type} to {target_type}"
+            )
+
+
+def are_compatible(assignments: t.Iterable[Assignment]) -> bool:
+    groups: t.DefaultDict[int, t.Set[expressions.Expression]] = collections.defaultdict(
+        set
+    )
+    for assignment in assignments:
+        target = assignment.target
+        if target in groups[assignment.index]:
+            return False
+        groups[assignment.index].add(target)
+    return True
+
+
+@d.dataclass(frozen=True)
 class Destination:
     location: Location
     probability: t.Optional[expressions.Expression] = None
-    assignments: t.AbstractSet[effects.Assignment] = frozenset()
+    assignments: t.FrozenSet[Assignment] = frozenset()
 
     def validate(self, scope: context.Scope) -> None:
-        if not effects.are_compatible(self.assignments):
+        if not are_compatible(self.assignments):
             raise errors.IncompatibleAssignmentsError(
                 f"assignments on edge {self} are not compatible"
             )
@@ -198,7 +225,7 @@ class Automaton:
         name: t.Optional[str] = None,
         *,
         progress_invariant: t.Optional[expressions.Expression] = None,
-        transient_values: t.AbstractSet[effects.Assignment] = frozenset(),
+        transient_values: t.AbstractSet[Assignment] = frozenset(),
         initial: bool = False,
     ) -> Location:
         """
@@ -311,7 +338,7 @@ class Automaton:
 
 
 Assignments = t.Union[
-    t.AbstractSet["effects.Assignment"], t.Mapping[str, "expressions.Expression"]
+    t.AbstractSet["Assignment"], t.Mapping[str, "expressions.Expression"]
 ]
 
 
@@ -326,9 +353,9 @@ def create_destination(
             location,
             probability,
             assignments=frozenset(
-                effects.Assignment(effects.Name(name), value)
+                Assignment(expressions.Name(name), value)
                 for name, value in assignments.items()
             ),
         )
     else:
-        return Destination(location, probability, assignments)
+        return Destination(location, probability, frozenset(assignments))

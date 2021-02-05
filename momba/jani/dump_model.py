@@ -13,7 +13,7 @@ import json
 import warnings
 
 from .. import model
-from ..model import effects, context, expressions, operators, properties, types
+from ..model import context, expressions, operators, properties, types
 from ..utils import checks
 from ..metadata import version
 
@@ -440,29 +440,6 @@ def _dump_unary_path_formula(
 checks.check_singledispatch(_dump_prop, model.Expression)
 
 
-@functools.singledispatch
-def _dump_target(target: effects.Target, ctx: JANIContext) -> JSON:
-    raise NotImplementedError(f"_dump_target has not been implemented for {target}")
-
-
-@_dump_target.register
-def _dump_target_identifier(target: effects.Name, ctx: JANIContext) -> JSON:
-    return target.identifier
-
-
-@_dump_target.register
-def _dump_target_index(target: effects.Index, ctx: JANIContext) -> JSON:
-    ctx.require(ModelFeature.ARRAYS)
-    return {
-        "op": "aa",
-        "exp": _dump_prop(target.array, ctx),
-        "index": _dump_prop(target.index, ctx),
-    }
-
-
-checks.check_singledispatch(_dump_target, effects.Target)
-
-
 def _dump_var_decl(decl: context.VariableDeclaration, ctx: JANIContext) -> JSON:
     jani_declaration: _JANIMap = {
         "name": decl.identifier,
@@ -485,9 +462,9 @@ def _dump_const_decl(decl: context.ConstantDeclaration, ctx: JANIContext) -> JSO
     return jani_declaration
 
 
-def _dump_assignment(assignment: effects.Assignment, ctx: JANIContext) -> JSON:
+def _dump_assignment(assignment: model.Assignment, ctx: JANIContext) -> JSON:
     jani_assignment: _JANIMap = {
-        "ref": _dump_target(assignment.target, ctx),
+        "ref": _dump_prop(assignment.target, ctx),
         "value": _dump_prop(assignment.value, ctx),
     }
     if assignment.index != 0:

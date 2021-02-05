@@ -25,6 +25,11 @@ class Expression(abc.ABC):
     def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
 
+    def infer_target_type(self, scope: context.Scope) -> types.Type:
+        raise errors.InvalidTypeError(
+            f"expression {self} is not a valid assignment target"
+        )
+
     @property
     @abc.abstractmethod
     def children(self) -> t.Sequence[Expression]:
@@ -167,6 +172,9 @@ class Name(_Leaf):
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return scope.lookup(self.identifier).typ
+
+    def infer_target_type(self, scope: context.Scope) -> types.Type:
+        return self.infer_type(scope)
 
 
 # XXX: this class should be abstract, however, then it would not type-check
@@ -433,10 +441,14 @@ class ArrayAccess(Expression):
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         array_type = scope.get_type(self.array)
+        # TODO: check the type of the index
         if isinstance(array_type, types.ArrayType):
             return array_type.element
         else:
             raise errors.InvalidTypeError("array of array access must have array type")
+
+    def infer_target_type(self, scope: context.Scope) -> types.Type:
+        return self.infer_type(scope)
 
 
 @d.dataclass(frozen=True)

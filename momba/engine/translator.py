@@ -16,7 +16,7 @@ import functools
 import json
 
 from .. import model
-from ..model import actions, effects, expressions, operators
+from ..model import actions, expressions, operators
 
 
 _JSONObject = t.Dict[str, t.Any]
@@ -604,7 +604,7 @@ def _translate_instance(
             reset_clocks: t.List[_JSONObject] = []
 
             for assignment in destination.assignments:
-                assert isinstance(assignment.target, effects.Name)
+                assert isinstance(assignment.target, expressions.Name)
                 declaration = edge_ctx.scope.lookup(assignment.target.identifier)
                 if declaration.typ == model.types.CLOCK:
                     assert assignment.index == 0

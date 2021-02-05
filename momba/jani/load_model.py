@@ -11,7 +11,6 @@ import warnings
 
 from momba import model
 from momba.model import (
-    effects,
     functions,
     automata,
     context,
@@ -517,13 +516,13 @@ def _location(jani_location: t.Any) -> automata.Location:
         progress_invariant = _expression(jani_location["time-progress"]["exp"])
     else:
         progress_invariant = None
-    transient_values: t.Set[effects.Assignment] = set()
+    transient_values: t.Set[automata.Assignment] = set()
     if "transient-values" in jani_location:
         for jani_transient_value in jani_location["transient-values"]:
             _check_fields(
                 jani_transient_value, required={"ref", "value"}, optional={"comment"}
             )
-            assignment = effects.Assignment(
+            assignment = automata.Assignment(
                 target=_target(jani_transient_value["ref"]),
                 value=_expression(jani_transient_value["value"]),
             )
@@ -540,13 +539,13 @@ def _location(jani_location: t.Any) -> automata.Location:
 _Locations = t.Dict[str, automata.Location]
 
 
-def _target(jani_target: t.Any) -> effects.Target:
+def _target(jani_target: t.Any) -> expressions.Expression:
     if isinstance(jani_target, str):
-        return effects.Name(jani_target)
+        return expressions.Name(jani_target)
     _check_fields(jani_target, required={"op"}, optional={"exp", "index"})
     if jani_target["op"] == "aa":
         _check_fields(jani_target, required={"op", "exp", "index"})
-        return effects.Index(
+        return expressions.ArrayAccess(
             array=_expression(jani_target["exp"]),
             index=_expression(jani_target["index"]),
         )
@@ -586,7 +585,7 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
                 else None
             ),
             assignments=frozenset(
-                effects.Assignment(
+                automata.Assignment(
                     target=_target(jani_assignment["ref"]),
                     value=_expression(jani_assignment["value"]),
                     index=jani_assignment.get("index", 0),

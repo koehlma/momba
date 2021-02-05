@@ -11,7 +11,7 @@ import dataclasses
 import fractions
 
 from .. import model
-from ..model import actions, expressions, types, effects, properties, operators
+from ..model import actions, expressions, types, properties, operators
 
 from . import lexer
 
@@ -510,7 +510,7 @@ def _parse_variable_declaration(stream: TokenStream) -> model.VariableDeclaratio
     )
 
 
-def _parse_assignment(stream: TokenStream) -> effects.Assignment:
+def _parse_assignment(stream: TokenStream) -> model.Assignment:
     stream.expect("assign")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
     if stream.check(lexer.TokenType.INTEGER):
@@ -521,7 +521,7 @@ def _parse_assignment(stream: TokenStream) -> effects.Assignment:
         index = 0
     stream.expect(":=")
     value = parse_expression(stream)
-    return effects.Assignment(effects.Name(name), value=value, index=index)
+    return model.Assignment(expressions.Name(name), value=value, index=index)
 
 
 def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Location:
@@ -529,7 +529,7 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
     stream.expect("location")
     name = stream.expect(lexer.TokenType.IDENTIFIER).text
     progress_invariant: t.Optional[model.Expression] = None
-    transient_values: t.Set[effects.Assignment] = set()
+    transient_values: t.Set[model.Assignment] = set()
     if stream.accept(":"):
         stream.expect(lexer.TokenType.INDENT)
         while not stream.accept(lexer.TokenType.DEDENT):
@@ -597,7 +597,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                 elif stream.accept("to"):
                     target_name = stream.expect(lexer.TokenType.IDENTIFIER).text
                     probability: t.Optional[model.Expression] = None
-                    assignments: t.Set[effects.Assignment] = set()
+                    assignments: t.Set[model.Assignment] = set()
                     if stream.accept(":"):
                         stream.expect(lexer.TokenType.INDENT)
                         while not stream.accept(lexer.TokenType.DEDENT):
