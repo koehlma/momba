@@ -43,6 +43,7 @@ Contents
 .. toctree::
     :maxdepth: 2
 
+    guide/index
     model/index
     moml/index
     explore/index
