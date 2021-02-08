@@ -6,6 +6,7 @@ Welcome to Momba's documentation!
 [![Docs](https://img.shields.io/static/v1?label=docs&message=master&color=blue)](https://koehlma.github.io/momba/)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Gitter](https://badges.gitter.im/koehlma/momba.svg)](https://gitter.im/koehlma/momba?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4519376.svg)](https://doi.org/10.5281/zenodo.4519376)
 
 *Momba* is a Python framework for dealing with quantitative models centered around the [JANI-model](http://www.jani-spec.org/) interchange format.
 Momba strives to deliver an integrated and intuitive experience to aid the process of model construction, validation, and analysis.
