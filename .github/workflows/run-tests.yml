@@ -28,6 +28,11 @@ jobs:
         poetry export --without-hashes --dev -f requirements.txt --output requirements.txt
         rustup default nightly
         pip install -r requirements.txt
+    - name: Build and install Momba Engine
+      run: |
+        cd engine
+        maturin develop
+        cd ..
     - name: Install Momba
       run: |
         poetry build -f wheel
