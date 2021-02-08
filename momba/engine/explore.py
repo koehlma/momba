@@ -212,7 +212,7 @@ class State(t.Generic[TimeTypeT]):
 
 
 def _compile(translation: Translation) -> t.Any:
-    return _engine.MDPExplorer(translation.json_network)  # type: ignore
+    return _engine.MDPExplorer(translation.json_network)
 
 
 @d.dataclass(frozen=True, eq=False, repr=False)

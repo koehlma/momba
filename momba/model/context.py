@@ -14,9 +14,6 @@ from . import actions, errors, functions, expressions, properties, types
 from .automata import Automaton
 from .networks import Network
 
-if t.TYPE_CHECKING:
-    from . import effects  # noqa: F401
-
 
 class ModelType(enum.Enum):
     """ Type of the model. """
