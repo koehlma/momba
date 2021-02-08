@@ -1,156 +1,157 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>momba.model.automata &mdash; Momba unknown documentation</title>
-  
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
+    <meta name="generator" content="sphinx-3.4.3, furo 2020.12.30.beta24"/>
+        <title>momba.model.automata - Momba unknown documentation</title>
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../../../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
     
 
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
   
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
-</head>
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
 
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/jupyter-cell.css" />
+    <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script defer="defer" src="../../../_static/jquery.js"></script>
+    <script defer="defer" src="../../../_static/underscore.js"></script>
+    <script defer="defer" src="../../../_static/doctools.js"></script>
+    <script defer="defer" src="../../../_static/thebelab-helper.js"></script>
+    <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script defer="defer" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script defer="defer" type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script defer src="../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+  <body dir="">
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
 
-          
-            <a href="../../../index.html" class="icon icon-home"> Momba
-          
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
-          
-          </a>
 
-          
-            
-            
-              <div class="version">
-                unknown
-              </div>
-            
-          
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../model/index.html">Momba Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../moml/index.html">MOML Language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../explore/index.html">State-Space Exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis/index.html">Model Analysis</a></li>
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Momba unknown documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Momba unknown documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/construction.html">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/exploration.html">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/analysis.html">Model Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/racetrack.html">Racetrack</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/model.html">Momba Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/engine.html">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reference/jani.html">JANI Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing/index.html">Contributing</a></li>
 </ul>
 
-            
-          
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Momba</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
-      <li>momba.model.automata</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <h1>Source code for momba.model.automata</h1><div class="highlight"><pre>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for momba.model.automata</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding:utf-8 -*-</span>
 <span class="c1">#</span>
 <span class="c1"># Copyright (C) 2019-2020, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
@@ -164,7 +165,7 @@
 
 <span class="kn">from</span> <span class="nn">mxu.maps</span> <span class="kn">import</span> <span class="n">FrozenMap</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">effects</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
 
 <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">context</span>
@@ -183,12 +184,12 @@
 
 
 <span class="n">ProgressInvariant</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span>
-<span class="n">TransientValues</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="s2">&quot;effects.Assignment&quot;</span><span class="p">]</span>
+<span class="n">TransientValues</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="s2">"Assignment"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../../model/index.html#momba.model.Location">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Location</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">"""</span>
 <span class="sd">    Represents a location of a SHA.</span>
 
 <span class="sd">    Attributes:</span>
@@ -199,7 +200,7 @@
 <span class="sd">            expression in the scope the location is used.</span>
 <span class="sd">        transient_values:</span>
 <span class="sd">            Assignments for transient variables.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -210,43 +211,70 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress_invariant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">is_timed</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;location invariant is not allowed for model type </span><span class="si">{</span><span class="n">scope</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">"location invariant is not allowed for model type </span><span class="si">{</span><span class="n">scope</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">"</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progress_invariant</span><span class="p">)</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;type of invariant in location </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not `types.BOOL`&quot;</span>
+                    <span class="sa">f</span><span class="s2">"type of invariant in location </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not `types.BOOL`"</span>
                 <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transient_values</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">is_timed</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;transient values are not allowed for model type </span><span class="si">{</span><span class="n">scope</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">effects</span><span class="o">.</span><span class="n">are_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transient_values</span><span class="p">):</span>
+            <span class="c1"># if not scope.ctx.model_type.is_timed:</span>
+            <span class="c1">#     raise errors.ModelingError(</span>
+            <span class="c1">#         f"transient values are not allowed for model type {scope.ctx.model_type}"</span>
+            <span class="c1">#     )</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">are_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transient_values</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">IncompatibleAssignmentsError</span><span class="p">(</span>
-                    <span class="s2">&quot;incompatible assignments for transient values&quot;</span>
+                    <span class="s2">"incompatible assignments for transient values"</span>
                 <span class="p">)</span>
             <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transient_values</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">assignment</span><span class="o">.</span><span class="n">index</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
-                        <span class="s2">&quot;index of assignments for transient values must be zero&quot;</span>
+                        <span class="s2">"index of assignments for transient values must be zero"</span>
                     <span class="p">)</span>
                 <span class="n">assignment</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span></div>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Assignment</span><span class="p">:</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">target_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">infer_target_type</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="n">value_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">target_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">value_type</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"cannot assign </span><span class="si">{</span><span class="n">value_type</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">target_type</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">are_compatible</span><span class="p">(</span><span class="n">assignments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Assignment</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="n">groups</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">DefaultDict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]]</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span>
+        <span class="nb">set</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="n">assignments</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">assignment</span><span class="o">.</span><span class="n">target</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">[</span><span class="n">assignment</span><span class="o">.</span><span class="n">index</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">groups</span><span class="p">[</span><span class="n">assignment</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
 
 
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Destination</span><span class="p">:</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">Location</span>
     <span class="n">probability</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">assignments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">effects</span><span class="o">.</span><span class="n">Assignment</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
+    <span class="n">assignments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Assignment</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">effects</span><span class="o">.</span><span class="n">are_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assignments</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">are_compatible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assignments</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">IncompatibleAssignmentsError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;assignments on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> are not compatible&quot;</span>
+                <span class="sa">f</span><span class="s2">"assignments on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> are not compatible"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probability</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">probability</span><span class="p">)</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;probability value must be numeric&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">"probability value must be numeric"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">assignment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignments</span><span class="p">:</span>
             <span class="n">assignment</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
 
@@ -268,11 +296,11 @@
 
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;type of rate on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not numeric&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"type of rate on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not numeric"</span><span class="p">)</span>
         <span class="n">edge_scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_edge_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">guard</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">edge_scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guard</span><span class="p">)</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;type of guard on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not `types.BOOL`&quot;</span>
+                <span class="sa">f</span><span class="s2">"type of guard on edge </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not `types.BOOL`"</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">destinations</span><span class="p">:</span>
             <span class="n">destination</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">edge_scope</span><span class="p">)</span>
@@ -306,7 +334,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing_edges</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Automaton @ 0x</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&gt;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Automaton @ 0x</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">X</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&gt;"</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -328,11 +356,11 @@
     <span class="k">def</span> <span class="nf">initial_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_restriction</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidOperationError</span><span class="p">(</span>
-                <span class="s2">&quot;restriction of initial valuations has already been set&quot;</span>
+                <span class="s2">"restriction of initial valuations has already been set"</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">initial_restriction</span><span class="p">)</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="s2">&quot;restriction of initial valuations must have type `types.BOOL`&quot;</span>
+                <span class="s2">"restriction of initial valuations must have type `types.BOOL`"</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initial_restriction</span> <span class="o">=</span> <span class="n">initial_restriction</span>
 
@@ -351,14 +379,14 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">progress_invariant</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">transient_values</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">effects</span><span class="o">.</span><span class="n">Assignment</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
+        <span class="n">transient_values</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Assignment</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
         <span class="n">initial</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Location</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Adds a location to the automaton.</span>
 
 <span class="sd">        :param location: The :class:`Location` to add.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">location</span> <span class="o">=</span> <span class="n">Location</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">progress_invariant</span><span class="p">,</span> <span class="n">transient_values</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">initial</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">location</span></div>
@@ -367,9 +395,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Automaton.add_edge"><a class="viewcode-back" href="../../../model/index.html#momba.model.Automaton.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="n">Edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Adds an edge to the automaton.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">action_pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">add_action_type</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">action_pattern</span><span class="o">.</span><span class="n">action_type</span><span class="p">)</span>
         <span class="n">edge</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">)</span>
@@ -393,11 +421,11 @@
         <span class="n">rate</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">annotation</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Creates a new edge with the given parameters.</span>
 
 <span class="sd">        See :class:`Edge` for more details.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span>
             <span class="n">source</span><span class="p">,</span>
             <span class="nb">frozenset</span><span class="p">(</span><span class="n">destinations</span><span class="p">),</span>
@@ -409,15 +437,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Automaton.get_incoming_edges"><a class="viewcode-back" href="../../../model/index.html#momba.model.Automaton.get_incoming_edges">[docs]</a>    <span class="k">def</span> <span class="nf">get_incoming_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Edge</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Returns the set of outgoing edges from the given location.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incoming_edges</span><span class="p">[</span><span class="n">location</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Automaton.get_outgoing_edges"><a class="viewcode-back" href="../../../model/index.html#momba.model.Automaton.get_outgoing_edges">[docs]</a>    <span class="k">def</span> <span class="nf">get_outgoing_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Edge</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Returns the set of incoming edges to the given location.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing_edges</span><span class="p">[</span><span class="n">location</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Automaton.declare_variable"><a class="viewcode-back" href="../../../model/index.html#momba.model.Automaton.declare_variable">[docs]</a>    <span class="k">def</span> <span class="nf">declare_variable</span><span class="p">(</span>
@@ -428,9 +456,9 @@
         <span class="n">is_transient</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">initial_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Declares a variable in the local scope of the automaton.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">is_transient</span><span class="o">=</span><span class="n">is_transient</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="n">initial_value</span>
         <span class="p">)</span></div>
@@ -442,9 +470,9 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">default_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Declarse a parameter for the automaton.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_constant</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">default_value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -454,9 +482,9 @@
         <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
         <span class="n">input_enable</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Instance</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        Creates an instance of the automaton for composition.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Instance</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">parameters</span><span class="p">),</span> <span class="n">input_enable</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">input_enable</span><span class="p">)</span>
@@ -464,7 +492,7 @@
 
 
 <span class="n">Assignments</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="s2">&quot;effects.Assignment&quot;</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;expressions.Expression&quot;</span><span class="p">]</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="s2">"Assignment"</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"expressions.Expression"</span><span class="p">]</span>
 <span class="p">]</span>
 
 
@@ -479,54 +507,38 @@
             <span class="n">location</span><span class="p">,</span>
             <span class="n">probability</span><span class="p">,</span>
             <span class="n">assignments</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span>
-                <span class="n">effects</span><span class="o">.</span><span class="n">Assignment</span><span class="p">(</span><span class="n">effects</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+                <span class="n">Assignment</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">assignments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Destination</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">probability</span><span class="p">,</span> <span class="n">assignments</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Destination</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">probability</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">assignments</span><span class="p">))</span>
 </pre></div>
-
-           </div>
-           
-          </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2020, Dependable Systems and Software Group, Saarland University
-
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-    <p style="margin-top: 1ex;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
-     
-
-
-</footer>
-
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
         </div>
-      </div>
 
-    </section>
-
-  </div>
-  
-
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+        <div class="related-information">
+              Copyright &#169; 2020, Dependable Systems and Software Group, Saarland University
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+  </body>
 </html>
