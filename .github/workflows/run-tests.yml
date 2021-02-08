@@ -31,8 +31,9 @@ jobs:
     - name: Build and install Momba Engine
       run: |
         cd engine
-        maturin develop
+        maturin build
         cd ..
+        pip install target/wheels/*.tar.gz
     - name: Install Momba
       run: |
         poetry build -f wheel
