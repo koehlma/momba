@@ -69,7 +69,7 @@ try:
         subprocess.check_output(["git", "describe", "--dirty"]).decode().strip()[1:]
     )
 except subprocess.CalledProcessError:
-    release = "unknown"
+    release = "master"
 
 version = release
 
@@ -92,6 +92,7 @@ templates_path = ["_templates"]
 
 html_theme = "furo"
 
+html_title = "Momba"
 html_static_path = ["_static"]
 html_css_files = [
     "css/jupyter-cell.css",
