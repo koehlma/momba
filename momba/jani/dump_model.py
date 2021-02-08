@@ -25,20 +25,72 @@ _JANIMap = t.Dict[str, JSON]  # type: ignore
 
 
 class ModelFeature(enum.Enum):
+    """
+    An enum representing optional JANI model features.
+    """
+
     ARRAYS = "arrays"
+    """ Support for arrays. """
+
     DATATYPES = "datatypes"
+    """
+    Support for datatypes.
+    """
+
     DERIVED_OPERATORS = "derived-operators"
+    """
+    Support for derived operators.
+    """
+
     EDGE_PRIORITIES = "edge-priorities"
+    """
+    Support for edge priorities.
+    """
+
     FUNCTIONS = "functions"
+    """
+    Support for functions.
+    """
+
     HYPERBOLIC_FUNCTIONS = "hyperbolic-functions"
+    """
+    Support for hyperbolic functions.
+    """
+
     NAMED_EXPRESSIONS = "named-expressions"
+    """
+    Support for named expressions.
+    """
+
     NONDET_SELECTION = "nondet-selection"
+    """
+    Suport for non-deterministic selection expressions.
+    """
+
     STATE_EXIT_REWARDS = "state-exit-rewards"
+    """
+    Support for state exit rewards.
+    """
+
     TRADEOFF_PROPERTIES = "tradeoff-properties"
+    """
+    Support for tradeoff properties.
+    """
+
     TRIGONOMETRIC_FUNCTIONS = "trigonometric-functions"
+    """
+    Support for trigonometric functions.
+    """
 
     X_MOMBA_OPERATORS = "x-momba-operators"
+    """
+    Support for Momba non-standard operators.
+    """
+
     X_MOMBA_VALUE_PASSING = "x-momba-value-passing"
+    """
+    Support for Momba non-standard value passing.
+    """
 
 
 _NamedObject = t.Union[model.Location, model.Automaton]
@@ -667,16 +719,29 @@ def dump_model(
     indent: t.Optional[int] = None,
     allow_momba_operators: bool = False,
     properties: t.Optional[t.Mapping[str, model.Expression]] = None,
-) -> bytes:
+) -> str:
     """
-    Takes a Momba automata network and exports it to the JANI format.
+    Takes a Momba automaton :class:`~momba.model.Network` and returns a
+    JANI string representing the network.
 
-    Arguments:
-        network: The Momba automata network to export to JANI.
-        indent: Indentation of the final JSON.
+    The `indent` parameter controls the indentation of the resulting
+    JANI string.
+    `None` means no indentation.
+    Set `indent` to an integer, e.g., :code:`2`, to enable pretty formatting.
 
-    Returns:
-        The model in UTF-8 encoded JANI format.
+    Momba supports some non-standard operators which can either be preserved
+    or desugared into standard JANI.
+    This behavior is controlled via the flag `allow_momba_operators`.
+    If the flag is set to `True`, then the `x-momba-operators` JANI model
+    feature is enabled and the non-standard operators will be preserved
+    in the output.
+    Otherwise, if it is set to `False` (the default case), non-standard
+    operators are desugared into standard JANI.
+
+    The `properties` parameter allows to provide an mapping from :class:`str`
+    to :class:`~momba.model.Expression`.
+    The provided expressions will be put as additional properties into the
+    JANI-model output.
     """
     jani_structure = dump_structure(
         network, allow_momba_operators=allow_momba_operators, properties=properties
@@ -685,4 +750,4 @@ def dump_model(
         jani_structure,
         indent=indent,
         ensure_ascii=False,
-    ).encode("utf-8")
+    )

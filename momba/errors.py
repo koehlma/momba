@@ -7,3 +7,7 @@ from __future__ import annotations
 
 class MombaError(Exception):
     pass
+
+
+class InvalidModelType(MombaError):
+    pass

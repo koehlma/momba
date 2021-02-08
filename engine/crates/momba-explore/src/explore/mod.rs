@@ -390,16 +390,19 @@ impl<T: time::TimeType> Explorer<T> {
         transition: &Transition<'c, T>,
         destination: &Destination<T>,
     ) -> State<T::Valuations> {
-        let mut targets = state.global_store.clone();
+        let mut targets = vec![
+            model::Value::Vector(state.global_store.clone().into()),
+            model::Value::Vector(state.transient_store.clone().into()),
+        ];
         for index in 0..self.compiled_network.assignment_groups.len() {
-            let global_store = targets.clone();
+            let global_store = targets[0].clone();
             for (action, automaton_destination) in transition
                 .actions
                 .iter()
                 .zip(destination.destinations.iter())
             {
                 let env = EdgeEnvironment::new([
-                    &global_store,
+                    &global_store.unwrap_vector(),
                     &state.transient_store,
                     action.arguments(),
                 ]);
@@ -421,12 +424,14 @@ impl<T: time::TimeType> Explorer<T> {
                 .reset(valuations, &automaton_destination.reset);
         }
 
-        let transient_store = self.compiled_network.compute_transient_values(&targets);
+        let transient_store = self
+            .compiled_network
+            .compute_transient_values(&targets[0].unwrap_vector());
 
         let state = State::<T::Valuations>::future(
             State {
                 locations,
-                global_store: targets,
+                global_store: targets[0].unwrap_vector().clone().into(),
                 transient_store,
                 valuations,
             },

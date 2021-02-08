@@ -4,8 +4,15 @@
 
 from __future__ import annotations
 
-from .dump_model import dump_model
-from .load_model import load_model, InvalidJANIError, UnsupportedJANIError
+from .dump_model import dump_model, ModelFeature
+from .load_model import load_model, InvalidJANIError, UnsupportedJANIError, JANIError
 
 
-__all__ = ["dump_model", "load_model", "InvalidJANIError", "UnsupportedJANIError"]
+__all__ = [
+    "dump_model",
+    "load_model",
+    "InvalidJANIError",
+    "UnsupportedJANIError",
+    "JANIError",
+    "ModelFeature",
+]

@@ -43,6 +43,10 @@ class ModelType(enum.Enum):
     def is_timed(self) -> bool:
         return self in _TIMED_MODEL_TYPES
 
+    @property
+    def is_discrete_time(self) -> bool:
+        return self in _DISCRETE_TIME_TYPES
+
 
 _TIMED_MODEL_TYPES = {
     ModelType.TA,
@@ -53,8 +57,10 @@ _TIMED_MODEL_TYPES = {
     ModelType.SHA,
 }
 
+_DISCRETE_TIME_TYPES = {ModelType.MDP, ModelType.LTS, ModelType.DTMC}
 
-Typed = t.Union[expressions.Expression, "effects.Target"]
+
+Typed = t.Union[expressions.Expression]
 
 
 # XXX: this class should be abstract, however, then it would not type-check

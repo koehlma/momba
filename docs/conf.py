@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import re
 
 from pygments.lexer import RegexLexer
 from pygments import token
@@ -74,24 +75,44 @@ version = release
 
 
 extensions = [
+    "myst_parser",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx_autodoc_typehints",
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
+    "jupyter_sphinx",
 ]
+
+# disable type hints
+autodoc_typehints = "none"
 
 html_theme_options = {"display_version": True}
 
 templates_path = ["_templates"]
 
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 
-html_static_path = []  # type: ignore
+html_static_path = ["_static"]
+html_css_files = [
+    "css/jupyter-cell.css",
+]
+
+
+type_re = re.compile(":type:.*$")
+
+
+def process_docstring(app, what, name, obj, options, lines):  # type: ignore
+    for index, line in enumerate(lines):
+        match = type_re.search(line)
+        if match:
+            # strip away the type information
+            lines[index] = line[: match.span()[0]]
 
 
 def setup(app):  # type:ignore
     from sphinx.highlighting import lexers
+
+    app.connect("autodoc-process-docstring", process_docstring)
 
     lexers["moml"] = MomlLexer()
     lexers["bnf"] = BNFLexer()

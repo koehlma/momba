@@ -368,12 +368,14 @@ impl<const BANKS: usize> Scope<BANKS> {
             Expression::Name(NameExpression { identifier }) => {
                 let address = self.get_address(identifier).unwrap();
                 // Is the identifier a global variable?
-                assert_eq!(address.bank, 0);
                 let index = address.register;
                 CompiledTargetExpression::new(
-                    move |targets, _, _| Target {
-                        store: targets,
-                        index: index,
+                    move |targets, _, _| match &mut targets[address.bank] {
+                        Value::Vector(vector) => Target {
+                            store: vector,
+                            index: index,
+                        },
+                        _ => panic!("Expected vector got."),
                     },
                     0,
                 )

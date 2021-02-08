@@ -127,6 +127,13 @@ impl Value {
         }
     }
 
+    pub fn unwrap_vector(&self) -> &Vec<Value> {
+        match self {
+            Value::Vector(vector) => vector,
+            _ => panic!("Value {:?} is not a Vector.", self),
+        }
+    }
+
     #[inline(always)]
     pub fn apply_not(self) -> Value {
         match self {

@@ -10,6 +10,7 @@ import json
 import warnings
 
 from momba import model
+from ..errors import MombaError
 from momba.model import (
     functions,
     automata,
@@ -24,14 +25,34 @@ from momba.model import (
 from .dump_model import ModelFeature
 
 
-class InvalidJANIError(Exception):
-    pass
+class JANIError(MombaError):
+    """
+    Indicates an error while loading a JANI string.
+
+    Usually either :class:`InvalidJANIError` or
+    :class:`UnsupportedJANIError` gets thrown.
+    """
 
 
-class UnsupportedJANIError(Exception):
-    unsupported_features: t.AbstractSet[ModelFeature]
+class InvalidJANIError(JANIError):
+    """
+    String is not valid JANI.
+    """
 
-    def __init__(self, unsupported_features: t.AbstractSet[ModelFeature]):
+
+class UnsupportedJANIError(JANIError):
+    """
+    Model contains unsupported JANI features.
+
+    Attributes
+    ----------
+    unsupported_features:
+        Used model features not supported by Momba.
+    """
+
+    unsupported_features: t.AbstractSet[t.Union[str, ModelFeature]]
+
+    def __init__(self, unsupported_features: t.AbstractSet[t.Union[str, ModelFeature]]):
         self.unsupported_features = unsupported_features
         super().__init__(f"unsupported JANI features {self.unsupported_features!r}")
 
@@ -657,12 +678,15 @@ def _load_functions(
 
 def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.Network:
     """
-    Constructs a Momba automata network based on the provided JANI model.
+    Constructs a Momba automaton :class:`~momba.model.Network` based on
+    the provided JANI model string.
 
-    :param source:
-        The source of the JANI model to load.
-    :return:
-        The resulting network of Momba automata network.
+    The flag `ignore_properties` indicates whether the properties of the
+    model should be ignored or added to the returned network's modeling
+    :class:`~momba.model.Context`.
+
+    Throws a :class:`~momba.jani.JANIError` in case the JANI file cannot be
+    loaded.
     """
     if isinstance(source, bytes):
         jani_model = json.loads(source.decode("utf-8"))

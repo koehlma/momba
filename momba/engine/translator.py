@@ -849,13 +849,10 @@ class Translation:
         }
 
 
-_NO_PARAMETERS: t.Mapping[str, model.Expression] = {}
-
-
 def translate_network(
     network: model.Network,
     *,
-    parameters: t.Mapping[str, model.Expression] = _NO_PARAMETERS,
+    parameters: t.Optional[t.Mapping[str, model.Expression]] = None,
 ) -> Translation:
     instance_names = _compute_instance_names(network)
     declarations = _compute_declarations(network, instance_names)
@@ -868,7 +865,7 @@ def translate_network(
             instance_names,
             instance_to_location_names,
             declarations,
-            parameters,
+            parameters or {},
         ),
         instance_names,
         declarations,

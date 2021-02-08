@@ -15,7 +15,7 @@ import click
 
 import colorama
 
-from momba.explore import engine
+from momba import engine
 
 from racetrack import (
     Scenario,
@@ -139,15 +139,15 @@ def race(
         instance for instance in network.instances if instance.automaton.name == "car"
     )
 
-    mdp = engine.MombaMDP(network)
+    explorer = engine.Explorer.new_discrete_time(network)
 
-    (state,) = mdp.initial_locations
+    (state,) = explorer.initial_states
 
     while True:
-        car_pos = state.binding["car_pos"].as_int
-        dx = state.binding["car_dx"].as_int
-        dy = state.binding["car_dy"].as_int
-        fuel = state.binding["fuel"].as_int
+        car_pos = state.global_env["car_pos"].as_int
+        dx = state.global_env["car_dx"].as_int
+        dy = state.global_env["car_dy"].as_int
+        fuel = state.global_env["fuel"].as_int
 
         print(f"\ndx: {dx}, dy: {dy}, fuel: {fuel}\n")
         print(format_track(track, car_pos))
@@ -156,20 +156,20 @@ def race(
             print("\nGame won!")
             break
 
-        options: t.Dict[t.Tuple[int, int], engine.MDPEdge] = {}
-        edges = mdp.get_edges_from(state)
+        options: t.Dict[t.Tuple[int, int], engine.Transition[engine.DiscreteTime]] = {}
+        transitions = state.transitions
 
-        if not edges:
+        if not transitions:
             print("\nGame over!")
             break
 
         if crazy_driver:
             # shortcut decision by letting the (random) crazy driver take the decision
-            state = random.choice(tuple(edges)).destinations.pick()
+            state = random.choice(transitions).destinations.pick().state
             continue
 
-        for option in edges:
-            annotation = option.vector[car_instance].annotation
+        for option in transitions:
+            annotation = option.edge_vector[car_instance].annotation
             assert annotation is not None
             ax = annotation["ax"]
             ay = annotation["ay"]
@@ -188,7 +188,7 @@ def race(
             type=click.IntRange(-scenario.max_acceleration, scenario.max_acceleration),
         )
         decision = options[(chosen_ax, chosen_ay)]
-        state = decision.destinations.pick()
+        state = decision.destinations.pick().state
 
 
 if __name__ == "__main__":
