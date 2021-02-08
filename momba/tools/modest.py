@@ -104,7 +104,9 @@ class ModestChecker(checkers.Checker):
             if property_names is not None:
                 for name in property_names:
                     named_properties[name] = network.ctx.get_property_by_name(name)
-            input_file.write_bytes(dump_model(network, properties=named_properties))
+            input_file.write_text(
+                dump_model(network, properties=named_properties), encoding="utf-8"
+            )
             result = self.toolset.check((input_file,))
             return {
                 dataset["property"]: fractions.Fraction(dataset["value"])

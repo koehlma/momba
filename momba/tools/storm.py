@@ -104,7 +104,9 @@ class StormChecker(checkers.Checker):
             if property_names is not None:
                 for name in property_names:
                     named_properties[name] = network.ctx.get_property_by_name(name)
-            input_file.write_bytes(dump_model(network, properties=named_properties))
+            input_file.write_text(
+                dump_model(network, properties=named_properties), encoding="utf-8"
+            )
             output = self.toolset.invoke(
                 ("--jani", input_file, "--janiproperty", "--engine", self.engine)
             )
