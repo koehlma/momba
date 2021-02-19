@@ -4,7 +4,6 @@
 
 <p align="center">
   <a href="https://pypi.python.org/pypi/momba"><img alt="PyPi Package" src="https://img.shields.io/pypi/v/momba.svg?label=latest%20version"></a>
-  
   <a href="https://github.com/koehlma/momba/actions"><img alt="Tests" src="https://img.shields.io/github/workflow/status/koehlma/momba/Run%20Tests?label=tests"></a>
   <a href="https://koehlma.github.io/momba/"><img alt="Docs" src="https://img.shields.io/static/v1?label=docs&message=master&color=blue"></a>
   <a href="https://github.com/psf/black"><img alt="Code Style: Black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
