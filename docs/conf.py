@@ -92,7 +92,8 @@ templates_path = ["_templates"]
 
 html_theme = "furo"
 
-html_title = "Momba"
+html_title = ""
+html_logo = "_static/images/logo_with_text.svg"
 html_static_path = ["_static"]
 html_css_files = [
     "css/jupyter-cell.css",
