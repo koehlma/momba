@@ -12,9 +12,12 @@ from .translator import Translation
 import abc
 
 from .. import model
-from ..errors import InvalidModelType
 
 from ._engine import engine as _engine
+
+
+class InvalidModelType:
+    pass
 
 
 class TimeType(abc.ABC):
