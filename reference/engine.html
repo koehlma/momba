@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="JANI Models" href="jani.html" /><link rel="prev" title="Momba Models" href="model.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="JANI Models" href="jani.html" /><link rel="prev" title="Exceptions" href="model/exceptions.html" />
 
     <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
         <title>Exploration Engine - Momba</title>
@@ -39,6 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/fix-source-link.css" />
     <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
@@ -124,19 +125,26 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">API Documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="model.html">Momba Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="model.html#id1">Momba Models</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="model/context.html">Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/automata.html">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/networks.html">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/actions.html">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/expressions.html">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/properties.html">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/types.html">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/functions.html">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Exploration Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="jani.html">JANI Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML Language</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../incubator/moml/grammar.html">MOML Grammar</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../incubator/moml/index.html">MOML</a></li>
 </ul>
 </li>
 </ul>
@@ -190,7 +198,7 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f2a087c08e0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7fbaf02670a0&gt;
 </pre></div>
 </div>
 </div>
@@ -228,17 +236,17 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
- 's1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'x1': Value(0),
  'w21': Value(0),
- 'y2': Value(0),
- 'z1': Value(0),
  'x2': Value(0),
  's2': Value(0),
  'w12': Value(0),
- 'x1': Value(0),
+ 'y2': Value(0),
  'y1': Value(0),
- 't': Value(0)}
+ 't': Value(0),
+ 's1': Value(0),
+ 'z2': Value(0),
+ 'z1': Value(0)}
 </pre></div>
 </div>
 </div>
@@ -252,11 +260,11 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1: l
-wire21: l
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>wire21: l
 wire12: l
 node2: l
 timer: l
+node1: l
 </pre></div>
 </div>
 </div>
@@ -271,15 +279,15 @@ timer: l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1
-{}
-wire21
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>wire21
 {}
 wire12
 {}
 node2
 {}
 timer
+{}
+node1
 {}
 </pre></div>
 </div>
@@ -294,7 +302,7 @@ To this end, we query the outgoing transitions of the initial state and their re
         <span class="c1"># the action of the transition is internal</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"Action: τ"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Action: </span><span class="si">{</span><span class="n">transition</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Action: </span><span class="si">{</span><span class="n">transition</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="n">transition</span><span class="o">.</span><span class="n">destinations</span><span class="o">.</span><span class="n">support</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  With p=</span><span class="si">{</span><span class="n">destination</span><span class="o">.</span><span class="n">probability</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">destination</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 </pre></div>
@@ -302,11 +310,11 @@ To this end, we query the outgoing transitions of the initial state and their re
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f2a0164ca90&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f2a0164caf0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fbaf0046a00&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fbaf0046a60&gt;.
 Action: snd_idle12
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f2a0164ceb0&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f2a0164cf10&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fbaf0046e20&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fbaf0046e80&gt;.
 </pre></div>
 </div>
 </div>
@@ -317,7 +325,7 @@ Action: snd_idle12
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
 
 <span class="n">transition</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">initial_state</span><span class="o">.</span><span class="n">transitions</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Action: </span><span class="si">{</span><span class="n">transition</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Action: </span><span class="si">{</span><span class="n">transition</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">successor</span> <span class="o">=</span> <span class="n">transition</span><span class="o">.</span><span class="n">destinations</span><span class="o">.</span><span class="n">pick</span><span class="p">()</span><span class="o">.</span><span class="n">state</span>
 
@@ -326,20 +334,20 @@ Action: snd_idle12
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
 </pre></div>
 </div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
- 's1': Value(3),
- 'w21': Value(0),
- 'y2': Value(0),
- 'z1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'x1': Value(0),
+ 'w21': Value(5),
  'x2': Value(0),
- 's2': Value(0),
- 'w12': Value(5),
- 'x1': Value(0),
+ 's2': Value(3),
+ 'w12': Value(0),
+ 'y2': Value(0),
  'y1': Value(0),
- 't': Value(0)}
+ 't': Value(0),
+ 's1': Value(0),
+ 'z2': Value(0),
+ 'z1': Value(0)}
 </pre></div>
 </div>
 </div>
@@ -406,7 +414,7 @@ unspecified behavior.</p>
 <dl class="py attribute">
 <dt id="momba.engine.Explorer.network">
 <code class="sig-name descname"><span class="pre">network</span></code><a class="headerlink" href="#momba.engine.Explorer.network" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">Network</span></code> the explorer has been created for.</p>
+<dd><p>The <a class="reference internal" href="model/networks.html#momba.model.Network" title="momba.model.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">Network</span></code></a> the explorer has been created for.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt id="momba.engine.Explorer.time_type">
@@ -502,7 +510,7 @@ stabilized yet.</p>
 <dl class="py attribute">
 <dt id="momba.engine.Action.action_type">
 <code class="sig-name descname"><span class="pre">action_type</span></code><a class="headerlink" href="#momba.engine.Action.action_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="model.html#momba.model.ActionType" title="momba.model.ActionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ActionType</span></code></a> of the action.</p>
+<dd><p>The <a class="reference internal" href="model/actions.html#momba.model.ActionType" title="momba.model.ActionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ActionType</span></code></a> of the action.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt id="momba.engine.Action.arguments">
@@ -564,14 +572,14 @@ For continuous-time models (TA and PTA) different time representations are avail
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="model.html">
+          <a class="prev-page" href="model/exceptions.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Momba Models</div>
+                <div class="title">Exceptions</div>
                 
               </div>
             </a>

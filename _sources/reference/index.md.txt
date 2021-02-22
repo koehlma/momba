@@ -6,9 +6,9 @@ In case you want a particular feature stabilized, please [open an issue](https:/
 
 
 ```{toctree}
-:maxdepth: 2
+:hidden:
 
-model
+model/index
 engine
 jani
 analysis

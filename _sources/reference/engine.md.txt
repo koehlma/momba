@@ -74,7 +74,7 @@ for transition in initial_state.transitions:
         # the action of the transition is internal
         print("Action: τ")
     else:
-        print(f"Action: {transition.action.action_type.name}")
+        print(f"Action: {transition.action.action_type.label}")
     for destination in transition.destinations.support:
         print(f"  With p={destination.probability} to {destination}.")
 ```
@@ -84,7 +84,7 @@ Let's chose a transition uniformly and then pick a successor state at random:
 import random
 
 transition = random.choice(initial_state.transitions)
-print(f"Action: {transition.action.action_type.name}")
+print(f"Action: {transition.action.action_type.label}")
 
 successor = transition.destinations.pick().state
 

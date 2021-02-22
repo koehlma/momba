@@ -39,6 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/fix-source-link.css" />
     <link rel="stylesheet" href="../../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
@@ -124,19 +125,26 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../reference/model.html">Momba Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../reference/model.html#id1">Momba Models</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/context.html">Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/automata.html">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/networks.html">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/actions.html">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/expressions.html">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/properties.html">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/types.html">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/functions.html">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../reference/model/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/engine.html">Exploration Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/jani.html">JANI Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/moml/index.html">MOML Language</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../incubator/moml/grammar.html">MOML Grammar</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../incubator/moml/index.html">MOML</a></li>
 </ul>
 </li>
 </ul>
@@ -161,7 +169,8 @@
         <h1>Source code for momba.model.actions</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding:utf-8 -*-</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (C) 2019-2020, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
+<span class="c1"># Copyright (C) 2019-2021, Saarland University</span>
+<span class="c1"># Copyright (C) 2019-2021, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -176,58 +185,109 @@
     <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ActionParameter"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ActionParameter">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ActionParameter</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents an action parameter.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    typ:</span>
+<span class="sd">        The type of the parameter.</span>
+<span class="sd">    comment:</span>
+<span class="sd">        An optional comment for the parameter.</span>
+<span class="sd">    """</span>
+
     <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span>
+    <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-    <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-
-<div class="viewcode-block" id="ActionType"><a class="viewcode-back" href="../../../reference/model.html#momba.model.ActionType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ActionType"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ActionType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ActionType</span><span class="p">:</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents an action type.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label:</span>
+<span class="sd">        The label of the action type.</span>
+<span class="sd">    parameters:</span>
+<span class="sd">        The parameters of the action type.</span>
+<span class="sd">    comment:</span>
+<span class="sd">        An optional comment for the action type.</span>
+<span class="sd">    """</span>
+
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ActionParameter</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
-
     <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Returns :obj:`True` if and only if the action type has parameters.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">arity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The arity, i.e., number of parameters, of the action type.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span><span class="p">:</span> <span class="n">ActionArgument</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActionPattern</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ActionPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">)</span></div>
 
 
-<span class="k">class</span> <span class="nc">ActionArgument</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="k">pass</span>
+<div class="viewcode-block" id="ActionArgument"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ActionArgument">[docs]</a><span class="k">class</span> <span class="nc">ActionArgument</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents an argument for an action pattern.</span>
+<span class="sd">    """</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="WriteArgument"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.WriteArgument">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">WriteArgument</span><span class="p">(</span><span class="n">ActionArgument</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Writes the value of the expression for the respective parameter.</span>
+<span class="sd">    """</span>
+
     <span class="c1"># is evaluated in the automata's scope, not in the edge scope</span>
-    <span class="n">expression</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span>
+    <span class="n">expression</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ReadArgument"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ReadArgument">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ReadArgument</span><span class="p">(</span><span class="n">ActionArgument</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Reads a value from the respective parameter.</span>
+<span class="sd">    """</span>
+
     <span class="c1"># gets declared in the edge scope</span>
-    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="GuardArgument"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.GuardArgument">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GuardArgument</span><span class="p">(</span><span class="n">ActionArgument</span><span class="p">):</span>
-    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents an argument to be used in a guard.</span>
+<span class="sd">    """</span>
+
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ActionPattern"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ActionPattern">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ActionPattern</span><span class="p">:</span>
-    <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents an action pattern.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    action_type:</span>
+<span class="sd">        The type of the action pattern.</span>
+<span class="sd">    arguments:</span>
+<span class="sd">        The arguments of the action pattern.</span>
+<span class="sd">    """</span>
+
+    <span class="n">action_type</span><span class="p">:</span> <span class="n">ActionType</span>
     <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ActionArgument</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -237,11 +297,13 @@
                 <span class="sa">f</span><span class="s2">"arguments but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span><span class="si">}</span><span class="s2"> were given"</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">declare_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ActionPattern.declare_in"><a class="viewcode-back" href="../../../reference/model/actions.html#momba.model.ActionPattern.declare_in">[docs]</a>    <span class="k">def</span> <span class="nf">declare_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Declares the identifiers of the pattern in the given scope.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            Experimental feature used for value passing only.</span>
 <span class="sd">        """</span>
-        <span class="c1"># FIXME: proper error reporting instead of assertions</span>
         <span class="k">for</span> <span class="n">argument</span><span class="p">,</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_type</span><span class="o">.</span><span class="n">parameters</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">GuardArgument</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">scope</span><span class="o">.</span><span class="n">is_declared</span><span class="p">(</span><span class="n">argument</span><span class="o">.</span><span class="n">identifier</span><span class="p">):</span>
@@ -253,7 +315,7 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">ReadArgument</span><span class="p">):</span>
                 <span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
                     <span class="n">argument</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="n">parameter</span><span class="o">.</span><span class="n">typ</span><span class="p">,</span> <span class="n">is_transient</span><span class="o">=</span><span class="kc">True</span>
-                <span class="p">)</span>
+                <span class="p">)</span></div></div>
 </pre></div>
       </article>
       <footer>
