@@ -47,6 +47,6 @@ The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sid
 
 ## Acknowledgements
 
-This project is partially supported by the ERC Advanced Investigators Grant 695614 ([POWVER](https://powver.org)), by the German Research Foundation (DFG) under grant No. 389792660, as part of TRR 248, see https://perspicuous-computing.science, and by the Key-Area Research and Development Program Grant 2018B010107004 of Guangdong Province.
+This project is partially supported by the ERC Advanced Investigators Grant 695614 ([POWVER](https://powver.org)), by the German Research Foundation (DFG) under grant No. 389792660, as part of [TRR 248](https://perspicuous-computing.science), and by the Key-Area Research and Development Program Grant 2018B010107004 of Guangdong Province.
 
 Thanks to Sarah Sterz for the awesome Momba logo.
