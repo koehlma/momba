@@ -37,28 +37,16 @@ Installing Momba with the `all` feature flag will install all optional dependenc
 Check out the [examples](https://koehlma.github.io/momba/examples) or read the [user guide](https://koehlma.github.io/momba/guide) to learn more.
 
 
-## Supported JANI Extensions
-
-Momba supports the full JANI core specification and furthermore has support for the following JANI extensions: `arrays`, `derived-operators`, `functions`, `nondet-selection`, `state-exit-rewards`, and `trigonometric-functions`.
-
-
 ## Rust Crates
 
-The simulation engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
+The exploration engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
 In case you are a Rust developer you might find some of the crates in [engine/crates](engine/crates) useful.
 In particular, the crate [momba-explore](https://crates.io/crates/momba-explore) allows developing high-performance model analysis tools with JANI support in Rust based on Momba's explicit state space exploration engine.
 The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sidekick) directly exposes some of this functionality.
 
 
-## Rationale
+## Acknowledgements
 
-The idea to harvest a general purpose programming environment for formal modelling is not new at all.
-For instance, the [SVL language](https://link.springer.com/chapter/10.1007/0-306-47003-9_24) combines the power of process algebraic modelling with the power of the bourne shell.
-Many formal modelling tools also already provide Python bindings, e.g., [Storm](https://moves-rwth.github.io/stormpy/) and [Spot](https://spot.lrde.epita.fr/).
-Momba tries not to be yet another incarnation of these ideas.
-While the construction of formal models clearly is an integral part of Momba, Momba is more than just a framework for constructing models with the help of Python.
-Most importantly, it also provides features to work with these models such as a simulator or an interface to different model checking tools.
-At the same time, it is not just a binding to an API developed for another language, like C++.
-Momba is tool-agnostic and aims to provide a pythonic interface for dealing with formal models while leveraging existing tools.
-Momba covers the whole process from model creation through validation to analysis.
-To this end, it is centered around the well-entrenched JANI-model interchange format.
+This project is partially supported by the ERC Advanced Investigators Grant 695614 ([POWVER](https://powver.org)), by the German Research Foundation (DFG) under grant No. 389792660, as part of TRR 248, see https://perspicuous-computing.science, and by the Key-Area Research and Development Program Grant 2018B010107004 of Guangdong Province.
+
+Thanks to Sarah Sterz for the awesome Momba logo.
