@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 use clock_zones;
 use clock_zones::Zone;
 
+use crate::Explorer;
+
 use super::model;
 
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
@@ -24,6 +26,9 @@ pub struct Constraint<T: TimeType> {
 pub trait TimeType: Sized {
     /// Type used to represent potentially infinite sets of clock valuations.
     type Valuations: Eq + PartialEq + std::hash::Hash + Clone;
+
+    /// Type used to represent partially infinite sets of clock valuations externally.
+    type External: Eq + PartialEq + std::hash::Hash + Clone;
 
     /// Type used to represent the difference between two clocks.
     type CompiledDifference: Clone;
@@ -71,6 +76,8 @@ pub trait TimeType: Sized {
 
     /// Extrapolates the future of the given valuations.
     fn future(&self, valuations: Self::Valuations) -> Self::Valuations;
+
+    fn externalize(&self, valuations: Self::Valuations) -> Self::External;
 }
 
 /// A time representation not supporting any real-valued clocks.
@@ -79,6 +86,8 @@ pub struct NoClocks();
 
 impl TimeType for NoClocks {
     type Valuations = ();
+
+    type External = ();
 
     type CompiledDifference = ();
 
@@ -142,6 +151,10 @@ impl TimeType for NoClocks {
     fn future(&self, _valuations: Self::Valuations) -> Self::Valuations {
         ()
     }
+
+    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
+        valuations
+    }
 }
 
 /// A time representation using [f64] clock zones.
@@ -188,6 +201,8 @@ impl Float64Zone {
 
 impl TimeType for Float64Zone {
     type Valuations = clock_zones::DBM<clock_zones::ConstantBound<ordered_float::NotNan<f64>>>;
+
+    type External = Self::Valuations;
 
     type CompiledDifference = (usize, usize);
 
@@ -261,6 +276,10 @@ impl TimeType for Float64Zone {
     /// Extrapolates the future of the given valuations.
     fn future(&self, mut valuations: Self::Valuations) -> Self::Valuations {
         valuations.future();
+        valuations
+    }
+
+    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
         valuations
     }
 }
@@ -344,6 +363,8 @@ impl GlobalValuations {
 impl TimeType for GlobalTime {
     type Valuations = GlobalValuations;
 
+    type External = Self::Valuations;
+
     type CompiledDifference = (usize, usize);
 
     type CompiledClocks = Vec<usize>;
@@ -422,6 +443,10 @@ impl TimeType for GlobalTime {
     /// Extrapolates the future of the given valuations.
     fn future(&self, mut valuations: Self::Valuations) -> Self::Valuations {
         valuations.zone.future();
+        valuations
+    }
+
+    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
         valuations
     }
 }

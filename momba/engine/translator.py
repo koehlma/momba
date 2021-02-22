@@ -840,6 +840,10 @@ class Translation:
     ]
 
     @functools.cached_property
+    def instance_name_to_instance(self) -> t.Mapping[str, model.Instance]:
+        return {name: instance for instance, name in self.instance_names.items()}
+
+    @functools.cached_property
     def reversed_instance_to_location_names(
         self,
     ) -> t.Mapping[model.Instance, t.Mapping[str, model.Location]]:

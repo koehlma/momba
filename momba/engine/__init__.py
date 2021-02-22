@@ -10,9 +10,6 @@ from .time import TimeType, DiscreteTime
 from .values import Value
 
 
-from . import _ipython  # noqa:
-
-
 __all__ = [
     "Action",
     "Destination",

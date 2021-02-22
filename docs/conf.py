@@ -63,7 +63,7 @@ class BNFLexer(RegexLexer):  # type:ignore
 
 
 project = "Momba"
-copyright = "2020, Dependable Systems and Software Group, Saarland University"
+copyright = "2020-2021, Dependable Systems and Software Group, Saarland University"
 author = "Maximilian Köhl"
 
 try:

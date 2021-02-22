@@ -5,14 +5,38 @@
 
 from __future__ import annotations
 
+import typing as t
 
-class TimeType:
+from .translator import Translation
+
+import abc
+
+from .. import model
+from ..errors import InvalidModelType
+
+from ._engine import engine as _engine
+
+
+class TimeType(abc.ABC):
     """
     Base class for time representations.
     """
+
+    @staticmethod
+    @abc.abstractmethod
+    def compile(network: model.Network, translation: Translation) -> t.Any:
+        raise NotImplementedError()
 
 
 class DiscreteTime(TimeType):
     """
     A representation of time without continuous-time clocks.
     """
+
+    @staticmethod
+    def compile(network: model.Network, translation: Translation) -> t.Any:
+        if not network.ctx.model_type.is_discrete_time:
+            raise InvalidModelType(
+                f"{network.ctx.model_type} is not a discrete time model type"
+            )
+        return _engine.Explorer(translation.json_network)

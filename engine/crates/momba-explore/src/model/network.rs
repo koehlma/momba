@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use super::actions::*;
 use super::expressions::*;
+use super::references::*;
 use super::types::*;
 use super::values::*;
 
@@ -28,6 +29,31 @@ impl Network {
         self.declarations
             .transient_variables
             .get_index_of(identifier)
+    }
+
+    pub fn get_automaton(&self, reference: &AutomatonReference) -> &Automaton {
+        self.automata.get(&reference.name).unwrap()
+    }
+
+    pub fn get_location(&self, reference: &LocationReference) -> &Location {
+        self.get_automaton(&reference.automaton)
+            .locations
+            .get(&reference.name)
+            .unwrap()
+    }
+
+    pub fn get_edge(&self, reference: &EdgeReference) -> &Edge {
+        self.get_location(&reference.location)
+            .edges
+            .get(reference.index)
+            .unwrap()
+    }
+
+    pub fn get_destination(&self, reference: &DestinationReference) -> &Destination {
+        self.get_edge(&reference.edge)
+            .destinations
+            .get(reference.index)
+            .unwrap()
     }
 }
 

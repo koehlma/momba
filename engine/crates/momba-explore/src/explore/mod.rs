@@ -11,6 +11,8 @@ mod actions;
 mod compiled;
 mod evaluate;
 
+pub mod external;
+
 use compiled::*;
 
 pub use actions::*;
@@ -152,6 +154,14 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
         &self.actions
     }
 
+    /// Returns a vector of indices of the participating automata.
+    pub fn edges(&self) -> Vec<model::EdgeReference> {
+        self.edges
+            .iter()
+            .map(|edge| edge.reference.clone())
+            .collect()
+    }
+
     /// Returns the clock valuations for which the transition is performed.
     pub fn valuations(&self) -> &T::Valuations {
         &self.valuations
@@ -170,6 +180,13 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
             valuations,
             action: self.action,
         }
+    }
+
+    pub fn edge_references(&self) -> Vec<model::EdgeReference> {
+        self.edges
+            .iter()
+            .map(|edge| edge.reference.clone())
+            .collect()
     }
 }
 
@@ -287,8 +304,9 @@ impl<T: time::TimeType> Explorer<T> {
         self.compiled_network
             .automata
             .iter()
-            .map(|automaton| {
-                let location = &automaton.locations[state.locations[automaton.reference]];
+            .enumerate()
+            .map(|(index, automaton)| {
+                let location = &automaton.locations[state.locations[index]];
                 location.internal_edges.iter().filter_map(|edge| {
                     if !edge.is_enabled(&global_env) {
                         None
@@ -416,7 +434,7 @@ impl<T: time::TimeType> Explorer<T> {
         let mut locations = state.locations.clone();
         let mut valuations = transition.valuations().clone();
         for automaton_destination in destination.destinations.iter() {
-            let automaton_index = automaton_destination.reference.edge.location.automaton;
+            let automaton_index = automaton_destination.automaton_index;
             locations[automaton_index] = automaton_destination.location;
             valuations = self
                 .compiled_network
@@ -445,6 +463,22 @@ impl<T: time::TimeType> Explorer<T> {
             .is_empty(&state.valuations));
 
         state
+    }
+
+    pub fn externalize_transition(&self, transition: &Transition<T>) -> external::Transition<T> {
+        external::Transition {
+            edge_vector: transition
+                .edges
+                .iter()
+                .map(|edge| edge.reference.clone())
+                .collect(),
+            action_vector: transition.actions.clone(),
+            action: transition.action.clone(),
+            valuations: self
+                .compiled_network
+                .zone_compiler
+                .externalize(transition.valuations.clone()),
+        }
     }
 }
 

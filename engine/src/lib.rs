@@ -66,7 +66,7 @@ impl Action {
 }
 
 #[pyclass]
-struct MDPState {
+struct State {
     explorer: Arc<momba_explore::MDPExplorer>,
     state: momba_explore::State<
         <momba_explore::time::NoClocks as momba_explore::time::TimeType>::Valuations,
@@ -74,14 +74,14 @@ struct MDPState {
 }
 
 #[pymethods]
-impl MDPState {
-    fn transitions(&self) -> Vec<MDPTransition> {
+impl State {
+    fn transitions(&self) -> Vec<Transition> {
         self.explorer
             .transitions(&self.state)
             .into_iter()
             .map(|transition| unsafe {
                 // This is safe because `transition` borrows from `self.explorer`.
-                MDPTransition::new(self.explorer.clone(), transition)
+                Transition::new(self.explorer.clone(), transition)
             })
             .collect()
     }
@@ -110,7 +110,7 @@ impl MDPState {
 }
 
 #[pyclass]
-struct MDPTransition {
+struct Transition {
     /// In lack of a better alternative, we use 'static here. The transition actually
     /// borrows from the `MDPExplorer` owned by the `Arc` stored in `explorer`.
     ///
@@ -119,7 +119,7 @@ struct MDPTransition {
     explorer: Arc<momba_explore::MDPExplorer>,
 }
 
-impl MDPTransition {
+impl Transition {
     /// Constructs a new transition.
     ///
     /// # Safety
@@ -128,14 +128,14 @@ impl MDPTransition {
         explorer: Arc<momba_explore::MDPExplorer>,
         transition: momba_explore::Transition<'e, momba_explore::time::NoClocks>,
     ) -> Self {
-        MDPTransition {
+        Transition {
             unsafe_transition: mem::transmute(transition),
             explorer: explorer.clone(),
         }
     }
 }
 
-impl MDPTransition {
+impl Transition {
     fn transition<'t>(
         &'t self,
     ) -> &'t momba_explore::Transition<'t, momba_explore::time::NoClocks> {
@@ -144,12 +144,12 @@ impl MDPTransition {
 }
 
 #[pymethods]
-impl MDPTransition {
-    fn destinations(&self, state: &MDPState) -> Vec<MDPDestination> {
+impl Transition {
+    fn destinations(&self, state: &State) -> Vec<Destination> {
         self.explorer
             .destinations(&state.state, self.transition())
             .into_iter()
-            .map(|destination| unsafe { MDPDestination::new(&self.explorer, destination) })
+            .map(|destination| unsafe { Destination::new(&self.explorer, destination) })
             .collect()
     }
 
@@ -159,20 +159,35 @@ impl MDPTransition {
             action: self.transition().result_action().clone(),
         }
     }
+
+    fn action_vector(&self) -> Vec<Action> {
+        self.transition()
+            .local_actions()
+            .iter()
+            .map(|action| Action {
+                explorer: self.explorer.clone(),
+                action: action.clone(),
+            })
+            .collect()
+    }
+
+    fn edge_vector(&self) -> String {
+        serde_json::to_string(&self.transition().edge_references()).unwrap()
+    }
 }
 
 #[pyclass]
-struct MDPDestination {
+struct Destination {
     unsafe_destination: momba_explore::Destination<'static, momba_explore::time::NoClocks>,
     explorer: Arc<momba_explore::MDPExplorer>,
 }
 
-impl MDPDestination {
+impl Destination {
     unsafe fn new<'e>(
         explorer: &'e Arc<momba_explore::MDPExplorer>,
         destination: momba_explore::Destination<'e, momba_explore::time::NoClocks>,
     ) -> Self {
-        MDPDestination {
+        Destination {
             explorer: explorer.clone(),
             unsafe_destination: mem::transmute(destination),
         }
@@ -186,13 +201,13 @@ impl MDPDestination {
 }
 
 #[pymethods]
-impl MDPDestination {
+impl Destination {
     fn probability(&self) -> f64 {
         self.destination().probability()
     }
 
-    fn successor(&self, state: &MDPState, transition: &MDPTransition) -> MDPState {
-        MDPState {
+    fn successor(&self, state: &State, transition: &Transition) -> State {
+        State {
             explorer: self.explorer.clone(),
             state: self.explorer.successor(
                 &state.state,
@@ -204,26 +219,26 @@ impl MDPDestination {
 }
 
 #[pyclass]
-struct MDPExplorer {
+struct Explorer {
     explorer: Arc<momba_explore::MDPExplorer>,
 }
 
 #[pymethods]
-impl MDPExplorer {
+impl Explorer {
     #[new]
     fn new(json_representation: &str) -> Self {
-        MDPExplorer {
+        Explorer {
             explorer: Arc::new(momba_explore::MDPExplorer::new(
                 serde_json::from_str(json_representation).expect("Error while reading model file!"),
             )),
         }
     }
 
-    fn initial_states(&self) -> Vec<MDPState> {
+    fn initial_states(&self) -> Vec<State> {
         self.explorer
             .initial_states()
             .into_iter()
-            .map(|state| MDPState {
+            .map(|state| State {
                 explorer: self.explorer.clone(),
                 state: state,
             })
@@ -234,10 +249,10 @@ impl MDPExplorer {
 /// A Python module implemented in Rust.
 #[pymodule]
 fn momba_engine(_py: Python, module: &PyModule) -> PyResult<()> {
-    module.add_class::<MDPExplorer>()?;
-    module.add_class::<MDPState>()?;
-    module.add_class::<MDPTransition>()?;
-    module.add_class::<MDPDestination>()?;
+    module.add_class::<Explorer>()?;
+    module.add_class::<State>()?;
+    module.add_class::<Transition>()?;
+    module.add_class::<Destination>()?;
 
     module.add_class::<Action>()?;
 

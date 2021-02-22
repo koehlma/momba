@@ -13,17 +13,6 @@ import typing as t
 class Value:
     """
     Represents a value.
-
-    Attributes
-    ----------
-    as_int:
-        Asserts that the value is an integer and returns the integer.
-    as_float:
-        Asserts that the value is a float and returns the float.
-    as_bool:
-        Asserts that the value is a bool and returns the bool.
-    as_array:
-        Asserts that the value is an array and returns a tuple of values.
     """
 
     _value: t.Any
@@ -32,20 +21,61 @@ class Value:
         return f"Value({self._value})"
 
     @property
+    def is_int(self) -> bool:
+        """
+        Returns :code:`True` if the value is an integer.
+        """
+        return isinstance(self._value, int)
+
+    @property
+    def is_float(self) -> bool:
+        """
+        Returns :code:`True` if the value is a float.
+        """
+        return isinstance(self._value, float)
+
+    @property
+    def is_bool(self) -> bool:
+        """
+        Returns :code:`True` if the value is a boolean.
+        """
+        return isinstance(self._value, bool)
+
+    @property
+    def is_array(self) -> bool:
+        """
+        Returns :code:`True` if the value is an array.
+        """
+        return isinstance(self._value, list)
+
+    @property
     def as_int(self) -> int:
-        assert isinstance(self._value, int)
+        """
+        Asserts that the value is an integer and returns the integer.
+        """
+        assert self.is_int
         return self._value
 
     @property
     def as_float(self) -> float:
+        """
+        Asserts that the value is a float and returns the float.
+        """
         assert isinstance(self._value, float)
         return self._value
 
     @property
     def as_bool(self) -> bool:
+        """
+        Asserts that the value is a boolean and returns the boolean.
+        """
         assert isinstance(self._value, bool)
         return self._value
 
     @property
-    def as_array(self) -> t.Sequence[Value]:
+    def as_array(self) -> t.Tuple[Value, ...]:
+        """
+        Asserts that the value is an array and returns a tuple of values.
+        """
+        assert isinstance(self._value, list)
         return tuple(map(Value, self._value))

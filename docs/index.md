@@ -34,14 +34,26 @@ Installing Momba with the `all` feature flag will install all optional dependenc
 Check out the [examples](examples) or read the [user guide](guide) to learn more.
 
 
-## Contents
+## Acknowledgements
+
+This project is partially supported by the ERC Advanced Investigators Grant 695614 ([POWVER](https://powver.org)), by the German Research Foundation (DFG) under grant No. 389792660, as part of [TRR 248](https://perspicuous-computing.science), and by the Key-Area Research and Development Program Grant 2018B010107004 of Guangdong Province.
+
+Thanks to Sarah Sterz for the awesome Momba logo.
+
 
 ```{toctree}
-:maxdepth: 2
+:hidden:
 
 guide/index
 examples/index
 reference/index
 incubator/index
+```
+
+```{toctree}
+:caption: Development
+:hidden:
+
 contributing/index
+GitHub Repository <https://github.com/koehlma/momba>
 ```

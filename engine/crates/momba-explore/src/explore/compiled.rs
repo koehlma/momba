@@ -16,30 +16,6 @@ pub type EdgeIndex = usize;
 
 pub type DestinationIndex = usize;
 
-/// Uniquely identifies an automaton of the model.
-pub type AutomatonReference = usize;
-
-/// Uniquely identifies a location of the model.
-#[derive(Clone)]
-pub struct LocationReference {
-    pub automaton: AutomatonReference,
-    pub index: LocationIndex,
-}
-
-/// Uniquely identifies an edge of the model.
-#[derive(Clone)]
-pub struct EdgeReference {
-    pub location: LocationReference,
-    pub index: EdgeIndex,
-}
-
-/// Uniquely identifies a destination of the model.
-#[derive(Clone)]
-pub struct DestinationReference {
-    pub edge: EdgeReference,
-    pub index: DestinationIndex,
-}
-
 pub type GlobalEnvironment<'s> = evaluate::Environment<'s, 2>;
 pub type EdgeEnvironment<'s> = evaluate::Environment<'s, 3>;
 
@@ -49,12 +25,12 @@ pub struct CompiledAssignment {
 }
 
 pub struct CompiledAutomaton<Z: time::TimeType> {
-    pub reference: AutomatonReference,
+    pub reference: model::AutomatonReference,
     pub locations: Vec<CompiledLocation<Z>>,
 }
 
 pub struct CompiledLocation<Z: time::TimeType> {
-    pub reference: LocationReference,
+    pub reference: model::LocationReference,
     pub invariant: Vec<CompiledClockConstraint<Z>>,
     pub internal_edges: Vec<CompiledEdge<Z>>,
     pub visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>>,
@@ -66,8 +42,9 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
         global_scope: &evaluate::Scope<2>,
         zone_compiler: &Z,
         automaton: &model::Automaton,
+        automaton_index: usize,
         location: &model::Location,
-        reference: LocationReference,
+        reference: model::LocationReference,
         assignment_groups: &IndexSet<usize>,
     ) -> Self {
         let mut internal_edges = Vec::new();
@@ -76,7 +53,7 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
                 .map(|_| Vec::new())
                 .collect();
         for (edge_index, edge) in location.edges.iter().enumerate() {
-            let edge_reference = EdgeReference {
+            let edge_reference = model::EdgeReference {
                 location: reference.clone(),
                 index: edge_index,
             };
@@ -84,6 +61,7 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
                 network,
                 zone_compiler,
                 automaton,
+                automaton_index,
                 edge,
                 edge_reference,
                 assignment_groups,
@@ -132,7 +110,7 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
 }
 
 pub struct CompiledEdge<Z: time::TimeType> {
-    pub reference: EdgeReference,
+    pub reference: model::EdgeReference,
     pub guard: CompiledGuard<Z>,
     pub destinations: Vec<CompiledDestination<Z>>,
 }
@@ -147,8 +125,9 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
         network: &model::Network,
         time_type: &Z,
         automaton: &model::Automaton,
+        automaton_index: usize,
         edge: &model::Edge,
-        reference: EdgeReference,
+        reference: model::EdgeReference,
         assignment_groups: &IndexSet<usize>,
     ) -> Self {
         let global_scope = network.global_scope();
@@ -169,7 +148,8 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
             .iter()
             .enumerate()
             .map(|(destination_index, destination)| CompiledDestination {
-                reference: DestinationReference {
+                automaton_index,
+                reference: model::DestinationReference {
                     edge: reference.clone(),
                     index: destination_index,
                 },
@@ -245,7 +225,8 @@ impl<T: time::TimeType> CompiledClockConstraint<T> {
 }
 
 pub struct CompiledDestination<Z: time::TimeType> {
-    pub reference: DestinationReference,
+    pub automaton_index: usize,
+    pub reference: model::DestinationReference,
     pub location: LocationIndex,
     pub probability: evaluate::CompiledExpression<3>,
     pub reset: Z::CompiledClocks,
@@ -253,7 +234,7 @@ pub struct CompiledDestination<Z: time::TimeType> {
 }
 
 pub struct SyncVectorItem {
-    pub automaton: AutomatonReference,
+    pub automaton_index: usize,
     pub action_type: model::LabelIndex,
     pub slot_mapping: Box<[usize]>,
 }
@@ -268,7 +249,7 @@ impl SyncVectorItem {
         global_env: &evaluate::Environment<2>,
         enabled_edges: &Box<[Box<[Box<[&'c CompiledVisibleEdge<Z>]>]>]>,
     ) -> Vec<LinkEdge<Z>> {
-        enabled_edges[self.automaton][self.action_type]
+        enabled_edges[self.automaton_index][self.action_type]
             .iter()
             .map(|edge| LinkEdge {
                 compiled: edge,
@@ -333,24 +314,24 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
         assignment_groups.sort();
         let automata = network
             .automata
-            .values()
+            .iter()
             .enumerate()
-            .map(|(automaton_reference, automaton)| CompiledAutomaton {
-                reference: automaton_reference,
+            .map(|(automaton_index, (name, automaton))| CompiledAutomaton {
+                reference: model::AutomatonReference { name: name.clone() },
                 locations: automaton
                     .locations
-                    .values()
-                    .enumerate()
-                    .map(|(location_index, location)| {
+                    .iter()
+                    .map(|(location_name, location)| {
                         CompiledLocation::new(
                             network,
                             &global_scope,
                             &zone_compiler,
                             automaton,
+                            automaton_index,
                             location,
-                            LocationReference {
-                                automaton: automaton_reference,
-                                index: location_index,
+                            model::LocationReference {
+                                automaton: model::AutomatonReference { name: name.clone() },
+                                name: location_name.clone(),
                             },
                             &assignment_groups,
                         )
@@ -367,7 +348,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                     .vector
                     .iter()
                     .map(|(automaton_name, link_pattern)| SyncVectorItem {
-                        automaton: network.automata.get_index_of(automaton_name).unwrap(),
+                        automaton_index: network.automata.get_index_of(automaton_name).unwrap(),
                         action_type: network
                             .declarations
                             .action_labels
@@ -504,4 +485,25 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
             .map(|expr| expr.evaluate(&env))
             .collect()
     }
+
+    // pub fn get_compiled_location(&self, reference: &LocationReference) -> &CompiledLocation<Z> {
+    //     &self.automata[reference.automaton].locations[reference.index]
+    // }
+
+    // pub fn get_compiled_edge(&self, reference: &EdgeReference) -> &CompiledEdge<Z> {
+    //     let location = self.get_compiled_location(&reference.location);
+    //     for edge in location.internal_edges.iter() {
+    //         if edge.reference.index == reference.index {
+    //             return edge;
+    //         }
+    //     }
+    //     for edges in location.visible_edges.iter() {
+    //         for edge in edges.iter() {
+    //             if edge.base.reference.index == reference.index {
+    //                 return &edge.base;
+    //             }
+    //         }
+    //     }
+    //     panic!()
+    // }
 }

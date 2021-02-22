@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::expressions::*;
 
-/// Represents an action pattern.
+/// Represents an *action pattern*.
 ///
 /// Action patterns enable value passing.
 /// A pattern is either *silent* or *labeled*.
