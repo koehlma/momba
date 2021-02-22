@@ -1,3 +1,5 @@
+import typing as t
+
 import os
 import sys
 import subprocess
@@ -92,12 +94,18 @@ templates_path = ["_templates"]
 
 html_theme = "furo"
 
-html_title = ""
-html_logo = "_static/images/logo_with_text.svg"
+html_title = "Momba"
+
 html_static_path = ["_static"]
 html_css_files = [
     "css/jupyter-cell.css",
 ]
+
+html_theme_options: t.Dict[str, t.Any] = {
+    "light_logo": "images/logo_with_text.svg",
+    "dark_logo": "images/logo_with_text_white.svg",
+    "sidebar_hide_name": True,
+}
 
 
 type_re = re.compile(":type:.*$")
