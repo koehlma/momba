@@ -98,7 +98,7 @@ html_title = "Momba"
 
 html_static_path = ["_static"]
 html_css_files = [
-    "css/jupyter-cell.css",
+    "css/jupyter.css",
 ]
 
 html_theme_options: t.Dict[str, t.Any] = {
