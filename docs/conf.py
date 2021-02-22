@@ -88,7 +88,7 @@ extensions = [
 # disable type hints
 autodoc_typehints = "none"
 
-html_theme_options = {"display_version": True}
+html_show_sphinx = False
 
 templates_path = ["_templates"]
 

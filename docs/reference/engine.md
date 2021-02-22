@@ -65,8 +65,8 @@ for instance in network.instances:
     print(initial_state.get_local_env(instance))
 ```
 
-So, let's explore the successors of `initial_state`.
-To this end, we query the outgoing transitions and their respective destinations of the initial state:
+So, let's explore the successors of the initial state `initial_state`.
+To this end, we query the outgoing transitions of the initial state and their respective destinations:
 
 ```{jupyter-execute}
 for transition in initial_state.transitions:

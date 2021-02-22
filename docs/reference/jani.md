@@ -3,6 +3,8 @@
 Momba exposes two main functions to work with [JANI-model](https://jani-spec.org) files, {func}`~momba.jani.dump_model` and {func}`~momba.jani.load_model`.
 As the names suggest, {func}`~momba.jani.dump_model` exports a Momba automaton {class}`~momba.model.Network` to JANI-model while the function {func}`~momba.jani.load_model` imports an automaton {class}`~momba.model.Network` from a JANI-model file.
 
+Momba supports the full JANI core specification and furthermore has support for the following JANI extensions: `arrays`, `derived-operators`, `functions`, `nondet-selection`, `state-exit-rewards`, and `trigonometric-functions`.
+
 
 ## Examples 
 

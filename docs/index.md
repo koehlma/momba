@@ -42,5 +42,6 @@ Check out the [examples](examples) or read the [user guide](guide) to learn more
 guide/index
 examples/index
 reference/index
+incubator/index
 contributing/index
 ```
