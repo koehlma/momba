@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -14,6 +15,15 @@ from . import types
 
 
 class Operator:
+    """
+    The base class of all operators.
+
+    Attributes
+    ----------
+    symbol:
+        Symbol associated with the operator.
+    """
+
     symbol: str
 
     def __init__(self, symbol: str):
@@ -21,7 +31,9 @@ class Operator:
 
 
 class BinaryOperator(Operator):
-    pass
+    """
+    Base class for all binary operators.
+    """
 
 
 class NativeBooleanFunction(t.Protocol):
@@ -30,15 +42,27 @@ class NativeBooleanFunction(t.Protocol):
 
 
 class BooleanOperator(BinaryOperator, enum.Enum):
+    """
+    An enum of boolean operators.
+    """
+
     AND = "∧", lambda left, right: left and right
+    """ Logical conjunction. """
+
     OR = "∨", lambda left, right: left or right
+    """ Logical disjunction. """
 
     # requires JANI extension `derived-operators`
     IMPLY = "⇒", lambda left, right: not left or right
+    """ Logical implication. """
 
     # requires JANI extension `x-momba-operators`
     XOR = "⊕", lambda left, right: (left or right) and not (left and right)
+    """ Logical exclusive disjunction. """
+
+    # requires JANI extension `x-momba-operators`
     EQUIV = "⇔", lambda left, right: left is right
+    """ Logical equivalence. """
 
     native_function: NativeBooleanFunction
 
@@ -56,25 +80,45 @@ class NativeBinaryArithmeticFunction(t.Protocol):
 
 
 class ArithmeticBinaryOperator(BinaryOperator, enum.Enum):
+    """
+    An enum of arithmetic binary operators.
+    """
+
     ADD = "+", lambda left, right: left + right
+    """ Addition. """
+
     SUB = "-", lambda left, right: left - right
+    """ Substraction. """
+
     MUL = "*", lambda left, right: left * right
+    """ Multiplication. """
+
     MOD = "%", lambda left, right: left % right
+    """ Euclidean remainder. """
 
     REAL_DIV = (
         "/",
         lambda left, right: fractions.Fraction(left) / fractions.Fraction(right),
     )
+    """ Real devision. """
 
     LOG = "log", lambda left, right: math.log(left, right)
+    """ Logarithm. """
+
     POW = "pow", lambda left, right: pow(left, right)
+    """ Power. """
 
     # requires JANI extension `derived-operators`
     MIN = "min", lambda left, right: min(left, right)
+    """ Minimum. """
+
+    # requires JANI extension `derived-operators`
     MAX = "max", lambda left, right: max(left, right)
+    """ Maximum. """
 
     # requires JANI extension `x-momba-operators`
     FLOOR_DIV = "//", lambda left, right: left // right
+    """ Euclidean division. """
 
     native_function: NativeBinaryArithmeticFunction
 
@@ -91,8 +135,15 @@ class NativeEqualityFunction(t.Protocol):
 
 
 class EqualityOperator(BinaryOperator, enum.Enum):
+    """
+    An enum of equality operators.
+    """
+
     EQ = "=", lambda left, right: left == right
+    """ Is equal. """
+
     NEQ = "≠", lambda left, right: left != right
+    """ Is not equal. """
 
     native_function: NativeEqualityFunction
 
@@ -107,12 +158,23 @@ class NativeComparisonFunction(t.Protocol):
 
 
 class ComparisonOperator(BinaryOperator, enum.Enum):
+    """
+    An enum of comparison operators.
+    """
+
     LT = "<", True, lambda left, right: left < right
+    """ Is less than. """
+
     LE = "≤", False, lambda left, right: left <= right
+    """ Is less than or equal to. """
 
     # requires JANI extension `derived-operators`
     GE = "≥", False, lambda left, right: left >= right
+    """ Is greater than or equal to. """
+
+    # requires JANI extension `derived-operators`
     GT = ">", True, lambda left, right: left > right
+    """ Is greater than. """
 
     is_strict: bool
     native_function: NativeComparisonFunction
@@ -145,7 +207,9 @@ _COMPARISON_SWAP_TABLE = {
 
 
 class UnaryOperator(Operator):
-    pass
+    """
+    Base class for all unary operators.
+    """
 
 
 class NotOperator(UnaryOperator, enum.Enum):

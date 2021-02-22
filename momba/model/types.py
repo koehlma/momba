@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -129,8 +130,8 @@ class BoundedType(NumericType):
 
     def validate_in(self, scope: context.Scope) -> None:
         if self.lower_bound is not None:
-            if not scope.is_constant(self.lower_bound):
-                raise InvalidBoundError("`lower_bound` has to be a constant")
+            # if not scope.is_constant(self.lower_bound):
+            #     raise InvalidBoundError("`lower_bound` has to be a constant")
             lower_bound_type = scope.get_type(self.lower_bound)
             if not self.base.is_assignable_from(lower_bound_type):
                 raise InvalidBoundError(
@@ -138,8 +139,8 @@ class BoundedType(NumericType):
                     f"assignable to base-type {self.base}"
                 )
         if self.upper_bound is not None:
-            if not scope.is_constant(self.upper_bound):
-                raise InvalidBoundError("`upper_bound` has to be a constant")
+            # if not scope.is_constant(self.upper_bound):
+            #     raise InvalidBoundError("`upper_bound` has to be a constant")
             upper_bound_type = scope.get_type(self.upper_bound)
             if not self.base.is_assignable_from(upper_bound_type):
                 raise InvalidBoundError(

@@ -1,5 +1,5 @@
-MOML Language
-=============
+MOML
+====
 
 The *Momba Modeling Language* (MOML) is **a model description language** based on the `JANI specification <http://www.jani-spec.org/>`_.
 In comparison to JANI, MOML is less verbose and thus easier to read and write.
@@ -9,6 +9,13 @@ If you, however, want explicit control over every aspect of your model, give MOM
 
 Momba comes with a converter to convert between MOML and JANI.
 Hence, you can use your MOML model with any tool supporting the JANI specification such as `The Modest Toolset <http://www.modestchecker.net/>`_ and `EPMC <https://github.com/ISCAS-PMC/ePMC>`_.
+
+
+```{eval-rst}
+.. autoclass:: momba.moml.expr
+    :members:
+    :member-order: bysource
+```
 
 
 .. code-block:: moml

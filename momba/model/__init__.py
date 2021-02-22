@@ -1,16 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
-
-"""
-Data-structures for the representation of quantitative models.
-
-Automata and automata networks are mutable. This is an intentional design
-choice. The validity of the model is partly assured during construction,
-for instance, a location can only be added if the invariant is a boolean
-expression in the scope of the automaton. As usual, if an algorithm works
-on a model, e.g., analyzing it, the model must not be modified.
-"""
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -38,7 +29,7 @@ from .automata import (
 
 from .context import (
     ModelType,
-    Declaration,
+    IdentifierDeclaration,
     VariableDeclaration,
     ConstantDeclaration,
     PropertyDefinition,
@@ -48,7 +39,9 @@ from .context import (
 
 from .distributions import DistributionType
 
-from .expressions import Expression
+from .expressions import Expression, ensure_expr
+
+from .functions import FunctionDefinition
 
 from .networks import Link, Network
 

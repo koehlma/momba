@@ -1,35 +1,67 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
 import dataclasses as d
 import typing as t
 
+import abc
 import enum
 
-from . import actions, errors, functions, expressions, properties, types
+from . import actions, errors, functions, expressions, types
 
 from .automata import Automaton
 from .networks import Network
 
 
 class ModelType(enum.Enum):
-    """ Type of the model. """
+    """
+    An enum representing different *model types*.
+
+    Attributes
+    ----------
+    full_name: str
+        The full human-readable name of the model type.
+    """
 
     LTS = "Labeled Transition System"
+    """ Labeled Transition System """
+
     DTMC = "Discrete-Time Markov Chain"
+    """ Discrete-Time Markov Chain """
+
     CTMC = "Continuous-Time Markov Chain"
+    """ Continuous-Time Markov Chain """
+
     MDP = "Markov Decision Process"
+    """ Markov Decision Process """
+
     CTMDP = "Continuous-Time Markov Decision Process"
+    """ Continuous-Time Markov Decision Process """
+
     MA = "Markov Automaton"
+    """ Markov Automaton """
+
     TA = "Timed Automaton"
+    """ Timed Automaton """
+
     PTA = "Probabilistic Timed Automaton"
+    """ Probabilistic Timed Automaton """
+
     STA = "Stochastic Timed Automaton"
+    """ Stochastic Timed Automaton """
+
     HA = "Hybrid Automaton"
-    PHA = "Probabilistic Timed Automaton"
+    """ Hybrid Automaton """
+
+    PHA = "Probabilistic Hybrid Automaton"
+    """ Probabilistic Hybrid Automaton """
+
     SHA = "Stochastic Hybrid Automaton"
+    """ Stochastic Hybrid Automaton """
 
     full_name: str
 
@@ -37,15 +69,23 @@ class ModelType(enum.Enum):
         self.full_name = full_name
 
     @property
-    def is_timed(self) -> bool:
-        return self in _TIMED_MODEL_TYPES
+    def uses_clocks(self) -> bool:
+        """
+        Returns :obj:`True` if and only if the respective models use real-value clocks.
+        """
+        return self in _CLOCK_TYPES
 
     @property
-    def is_discrete_time(self) -> bool:
-        return self in _DISCRETE_TIME_TYPES
+    def is_untimed(self) -> bool:
+        """
+        Returns :obj:`True` if and only if the model type is *not timed*.
+
+        Untimed model types are :code:`LTS`, :code:`DTMC`, and :code:`MDP`.
+        """
+        return self in _UNTIMED_TYPES
 
 
-_TIMED_MODEL_TYPES = {
+_CLOCK_TYPES = {
     ModelType.TA,
     ModelType.PTA,
     ModelType.STA,
@@ -54,104 +94,167 @@ _TIMED_MODEL_TYPES = {
     ModelType.SHA,
 }
 
-_DISCRETE_TIME_TYPES = {ModelType.MDP, ModelType.LTS, ModelType.DTMC}
+_UNTIMED_TYPES = {ModelType.MDP, ModelType.LTS, ModelType.DTMC}
 
 
-Typed = t.Union[expressions.Expression]
-
-
-# XXX: this class should be abstract, however, then it would not type-check
-# https://github.com/python/mypy/issues/5374
 @d.dataclass(frozen=True)
-class Declaration:
+class IdentifierDeclaration(abc.ABC):
+    """
+    Represents a declaration of an identifier.
+
+    Attributes
+    ----------
+    identifier:
+        The declared identifier.
+    typ:
+        The type of the identifier.
+    comment:
+        An additional optional comment for the declaration.
+    """
+
     identifier: str
     typ: types.Type
 
     comment: t.Optional[str] = None
 
-    # XXX: this method shall be implemented by all subclasses
+    @abc.abstractmethod
     def validate(self, scope: Scope) -> None:
-        raise NotImplementedError()
+        """
+        Validates that the declaration is valid in the given scope.
 
-    def is_constant_in(self, scope: Scope) -> bool:
-        return False
+        Raises :class:`~errors.ModelingError` if the declaration is invalid.
+        """
+        raise NotImplementedError()
 
 
 @d.dataclass(frozen=True)
-class VariableDeclaration(Declaration):
+class VariableDeclaration(IdentifierDeclaration):
+    """
+    Represents a *variable declaration*.
+
+    Attributes
+    ----------
+    is_transient:
+        Optional boolean flag indicating whether the variable is *transient*.
+    initial_value:
+        Optional :class:`~momba.model.Expression` providing an initial value for the variable.
+    """
+
     is_transient: t.Optional[bool] = None
     initial_value: t.Optional[expressions.Expression] = None
+
+    def __post_init__(self) -> None:
+        if self.is_transient and self.initial_value is None:
+            raise errors.ModelingError(
+                "transient variables must have an initial value", self
+            )
 
     def validate(self, scope: Scope) -> None:
         if self.initial_value is not None:
             value_type = scope.get_type(self.initial_value)
             if not self.typ.is_assignable_from(value_type):
-                raise errors.InvalidTypeError(
+                raise errors.ModelingError(
                     f"type of initial value {value_type} is not "
-                    f"assignable to variable type {self.typ}"
+                    f"assignable to variable type {self.typ}",
+                    self,
                 )
-            if not self.initial_value.is_constant_in(scope):
-                raise errors.NotAConstantError(
-                    f"initial value {self.initial_value} is required to be a constant"
-                )
-        # FIXME: check whether wether an initial value is provided if the
-        # variable is transient and not provided via value passing
 
 
 @d.dataclass(frozen=True)
-class ConstantDeclaration(Declaration):
+class ConstantDeclaration(IdentifierDeclaration):
+    """
+    Represents a *constant declaration*.
+
+    Attributes
+    ----------
+    value:
+        Optional :class:`~momba.model.Expression` specifying the value of the constant.
+    """
+
     value: t.Optional[expressions.Expression] = None
 
     @property
     def is_parameter(self) -> bool:
+        """
+        Returns :obj:`True` if and only if the constant is a *parameter*.
+
+        Parameters are constants without a :attr:`value`.
+        """
         return self.value is None
 
     def validate(self, scope: Scope) -> None:
         if self.value is not None:
             value_type = scope.get_type(self.value)
-            if not self.value.is_constant_in(scope):
-                raise errors.NotAConstantError(
-                    f"value {self.value} of constant declaration is not a constant"
-                )
             if not self.typ.is_assignable_from(value_type):
-                raise errors.InvalidTypeError(
+                raise errors.ModelingError(
                     f"type of constant value {value_type} is not "
                     f"assignable to constant type {self.typ}"
                 )
 
-    def is_constant_in(self, scope: Scope) -> bool:
-        return True
-
 
 @d.dataclass(frozen=True)
 class PropertyDefinition:
+    """
+    Represents a *property definition*.
+
+    Attributes
+    ----------
+    name:
+        The name of the property.
+    expression:
+        An :class:`~momba.model.Expression` defining the property.
+    comment:
+        An optional comment describing the property.
+    """
+
     name: str
-    prop: properties.Property
+    expression: expressions.Expression
 
     comment: t.Optional[str] = None
 
 
 class Scope:
+    """
+    Represents a *scope*.
+
+    Attributes
+    ----------
+    ctx:
+        The modeling context associated with the scope.
+    parent:
+        The parent scope if it exists (:obj:`None` if there is no parent).
+    """
+
     ctx: Context
     parent: t.Optional[Scope]
 
-    _declarations: t.Dict[str, Declaration]
+    _declarations: t.Dict[str, IdentifierDeclaration]
     _functions: t.Dict[str, functions.FunctionDefinition]
-    _cache: t.Dict[Typed, types.Type]
+
+    _type_cache: t.Dict[expressions.Expression, types.Type]
 
     def __init__(self, ctx: Context, parent: t.Optional[Scope] = None):
         self.ctx = ctx
         self.parent = parent
         self._declarations = {}
         self._functions = {}
-        self._cache = {}
+        self._type_cache = {}
+
+    def __repr__(self) -> str:
+        return f"<Scope parent={self.parent} at 0x{id(self):x}>"
 
     @property
-    def declarations(self) -> t.AbstractSet[Declaration]:
+    def declarations(self) -> t.AbstractSet[IdentifierDeclaration]:
+        """
+        Variable and constant declarations of the scope.
+        """
         return frozenset(self._declarations.values())
 
     @property
     def variable_declarations(self) -> t.AbstractSet[VariableDeclaration]:
+        """
+        Variable declarations of the scope.
+        """
         return frozenset(
             declaration
             for declaration in self._declarations.values()
@@ -160,6 +263,9 @@ class Scope:
 
     @property
     def constant_declarations(self) -> t.AbstractSet[ConstantDeclaration]:
+        """
+        Constant declarations of the scope.
+        """
         return frozenset(
             declaration
             for declaration in self._declarations.values()
@@ -169,7 +275,7 @@ class Scope:
     @property
     def clock_declarations(self) -> t.AbstractSet[VariableDeclaration]:
         """
-        Returns the set of declarations for clock variables.
+        Variable declarations of clock variables of the scope.
         """
         # FIXME: this does not return declarations with a bounded CLOCK type
         return frozenset(
@@ -182,32 +288,44 @@ class Scope:
         )
 
     def create_child_scope(self) -> Scope:
+        """
+        Creates a child scope.
+        """
         return Scope(self.ctx, parent=self)
 
-    def get_type(self, typed: Typed) -> types.Type:
-        if typed not in self._cache:
-            inferred_type = typed.infer_type(self)
+    def get_type(self, expr: expressions.Expression) -> types.Type:
+        """
+        Returns the (inferred) type of the given expression in the scope.
+        """
+        if expr not in self._type_cache:
+            inferred_type = expr.infer_type(self)
             inferred_type.validate_in(self)
-            self._cache[typed] = inferred_type
-        return self._cache[typed]
+            self._type_cache[expr] = inferred_type
+        return self._type_cache[expr]
 
-    def get_function(self, identifier: str) -> functions.FunctionDefinition:
+    def get_function(self, name: str) -> functions.FunctionDefinition:
+        """
+        Retrieves a :class:`FunctionDefinition` by its name.
+
+        Raises :class:`~errors.NotFoundError` if no such definition exists.
+        """
         try:
-            return self._functions[identifier]
+            return self._functions[name]
         except KeyError:
             if self.parent is None:
-                raise errors.UnboundIdentifierError(
-                    f"no function with name {identifier} found"
-                )
-            return self.parent.get_function(identifier)
-
-    def is_constant(self, expression: expressions.Expression) -> bool:
-        return expression.is_constant_in(self)
+                raise errors.NotFoundError(f"no function with name {name} found")
+            return self.parent.get_function(name)
 
     def is_local(self, identifier: str) -> bool:
+        """
+        Checks whether the identifier is locally declared in the scope.
+        """
         return identifier in self._declarations
 
     def is_declared(self, identifier: str) -> bool:
+        """
+        Checks whether the identifier is declared in the scope.
+        """
         if identifier in self._declarations:
             return True
         if self.parent is not None:
@@ -215,28 +333,51 @@ class Scope:
         return False
 
     def get_scope(self, identifier: str) -> Scope:
+        """
+        Retrieves the scope in which the given identifier is declared.
+
+        Raises :class:`~errors.NotFoundError` if no such identifier is declared.
+        """
         if identifier in self._declarations:
             return self
         else:
-            raise errors.UnboundIdentifierError(
-                f"identifier `{identifier}` is unbound in scope {self}"
-            )
+            if self.parent is None:
+                raise errors.NotFoundError(
+                    f"identifier {identifier!r} is unbound in scope {self!r}"
+                )
             return self.parent.get_scope(identifier)
 
-    def lookup(self, identifier: str) -> Declaration:
+    def lookup(self, identifier: str) -> IdentifierDeclaration:
+        """
+        Retrieves the declaration for the given identifier.
+
+        Raises :class:`~errors.NotFoundError` if no such identifier is declared.
+        """
         try:
             return self._declarations[identifier]
         except KeyError:
             if self.parent is None:
-                raise errors.UnboundIdentifierError(
-                    f"identifier `{identifier}` is unbound in scope {self}"
+                raise errors.NotFoundError(
+                    f"identifier {identifier!r} is unbound in scope {self!r}"
                 )
             return self.parent.lookup(identifier)
 
-    def add_declaration(self, declaration: Declaration, validate: bool = True) -> None:
+    def add_declaration(
+        self, declaration: IdentifierDeclaration, *, validate: bool = True
+    ) -> None:
+        """
+        Adds an identifier declaration to the scope.
+
+        The flag `validate` specifies whether the declaration should
+        be validated within the scope before adding it. In case
+        validation fails, a :class:`~errors.ModelingError` is raised.
+
+        Raises :class:`~errors.ModelingError` in case the identifier
+        has already been declared.
+        """
         if declaration.identifier in self._declarations:
             raise errors.InvalidDeclarationError(
-                f"identifier `{declaration.identifier}` has already been declared"
+                f"identifier {declaration.identifier!r} has already been declared"
             )
         if validate:
             declaration.validate(self)
@@ -251,6 +392,17 @@ class Scope:
         initial_value: t.Optional[expressions.ValueOrExpression] = None,
         comment: t.Optional[str] = None,
     ) -> None:
+        """
+        Declares a variable within the scope.
+
+        The parameters are passed to :class:`VariableDeclaration` with
+        the exception of `initial_value`. When provided with a value
+        which is not an expressions, this function implicitly converts
+        the provided value into an expression using :func:`ensure_expr`.
+
+        Raises :class:`~errors.ModelingError` in case the identifier
+        has already been declared.
+        """
         value = None
         if initial_value is not None:
             value = expressions.ensure_expr(initial_value)
@@ -272,6 +424,17 @@ class Scope:
         value: t.Optional[expressions.ValueOrExpression] = None,
         comment: t.Optional[str] = None,
     ) -> None:
+        """
+        Declares a constant within the scope.
+
+        The parameters are passed to :class:`ConstantDeclaration` with
+        the exception of `value`. When provided with a value which is
+        not an expressions, this function implicitly converts the
+        provided value into an expression using :func:`ensure_expr`.
+
+        Raises :class:`~errors.ModelingError` in case the identifier
+        has already been declared.
+        """
         if value is None:
             self.add_declaration(
                 ConstantDeclaration(identifier, typ, comment=comment, value=None)
@@ -293,6 +456,16 @@ class Scope:
         returns: types.Type,
         body: expressions.Expression,
     ) -> functions.FunctionDefinition:
+        """
+        Defines a function within the scope.
+
+        The parameters are passed to :class:`FunctionDefinition`.
+
+        Raises :class:`~errors.ModelingError` in case an identically
+        named function already exists.
+        """
+        if name in self._functions:
+            raise errors.ModelingError(f"a function named {name!r} already exists")
         definition = functions.FunctionDefinition(
             name, tuple(parameters), returns, body
         )
@@ -302,22 +475,13 @@ class Scope:
 
 class Context:
     """
-    Represents a modeling context.
-
-    Parameters:
-        model_type: The model type to use for the context.
+    Represents a *modeling context*.
 
     Attributes:
         model_type:
-            The type of the model, e.g., SHA, PTA or MDP.
+            The :class:`ModelType` of the modeling context.
         global_scope:
-            The scope for global variables and constants.
-        actions:
-            A set of actions usable in the context.
-        networks:
-            Automata networks defined in the modeling context.
-        properties:
-            Properties defined in the modeling context.
+            The global :class:`Scope` of the modeling context.
     """
 
     model_type: ModelType
@@ -331,7 +495,7 @@ class Context:
 
     _metadata: t.Dict[str, str]
 
-    def __init__(self, model_type: ModelType = ModelType.SHA) -> None:
+    def __init__(self, model_type) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
         self._automata = set()
@@ -340,74 +504,148 @@ class Context:
         self._named_properties = {}
         self._metadata = {}
 
+    def __repr__(self) -> str:
+        return f"<Context model_type={self.model_type} at 0x{id(self):x}>"
+
     @property
     def automata(self) -> t.AbstractSet[Automaton]:
+        """
+        The set of automata defined on the modeling context.
+        """
         return self._automata
 
     @property
     def networks(self) -> t.AbstractSet[Network]:
+        """
+        The set of networks defined on the modeling context.
+        """
         return self._networks
 
     @property
     def metadata(self) -> t.Mapping[str, str]:
+        """
+        Additional metadata associated with the modeling
+        context (e.g., author information).
+        """
         return self._metadata
 
     @property
     def action_types(self) -> t.Mapping[str, actions.ActionType]:
+        """
+        The action types defined on the modeling context.
+        """
         return self._action_types
 
     @property
-    def named_properties(self) -> t.Mapping[str, PropertyDefinition]:
+    def properties(self) -> t.Mapping[str, PropertyDefinition]:
+        """
+        The properties defined on the modeling context.
+        """
         return self._named_properties
 
     def update_metadata(self, metadata: t.Mapping[str, str]) -> None:
+        """
+        Updates the metadata with the provided mapping.
+        """
         self._metadata.update(metadata)
 
     def get_automaton_by_name(self, name: str) -> Automaton:
+        """
+        Retrieves an automaton by its name.
+
+        Raises :class:`~errors.NotFoundError` if no such automaton exists.
+        """
         for automaton in self._automata:
             if automaton.name == name:
                 return automaton
-        raise Exception(f"there is no automaton with name {name}")
+        raise errors.NotFoundError(f"there exists no automaton named {name!r}")
 
     def get_network_by_name(self, name: str) -> Network:
+        """
+        Retrives a network by its name.
+
+        Raises :class:`~errors.NotFoundError` if no such network exists.
+        """
         for network in self._networks:
             if network.name == name:
                 return network
-        raise Exception("there is no network with name")
+        raise errors.NotFoundError(f"there exists no network named {name!r}")
 
-    def get_property_by_name(self, name: str) -> properties.Property:
-        return self._named_properties[name].prop
+    def get_property_definition_by_name(self, name: str) -> PropertyDefinition:
+        """
+        Retrieves a property definition by its name.
+
+        Raises :class:`~errors.NotFoundError` if no
+        such property definition exists.
+        """
+        try:
+            return self._named_properties[name]
+        except KeyError:
+            raise errors.NotFoundError(
+                f"there exists no property definition named {name!r}"
+            )
 
     def get_action_type_by_name(self, name: str) -> actions.ActionType:
-        return self._action_types[name]
+        """
+        Retrives an action type by its name.
 
-    def add_action_type(self, action_type: actions.ActionType) -> None:
-        if action_type.name in self._action_types:
-            assert action_type is self._action_types[action_type.name]
-        self._action_types[action_type.name] = action_type
+        Raises :class:`~errors.NotFoundError` if no such action type exists.
+        """
+        try:
+            return self._action_types[name]
+        except KeyError:
+            raise errors.NotFoundError(f"there exists no action type named {name!r}")
+
+    def _add_action_type(self, action_type: actions.ActionType) -> None:
+        """
+        Adds an action type to the modeling context.
+
+        Raises :class:`~errors.ModelingError` if an identically
+        named action type already exists.
+        """
+        if action_type.label in self._action_types:
+            raise errors.ModelingError(
+                f"an action type with name {action_type.label!r} already exists"
+            )
+        self._action_types[action_type.label] = action_type
 
     def create_action_type(
         self, name: str, *, parameters: t.Sequence[actions.ActionParameter] = ()
     ) -> actions.ActionType:
+        """
+        Creates a new action type with the given name and parameters.
+
+        Raises :class:`~errors.ModelingError` if an identically
+        named action type already exists.
+        """
         if name in self._action_types:
-            raise Exception(f"action with name {name!r} already exists")
+            raise errors.ModelingError(f"action type with name {name!r} already exists")
         action_type = actions.ActionType(name, tuple(parameters))
-        self.add_action_type(action_type)
+        self._add_action_type(action_type)
         return action_type
 
     def create_automaton(self, *, name: t.Optional[str] = None) -> Automaton:
+        """
+        Creates an automaton with the given optional name and returns it.
+        """
         automaton = Automaton(self, name=name)
         self._automata.add(automaton)
         return automaton
 
     def create_network(self, *, name: t.Optional[str] = None) -> Network:
+        """
+        Creates a network with the given optional name and returns it.
+        """
         network = Network(self, name=name)
         self._networks.add(network)
         return network
 
     def define_property(
-        self, name: str, prop: properties.Property
+        self, name: str, expression: expressions.Expression
     ) -> PropertyDefinition:
-        definition = PropertyDefinition(name, prop)
+        """
+        Defines a property on the modeling context.
+        """
+        definition = PropertyDefinition(name, expression)
         self._named_properties[name] = definition
         return definition

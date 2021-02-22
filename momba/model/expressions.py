@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -21,6 +22,10 @@ if t.TYPE_CHECKING:
 
 
 class Expression(abc.ABC):
+    """
+    Abstract base class for expressions.
+    """
+
     @abc.abstractmethod
     def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
@@ -33,33 +38,38 @@ class Expression(abc.ABC):
     @property
     @abc.abstractmethod
     def children(self) -> t.Sequence[Expression]:
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def is_constant_in(self, scope: context.Scope) -> bool:
         """
-        Returns `True` only if the expression has a constant value in the given scope.
-
-        Arguments:
-            scope: The scope to use.
+        The children of the expression.
         """
         raise NotImplementedError()
 
     def traverse(self) -> t.Iterator[Expression]:
+        """
+        Returns an iterator over the subexpressions.
+        """
         yield self
         for child in self.children:
             yield from child.traverse()
 
     @property
     def subexpressions(self) -> t.AbstractSet[Expression]:
+        """
+        A set of subexpressions.
+        """
         return frozenset(self.traverse())
 
     @property
     def is_sampling_free(self) -> bool:
+        """
+        Returns whether the expression is *sampling-free*.
+        """
         return all(not isinstance(e, Sample) for e in self.traverse())
 
     @property
     def used_names(self) -> t.AbstractSet[Name]:
+        """
+        Returns a set of *name expressions* occuring in the expression.
+        """
         return frozenset(child for child in self.traverse() if isinstance(child, Name))
 
 
@@ -76,6 +86,15 @@ class Constant(_Leaf, abc.ABC):
 
 @d.dataclass(frozen=True)
 class BooleanConstant(Constant):
+    """
+    A boolean constant.
+
+    Attributes
+    ----------
+    boolean:
+        The value of the boolean constant.
+    """
+
     boolean: bool
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -83,14 +102,28 @@ class BooleanConstant(Constant):
 
 
 class NumericConstant(Constant, abc.ABC):
+    """
+    Abstract base class for numeric constants.
+    """
+
     @property
     @abc.abstractmethod
     def as_float(self) -> float:
+        """
+        The numeric constant as a floating-point number.
+
+        Note that this may result in a loss of precision.
+        """
         raise NotImplementedError()
 
     @property
     @abc.abstractmethod
     def as_fraction(self) -> fractions.Fraction:
+        """
+        The numeric constant as a fraction.
+
+        Note that this may result in a loss of precision
+        """
         raise NotImplementedError()
 
 
@@ -100,6 +133,15 @@ FALSE: Expression = BooleanConstant(False)
 
 @d.dataclass(frozen=True)
 class IntegerConstant(NumericConstant):
+    """
+    An integer constant.
+
+    Attributes
+    ----------
+    integer:
+        The value of the integer constant.
+    """
+
     integer: int
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -121,8 +163,22 @@ _NAMED_REAL_MAP: t.Dict[str, NamedReal] = {}
 
 
 class NamedReal(enum.Enum):
+    """
+    An enum of named reals.
+
+    Attributes
+    ----------
+    symbol:
+        The mathematical symbol of the real.
+    float_value:
+        A floating-point approximation of the real.
+    """
+
     PI = "π", math.pi
+    """ The number π. """
+
     E = "e", math.e
+    """ The number e. """
 
     symbol: str
     float_value: float
@@ -138,6 +194,15 @@ Real = t.Union[NamedReal, fractions.Fraction]
 
 @d.dataclass(frozen=True)
 class RealConstant(NumericConstant):
+    """
+    A real constant.
+
+    Attributes
+    ----------
+    real:
+        The real (either :class:`NamedReal` or a fraction).
+    """
+
     real: Real
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -165,10 +230,19 @@ class RealConstant(NumericConstant):
 
 @d.dataclass(frozen=True)
 class Name(_Leaf):
+    """
+    A name expression.
+
+    Attributes
+    ----------
+    identifier:
+        The identifier.
+    """
+
     identifier: str
 
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return scope.lookup(self.identifier).is_constant_in(scope)
+        return False
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return scope.lookup(self.identifier).typ
@@ -177,10 +251,21 @@ class Name(_Leaf):
         return self.infer_type(scope)
 
 
-# XXX: this class should be abstract, however, then it would not type-check
-# https://github.com/python/mypy/issues/5374
 @d.dataclass(frozen=True)
-class BinaryExpression(Expression):
+class BinaryExpression(Expression, abc.ABC):
+    """
+    Abstract base class for binary expressions.
+
+    Attributes
+    ----------
+    operator:
+        The binary operator (:class:`~momba.model.operators.BinaryOperator`).
+    left:
+        The left operand.
+    right:
+        The right operand.
+    """
+
     operator: operators.BinaryOperator
     left: Expression
     right: Expression
@@ -192,12 +277,17 @@ class BinaryExpression(Expression):
     def is_constant_in(self, scope: context.Scope) -> bool:
         return self.left.is_constant_in(scope) and self.right.is_constant_in(scope)
 
-    # XXX: this method shall be implemented by all subclasses
-    def infer_type(self, scope: context.Scope) -> types.Type:
-        raise NotImplementedError()
-
 
 class Boolean(BinaryExpression):
+    """
+    A boolean binary expression.
+
+    Attributes
+    ----------
+    operator:
+        The boolean operator (:class:`~momba.model.operators.BooleanOperator`).
+    """
+
     operator: operators.BooleanOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -437,7 +527,8 @@ class ArrayAccess(Expression):
         return self.array, self.index
 
     def is_constant_in(self, scope: context.Scope) -> bool:
-        return self.array.is_constant_in(scope) and self.index.is_constant_in(scope)
+        # return self.array.is_constant_in(scope) and self.index.is_constant_in(scope)
+        return False
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         array_type = scope.get_type(self.array)

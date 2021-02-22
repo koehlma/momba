@@ -1,20 +1,16 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.unisaarland.de>
-
-"""
-Momba is a Python library for *quantitative models*.
-
-It's core modeling formalism are *stochastic hybrid automata* (SHA).
-"""
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
-from . import model
+from . import analysis, engine, jani, model, moml
 
 from .metadata import version
+
 
 __version__ = version
 
 
-__all__ = ["model"]
+__all__ = ["analysis", "engine", "jani", "model", "moml"]

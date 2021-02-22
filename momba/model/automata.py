@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -22,11 +23,29 @@ Annotation = t.Mapping[str, t.Union[int, str, float]]
 
 @d.dataclass(frozen=True, eq=False)
 class Instance:
+    """
+    Represents an automaton instance.
+
+    Attributes
+    ----------
+    automaton:
+        The instaniated automaton.
+    arguments:
+        The arguments passed to the parameters of the automaton.
+    input_enabled:
+        The set of action types for which the instance is input enabled.
+    comment:
+        An optional comment describing the instance.
+    """
+
     automaton: Automaton
-
     arguments: t.Tuple[expressions.Expression, ...] = ()
+    input_enable: t.FrozenSet[actions.ActionType] = frozenset()
+    comment: t.Optional[str] = None
 
-    input_enable: t.FrozenSet[str] = frozenset()
+    def __post_init__(self) -> None:
+        if len(self.arguments) != len(self.automaton.parameters):
+            raise errors.ModelingError("invalid number of arguments for automaton")
 
 
 ProgressInvariant = t.Optional[expressions.Expression]
@@ -36,16 +55,19 @@ TransientValues = t.AbstractSet["Assignment"]
 @d.dataclass(frozen=True, eq=False)
 class Location:
     """
-    Represents a location of a SHA.
+    Represents a location of an automaton.
 
     Attributes:
         name:
-            The unique name of the location.
+            The optional name of the location.
         progress_invariant:
-            The *time-progression invariant* of the location. Has to be a boolean
-            expression in the scope the location is used.
+            An optional expression `progress_invariant` specifies the invariant
+            subject to which the time may progress in the location. As per the
+            JANI specification, the invariant is only allowed for models using
+            real-valued clocks (see :class:`~momba.model.ModelType`).
         transient_values:
-            Assignments for transient variables.
+            A set of assignments for transient variables. These assignments
+            define the values of the transient variables when in the location.
     """
 
     name: t.Optional[str] = None
@@ -53,9 +75,18 @@ class Location:
     progress_invariant: ProgressInvariant = None
     transient_values: TransientValues = frozenset()
 
-    def validate(self, scope: context.Scope) -> None:
+    def validate(self, automaton: Automaton) -> None:
+        """
+        Validates the location for the given automaton.
+
+        Raises :class:`~errors.ModelingError` if the location is invalid
+        to add to the automaton according to the JANI specification. For
+        instance, if the location has a `progress_invariant` but the model
+        type does not support clocks.
+        """
+        scope = automaton.scope
         if self.progress_invariant is not None:
-            if not scope.ctx.model_type.is_timed:
+            if not scope.ctx.model_type.uses_clocks:
                 raise errors.ModelingError(
                     f"location invariant is not allowed for model type {scope.ctx.model_type}"
                 )
@@ -64,29 +95,44 @@ class Location:
                     f"type of invariant in location {self} is not `types.BOOL`"
                 )
         if self.transient_values:
-            # if not scope.ctx.model_type.is_timed:
-            #     raise errors.ModelingError(
-            #         f"transient values are not allowed for model type {scope.ctx.model_type}"
-            #     )
             if not are_compatible(self.transient_values):
                 raise errors.IncompatibleAssignmentsError(
-                    "incompatible assignments for transient values"
+                    f"incompatible assignments for transient values in location {self}"
                 )
             for assignment in self.transient_values:
                 if assignment.index != 0:
                     raise errors.ModelingError(
-                        "index of assignments for transient values must be zero"
+                        f"index of assignment {assignment} to transient variable is non-zero"
                     )
                 assignment.validate(scope)
 
 
 @d.dataclass(frozen=True)
 class Assignment:
+    """
+    Represents an assignment.
+
+    Attributes
+    ----------
+    target:
+        The target of the assignment.
+    value:
+        The value to assign.
+    index:
+        The index of the assignment.
+    """
+
     target: expressions.Expression
     value: expressions.Expression
     index: int = 0
 
     def validate(self, scope: context.Scope) -> None:
+        """
+        Validates the assignment in the given scope.
+
+        Raises :class:`~errors.ModelingError` if the target is not
+        assignable from the value type.
+        """
         target_type = self.target.infer_target_type(scope)
         value_type = scope.get_type(self.value)
         if not target_type.is_assignable_from(value_type):
@@ -96,6 +142,10 @@ class Assignment:
 
 
 def are_compatible(assignments: t.Iterable[Assignment]) -> bool:
+    """
+    Checks whether the given assignments are compatible according
+    to the JANI specification.
+    """
     groups: t.DefaultDict[int, t.Set[expressions.Expression]] = collections.defaultdict(
         set
     )
@@ -109,11 +159,29 @@ def are_compatible(assignments: t.Iterable[Assignment]) -> bool:
 
 @d.dataclass(frozen=True)
 class Destination:
+    """
+    Represents a destination of an edge.
+
+    Attributes
+    ----------
+    location:
+        The target location of the destination.
+    probability:
+        An optional expression for the probability of the destination.
+    assignments:
+        A set of assignments to be executed when going to the destination.
+    """
+
     location: Location
     probability: t.Optional[expressions.Expression] = None
     assignments: t.FrozenSet[Assignment] = frozenset()
 
-    def validate(self, scope: context.Scope) -> None:
+    def _validate(self, automaton: Automaton, scope: context.Scope) -> None:
+        self.location.validate(automaton)
+        if self.location not in automaton.locations:
+            raise errors.ModelingError(
+                f"source location of edge {self} is not a location of the automaton {automaton}"
+            )
         if not are_compatible(self.assignments):
             raise errors.IncompatibleAssignmentsError(
                 f"assignments on edge {self} are not compatible"
@@ -127,6 +195,25 @@ class Destination:
 
 @d.dataclass(frozen=True)
 class Edge:
+    """
+    Represents an edge of an automaton.
+
+    Attributes
+    ----------
+    location:
+        The source location of the edge.
+    destinations:
+        The destinations of the edge.
+    action_pattern:
+        The optional action pattern of the edge.
+    guard:
+        The optional guard of the edge.
+    rate:
+        The optional rate of the edge.
+    annotation:
+        An optional annotation of the edge.
+    """
+
     location: Location
     destinations: t.AbstractSet[Destination]
     action_pattern: t.Optional[actions.ActionPattern] = None
@@ -135,12 +222,32 @@ class Edge:
     annotation: t.Optional[Annotation] = None
 
     def create_edge_scope(self, parent: context.Scope) -> context.Scope:
+        """
+        Creates an *edge scope* with the given parent scope.
+
+        .. warning::
+            Used for *value passing* an experimental Momba feature. Value
+            passing is not part of the official JANI specification.
+        """
         scope = parent.create_child_scope()
         if self.action_pattern is not None:
             self.action_pattern.declare_in(scope)
         return scope
 
-    def validate(self, scope: context.Scope) -> None:
+    def validate(self, automaton: Automaton) -> None:
+        """
+        Validates the edge for the given automaton.
+
+        Raises :class:`~errors.ModelingError` if the edge is invalid to add
+        to the automaton according to the JANI specification. For instance, if
+        source location is not a location of the automaton.
+        """
+        scope = automaton.scope
+        self.location.validate(automaton)
+        if self.location not in automaton.locations:
+            raise errors.ModelingError(
+                f"source location of edge {self} is not a location of the automaton {automaton}"
+            )
         if self.rate is not None and not scope.get_type(self.rate).is_numeric:
             raise errors.InvalidTypeError(f"type of rate on edge {self} is not numeric")
         edge_scope = self.create_edge_scope(scope)
@@ -149,10 +256,23 @@ class Edge:
                 f"type of guard on edge {self} is not `types.BOOL`"
             )
         for destination in self.destinations:
-            destination.validate(edge_scope)
+            destination._validate(automaton, edge_scope)
 
 
 class Automaton:
+    """
+    Represents an automaton.
+
+    Attributes
+    ----------
+    ctx:
+        The :class:`Context` associated with the automaton.
+    scope:
+        The local :class:`Scope` of the automaton.
+    name:
+        The optional name of the automaton.
+    """
+
     ctx: context.Context
     scope: context.Scope
 
@@ -180,42 +300,72 @@ class Automaton:
         self._outgoing_edges = collections.defaultdict(set)
 
     def __repr__(self) -> str:
-        return f"<Automaton @ 0x{id(self):X} name={self.name!r}>"
-
-    @property
-    def parameters(self) -> t.Sequence[str]:
-        return self._parameters
+        return f"<Automaton name={self.name!r} at 0x{id(self):x}>"
 
     @property
     def locations(self) -> t.AbstractSet[Location]:
+        """
+        The set of locations of the automaton.
+        """
         return self._locations
 
     @property
     def initial_locations(self) -> t.AbstractSet[Location]:
+        """
+        The set of initial locations of the automaton.
+        """
         return self._initial_locations
 
     @property
+    def edges(self) -> t.Sequence[Edge]:
+        """
+        The set of edges of the automaton.
+        """
+        return self._edges
+
+    @property
     def initial_restriction(self) -> t.Optional[expressions.Expression]:
+        """
+        An optional restriction to be satisfied by initial states.
+
+        This property can be set *only once* per automaton. The expression
+        has to be boolean.
+
+        Raises :class:`~errors.ModelingError` when set twice or to a
+        non-boolean expression.
+        """
         return self._initial_restriction
 
     @initial_restriction.setter
     def initial_restriction(self, initial_restriction: expressions.Expression) -> None:
         if self._initial_restriction is not None:
-            raise errors.InvalidOperationError(
-                "restriction of initial valuations has already been set"
+            raise errors.ModelingError(
+                "restriction of initial environment has already been set"
             )
         if self.scope.get_type(initial_restriction) != types.BOOL:
-            raise errors.InvalidTypeError(
+            raise errors.ModelingError(
                 "restriction of initial valuations must have type `types.BOOL`"
             )
         self._initial_restriction = initial_restriction
 
     @property
-    def edges(self) -> t.Sequence[Edge]:
-        return self._edges
+    def parameters(self) -> t.Sequence[str]:
+        """
+        The sequence of parameters of the automaton.
+        """
+        return self._parameters
 
     def add_location(self, location: Location, *, initial: bool = False) -> None:
-        location.validate(self.scope)
+        """
+        Adds a location to the automaton.
+
+        The flag `initial` specifies whether the location
+        is an initial location.
+
+        Raises :class:`~errors.ModelingError` when the location cannot be added
+        to the automaton. See the method :meth:`Location.validate` for details.
+        """
+        location.validate(self)
         self._locations.add(location)
         if initial:
             self._initial_locations.add(location)
@@ -229,27 +379,34 @@ class Automaton:
         initial: bool = False,
     ) -> Location:
         """
-        Adds a location to the automaton.
+        Creates a location with the given name and adds it to the automaton.
 
-        :param location: The :class:`Location` to add.
+        The optional expression `progress_invariant` specifies the invariant
+        subject to which the time may progress in the location. As per the
+        JANI specification, the invariant is only allowed for models using
+        real-valued clocks (see :class:`~momba.model.ModelType`).
+
+        The parameter `transient_values` should be a set of assignments for
+        transient variables. These assignments define the values of the
+        transient variables when in the location.
+
+        The flag `initial` specifies whether the location
+        is an initial location.
+
+        Raises the same exceptions as :meth:`add_location`.
         """
         location = Location(name, progress_invariant, transient_values)
         self.add_location(location, initial=initial)
         return location
 
-    def add_initial_location(self, location: Location) -> None:
-        self.add_location(location, initial=True)
-
     def add_edge(self, edge: Edge) -> None:
         """
         Adds an edge to the automaton.
+
+        Raises :class:`~errors.ModelingError` when the edge cannot be added
+        to the automaton. See the method :meth:`Edge.validate` for details.
         """
-        if edge.action_pattern is not None:
-            self.ctx.add_action_type(edge.action_pattern.action_type)
-        edge.validate(self.scope)
-        edge.location.validate(self.scope)
-        for destination in edge.destinations:
-            destination.location.validate(self.scope)
+        edge.validate(self)
         self._edges.append(edge)
         self._locations.add(edge.location)
         self._outgoing_edges[edge.location].add(edge)
@@ -268,9 +425,11 @@ class Automaton:
         annotation: t.Optional[Annotation] = None,
     ) -> None:
         """
-        Creates a new edge with the given parameters.
+        Creates an edge and adds it to the automaton.
 
-        See :class:`Edge` for more details.
+        The parameters are passed to :class:`Edge`.
+
+        Raises the same exceptions as :meth:`add_edge`.
         """
         edge = Edge(
             source,
@@ -304,6 +463,8 @@ class Automaton:
     ) -> None:
         """
         Declares a variable in the local scope of the automaton.
+
+        Passes the parameters to :meth:`Scope.declare_variable`.
         """
         self.scope.declare_variable(
             name, typ, is_transient=is_transient, initial_value=initial_value
@@ -317,7 +478,10 @@ class Automaton:
         default_value: t.Optional[expressions.Expression] = None,
     ) -> None:
         """
-        Declarse a parameter for the automaton.
+        Declarse a parameter of the automaton.
+
+        Passes the parameters to :meth:`Scope.declare_constant` where
+        `value` is `default_value`.
         """
         self.scope.declare_constant(name, typ, value=default_value)
         self._parameters.append(name)
@@ -325,15 +489,17 @@ class Automaton:
     def create_instance(
         self,
         *,
-        parameters: t.Sequence[expressions.Expression] = (),
+        arguments: t.Sequence[expressions.Expression] = (),
         input_enable: t.AbstractSet[str] = frozenset(),
+        comment: t.Optional[str] = None,
     ) -> Instance:
         """
         Creates an instance of the automaton for composition.
+
+        Passes the parameters to :class:`Instance`.
         """
-        assert len(parameters) == len(self.parameters)
         return Instance(
-            self, arguments=tuple(parameters), input_enable=frozenset(input_enable)
+            self, arguments=tuple(arguments), input_enable=frozenset(input_enable)
         )
 
 
@@ -348,6 +514,13 @@ def create_destination(
     probability: t.Optional[expressions.Expression] = None,
     assignments: Assignments = frozenset(),
 ) -> Destination:
+    """
+    Creates a destination with the given target location.
+
+    This is a convenience function for creating destinations where
+    assignments can be provied as a mapping. We recommend using it
+    instead of creating :class:`Destination` objects directly.
+    """
     if isinstance(assignments, t.Mapping):
         return Destination(
             location,

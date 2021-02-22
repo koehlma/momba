@@ -380,7 +380,7 @@ def _compute_global_variables(declarations: Declarations) -> _JSONObject:
 
 def _compute_action_types(network: model.Network) -> _JSONObject:
     return {
-        action_type.name: [
+        action_type.label: [
             _translate_type(parameter.typ) for parameter in action_type.parameters
         ]
         for action_type in network.ctx.action_types.values()
@@ -411,7 +411,7 @@ def _translate_action_pattern(
     else:
         return {
             "kind": "LABELED",
-            "label": action_pattern.action_type.name,
+            "label": action_pattern.action_type.label,
             "arguments": [
                 _translate_pattern_argument(argument, ctx)
                 for argument in action_pattern.arguments
@@ -670,13 +670,13 @@ def _translate_link(
     else:
         result = {
             "kind": "LABELED",
-            "action_type": link.result.action_type.name,
+            "action_type": link.result.action_type.label,
             "arguments": _translate_arguments(link.result.arguments),
         }
     vector: _JSONObject = {}
     for instance, pattern in link.vector.items():
         vector[instance_names[instance]] = {
-            "action_type": pattern.action_type.name,
+            "action_type": pattern.action_type.label,
             "arguments": _translate_arguments(pattern.arguments),
         }
 

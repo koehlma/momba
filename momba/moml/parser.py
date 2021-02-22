@@ -543,7 +543,7 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
                 raise stream.make_error("expected location body")
     return automaton.create_location(
         name,
-        progress_invariant=progress_invariant,
+        invariant=progress_invariant,
         transient_values=transient_values,
         initial=is_initial,
     )
@@ -695,7 +695,7 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                 stream.expect(lexer.TokenType.DEDENT)
             instance_map[name] = ctx.get_automaton_by_name(
                 automaton_name
-            ).create_instance(parameters=parameters, input_enable=input_enable)
+            ).create_instance(arguments=parameters, input_enable=input_enable)
         elif stream.accept("composition"):
             instances: t.List[model.Instance] = []
             instances.append(
@@ -773,7 +773,7 @@ def _parse_moml(stream: TokenStream, ctx: model.Context) -> model.Context:
             assert automaton.name not in automaton_map and automaton.name is not None
             automaton_map[automaton.name] = automaton
         elif stream.check("action"):
-            ctx.add_action_type(_parse_action_declaration(stream))
+            ctx._add_action_type(_parse_action_declaration(stream))
         elif stream.check("network"):
             _parse_network(stream, ctx)
         elif stream.check(lexer.TokenType.END_OF_FILE):

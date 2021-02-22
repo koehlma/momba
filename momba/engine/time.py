@@ -38,7 +38,7 @@ class DiscreteTime(TimeType):
 
     @staticmethod
     def compile(network: model.Network, translation: Translation) -> t.Any:
-        if not network.ctx.model_type.is_discrete_time:
+        if not network.ctx.model_type.is_untimed:
             raise InvalidModelType(
                 f"{network.ctx.model_type} is not a discrete time model type"
             )

@@ -599,7 +599,7 @@ def _dump_action_pattern(
         #         "identifiers": list(pattern.identifiers),
         #     }
         # else:
-        return pattern.action_type.name
+        return pattern.action_type.label
     return None
 
 
@@ -644,7 +644,7 @@ def _dump_metadata(model_ctx: model.Context) -> _JANIMap:
 
 
 def _dump_action_type(action_type: model.ActionType, ctx: JANIContext) -> _JANIMap:
-    jani_action: _JANIMap = {"name": action_type.name}
+    jani_action: _JANIMap = {"name": action_type.label}
     jani_parameters: t.List[_JANIMap] = []
     for parameter in action_type.parameters:
         ctx.require(ModelFeature.X_MOMBA_VALUE_PASSING)
@@ -669,8 +669,8 @@ def dump_structure(
     jani_metadata: t.Dict[str, str] = {}
     if properties is None:
         properties = {
-            definition.name: definition.prop
-            for definition in network.ctx.named_properties.values()
+            definition.name: definition.expression
+            for definition in network.ctx.properties.values()
         }
     if "name" in network.ctx.metadata:
         jani_metadata

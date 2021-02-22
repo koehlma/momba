@@ -97,8 +97,8 @@ class StormChecker(checkers.Checker):
             if properties is None and property_names is None:
                 named_properties.update(
                     {
-                        definition.name: definition.prop
-                        for definition in network.ctx.named_properties.values()
+                        definition.name: definition.expression
+                        for definition in network.ctx.properties.values()
                     }
                 )
             if property_names is not None:

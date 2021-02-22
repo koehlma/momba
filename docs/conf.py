@@ -97,9 +97,7 @@ html_theme = "furo"
 html_title = "Momba"
 
 html_static_path = ["_static"]
-html_css_files = [
-    "css/jupyter.css",
-]
+html_css_files = ["css/jupyter.css", "css/fix-source-link.css"]
 
 html_theme_options: t.Dict[str, t.Any] = {
     "light_logo": "images/logo_with_text.svg",

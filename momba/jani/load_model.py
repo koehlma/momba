@@ -10,7 +10,6 @@ import json
 import warnings
 
 from momba import model
-from ..errors import MombaError
 from momba.model import (
     functions,
     automata,
@@ -25,7 +24,7 @@ from momba.model import (
 from .dump_model import ModelFeature
 
 
-class JANIError(MombaError):
+class JANIError:
     """
     Indicates an error while loading a JANI string.
 
@@ -741,7 +740,7 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
         network.initial_restriction = initial_restriction
     if "actions" in jani_model:
         for jani_action in jani_model["actions"]:
-            network.ctx.add_action_type(_action(jani_action))
+            network.ctx._add_action_type(_action(jani_action))
     _load_functions(network.ctx.global_scope, jani_model.get("functions", ()))
     for jani_automaton in jani_model["automata"]:
         _check_fields(
@@ -780,10 +779,12 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
             )
             initial_restriction = _expression(jani_automaton["restrict-initial"]["exp"])
             automaton.initial_restriction = initial_restriction
+        for location in locations.values():
+            automaton.add_location(location)
         for jani_edge in jani_automaton["edges"]:
             automaton.add_edge(_edge(network.ctx, locations, jani_edge))
         for jani_location in jani_automaton["initial-locations"]:
-            automaton.add_initial_location(locations[jani_location])
+            automaton.add_location(locations[jani_location], initial=True)
     jani_system = jani_model["system"]
     instances: t.List[model.Instance] = []
     _check_fields(jani_system, required={"elements"}, optional={"syncs", "comment"})

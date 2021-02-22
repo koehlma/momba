@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2019-2021, Saarland University
+# Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -18,6 +19,17 @@ if t.TYPE_CHECKING:
 
 @d.dataclass(frozen=True, eq=False)
 class Link:
+    """
+    Represents a link of an automaton network.
+
+    Attributes
+    ----------
+    vector:
+        The synchronization vector.
+    result:
+        The resulting action pattern.
+    """
+
     vector: t.Mapping[Instance, ActionPattern]
     result: t.Optional[ActionPattern] = None
     condition: t.Optional[Expression] = None
@@ -30,9 +42,20 @@ class Link:
 
 
 class Network:
-    name: t.Optional[str]
+    """
+    Represents an automaton network.
+
+    Attributes
+    ----------
+    ctx:
+        The :class:`Context` associated with the network.
+    name:
+        The optional name of the network.
+    """
 
     ctx: context.Context
+
+    name: t.Optional[str]
 
     _initial_restriction: t.Optional[Expression]
 
@@ -48,14 +71,29 @@ class Network:
 
     @property
     def links(self) -> t.AbstractSet[Link]:
+        """
+        The set of links of the network.
+        """
         return self._links
 
     @property
     def instances(self) -> t.AbstractSet[Instance]:
+        """
+        The set of instances of the network.
+        """
         return self._instances
 
     @property
     def initial_restriction(self) -> t.Optional[Expression]:
+        """
+        An optional restriction to be satisfied by initial states.
+
+        This property can be set *only once* on a network. The expression
+        has to be boolean.
+
+        Raises :class:`~errors.ModelingError` when set twice or to a
+        non-boolean expression.
+        """
         return self._initial_restriction
 
     @initial_restriction.setter
@@ -71,6 +109,13 @@ class Network:
         self._initial_restriction = initial_restriction
 
     def add_instance(self, instance: Instance) -> None:
+        """
+        Adds an instance to the network.
+
+        The instance and network are required to be in the same
+        modeling context.
+        """
+        assert instance.automaton.ctx is self.ctx
         self._instances.add(instance)
 
     def create_link(
@@ -80,6 +125,16 @@ class Network:
         result: t.Optional[ActionPattern] = None,
         condition: t.Optional[Expression] = None
     ) -> Link:
+        """
+        Creates a synchronization link between automata instances.
+
+        The parameter `vector` is a mapping from the instances
+        participating in the synchronization to action patterns with
+        which they participate.
+
+        The parameter `result` is the action pattern resulting
+        from synchronizing.
+        """
         link = Link(vector, result=result, condition=condition)
         for instance in vector.keys():
             self.add_instance(instance)
