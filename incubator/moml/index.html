@@ -1,13 +1,13 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="MOML Grammar" href="grammar.html" /><link rel="prev" title="Value Passing" href="../value-passing.html" />
 
-    <meta name="generator" content="sphinx-3.4.3, furo 2020.12.30.beta24"/>
-        <title>MOML Language - </title>
-      <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
-    <link rel="stylesheet" href="../_static/pygments.css">
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
+    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+        <title>MOML Language - Momba</title>
+      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
     
 
 
@@ -36,20 +36,10 @@
   --color-code-foreground: #d0d0d0;
   
   }
-</style><link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/jupyter-cell.css" />
-    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script defer="defer" src="../_static/jquery.js"></script>
-    <script defer="defer" src="../_static/underscore.js"></script>
-    <script defer="defer" src="../_static/doctools.js"></script>
-    <script defer="defer" src="../_static/thebelab-helper.js"></script>
-    <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script defer="defer" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
-    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script defer="defer" type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+</style><link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/jupyter.css" />
+    <link rel="stylesheet" href="../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -98,7 +88,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand"></div></a>
+      <a href="../../index.html"><div class="brand">Momba</div></a>
     </div>
     <div class="header-right">
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
@@ -109,37 +99,51 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/logo_with_text.svg" alt="Logo"/>
+    <img class="sidebar-logo only-light" src="../../_static/images/logo_with_text.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
   </div>
   
-  <span class="sidebar-brand-text"></span>
   
-</a><form class="sidebar-search-container" method="get" action="../search.html">
+</a><form class="sidebar-search-container" method="get" action="../../search.html">
   <input class="sidebar-search" placeholder=Search name="q">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../guide/construction.html">Model Construction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/exploration.html">Model Exploration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/analysis.html">Model Analysis</a></li>
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/construction.html">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/exploration.html">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/analysis.html">Model Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/racetrack.html">Racetrack</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/racetrack.html">Racetrack</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../reference/model.html">Momba Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/engine.html">Exploration Engine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/jani.html">JANI Models</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/model.html">Momba Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/model.html#id1">Momba Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/engine.html">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/jani.html">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Feature Incubator</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../value-passing.html">Value Passing</a></li>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">MOML Language</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
 </ul>
 
 </div>
@@ -206,32 +210,48 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
 <div class="section" id="vs-code-support">
 <h2>VS Code Support<a class="headerlink" href="#vs-code-support" title="Permalink to this headline">¶</a></h2>
 <p>We provide a <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=koehlma.moml-language">VS Code extension for MOML</a>:</p>
-<img alt="../_images/vscode.jpg" src="../_images/vscode.jpg"/>
+<img alt="../../_images/vscode.jpg" src="../../_images/vscode.jpg"/>
 </div>
 </div>
 
       </article>
       <footer>
         
+    
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="grammar.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">MOML Grammar</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../value-passing.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Value Passing</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2020, Dependable Systems and Software Group, Saarland University
+              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
             |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
-            <a class="muted-link" href="../_sources/moml/index.rst.txt"
+            <a class="muted-link" href="../../_sources/incubator/moml/index.rst.txt"
                rel="nofollow">
               Show Source
             </a>
         </div>
         
+    <p style="padding: 0 0.75rem; margin-top: 0;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+
       </footer>
     </div>
     <aside class="toc-drawer">
@@ -260,5 +280,12 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
     </aside>
   </main>
 </div>
-  </body>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
 </html>

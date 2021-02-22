@@ -11,4 +11,5 @@ In case you want a particular feature stabilized, please [open an issue](https:/
 model
 engine
 jani
+analysis
 ```

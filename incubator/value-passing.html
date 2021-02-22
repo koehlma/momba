@@ -1,10 +1,10 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="MOML Language" href="moml/index.html" /><link rel="prev" title="Feature Incubator" href="index.html" />
 
-    <meta name="generator" content="sphinx-3.4.3, furo 2020.12.30.beta24"/>
-        <title>JANI Value Passing - </title>
+    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+        <title>Value Passing - Momba</title>
       <link rel="stylesheet" href="../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
     <link rel="stylesheet" href="../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
@@ -38,18 +38,8 @@
   }
 </style><link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/jupyter-cell.css" />
-    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=26485485040e7aaf717c13fd0188a5ad2c2deb60">
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script defer="defer" src="../_static/jquery.js"></script>
-    <script defer="defer" src="../_static/underscore.js"></script>
-    <script defer="defer" src="../_static/doctools.js"></script>
-    <script defer="defer" src="../_static/thebelab-helper.js"></script>
-    <script defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script defer="defer" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
-    <script async="async" defer="defer" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script defer="defer" type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <script defer src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></head>
+    <link rel="stylesheet" type="text/css" href="../_static/css/jupyter.css" />
+    <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -98,7 +88,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand"></div></a>
+      <a href="../index.html"><div class="brand">Momba</div></a>
     </div>
     <div class="header-right">
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
@@ -109,20 +99,20 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/logo_with_text.svg" alt="Logo"/>
+    <img class="sidebar-logo only-light" src="../_static/images/logo_with_text.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
   </div>
   
-  <span class="sidebar-brand-text"></span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html">
   <input class="sidebar-search" placeholder=Search name="q">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../guide/construction.html">Model Construction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/exploration.html">Model Exploration</a></li>
@@ -135,11 +125,25 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../reference/model.html">Momba Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/model.html#id1">Momba Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../reference/engine.html">Exploration Engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../reference/jani.html">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Feature Incubator</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Value Passing</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="moml/index.html">MOML Language</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="moml/grammar.html">MOML Grammar</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing/index.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
 </ul>
 
 </div>
@@ -154,10 +158,10 @@
         <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="jani-value-passing">
-<h1>JANI Value Passing<a class="headerlink" href="#jani-value-passing" title="Permalink to this headline">¶</a></h1>
-<p>This document specifies the JANI feature <em>x-momba-value-passing</em> which extends the <em>JANI model interchange format</em> (<a class="reference external" href="http://www.jani-spec.org/">JANI-model</a>) with <em>value passing</em> via synchronization inspired by LOTOS.
-In principle, JANI-model already allows for efficient value passing via transient global variables <a class="reference internal" href="#bdhhjt17" id="id1"><span>[BDHHJT17]</span></a>.
+        <div class="section" id="value-passing">
+<h1>Value Passing<a class="headerlink" href="#value-passing" title="Permalink to this headline">¶</a></h1>
+<p>This document specifies the JANI feature <em>x-momba-value-passing</em> which extends the <em>JANI model interchange format</em> (<code class="docutils literal notranslate"><span class="pre">JANI-model</span> <span class="pre">&lt;http://www.jani-spec.org/&gt;</span></code><em>) with <em>value passing</em> via synchronization inspired by LOTOS.
+In principle, JANI-model already allows for efficient value passing via transient global variables [BDHHJT17]</em>.
 While perfectly adequate for model checking purposes, this approach to value passing has two shortcomings:
 (1) it restricts compositionality by not allowing two instances of the same automaton to participate in a synchronization while passing values over the same global variables and
 (2) it does not allow one to reason about an automaton solely on the basis of its observable behavior in terms of actions.
@@ -167,47 +171,50 @@ Subsequently, we describe the static and dynamic semantics of the extension.</p>
 <div class="section" id="general-idea">
 <h2>General Idea<a class="headerlink" href="#general-idea" title="Permalink to this headline">¶</a></h2>
 <p>The intuitive idea is to extend actions with <em>parameters</em> giving rise to <em>action schemas</em>.
-An <em>action schema</em> <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> and a list of parameter types <span class="math notranslate nohighlight">\(\tau_i\)</span>.
-A concrete action <span class="math notranslate nohighlight">\(\alpha(\nu_1, \ldots, \nu_n)\)</span>, then, consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> uniquely identifying an action schema <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> and <em>arguments</em> <span class="math notranslate nohighlight">\(\nu_i\)</span> such that each <span class="math notranslate nohighlight">\(\nu_i\)</span> has a type which is assignable to <span class="math notranslate nohighlight">\(\tau_i\)</span>.</p>
-<p>An <em>action pattern</em> <span class="math notranslate nohighlight">\(\alpha(x_1, \ldots, x_n)\)</span> consists of a name <span class="math notranslate nohighlight">\(\alpha\)</span> uniquely identifying an action schema <span class="math notranslate nohighlight">\(\alpha(\tau_1, \ldots, \tau_n)\)</span> and identifiers <span class="math notranslate nohighlight">\(x_i\)</span>.
-The <cite>action</cite> fields of an edge now becomes an action pattern and the corresponding identifiers are available in the guard and for assignments.</p>
+An <em>action schema</em> :math:<code class="docutils literal notranslate"><span class="pre">\alpha(\tau_1,</span> <span class="pre">\ldots,</span> <span class="pre">\tau_n)</span></code> consists of a name :math:<code class="docutils literal notranslate"><span class="pre">\alpha</span></code> and a list of parameter types :math:<code class="docutils literal notranslate"><span class="pre">\tau_i</span></code>.
+A concrete action :math:<code class="docutils literal notranslate"><span class="pre">\alpha(\nu_1,</span> <span class="pre">\ldots,</span> <span class="pre">\nu_n)</span></code>, then, consists of a name :math:<code class="docutils literal notranslate"><span class="pre">\alpha</span></code> uniquely identifying an action schema :math:<code class="docutils literal notranslate"><span class="pre">\alpha(\tau_1,</span> <span class="pre">\ldots,</span> <span class="pre">\tau_n)</span></code> and <em>arguments</em> :math:<code class="docutils literal notranslate"><span class="pre">\nu_i</span></code> such that each :math:<code class="docutils literal notranslate"><span class="pre">\nu_i</span></code> has a type which is assignable to :math:<code class="docutils literal notranslate"><span class="pre">\tau_i</span></code>.</p>
+<p>An <em>action pattern</em> :math:<code class="docutils literal notranslate"><span class="pre">\alpha(x_1,</span> <span class="pre">\ldots,</span> <span class="pre">x_n)</span></code> consists of a name :math:<code class="docutils literal notranslate"><span class="pre">\alpha</span></code> uniquely identifying an action schema :math:<code class="docutils literal notranslate"><span class="pre">\alpha(\tau_1,</span> <span class="pre">\ldots,</span> <span class="pre">\tau_n)</span></code> and identifiers :math:<code class="docutils literal notranslate"><span class="pre">x_i</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">action</span></code> fields of an edge now becomes an action pattern and the corresponding identifiers are available in the guard and for assignments.</p>
 <p>Each edge with an action pattern introduces a new <em>edge scope</em> in which the guard and all expressions occurring in a destination specification are evaluated.</p>
-<p>A synchronization vector has the form <span class="math notranslate nohighlight">\(\langle p_1, \ldots, p_m\rangle \to p\)</span> where all :math:<a href="#id2"><span class="problematic" id="id3">`</span></a>p`s are action patterns.</p>
+<p>A synchronization vector has the form :math:<code class="docutils literal notranslate"><span class="pre">\langle</span> <span class="pre">p_1,</span> <span class="pre">\ldots,</span> <span class="pre">p_m\rangle</span> <span class="pre">\to</span> <span class="pre">p</span></code> where all :math:<code class="docutils literal notranslate"><span class="pre">p</span></code>s are action patterns.</p>
 <p>Generally, we allow identifiers to occur multiple times if they have the same time.
 We replace all except one of the occurances with different identifiers and add an assertion that they are all equal.</p>
 </div>
 <div class="section" id="syntactical-extension">
 <h2>Syntactical Extension<a class="headerlink" href="#syntactical-extension" title="Permalink to this headline">¶</a></h2>
-<p>We extend the each action declaration of the <cite>actions</cite> field in <cite>Model</cite> with an optional field <cite>parameters</cite>:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">"name"</span><span class="o">:</span> <span class="nx">Identifier</span><span class="p">,</span>
-    <span class="s2">"?parameters"</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">({</span>
-        <span class="s2">"type"</span><span class="o">:</span> <span class="nx">Type</span><span class="p">,</span>
-        <span class="s2">"?comment"</span><span class="o">:</span> <span class="nb">String</span>
-    <span class="p">}),</span>
-    <span class="s2">"?comment"</span><span class="o">:</span> <span class="nb">String</span>
-<span class="p">}</span>
+<p>We extend the each action declaration of the <code class="docutils literal notranslate"><span class="pre">actions</span></code> field in <code class="docutils literal notranslate"><span class="pre">Model</span></code> with an optional field <code class="docutils literal notranslate"><span class="pre">parameters</span></code>:</p>
+<p>.. code-block:: javascript</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    "name": Identifier,
+    "?parameters": Array.of({
+        "type": Type,
+        "?comment": String
+    }),
+    "?comment": String
+}
 </pre></div>
 </div>
-<p>We extend the <cite>action</cite> fields of an <cite>edge</cite> with:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">ActionPattern</span> <span class="o">=</span> <span class="nx">schema</span><span class="p">([</span>
-    <span class="nx">Identifier</span><span class="p">,</span>
-    <span class="p">{</span>
-        <span class="s2">"name"</span><span class="o">:</span> <span class="nx">Identifier</span><span class="p">,</span>
-        <span class="s2">"?identifiers"</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">([</span>
-            <span class="nx">Identifier</span>
-        <span class="p">])</span>
-    <span class="p">}</span>
-<span class="p">])</span>
+<p>We extend the <code class="docutils literal notranslate"><span class="pre">action</span></code> fields of an <code class="docutils literal notranslate"><span class="pre">edge</span></code> with:</p>
+<p>.. code-block:: javascript</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>var ActionPattern = schema([
+    Identifier,
+    {
+        "name": Identifier,
+        "?identifiers": Array.of([
+            Identifier
+        ])
+    }
+])
 </pre></div>
 </div>
 <p>We extend a synchronization vector as follows:</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">"synchronise"</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">([</span><span class="nx">ActionPattern</span><span class="p">,</span> <span class="kc">null</span><span class="p">])</span>
-    <span class="s2">"?result"</span><span class="o">:</span> <span class="nx">ActionPattern</span><span class="p">,</span>
-    <span class="s2">"?condition"</span><span class="o">:</span> <span class="nx">Expression</span><span class="p">,</span>
-    <span class="s2">"?comment"</span><span class="o">:</span> <span class="nb">String</span>
-<span class="p">}</span>
+<p>.. code-block:: javascript</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    "synchronise": Array.of([ActionPattern, null])
+    "?result": ActionPattern,
+    "?condition": Expression,
+    "?comment": String
+}
 </pre></div>
 </div>
 </div>
@@ -219,56 +226,68 @@ We replace all except one of the occurances with different identifiers and add a
 Each identifier must occur at most once as “READ” direction argument.</p>
 <p>For each synchronization vector, for each pattern in the vector: For each argument, if the respective parameter has “WRITE” direction, the argument is an identifier, otherwise, it is an arbitrary expression.
 Within each synchronization vector, each identifier must occur at most once as “WRITE” direction argument.
-For the <cite>result</cite> fields this is reversed.</p>
+For the <code class="docutils literal notranslate"><span class="pre">result</span></code> fields this is reversed.</p>
 <p>Scoping: An action pattern introduces a new scope.</p>
-<p>Within an edge: Identifiers occurring as “READ” direction arguments can be used and contain a value of the respective parameter type for expressions in destinations and the <cite>guard</cite> field.</p>
+<p>Within an edge: Identifiers occurring as “READ” direction arguments can be used and contain a value of the respective parameter type for expressions in destinations and the <code class="docutils literal notranslate"><span class="pre">guard</span></code> field.</p>
 <p>Within a synchronization vector: Identifiers occurring as “WRITE” direction arguments can be used and contain a value of the respective type for expressions occurring in “READ” direction argument respectively “WRITE” direction arguments in the resulting action.</p>
-<p>Expressions occurring in <cite>WRITE</cite>-parameters must not contain any sampling expressions. They may, however, contain the <cite>nondet</cite> operator as specified in JANI feature <em>nondet-selection</em>.</p>
+<p>Expressions occurring in <code class="docutils literal notranslate"><span class="pre">WRITE</span></code>-parameters must not contain any sampling expressions. They may, however, contain the <code class="docutils literal notranslate"><span class="pre">nondet</span></code> operator as specified in JANI feature <em>nondet-selection</em>.</p>
 </div>
 <div class="section" id="dynamic-semantics">
 <h2>Dynamic Semantics<a class="headerlink" href="#dynamic-semantics" title="Permalink to this headline">¶</a></h2>
 <p>As the guard may refer identifiers bound in the action pattern, we consider possible synchronization actions before evaluating the guard.</p>
 <p>The semantics are as follows:</p>
-<ol class="arabic simple">
-<li><p>For all automata the expressions occurring in <cite>WRITE</cite> direction arguments are evaluated.</p></li>
+<ol class="simple">
+<li><p>For all automata the expressions occurring in <code class="docutils literal notranslate"><span class="pre">WRITE</span></code> direction arguments are evaluated.</p></li>
 <li><p>Those values are bound to the respective identifiers in the synchronization vector.</p></li>
 <li><p>The condition of the synchronization is evaluated. If it evaluates to false, the respective actions are not possible, if it evaluates to true, we proceed.</p></li>
-<li><p>The expressions in the <cite>READ</cite> direction arguments in the synchronization vector are evaluated.</p></li>
+<li><p>The expressions in the <code class="docutils literal notranslate"><span class="pre">READ</span></code> direction arguments in the synchronization vector are evaluated.</p></li>
 <li><p>The results of those evaluations are bound to the respective identifiers in the pattern for each automata.</p></li>
-<li><p>The <cite>guard</cite> of each of those actions is evaluated with those values.</p></li>
-<li><p>If all guards evaluate to <cite>true</cite> then the automata atomically take the respective edges together. The values bound to the identifiers in the automata are available for the assignments and probabilities for each destination. The assignments are resolved as usually using their indices.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">guard</span></code> of each of those actions is evaluated with those values.</p></li>
+<li><p>If all guards evaluate to <code class="docutils literal notranslate"><span class="pre">true</span></code> then the automata atomically take the respective edges together. The values bound to the identifiers in the automata are available for the assignments and probabilities for each destination. The assignments are resolved as usually using their indices.</p></li>
 </ol>
-<dl class="citation">
-<dt class="label" id="bdhhjt17"><span class="brackets"><a class="fn-backref" href="#id1">BDHHJT17</a></span></dt>
-<dd><p>Carlos E. Budde, Christian Dehnert, Ernst Moritz Hahn, Arnd Hartmanns, Sebastian Junges, and Andrea Turrini:
+<p>.. [BDHHJT17] Carlos E. Budde, Christian Dehnert, Ernst Moritz Hahn, Arnd Hartmanns, Sebastian Junges, and Andrea Turrini:
 JANI: Quantitative Model and Tool Interaction. TACAS (2) 2017: 151-168</p>
-</dd>
-</dl>
 </div>
 </div>
 
       </article>
       <footer>
         
+    
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="moml/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">MOML Language</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Feature Incubator</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2020, Dependable Systems and Software Group, Saarland University
+              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
             |
-            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
-              and
-              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
-            <a class="muted-link" href="../_sources/jani/jani_vp.rst.txt"
+            <a class="muted-link" href="../_sources/incubator/value-passing.md.txt"
                rel="nofollow">
               Show Source
             </a>
         </div>
         
+    <p style="padding: 0 0.75rem; margin-top: 0;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+
       </footer>
     </div>
     <aside class="toc-drawer">
@@ -283,7 +302,7 @@ JANI: Quantitative Model and Tool Interaction. TACAS (2) 2017: 151-168</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">JANI Value Passing</a><ul>
+<li><a class="reference internal" href="#">Value Passing</a><ul>
 <li><a class="reference internal" href="#general-idea">General Idea</a></li>
 <li><a class="reference internal" href="#syntactical-extension">Syntactical Extension</a></li>
 <li><a class="reference internal" href="#static-semantics">Static Semantics</a></li>
@@ -300,5 +319,12 @@ JANI: Quantitative Model and Tool Interaction. TACAS (2) 2017: 151-168</p>
     </aside>
   </main>
 </div>
-  </body>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
 </html>
