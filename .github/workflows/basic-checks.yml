@@ -30,7 +30,7 @@ jobs:
     - name: Build and install Momba Engine
       run: |
         cd engine
-        maturin build
+        maturin build -i
         cd ..
         pip install target/wheels/*.tar.gz
     - name: Style check with black
