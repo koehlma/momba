@@ -24,7 +24,7 @@ from momba.model import (
 from .dump_model import ModelFeature
 
 
-class JANIError:
+class JANIError(Exception):
     """
     Indicates an error while loading a JANI string.
 
@@ -72,10 +72,10 @@ _BINARY_OP_MAP: t.Mapping[str, expressions.BinaryConstructor] = {
     "⇔": expressions.logic_equiv,  # defined by the `x-momba-operators` extension
     "=": expressions.equals,
     "≠": expressions.not_equals,
-    "<": expressions.less_than,
-    "≤": expressions.less_or_equal_than,
-    ">": expressions.greater_than,  # defined by the `derived-operators` extension
-    "≥": expressions.greater_or_equal_than,  # defined by the `derived-operators` extension
+    "<": expressions.less,
+    "≤": expressions.less_or_equal,
+    ">": expressions.greater,  # defined by the `derived-operators` extension
+    "≥": expressions.greater_or_equal,  # defined by the `derived-operators` extension
     "+": expressions.add,
     "-": expressions.sub,
     "*": expressions.mul,

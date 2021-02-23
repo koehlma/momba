@@ -214,6 +214,7 @@ class UnaryOperator(Operator):
 
 class NotOperator(UnaryOperator, enum.Enum):
     NOT = "¬"
+    """ Logical negation. """
 
 
 class NativeUnaryArithmeticFunction(t.Protocol):
@@ -223,16 +224,24 @@ class NativeUnaryArithmeticFunction(t.Protocol):
 
 class ArithmeticUnaryOperator(UnaryOperator, enum.Enum):
     CEIL = "ceil", lambda _: types.INT, lambda operand: math.ceil(operand)
+    """ Round up. """
+
     FLOOR = "floor", lambda _: types.INT, lambda operand: math.floor(operand)
+    """ Round down. """
 
     # requires JANI extension `derived-operators`
     ABS = "abs", lambda typ: typ, lambda operand: abs(operand)
+    """ Absolute value. """
+
     SGN = (
         "sgn",
         lambda _: types.INT,
         lambda operand: -1 if operand < 0 else (1 if operand > 0 else 0),
     )
+    """ Sign. """
+
     TRC = "trc", lambda _: types.INT, lambda operand: math.trunc(operand)
+    """ Truncate. """
 
     infer_result_type: types.InferTypeUnary
     native_function: NativeUnaryArithmeticFunction
@@ -248,43 +257,91 @@ class ArithmeticUnaryOperator(UnaryOperator, enum.Enum):
         self.native_function = native_function
 
 
-class MinMax(enum.Enum):
+class MinMax(Operator, enum.Enum):
+    """
+    Minimum and maximum functions.
+    """
+
     MIN = "min"
+    """ Minimum. """
+
     MAX = "max"
+    """ Maximum. """
 
 
-class Quantifier(enum.Enum):
+class Quantifier(Operator, enum.Enum):
+    """
+    Logical quantifier.
+    """
+
     FORALL = "∀"
+    """ Universal quantifier. """
+
     EXISTS = "∃"
+    """ Existential quantifier. """
 
 
-class BinaryPathOperator(enum.Enum):
+class BinaryPathOperator(Operator, enum.Enum):
+    """
+    LTL binary path operators.
+    """
+
     UNTIL = "U"
+    """ Until. """
+
     WEAK_UNTIL = "W"
+    """ Weak until. """
 
     # requires JANI extension `derived-operators`
     RELEASE = "R"
+    """ Release. """
 
 
-class UnaryPathOperator(enum.Enum):
+class UnaryPathOperator(Operator, enum.Enum):
+    """ LTL unary path operators. """
+
     # requires JANI extension `derived-operators`
     EVENTUALLY = "F"
+    """ Eventually. """
+
     GLOBALLY = "G"
+    """ Globally. """
 
 
-class AggregationFunction(enum.Enum):
+class AggregationFunction(Operator, enum.Enum):
+    """
+    Aggregation functions.
+    """
+
     MIN = "min", {types.REAL}, lambda _: types.REAL
-    MAX = "max", {types.REAL}, lambda _: types.REAL
-    SUM = "sum", {types.REAL}, lambda _: types.REAL
-    AVG = "avg", {types.REAL}, lambda _: types.REAL
-    COUNT = "count", {types.BOOL}, lambda _: types.INT
-    EXISTS = "∃", {types.BOOL}, lambda _: types.BOOL
-    FORALL = "∀", {types.BOOL}, lambda _: types.BOOL
-    ARGMIN = "argmin", {types.REAL}, lambda _: types.set_of(types.STATE)
-    ARGMAX = "argmax", {types.REAL}, lambda _: types.set_of(types.STATE)
-    VALUES = "values", {types.REAL, types.BOOL}, lambda typ: types.set_of(typ)
+    """ Minimum. """
 
-    symbol: str
+    MAX = "max", {types.REAL}, lambda _: types.REAL
+    """ Maximum. """
+
+    SUM = "sum", {types.REAL}, lambda _: types.REAL
+    """ Sum. """
+
+    AVG = "avg", {types.REAL}, lambda _: types.REAL
+    """ Average. """
+
+    COUNT = "count", {types.BOOL}, lambda _: types.INT
+    """ Count. """
+
+    EXISTS = "∃", {types.BOOL}, lambda _: types.BOOL
+    """ Exists. """
+
+    FORALL = "∀", {types.BOOL}, lambda _: types.BOOL
+    """ For all. """
+
+    ARGMIN = "argmin", {types.REAL}, lambda _: types.set_of(types.STATE)
+    """ Minimizing argument. """
+
+    ARGMAX = "argmax", {types.REAL}, lambda _: types.set_of(types.STATE)
+    """ Maximizing argument. """
+
+    VALUES = "values", {types.REAL, types.BOOL}, lambda typ: types.set_of(typ)
+    """ Values. """
 
     allowed_values_type: t.Set[types.Type]
     infer_result_type: types.InferTypeUnary
@@ -295,22 +352,48 @@ class AggregationFunction(enum.Enum):
         allowed_values_type: t.Set[types.Type],
         infer_result_type: types.InferTypeUnary,
     ) -> None:
-        self.symbol = symbol
+        super().__init__(symbol)
         self.allowed_values_type = allowed_values_type
         self.infer_result_type = infer_result_type
 
 
 class TrigonometricFunction(UnaryOperator, enum.Enum):
+    """
+    Trigonometric functions.
+    """
+
     SIN = "sin"
+    """ Sine. """
+
     COS = "cos"
+    """ Cosine. """
+
     TAN = "tan"
+    """ Tangent. """
+
     COT = "cot"
+    """ Cotangent.. """
+
     SEC = "sec"
+    """ Secant. """
+
     CSC = "csc"
+    """ Cosecant. """
 
     ARC_SIN = "asin"
+    """ Inverse sine """
+
     ARC_COS = "acos"
+    """ Inverse cosine. """
+
     ARC_TAN = "atan"
+    """ Inverse tangent. """
+
     ARC_COT = "acot"
+    """ Inverse cotangent. """
+
     ARC_SEC = "asec"
+    """ Inverse secant. """
+
     ARC_CSC = "acsc"
+    """ Inverse coscant. """

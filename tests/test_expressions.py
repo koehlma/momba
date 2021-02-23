@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from momba import model
 from momba.model import context, errors, types
 from momba.model.expressions import ensure_expr, ite, name, logic_and
 
@@ -11,14 +12,14 @@ import pytest
 
 
 def test_basic_inferences() -> None:
-    ctx = context.Context()
+    ctx = context.Context(model.ModelType.SHA)
 
     scope = ctx.global_scope.create_child_scope()
     scope.declare_variable("x", types.BOOL)
 
     expr = logic_and(name("x"), name("y"))
 
-    with pytest.raises(errors.UnboundIdentifierError):
+    with pytest.raises(errors.NotFoundError):
         scope.get_type(expr)
 
     scope.declare_variable("y", types.BOOL)

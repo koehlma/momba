@@ -4,30 +4,29 @@
 
 from __future__ import annotations
 
-from momba.model.automata import Automaton, Edge, Location, Destination
-from momba.model.expressions import name, less_than, greater_than
+from momba import model
+from momba.model.automata import Automaton, Location, Destination
+from momba.model.expressions import name, less, greater
 from momba.model import context, errors, types
 
 import pytest
 
 
 def test_basic_inferences() -> None:
-    automaton = Automaton(context.Context())
+    automaton = Automaton(context.Context(model.ModelType.SHA))
     automaton.scope.declare_constant("T", types.INT)
     automaton.scope.declare_variable("x", types.CLOCK)
 
-    location_1 = Location(
-        "Location1", progress_invariant=less_than(name("x"), name("T"))
+    location_1 = automaton.create_location(
+        "Location1", progress_invariant=less(name("x"), name("T"))
     )
-    location_2 = Location("Location2")
+    location_2 = automaton.create_location("Location2")
 
-    edge = Edge(
+    automaton.create_edge(
         location_1,
-        guard=greater_than(name("x"), name("T")),
+        guard=greater(name("x"), name("T")),
         destinations=frozenset({Destination(location_2)}),
     )
-
-    automaton.add_edge(edge)
 
     with pytest.raises(errors.ModelingError):
         automaton.add_location(

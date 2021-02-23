@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2020, Michaela Klauck <klauck@cs.uni-saarland.de>
-# Copyright (C) 2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2020-2021, Saarland University
+# Copyright (C) 2020-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2020-2021, Michaela Klauck <klauck@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -18,8 +19,7 @@ if t.TYPE_CHECKING:
 
 
 class Property(expressions.Expression, abc.ABC):
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
+    pass
 
 
 @d.dataclass(frozen=True)

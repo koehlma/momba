@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from momba import model
 from momba.model import context, types
 from momba.model.types import array_of
 
@@ -37,7 +38,7 @@ def test_bounded_types() -> None:
     assert not types.INT.bound(2, 10).is_assignable_from(types.REAL.bound("π", ...))
 
     with pytest.raises(types.InvalidBoundError):
-        ctx = context.Context()
+        ctx = context.Context(model.ModelType.SHA)
         scope = ctx.global_scope.create_child_scope()
         types.INT.bound(..., "π").validate_in(scope)
     with pytest.raises(types.InvalidBoundError):

@@ -44,5 +44,5 @@ class UnboundIdentifierError(ModelingError):
     pass
 
 
-class NotFoundError(Exception):
+class NotFoundError(ModelingError):
     """Entity not found. """

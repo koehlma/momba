@@ -53,6 +53,3 @@ class CallExpression(expressions.Expression):
     @property
     def children(self) -> t.Sequence[expressions.Expression]:
         return self.arguments
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False

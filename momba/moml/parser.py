@@ -176,10 +176,10 @@ _BINARY_CONSTRUCTORS: t.Mapping[lexer.TokenType, expressions.BinaryConstructor] 
     lexer.TokenType.MINUS: expressions.sub,
     lexer.TokenType.COMP_EQ: expressions.equals,
     lexer.TokenType.COMP_NEQ: expressions.not_equals,
-    lexer.TokenType.COMP_LT: expressions.less_than,
-    lexer.TokenType.COMP_LE: expressions.less_or_equal_than,
-    lexer.TokenType.COMP_GE: expressions.greater_or_equal_than,
-    lexer.TokenType.COMP_GT: expressions.greater_than,
+    lexer.TokenType.COMP_LT: expressions.less,
+    lexer.TokenType.COMP_LE: expressions.less_or_equal,
+    lexer.TokenType.COMP_GE: expressions.greater_or_equal,
+    lexer.TokenType.COMP_GT: expressions.greater,
     lexer.TokenType.LOGIC_AND: expressions.logic_and,
     lexer.TokenType.LOGIC_OR: expressions.logic_or,
     lexer.TokenType.LOGIC_XOR: expressions.logic_xor,
@@ -543,7 +543,7 @@ def _parse_location(stream: TokenStream, automaton: model.Automaton) -> model.Lo
                 raise stream.make_error("expected location body")
     return automaton.create_location(
         name,
-        invariant=progress_invariant,
+        progress_invariant=progress_invariant,
         transient_values=transient_values,
         initial=is_initial,
     )
@@ -684,14 +684,22 @@ def _parse_network(stream: TokenStream, ctx: model.Context) -> None:
                     if not stream.accept(","):
                         stream.expect(")")
                         break
-            input_enable: t.Set[str] = set()
+            input_enable: t.Set[actions.ActionType] = set()
             if stream.accept(":"):
                 stream.expect(lexer.TokenType.INDENT)
                 if stream.accept("input"):
                     stream.expect("enable")
-                    input_enable.add(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                    input_enable.add(
+                        ctx.get_action_type_by_name(
+                            stream.expect(lexer.TokenType.IDENTIFIER).text
+                        )
+                    )
                     while stream.accept(","):
-                        input_enable.add(stream.expect(lexer.TokenType.IDENTIFIER).text)
+                        input_enable.add(
+                            ctx.get_action_type_by_name(
+                                stream.expect(lexer.TokenType.IDENTIFIER).text
+                            )
+                        )
                 stream.expect(lexer.TokenType.DEDENT)
             instance_map[name] = ctx.get_automaton_by_name(
                 automaton_name

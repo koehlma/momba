@@ -16,7 +16,7 @@ from .. import model
 from ._engine import engine as _engine
 
 
-class InvalidModelType:
+class InvalidModelType(Exception):
     pass
 
 

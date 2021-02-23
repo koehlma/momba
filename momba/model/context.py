@@ -8,7 +8,6 @@ from __future__ import annotations
 import dataclasses as d
 import typing as t
 
-import abc
 import enum
 
 from . import actions, errors, functions, expressions, types
@@ -97,8 +96,10 @@ _CLOCK_TYPES = {
 _UNTIMED_TYPES = {ModelType.MDP, ModelType.LTS, ModelType.DTMC}
 
 
+# XXX: this class should be abstract, however, then it would not type-check
+# https://github.com/python/mypy/issues/5374
 @d.dataclass(frozen=True)
-class IdentifierDeclaration(abc.ABC):
+class IdentifierDeclaration:
     """
     Represents a declaration of an identifier.
 
@@ -117,7 +118,7 @@ class IdentifierDeclaration(abc.ABC):
 
     comment: t.Optional[str] = None
 
-    @abc.abstractmethod
+    # XXX: this method shall be implemented by all subclasses
     def validate(self, scope: Scope) -> None:
         """
         Validates that the declaration is valid in the given scope.
@@ -495,7 +496,7 @@ class Context:
 
     _metadata: t.Dict[str, str]
 
-    def __init__(self, model_type) -> None:
+    def __init__(self, model_type: ModelType) -> None:
         self.model_type = model_type
         self.global_scope = Scope(self)
         self._automata = set()

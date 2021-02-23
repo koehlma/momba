@@ -103,7 +103,9 @@ class StormChecker(checkers.Checker):
                 )
             if property_names is not None:
                 for name in property_names:
-                    named_properties[name] = network.ctx.get_property_by_name(name)
+                    named_properties[
+                        name
+                    ] = network.ctx.get_property_definition_by_name(name).expression
             input_file.write_text(
                 dump_model(network, properties=named_properties), encoding="utf-8"
             )

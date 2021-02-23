@@ -490,7 +490,7 @@ class Automaton:
         self,
         *,
         arguments: t.Sequence[expressions.Expression] = (),
-        input_enable: t.AbstractSet[str] = frozenset(),
+        input_enable: t.AbstractSet[actions.ActionType] = frozenset(),
         comment: t.Optional[str] = None,
     ) -> Instance:
         """

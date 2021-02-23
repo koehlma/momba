@@ -74,7 +74,7 @@ __all__ = [
     "create_destination",
     # from `.context`
     "ModelType",
-    "Declaration",
+    "IdentifierDeclaration",
     "VariableDeclaration",
     "ConstantDeclaration",
     "PropertyDefinition",
@@ -84,6 +84,9 @@ __all__ = [
     "DistributionType",
     # from `.expressions`
     "Expression",
+    "ensure_expr",
+    # from `functions`
+    "FunctionDefinition",
     # from `.networks`
     "Network",
     "Link",

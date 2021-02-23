@@ -39,7 +39,7 @@ class Expression(abc.ABC):
     @abc.abstractmethod
     def children(self) -> t.Sequence[Expression]:
         """
-        The children of the expression.
+        The direct children of the expression.
         """
         raise NotImplementedError()
 
@@ -80,8 +80,7 @@ class _Leaf(Expression):
 
 
 class Constant(_Leaf, abc.ABC):
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return True
+    pass
 
 
 @d.dataclass(frozen=True)
@@ -241,9 +240,6 @@ class Name(_Leaf):
 
     identifier: str
 
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
-
     def infer_type(self, scope: context.Scope) -> types.Type:
         return scope.lookup(self.identifier).typ
 
@@ -251,8 +247,10 @@ class Name(_Leaf):
         return self.infer_type(scope)
 
 
+# XXX: this class should be abstract, however, then it would not type-check
+# https://github.com/python/mypy/issues/5374
 @d.dataclass(frozen=True)
-class BinaryExpression(Expression, abc.ABC):
+class BinaryExpression(Expression):
     """
     Abstract base class for binary expressions.
 
@@ -274,8 +272,9 @@ class BinaryExpression(Expression, abc.ABC):
     def children(self) -> t.Sequence[Expression]:
         return self.left, self.right
 
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return self.left.is_constant_in(scope) and self.right.is_constant_in(scope)
+    # XXX: this method shall be implemented by all subclasses
+    def infer_type(self, scope: context.Scope) -> types.Type:
+        raise NotImplementedError()
 
 
 class Boolean(BinaryExpression):
@@ -308,6 +307,15 @@ _REAL_RESULT_OPERATORS = {
 
 
 class ArithmeticBinary(BinaryExpression):
+    """
+    An arithmetic binary expression.
+
+    Attributes
+    ----------
+    operator:
+        The arithmetic operator (:class:`~momba.model.operators.ArithmeticBinaryOperator`).
+    """
+
     operator: operators.ArithmeticBinaryOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -329,6 +337,15 @@ class ArithmeticBinary(BinaryExpression):
 
 
 class Equality(BinaryExpression):
+    """
+    An equality binary expression.
+
+    Attributes
+    ----------
+    operator:
+        The equality operator (:class:`~momba.model.operators.EqualityOperator`).
+    """
+
     operator: operators.EqualityOperator
 
     def get_common_type(self, scope: context.Scope) -> types.Type:
@@ -357,6 +374,15 @@ class Equality(BinaryExpression):
 
 
 class Comparison(BinaryExpression):
+    """
+    A comparison expression.
+
+    Attributes
+    ----------
+    operator:
+        The comparison operator (:class:`~momba.model.operators.ComparisonOperator`).
+    """
+
     operator: operators.ComparisonOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -371,6 +397,19 @@ class Comparison(BinaryExpression):
 
 @d.dataclass(frozen=True)
 class Conditional(Expression):
+    """
+    A ternary conditional expression.
+
+    Attributes
+    ----------
+    condition:
+        The condition.
+    consequence:
+        The consequence to be evaluated if the condition is true.
+    alternative:
+        The alternative to be evaluated if the condition is false.
+    """
+
     condition: Expression
     consequence: Expression
     alternative: Expression
@@ -378,13 +417,6 @@ class Conditional(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return self.condition, self.consequence, self.alternative
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return (
-            self.condition.is_constant_in(scope)
-            and self.consequence.is_constant_in(scope)
-            and self.alternative.is_constant_in(scope)
-        )
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         condition_type = scope.get_type(self.condition)
@@ -407,7 +439,18 @@ class Conditional(Expression):
 # XXX: this class should be abstract, however, then it would not type-check
 # https://github.com/python/mypy/issues/5374
 @d.dataclass(frozen=True)
-class UnaryExpression(Expression):
+class UnaryExpression(Expression, abc.ABC):
+    """
+    Base class of all unary expressions.
+
+    Attributes
+    ----------
+    operator:
+        The unary operator (:class:`~momba.model.operators.UnaryOperator`).
+    operand:
+        The operand.
+    """
+
     operator: operators.UnaryOperator
     operand: Expression
 
@@ -415,15 +458,21 @@ class UnaryExpression(Expression):
     def children(self) -> t.Sequence[Expression]:
         return (self.operand,)
 
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return self.operand.is_constant_in(scope)
-
     # XXX: this method shall be implemented by all subclasses
     def infer_type(self, scope: context.Scope) -> types.Type:
         raise NotImplementedError()
 
 
 class ArithmeticUnary(UnaryExpression):
+    """
+    An arithmetic unary expression.
+
+    Attributes
+    ----------
+    operator:
+        The arithmetic operator (:class:`~momba.model.operators.ArithmeticUnaryOperator`).
+    """
+
     operator: operators.ArithmeticUnaryOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -436,6 +485,15 @@ class ArithmeticUnary(UnaryExpression):
 
 
 class Not(UnaryExpression):
+    """
+    Logical negation.
+
+    Attributes
+    ----------
+    operator:
+        The logical negation operator (:class:`~momba.model.operators.NotOperator`).
+    """
+
     operator: operators.NotOperator
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -449,6 +507,18 @@ class Not(UnaryExpression):
 
 @d.dataclass(frozen=True)
 class Sample(Expression):
+    """
+    A sample expression.
+
+    Attributes
+    ----------
+    distribution:
+        The type of the distribution to sample from
+        (:class:`~momba.model.distributions.DistributionType`).
+    arguments:
+        The arguments to the distribution.
+    """
+
     distribution: distributions.DistributionType
     arguments: t.Sequence[Expression]
 
@@ -462,9 +532,6 @@ class Sample(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return self.arguments
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         # we already know that the arity of the parameters and arguments match
@@ -483,6 +550,17 @@ class Sample(Expression):
 # requires JANI extension `nondet-selection`
 @d.dataclass(frozen=True)
 class Selection(Expression):
+    """
+    A non-deterministic selection expression.
+
+    Attributes
+    ----------
+    variable:
+        The identifier to select over.
+    condition:
+        The condition that should be satisfied.
+    """
+
     variable: str
     condition: Expression
 
@@ -494,9 +572,6 @@ class Selection(Expression):
             raise errors.InvalidTypeError("condition must have type `types.BOOL`")
         return types.REAL
 
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
-
     @property
     def children(self) -> t.Sequence[Expression]:
         return (self.condition,)
@@ -504,13 +579,19 @@ class Selection(Expression):
 
 @d.dataclass(frozen=True)
 class Derivative(Expression):
+    """
+    Derivative of a continuous variable.
+
+    Attributes
+    ==========
+    identifier:
+        The continuous variable.
+    """
+
     identifier: str
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         return types.REAL
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return False
 
     @property
     def children(self) -> t.Sequence[Expression]:
@@ -519,16 +600,23 @@ class Derivative(Expression):
 
 @d.dataclass(frozen=True)
 class ArrayAccess(Expression):
+    """
+    An array access expression.
+
+    Attributes
+    ----------
+    array:
+        The array to access.
+    index:
+        The index where to access the array.
+    """
+
     array: Expression
     index: Expression
 
     @property
     def children(self) -> t.Sequence[Expression]:
         return self.array, self.index
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        # return self.array.is_constant_in(scope) and self.index.is_constant_in(scope)
-        return False
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         array_type = scope.get_type(self.array)
@@ -544,6 +632,15 @@ class ArrayAccess(Expression):
 
 @d.dataclass(frozen=True)
 class ArrayValue(Expression):
+    """
+    An array value expression.
+
+    Attributes
+    ----------
+    elements:
+        The elements of the array to construct.
+    """
+
     elements: t.Tuple[Expression, ...]
 
     def __post_init__(self) -> None:
@@ -555,9 +652,6 @@ class ArrayValue(Expression):
     @property
     def children(self) -> t.Sequence[Expression]:
         return self.elements
-
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return all(scope.is_constant(element) for element in self.elements)
 
     def infer_type(self, scope: context.Scope) -> types.Type:
         common_type: t.Optional[types.Type] = None
@@ -577,6 +671,19 @@ class ArrayValue(Expression):
 
 @d.dataclass(frozen=True)
 class ArrayConstructor(Expression):
+    """
+    An array constructor expression.
+
+    Attributes
+    ----------
+    variable:
+        The identifier to range over.
+    length:
+        The length of the array.
+    expression:
+        The expression to compute the elements of the array.
+    """
+
     variable: str
     length: Expression
     expression: Expression
@@ -590,11 +697,6 @@ class ArrayConstructor(Expression):
         child_scope.declare_constant(self.variable, types.INT)
         return child_scope
 
-    def is_constant_in(self, scope: context.Scope) -> bool:
-        return self.length.is_constant_in(scope) and self.expression.is_constant_in(
-            self._create_scope(scope)
-        )
-
     def infer_type(self, scope: context.Scope) -> types.Type:
         if not types.INT.is_assignable_from(scope.get_type(self.length)):
             raise errors.InvalidTypeError(
@@ -604,6 +706,16 @@ class ArrayConstructor(Expression):
 
 
 class Trigonometric(UnaryExpression):
+    """
+    A trigonometric expression.
+
+    Attributes
+    ----------
+    operator:
+        The trigonometric function to apply
+        (:class:`~momba.model.operators.TrigonometricFunction`).
+    """
+
     operator: operators.TrigonometricFunction
 
     def infer_type(self, scope: context.Scope) -> types.Type:
@@ -623,10 +735,19 @@ ValueOrExpression = t.Union[Expression, Value]
 
 
 class ConversionError(ValueError):
-    pass
+    """
+    Unable to convert the provided value.
+    """
 
 
 def ensure_expr(value_or_expression: ValueOrExpression) -> Expression:
+    """
+    Takes a Python value or expression and returns an expression.
+
+    Implicitly converts floats, integers, and booleans to constant expressions.
+
+    Raises :class:`~momba.model.expressions.ConversionError` if the conversion fails.
+    """
     if isinstance(value_or_expression, Expression):
         return value_or_expression
     elif isinstance(value_or_expression, bool):
@@ -650,6 +771,9 @@ def ite(
     consequence: ValueOrExpression,
     alternative: ValueOrExpression,
 ) -> Expression:
+    """
+    Constructs a conditional expression implicitly converting the arguments.
+    """
     return Conditional(
         ensure_expr(condition), ensure_expr(consequence), ensure_expr(alternative)
     )
@@ -673,105 +797,168 @@ def _boolean_binary_expression(
     return result
 
 
+def logic_not(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs a logical negation expression.
+    """
+    return Not(operators.NotOperator.NOT, ensure_expr(operand))
+
+
 def logic_any(*expressions: ValueOrExpression) -> Expression:
+    """
+    Constructs a disjunction over the provided expressions.
+
+    Returns :attr:`~momba.model.expressions.FALSE` if there are no expressions.
+    """
     if len(expressions) == 0:
         return BooleanConstant(False)
     return logic_or(*expressions)
 
 
 def logic_or(*expressions: ValueOrExpression) -> Expression:
+    """
+    Constructs a disjunction over the provided expressions.
+    """
     return _boolean_binary_expression(operators.BooleanOperator.OR, expressions)
 
 
 def logic_all(*expressions: ValueOrExpression) -> Expression:
+    """
+    Constructs a conjunction over the provided expressions.
+
+    Returns :attr:`~momba.model.expressions.TRUE` if there are no expressions.
+    """
     if len(expressions) == 0:
         return BooleanConstant(True)
     return logic_and(*expressions)
 
 
 def logic_and(*expressions: ValueOrExpression) -> Expression:
+    """
+    Constructs a conjunction over the provided expressions.
+    """
     return _boolean_binary_expression(operators.BooleanOperator.AND, expressions)
 
 
 def logic_xor(*expressions: ValueOrExpression) -> Expression:
+    """
+    Constructs an exclusive disjunction over the provided expressions.
+    """
     return _boolean_binary_expression(operators.BooleanOperator.XOR, expressions)
 
 
 def logic_implies(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a logical implication.
+    """
     return Boolean(
         operators.BooleanOperator.IMPLY, ensure_expr(left), ensure_expr(right)
     )
 
 
 def logic_equiv(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a logical equivalence.
+    """
     return Boolean(
         operators.BooleanOperator.EQUIV, ensure_expr(left), ensure_expr(right)
     )
 
 
 def equals(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs an *equality* expression.
+    """
     return Equality(
         operators.EqualityOperator.EQ, ensure_expr(left), ensure_expr(right)
     )
 
 
 def not_equals(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs an *inequality* expression.
+    """
     return Equality(
         operators.EqualityOperator.NEQ, ensure_expr(left), ensure_expr(right)
     )
 
 
-def less_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+def less(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a *less than* expression.
+    """
     return Comparison(
         operators.ComparisonOperator.LT, ensure_expr(left), ensure_expr(right)
     )
 
 
-def less_or_equal_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+def less_or_equal(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a *less than or equal to* expression.
+    """
     return Comparison(
         operators.ComparisonOperator.LE, ensure_expr(left), ensure_expr(right)
     )
 
 
-def greater_than(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+def greater(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a *greater than* expression.
+    """
     return Comparison(
         operators.ComparisonOperator.GT, ensure_expr(left), ensure_expr(right)
     )
 
 
-def greater_or_equal_than(
-    left: ValueOrExpression, right: ValueOrExpression
-) -> Expression:
+def greater_or_equal(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs a *greater than or equal to* expression.
+    """
     return Comparison(
         operators.ComparisonOperator.GE, ensure_expr(left), ensure_expr(right)
     )
 
 
 def add(left: ValueOrExpression, right: ValueOrExpression) -> Expression:
+    """
+    Constructs an arithmetic addition expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.ADD, ensure_expr(left), ensure_expr(right)
     )
 
 
 def sub(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs an arithmetic substraction expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.SUB, ensure_expr(left), ensure_expr(right)
     )
 
 
 def mul(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs an arithmetic multiplication expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.MUL, ensure_expr(left), ensure_expr(right)
     )
 
 
 def mod(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs an euclidean remainder expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.MOD, ensure_expr(left), ensure_expr(right)
     )
 
 
 def real_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs a real-division expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.REAL_DIV,
         ensure_expr(left),
@@ -780,30 +967,45 @@ def real_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpress
 
 
 def log(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs a logarithm expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.LOG, ensure_expr(left), ensure_expr(right)
     )
 
 
 def power(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs a power expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.POW, ensure_expr(left), ensure_expr(right)
     )
 
 
 def minimum(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs a minimum expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.MIN, ensure_expr(left), ensure_expr(right)
     )
 
 
 def maximum(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs a maximum expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.MAX, ensure_expr(left), ensure_expr(right)
     )
 
 
 def floor_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpression:
+    """
+    Constructs an euclidean division expression.
+    """
     return ArithmeticBinary(
         operators.ArithmeticBinaryOperator.FLOOR_DIV,
         ensure_expr(left),
@@ -814,31 +1016,45 @@ def floor_div(left: ValueOrExpression, right: ValueOrExpression) -> BinaryExpres
 UnaryConstructor = t.Callable[[ValueOrExpression], Expression]
 
 
-def logic_not(operand: ValueOrExpression) -> Expression:
-    return Not(operators.NotOperator.NOT, ensure_expr(operand))
-
-
 def floor(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs a floor expression.
+    """
     return ArithmeticUnary(
         operators.ArithmeticUnaryOperator.FLOOR, ensure_expr(operand)
     )
 
 
 def ceil(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs a ceil expression.
+    """
     return ArithmeticUnary(operators.ArithmeticUnaryOperator.CEIL, ensure_expr(operand))
 
 
 def absolute(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs an absolute value expression.
+    """
     return ArithmeticUnary(operators.ArithmeticUnaryOperator.ABS, ensure_expr(operand))
 
 
 def sgn(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs a sign expression.
+    """
     return ArithmeticUnary(operators.ArithmeticUnaryOperator.SGN, ensure_expr(operand))
 
 
 def trunc(operand: ValueOrExpression) -> Expression:
+    """
+    Constructs a truncate expression.
+    """
     return ArithmeticUnary(operators.ArithmeticUnaryOperator.TRC, ensure_expr(operand))
 
 
 def name(identifier: str) -> Name:
+    """
+    Constructs a name expression.
+    """
     return Name(identifier)
