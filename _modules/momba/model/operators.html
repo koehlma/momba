@@ -381,8 +381,9 @@
 <span class="sd">    """</span></div>
 
 
-<span class="k">class</span> <span class="nc">NotOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="NotOperator"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.NotOperator">[docs]</a><span class="k">class</span> <span class="nc">NotOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">NOT</span> <span class="o">=</span> <span class="s2">"¬"</span>
+    <span class="sd">""" Logical negation. """</span></div>
 
 
 <span class="k">class</span> <span class="nc">NativeUnaryArithmeticFunction</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
@@ -390,18 +391,26 @@
         <span class="k">pass</span>
 
 
-<span class="k">class</span> <span class="nc">ArithmeticUnaryOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="ArithmeticUnaryOperator"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.ArithmeticUnaryOperator">[docs]</a><span class="k">class</span> <span class="nc">ArithmeticUnaryOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">CEIL</span> <span class="o">=</span> <span class="s2">"ceil"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+    <span class="sd">""" Round up. """</span>
+
     <span class="n">FLOOR</span> <span class="o">=</span> <span class="s2">"floor"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+    <span class="sd">""" Round down. """</span>
 
     <span class="c1"># requires JANI extension `derived-operators`</span>
     <span class="n">ABS</span> <span class="o">=</span> <span class="s2">"abs"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">typ</span><span class="p">:</span> <span class="n">typ</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+    <span class="sd">""" Absolute value. """</span>
+
     <span class="n">SGN</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">"sgn"</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
         <span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">operand</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">operand</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span>
     <span class="p">)</span>
+    <span class="sd">""" Sign. """</span>
+
     <span class="n">TRC</span> <span class="o">=</span> <span class="s2">"trc"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">operand</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">trunc</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+    <span class="sd">""" Truncate. """</span>
 
     <span class="n">infer_result_type</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">InferTypeUnary</span>
     <span class="n">native_function</span><span class="p">:</span> <span class="n">NativeUnaryArithmeticFunction</span>
@@ -414,46 +423,94 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">infer_result_type</span> <span class="o">=</span> <span class="n">infer_result_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">native_function</span> <span class="o">=</span> <span class="n">native_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">native_function</span> <span class="o">=</span> <span class="n">native_function</span></div>
 
 
-<span class="k">class</span> <span class="nc">MinMax</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="MinMax"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.MinMax">[docs]</a><span class="k">class</span> <span class="nc">MinMax</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Minimum and maximum functions.</span>
+<span class="sd">    """</span>
+
     <span class="n">MIN</span> <span class="o">=</span> <span class="s2">"min"</span>
+    <span class="sd">""" Minimum. """</span>
+
     <span class="n">MAX</span> <span class="o">=</span> <span class="s2">"max"</span>
+    <span class="sd">""" Maximum. """</span></div>
 
 
-<span class="k">class</span> <span class="nc">Quantifier</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="Quantifier"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.Quantifier">[docs]</a><span class="k">class</span> <span class="nc">Quantifier</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Logical quantifier.</span>
+<span class="sd">    """</span>
+
     <span class="n">FORALL</span> <span class="o">=</span> <span class="s2">"∀"</span>
+    <span class="sd">""" Universal quantifier. """</span>
+
     <span class="n">EXISTS</span> <span class="o">=</span> <span class="s2">"∃"</span>
+    <span class="sd">""" Existential quantifier. """</span></div>
 
 
-<span class="k">class</span> <span class="nc">BinaryPathOperator</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="BinaryPathOperator"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.BinaryPathOperator">[docs]</a><span class="k">class</span> <span class="nc">BinaryPathOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    LTL binary path operators.</span>
+<span class="sd">    """</span>
+
     <span class="n">UNTIL</span> <span class="o">=</span> <span class="s2">"U"</span>
+    <span class="sd">""" Until. """</span>
+
     <span class="n">WEAK_UNTIL</span> <span class="o">=</span> <span class="s2">"W"</span>
+    <span class="sd">""" Weak until. """</span>
 
     <span class="c1"># requires JANI extension `derived-operators`</span>
     <span class="n">RELEASE</span> <span class="o">=</span> <span class="s2">"R"</span>
+    <span class="sd">""" Release. """</span></div>
 
 
-<span class="k">class</span> <span class="nc">UnaryPathOperator</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="UnaryPathOperator"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.UnaryPathOperator">[docs]</a><span class="k">class</span> <span class="nc">UnaryPathOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">""" LTL unary path operators. """</span>
+
     <span class="c1"># requires JANI extension `derived-operators`</span>
     <span class="n">EVENTUALLY</span> <span class="o">=</span> <span class="s2">"F"</span>
+    <span class="sd">""" Eventually. """</span>
+
     <span class="n">GLOBALLY</span> <span class="o">=</span> <span class="s2">"G"</span>
+    <span class="sd">""" Globally. """</span></div>
 
 
-<span class="k">class</span> <span class="nc">AggregationFunction</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="AggregationFunction"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.AggregationFunction">[docs]</a><span class="k">class</span> <span class="nc">AggregationFunction</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Aggregation functions.</span>
+<span class="sd">    """</span>
+
     <span class="n">MIN</span> <span class="o">=</span> <span class="s2">"min"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
-    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">"max"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
-    <span class="n">SUM</span> <span class="o">=</span> <span class="s2">"sum"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
-    <span class="n">AVG</span> <span class="o">=</span> <span class="s2">"avg"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
-    <span class="n">COUNT</span> <span class="o">=</span> <span class="s2">"count"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span>
-    <span class="n">EXISTS</span> <span class="o">=</span> <span class="s2">"∃"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
-    <span class="n">FORALL</span> <span class="o">=</span> <span class="s2">"∀"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
-    <span class="n">ARGMIN</span> <span class="o">=</span> <span class="s2">"argmin"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">STATE</span><span class="p">)</span>
-    <span class="n">ARGMAX</span> <span class="o">=</span> <span class="s2">"argmax"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">STATE</span><span class="p">)</span>
-    <span class="n">VALUES</span> <span class="o">=</span> <span class="s2">"values"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
+    <span class="sd">""" Minimum. """</span>
 
-    <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">MAX</span> <span class="o">=</span> <span class="s2">"max"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+    <span class="sd">""" Maximum. """</span>
+
+    <span class="n">SUM</span> <span class="o">=</span> <span class="s2">"sum"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+    <span class="sd">""" Sum. """</span>
+
+    <span class="n">AVG</span> <span class="o">=</span> <span class="s2">"avg"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
+    <span class="sd">""" Average. """</span>
+
+    <span class="n">COUNT</span> <span class="o">=</span> <span class="s2">"count"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span>
+    <span class="sd">""" Count. """</span>
+
+    <span class="n">EXISTS</span> <span class="o">=</span> <span class="s2">"∃"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+    <span class="sd">""" Exists. """</span>
+
+    <span class="n">FORALL</span> <span class="o">=</span> <span class="s2">"∀"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span>
+    <span class="sd">""" For all. """</span>
+
+    <span class="n">ARGMIN</span> <span class="o">=</span> <span class="s2">"argmin"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">STATE</span><span class="p">)</span>
+    <span class="sd">""" Minimizing argument. """</span>
+
+    <span class="n">ARGMAX</span> <span class="o">=</span> <span class="s2">"argmax"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">STATE</span><span class="p">)</span>
+    <span class="sd">""" Maximizing argument. """</span>
+
+    <span class="n">VALUES</span> <span class="o">=</span> <span class="s2">"values"</span><span class="p">,</span> <span class="p">{</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">},</span> <span class="k">lambda</span> <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">set_of</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
+    <span class="sd">""" Values. """</span>
 
     <span class="n">allowed_values_type</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">]</span>
     <span class="n">infer_result_type</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">InferTypeUnary</span>
@@ -464,25 +521,51 @@
         <span class="n">allowed_values_type</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">],</span>
         <span class="n">infer_result_type</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">InferTypeUnary</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">allowed_values_type</span> <span class="o">=</span> <span class="n">allowed_values_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">infer_result_type</span> <span class="o">=</span> <span class="n">infer_result_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infer_result_type</span> <span class="o">=</span> <span class="n">infer_result_type</span></div>
 
 
-<span class="k">class</span> <span class="nc">TrigonometricFunction</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="TrigonometricFunction"><a class="viewcode-back" href="../../../reference/model/expressions.html#momba.model.operators.TrigonometricFunction">[docs]</a><span class="k">class</span> <span class="nc">TrigonometricFunction</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">,</span> <span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Trigonometric functions.</span>
+<span class="sd">    """</span>
+
     <span class="n">SIN</span> <span class="o">=</span> <span class="s2">"sin"</span>
+    <span class="sd">""" Sine. """</span>
+
     <span class="n">COS</span> <span class="o">=</span> <span class="s2">"cos"</span>
+    <span class="sd">""" Cosine. """</span>
+
     <span class="n">TAN</span> <span class="o">=</span> <span class="s2">"tan"</span>
+    <span class="sd">""" Tangent. """</span>
+
     <span class="n">COT</span> <span class="o">=</span> <span class="s2">"cot"</span>
+    <span class="sd">""" Cotangent.. """</span>
+
     <span class="n">SEC</span> <span class="o">=</span> <span class="s2">"sec"</span>
+    <span class="sd">""" Secant. """</span>
+
     <span class="n">CSC</span> <span class="o">=</span> <span class="s2">"csc"</span>
+    <span class="sd">""" Cosecant. """</span>
 
     <span class="n">ARC_SIN</span> <span class="o">=</span> <span class="s2">"asin"</span>
+    <span class="sd">""" Inverse sine """</span>
+
     <span class="n">ARC_COS</span> <span class="o">=</span> <span class="s2">"acos"</span>
+    <span class="sd">""" Inverse cosine. """</span>
+
     <span class="n">ARC_TAN</span> <span class="o">=</span> <span class="s2">"atan"</span>
+    <span class="sd">""" Inverse tangent. """</span>
+
     <span class="n">ARC_COT</span> <span class="o">=</span> <span class="s2">"acot"</span>
+    <span class="sd">""" Inverse cotangent. """</span>
+
     <span class="n">ARC_SEC</span> <span class="o">=</span> <span class="s2">"asec"</span>
+    <span class="sd">""" Inverse secant. """</span>
+
     <span class="n">ARC_CSC</span> <span class="o">=</span> <span class="s2">"acsc"</span>
+    <span class="sd">""" Inverse coscant. """</span></div>
 </pre></div>
       </article>
       <footer>

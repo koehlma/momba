@@ -193,7 +193,7 @@
 <span class="kn">from</span> <span class="nn">.dump_model</span> <span class="kn">import</span> <span class="n">ModelFeature</span>
 
 
-<div class="viewcode-block" id="JANIError"><a class="viewcode-back" href="../../../reference/jani.html#momba.jani.JANIError">[docs]</a><span class="k">class</span> <span class="nc">JANIError</span><span class="p">:</span>
+<div class="viewcode-block" id="JANIError"><a class="viewcode-back" href="../../../reference/jani.html#momba.jani.JANIError">[docs]</a><span class="k">class</span> <span class="nc">JANIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Indicates an error while loading a JANI string.</span>
 
@@ -241,10 +241,10 @@
     <span class="s2">"⇔"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_equiv</span><span class="p">,</span>  <span class="c1"># defined by the `x-momba-operators` extension</span>
     <span class="s2">"="</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">equals</span><span class="p">,</span>
     <span class="s2">"≠"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">not_equals</span><span class="p">,</span>
-    <span class="s2">"&lt;"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">less_than</span><span class="p">,</span>
-    <span class="s2">"≤"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">less_or_equal_than</span><span class="p">,</span>
-    <span class="s2">"&gt;"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">greater_than</span><span class="p">,</span>  <span class="c1"># defined by the `derived-operators` extension</span>
-    <span class="s2">"≥"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">greater_or_equal_than</span><span class="p">,</span>  <span class="c1"># defined by the `derived-operators` extension</span>
+    <span class="s2">"&lt;"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">less</span><span class="p">,</span>
+    <span class="s2">"≤"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">less_or_equal</span><span class="p">,</span>
+    <span class="s2">"&gt;"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">greater</span><span class="p">,</span>  <span class="c1"># defined by the `derived-operators` extension</span>
+    <span class="s2">"≥"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">greater_or_equal</span><span class="p">,</span>  <span class="c1"># defined by the `derived-operators` extension</span>
     <span class="s2">"+"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">add</span><span class="p">,</span>
     <span class="s2">"-"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">sub</span><span class="p">,</span>
     <span class="s2">"*"</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span>

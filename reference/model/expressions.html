@@ -169,7 +169,8 @@
         <div class="section" id="expressions">
 <h1>Expressions<a class="headerlink" href="#expressions" title="Permalink to this headline">¶</a></h1>
 <p>In case you create expressions using Python code you probably want to use the convenience function <a class="reference internal" href="../../incubator/moml/index.html#momba.moml.expr" title="momba.moml.expr"><code class="xref py py-func docutils literal notranslate"><span class="pre">expr()</span></code></a> instead of working with the classes provided here directly.
-Note that this function is still provisional, however, it provides a much more concise way of defining expressions.</p>
+Note that this function is still provisional, however, it provides a much more concise way of defining expressions.
+In any case, instead of constructing objects directly it is recommended to use the constructor functions documented bellow.</p>
 <dl class="py class">
 <dt id="momba.model.Expression">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.</span></code><code class="sig-name descname"><span class="pre">Expression</span></code><a class="reference internal" href="../../_modules/momba/model/expressions.html#Expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Expression" title="Permalink to this definition">¶</a></dt>
@@ -177,7 +178,7 @@ Note that this function is still provisional, however, it provides a much more c
 <dl class="py method">
 <dt id="momba.model.Expression.children">
 <em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.Expression.children" title="Permalink to this definition">¶</a></dt>
-<dd><p>The children of the expression.</p>
+<dd><p>The direct children of the expression.</p>
 </dd></dl>
 <dl class="py method">
 <dt id="momba.model.Expression.traverse">
@@ -203,9 +204,177 @@ Note that this function is still provisional, however, it provides a much more c
 <dl class="py function">
 <dt id="momba.model.ensure_expr">
 <code class="sig-prename descclassname"><span class="pre">momba.model.</span></code><code class="sig-name descname"><span class="pre">ensure_expr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value_or_expression</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ensure_expr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.ensure_expr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<div class="section" id="reference">
-<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<dd><p>Takes a Python value or expression and returns an expression.</p>
+<p>Implicitly converts floats, integers, and booleans to constant expressions.</p>
+<p>Raises <a class="reference internal" href="#momba.model.expressions.ConversionError" title="momba.model.expressions.ConversionError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConversionError</span></code></a> if the conversion fails.</p>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ConversionError">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ConversionError</span></code><a class="reference internal" href="../../_modules/momba/model/expressions.html#ConversionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ConversionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unable to convert the provided value.</p>
+</dd></dl>
+<div class="section" id="constructor-functions">
+<h2>Constructor Functions<a class="headerlink" href="#constructor-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="momba.model.expressions.ite">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ite</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a conditional expression implicitly converting the arguments.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_not">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_not</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a logical negation expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_any">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_any</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_any"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_any" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a disjunction over the provided expressions.</p>
+<p>Returns <a class="reference internal" href="#momba.model.expressions.FALSE" title="momba.model.expressions.FALSE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">FALSE</span></code></a> if there are no expressions.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_or">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_or</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_or" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a disjunction over the provided expressions.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_all">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_all</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a conjunction over the provided expressions.</p>
+<p>Returns <a class="reference internal" href="#momba.model.expressions.TRUE" title="momba.model.expressions.TRUE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TRUE</span></code></a> if there are no expressions.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_and">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_and</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_and"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_and" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a conjunction over the provided expressions.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_xor">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_xor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">expressions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_xor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_xor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an exclusive disjunction over the provided expressions.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_implies">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_implies</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_implies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a logical implication.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.logic_equiv">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">logic_equiv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#logic_equiv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.logic_equiv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a logical equivalence.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.equals">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">equals</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#equals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.equals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an <em>equality</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.not_equals">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">not_equals</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#not_equals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.not_equals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an <em>inequality</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.less">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">less</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#less"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.less" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <em>less than</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.less_or_equal">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">less_or_equal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#less_or_equal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.less_or_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <em>less than or equal to</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.greater">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">greater</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#greater"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.greater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <em>greater than</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.greater_or_equal">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">greater_or_equal</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#greater_or_equal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.greater_or_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <em>greater than or equal to</em> expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.add">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an arithmetic addition expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.sub">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">sub</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#sub"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an arithmetic substraction expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.mul">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">mul</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#mul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an arithmetic multiplication expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.mod">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">mod</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#mod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an euclidean remainder expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.real_div">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">real_div</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#real_div"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.real_div" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a real-division expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.log">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">log</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a logarithm expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.power">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">power</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#power"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a power expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.minimum">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">minimum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#minimum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.minimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a minimum expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.maximum">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">maximum</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#maximum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.maximum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a maximum expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.floor_div">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">floor_div</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#floor_div"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.floor_div" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an euclidean division expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.floor">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">floor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#floor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.floor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a floor expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.ceil">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ceil</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ceil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ceil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a ceil expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.absolute">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">absolute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#absolute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.absolute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an absolute value expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.sgn">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">sgn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#sgn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.sgn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a sign expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.trunc">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">trunc</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#trunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.trunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a truncate expression.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.expressions.name">
+<code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">name</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a name expression.</p>
+</dd></dl>
+</div>
+<div class="section" id="class-hierarchy">
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="momba.model.expressions.BooleanConstant">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">BooleanConstant</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boolean</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#BooleanConstant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.BooleanConstant" title="Permalink to this definition">¶</a></dt>
@@ -342,7 +511,7 @@ Note that this function is still provisional, however, it provides a much more c
 <dl class="py method">
 <dt id="momba.model.expressions.BinaryExpression.children">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.BinaryExpression.children" title="Permalink to this definition">¶</a></dt>
-<dd><p>The children of the expression.</p>
+<dd><p>The direct children of the expression.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
@@ -353,6 +522,228 @@ Note that this function is still provisional, however, it provides a much more c
 <dt id="momba.model.expressions.Boolean.operator">
 <code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.Boolean.operator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The boolean operator (<a class="reference internal" href="#momba.model.operators.BooleanOperator" title="momba.model.operators.BooleanOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BooleanOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ArithmeticBinary">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ArithmeticBinary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ArithmeticBinary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ArithmeticBinary" title="Permalink to this definition">¶</a></dt>
+<dd><p>An arithmetic binary expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArithmeticBinary.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.ArithmeticBinary.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The arithmetic operator (<a class="reference internal" href="#momba.model.operators.ArithmeticBinaryOperator" title="momba.model.operators.ArithmeticBinaryOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArithmeticBinaryOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Equality">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Equality</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Equality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Equality" title="Permalink to this definition">¶</a></dt>
+<dd><p>An equality binary expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Equality.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.Equality.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The equality operator (<a class="reference internal" href="#momba.model.operators.EqualityOperator" title="momba.model.operators.EqualityOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">EqualityOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Comparison">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Comparison</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Comparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Comparison" title="Permalink to this definition">¶</a></dt>
+<dd><p>A comparison expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Comparison.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.Comparison.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The comparison operator (<a class="reference internal" href="#momba.model.operators.ComparisonOperator" title="momba.model.operators.ComparisonOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComparisonOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Conditional">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Conditional</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Conditional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Conditional" title="Permalink to this definition">¶</a></dt>
+<dd><p>A ternary conditional expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Conditional.condition">
+<code class="sig-name descname"><span class="pre">condition</span></code><a class="headerlink" href="#momba.model.expressions.Conditional.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>The condition.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Conditional.consequence">
+<code class="sig-name descname"><span class="pre">consequence</span></code><a class="headerlink" href="#momba.model.expressions.Conditional.consequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>The consequence to be evaluated if the condition is true.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Conditional.alternative">
+<code class="sig-name descname"><span class="pre">alternative</span></code><a class="headerlink" href="#momba.model.expressions.Conditional.alternative" title="Permalink to this definition">¶</a></dt>
+<dd><p>The alternative to be evaluated if the condition is false.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.Conditional.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.Conditional.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.UnaryExpression">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">UnaryExpression</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#UnaryExpression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.UnaryExpression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class of all unary expressions.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.UnaryExpression.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.UnaryExpression.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unary operator (<a class="reference internal" href="#momba.model.operators.UnaryOperator" title="momba.model.operators.UnaryOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnaryOperator</span></code></a>).</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.UnaryExpression.operand">
+<code class="sig-name descname"><span class="pre">operand</span></code><a class="headerlink" href="#momba.model.expressions.UnaryExpression.operand" title="Permalink to this definition">¶</a></dt>
+<dd><p>The operand.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.UnaryExpression.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.UnaryExpression.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ArithmeticUnary">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ArithmeticUnary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ArithmeticUnary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ArithmeticUnary" title="Permalink to this definition">¶</a></dt>
+<dd><p>An arithmetic unary expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArithmeticUnary.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.ArithmeticUnary.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The arithmetic operator (<a class="reference internal" href="#momba.model.operators.ArithmeticUnaryOperator" title="momba.model.operators.ArithmeticUnaryOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArithmeticUnaryOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Not">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Not</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Not" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logical negation.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Not.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.Not.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logical negation operator (<a class="reference internal" href="#momba.model.operators.NotOperator" title="momba.model.operators.NotOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NotOperator</span></code></a>).</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Sample">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Sample</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sample expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Sample.distribution">
+<code class="sig-name descname"><span class="pre">distribution</span></code><a class="headerlink" href="#momba.model.expressions.Sample.distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of the distribution to sample from
+(<a class="reference internal" href="#momba.model.distributions.DistributionType" title="momba.model.distributions.DistributionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">DistributionType</span></code></a>).</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Sample.arguments">
+<code class="sig-name descname"><span class="pre">arguments</span></code><a class="headerlink" href="#momba.model.expressions.Sample.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>The arguments to the distribution.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.Sample.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.Sample.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Selection">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Selection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A non-deterministic selection expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Selection.variable">
+<code class="sig-name descname"><span class="pre">variable</span></code><a class="headerlink" href="#momba.model.expressions.Selection.variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier to select over.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Selection.condition">
+<code class="sig-name descname"><span class="pre">condition</span></code><a class="headerlink" href="#momba.model.expressions.Selection.condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>The condition that should be satisfied.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.Selection.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.Selection.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Derivative">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Derivative</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Derivative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Derivative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derivative of a continuous variable.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Derivative.identifier">
+<code class="sig-name descname"><span class="pre">identifier</span></code><a class="headerlink" href="#momba.model.expressions.Derivative.identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The continuous variable.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.Derivative.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.Derivative.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ArrayAccess">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ArrayAccess</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ArrayAccess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ArrayAccess" title="Permalink to this definition">¶</a></dt>
+<dd><p>An array access expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayAccess.array">
+<code class="sig-name descname"><span class="pre">array</span></code><a class="headerlink" href="#momba.model.expressions.ArrayAccess.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>The array to access.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayAccess.index">
+<code class="sig-name descname"><span class="pre">index</span></code><a class="headerlink" href="#momba.model.expressions.ArrayAccess.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>The index where to access the array.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.ArrayAccess.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.ArrayAccess.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ArrayValue">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ArrayValue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ArrayValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ArrayValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>An array value expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayValue.elements">
+<code class="sig-name descname"><span class="pre">elements</span></code><a class="headerlink" href="#momba.model.expressions.ArrayValue.elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>The elements of the array to construct.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.ArrayValue.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.ArrayValue.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.ArrayConstructor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">ArrayConstructor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#ArrayConstructor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.ArrayConstructor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An array constructor expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayConstructor.variable">
+<code class="sig-name descname"><span class="pre">variable</span></code><a class="headerlink" href="#momba.model.expressions.ArrayConstructor.variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The identifier to range over.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayConstructor.length">
+<code class="sig-name descname"><span class="pre">length</span></code><a class="headerlink" href="#momba.model.expressions.ArrayConstructor.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>The length of the array.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.expressions.ArrayConstructor.expression">
+<code class="sig-name descname"><span class="pre">expression</span></code><a class="headerlink" href="#momba.model.expressions.ArrayConstructor.expression" title="Permalink to this definition">¶</a></dt>
+<dd><p>The expression to compute the elements of the array.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.expressions.ArrayConstructor.children">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children</span></code><a class="headerlink" href="#momba.model.expressions.ArrayConstructor.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>The direct children of the expression.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.expressions.Trigonometric">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.expressions.</span></code><code class="sig-name descname"><span class="pre">Trigonometric</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/expressions.html#Trigonometric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.expressions.Trigonometric" title="Permalink to this definition">¶</a></dt>
+<dd><p>A trigonometric expression.</p>
+<dl class="py attribute">
+<dt id="momba.model.expressions.Trigonometric.operator">
+<code class="sig-name descname"><span class="pre">operator</span></code><a class="headerlink" href="#momba.model.expressions.Trigonometric.operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trigonometric function to apply
+(<a class="reference internal" href="#momba.model.operators.TrigonometricFunction" title="momba.model.operators.TrigonometricFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrigonometricFunction</span></code></a>).</p>
 </dd></dl>
 </dd></dl>
 </div>
@@ -503,6 +894,379 @@ Note that this function is still provisional, however, it provides a much more c
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">UnaryOperator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#UnaryOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.UnaryOperator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all unary operators.</p>
 </dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.NotOperator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">NotOperator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#NotOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.NotOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.NotOperator.NOT">
+<code class="sig-name descname"><span class="pre">NOT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'¬'</span></em><a class="headerlink" href="#momba.model.operators.NotOperator.NOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logical negation.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.ArithmeticUnaryOperator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">ArithmeticUnaryOperator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#ArithmeticUnaryOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.ArithmeticUnaryOperator.CEIL">
+<code class="sig-name descname"><span class="pre">CEIL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('ceil',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator.CEIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Round up.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.ArithmeticUnaryOperator.FLOOR">
+<code class="sig-name descname"><span class="pre">FLOOR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('floor',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator.FLOOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Round down.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.ArithmeticUnaryOperator.ABS">
+<code class="sig-name descname"><span class="pre">ABS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('abs',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator.ABS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute value.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.ArithmeticUnaryOperator.SGN">
+<code class="sig-name descname"><span class="pre">SGN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('sgn',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator.SGN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sign.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.ArithmeticUnaryOperator.TRC">
+<code class="sig-name descname"><span class="pre">TRC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('trc',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;,</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticUnaryOperator.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.ArithmeticUnaryOperator.TRC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Truncate.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.MinMax">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">MinMax</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#MinMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.MinMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum and maximum functions.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.MinMax.MIN">
+<code class="sig-name descname"><span class="pre">MIN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'min'</span></em><a class="headerlink" href="#momba.model.operators.MinMax.MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.MinMax.MAX">
+<code class="sig-name descname"><span class="pre">MAX</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'max'</span></em><a class="headerlink" href="#momba.model.operators.MinMax.MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.Quantifier">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">Quantifier</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#Quantifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.Quantifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logical quantifier.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.Quantifier.FORALL">
+<code class="sig-name descname"><span class="pre">FORALL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'∀'</span></em><a class="headerlink" href="#momba.model.operators.Quantifier.FORALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Universal quantifier.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.Quantifier.EXISTS">
+<code class="sig-name descname"><span class="pre">EXISTS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'∃'</span></em><a class="headerlink" href="#momba.model.operators.Quantifier.EXISTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Existential quantifier.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.BinaryPathOperator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">BinaryPathOperator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#BinaryPathOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.BinaryPathOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>LTL binary path operators.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.BinaryPathOperator.UNTIL">
+<code class="sig-name descname"><span class="pre">UNTIL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'U'</span></em><a class="headerlink" href="#momba.model.operators.BinaryPathOperator.UNTIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Until.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.BinaryPathOperator.WEAK_UNTIL">
+<code class="sig-name descname"><span class="pre">WEAK_UNTIL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'W'</span></em><a class="headerlink" href="#momba.model.operators.BinaryPathOperator.WEAK_UNTIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weak until.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.BinaryPathOperator.RELEASE">
+<code class="sig-name descname"><span class="pre">RELEASE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'R'</span></em><a class="headerlink" href="#momba.model.operators.BinaryPathOperator.RELEASE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.UnaryPathOperator">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">UnaryPathOperator</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#UnaryPathOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.UnaryPathOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>LTL unary path operators.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.UnaryPathOperator.EVENTUALLY">
+<code class="sig-name descname"><span class="pre">EVENTUALLY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'F'</span></em><a class="headerlink" href="#momba.model.operators.UnaryPathOperator.EVENTUALLY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eventually.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.UnaryPathOperator.GLOBALLY">
+<code class="sig-name descname"><span class="pre">GLOBALLY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'G'</span></em><a class="headerlink" href="#momba.model.operators.UnaryPathOperator.GLOBALLY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Globally.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.AggregationFunction">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">AggregationFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#AggregationFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.AggregationFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregation functions.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.MIN">
+<code class="sig-name descname"><span class="pre">MIN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('min',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.MIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.MAX">
+<code class="sig-name descname"><span class="pre">MAX</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('max',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.SUM">
+<code class="sig-name descname"><span class="pre">SUM</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('sum',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.SUM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sum.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.AVG">
+<code class="sig-name descname"><span class="pre">AVG</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('avg',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.AVG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.COUNT">
+<code class="sig-name descname"><span class="pre">COUNT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('count',</span> <span class="pre">{BoolType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.COUNT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.EXISTS">
+<code class="sig-name descname"><span class="pre">EXISTS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('∃',</span> <span class="pre">{BoolType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.EXISTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exists.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.FORALL">
+<code class="sig-name descname"><span class="pre">FORALL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('∀',</span> <span class="pre">{BoolType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.FORALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>For all.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.ARGMIN">
+<code class="sig-name descname"><span class="pre">ARGMIN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('argmin',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.ARGMIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimizing argument.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.ARGMAX">
+<code class="sig-name descname"><span class="pre">ARGMAX</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('argmax',</span> <span class="pre">{RealType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.ARGMAX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximizing argument.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.AggregationFunction.VALUES">
+<code class="sig-name descname"><span class="pre">VALUES</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('values',</span> <span class="pre">{RealType(),</span> <span class="pre">BoolType()},</span> <span class="pre">&lt;function</span> <span class="pre">AggregationFunction.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#momba.model.operators.AggregationFunction.VALUES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Values.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.operators.TrigonometricFunction">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.operators.</span></code><code class="sig-name descname"><span class="pre">TrigonometricFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/operators.html#TrigonometricFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.operators.TrigonometricFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigonometric functions.</p>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.SIN">
+<code class="sig-name descname"><span class="pre">SIN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'sin'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.SIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sine.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.COS">
+<code class="sig-name descname"><span class="pre">COS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'cos'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.COS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cosine.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.TAN">
+<code class="sig-name descname"><span class="pre">TAN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'tan'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.TAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tangent.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.COT">
+<code class="sig-name descname"><span class="pre">COT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'cot'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.COT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cotangent..</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.SEC">
+<code class="sig-name descname"><span class="pre">SEC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'sec'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.SEC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Secant.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.CSC">
+<code class="sig-name descname"><span class="pre">CSC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'csc'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.CSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cosecant.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_SIN">
+<code class="sig-name descname"><span class="pre">ARC_SIN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'asin'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_SIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse sine</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_COS">
+<code class="sig-name descname"><span class="pre">ARC_COS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'acos'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_COS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse cosine.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_TAN">
+<code class="sig-name descname"><span class="pre">ARC_TAN</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'atan'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_TAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse tangent.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_COT">
+<code class="sig-name descname"><span class="pre">ARC_COT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'acot'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_COT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse cotangent.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_SEC">
+<code class="sig-name descname"><span class="pre">ARC_SEC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'asec'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_SEC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse secant.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.operators.TrigonometricFunction.ARC_CSC">
+<code class="sig-name descname"><span class="pre">ARC_CSC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'acsc'</span></em><a class="headerlink" href="#momba.model.operators.TrigonometricFunction.ARC_CSC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse coscant.</p>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="distributions">
+<h2>Distributions<a class="headerlink" href="#distributions" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="momba.model.distributions.DistributionType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.distributions.</span></code><code class="sig-name descname"><span class="pre">DistributionType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/distributions.html#DistributionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.distributions.DistributionType" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enum of distribution type.</p>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.DISCRETE_UNIFORM">
+<code class="sig-name descname"><span class="pre">DISCRETE_UNIFORM</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('DiscreteUniform',</span> <span class="pre">(IntegerType(),</span> <span class="pre">IntegerType()),</span> <span class="pre">IntegerType())</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.DISCRETE_UNIFORM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Discrete uniform distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.BERNOULLI">
+<code class="sig-name descname"><span class="pre">BERNOULLI</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Bernoulli',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.BERNOULLI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bernoulli distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.BINOMIAL">
+<code class="sig-name descname"><span class="pre">BINOMIAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Binomial',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.BINOMIAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binomial distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.NEGATIVE_BINOMIAL">
+<code class="sig-name descname"><span class="pre">NEGATIVE_BINOMIAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('NegativeBinomial',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.NEGATIVE_BINOMIAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Negative binomial distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.POISSON">
+<code class="sig-name descname"><span class="pre">POISSON</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Poisson',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.POISSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Poisson distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.GEOMETRIC">
+<code class="sig-name descname"><span class="pre">GEOMETRIC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Geometric',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.GEOMETRIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometric distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.HYPERGEOMETRIC">
+<code class="sig-name descname"><span class="pre">HYPERGEOMETRIC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Hypergeometric',</span> <span class="pre">(IntegerType(),</span> <span class="pre">IntegerType(),</span> <span class="pre">IntegerType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.HYPERGEOMETRIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hypergeometric distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.CONWAY_MAXWELL_POISSON">
+<code class="sig-name descname"><span class="pre">CONWAY_MAXWELL_POISSON</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('ConwayMaxwellPoisson',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.CONWAY_MAXWELL_POISSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conway Maxwell Poisson distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.ZIPF">
+<code class="sig-name descname"><span class="pre">ZIPF</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('ZipF',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.ZIPF" title="Permalink to this definition">¶</a></dt>
+<dd><p>ZipF distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.UNIFORM">
+<code class="sig-name descname"><span class="pre">UNIFORM</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Uniform',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.UNIFORM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uniform distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.NORMAL">
+<code class="sig-name descname"><span class="pre">NORMAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Normal',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.NORMAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normal distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.LOG_NORMAL">
+<code class="sig-name descname"><span class="pre">LOG_NORMAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('LogNormal',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.LOG_NORMAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logarithmic normal distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.BETA">
+<code class="sig-name descname"><span class="pre">BETA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Beta',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.BETA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Beta distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.CAUCHY">
+<code class="sig-name descname"><span class="pre">CAUCHY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Cauchy',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.CAUCHY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cauchy distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.CHI">
+<code class="sig-name descname"><span class="pre">CHI</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Chi',</span> <span class="pre">(IntegerType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.CHI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chi distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.CHI_SQUARED">
+<code class="sig-name descname"><span class="pre">CHI_SQUARED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('ChiSquared',</span> <span class="pre">(IntegerType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.CHI_SQUARED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chi squared distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.ERLANG">
+<code class="sig-name descname"><span class="pre">ERLANG</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Erlang',</span> <span class="pre">(IntegerType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.ERLANG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Erlang distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.EXPONENTIAL">
+<code class="sig-name descname"><span class="pre">EXPONENTIAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Exponential',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.EXPONENTIAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exponential distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.FISHER_SNEDECOR">
+<code class="sig-name descname"><span class="pre">FISHER_SNEDECOR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('FisherSnedecor',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.FISHER_SNEDECOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fisher Snedecor distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.GAMMA">
+<code class="sig-name descname"><span class="pre">GAMMA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Gamma',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.GAMMA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gamma distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.INVERSE_GAMMA">
+<code class="sig-name descname"><span class="pre">INVERSE_GAMMA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('InverseGamma',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.INVERSE_GAMMA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse gamma distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.LAPLACE">
+<code class="sig-name descname"><span class="pre">LAPLACE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Laplace',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.LAPLACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Laplace distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.PARETO">
+<code class="sig-name descname"><span class="pre">PARETO</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Pareto',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.PARETO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pareto distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.RAYLEIGH">
+<code class="sig-name descname"><span class="pre">RAYLEIGH</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Rayleigh',</span> <span class="pre">(RealType(),))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.RAYLEIGH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rayleigh distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.STABLE">
+<code class="sig-name descname"><span class="pre">STABLE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Stable',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType(),</span> <span class="pre">RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.STABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stable distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.STUDENT_T">
+<code class="sig-name descname"><span class="pre">STUDENT_T</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('StudentT',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.STUDENT_T" title="Permalink to this definition">¶</a></dt>
+<dd><p>StudentT distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.WEIBULL">
+<code class="sig-name descname"><span class="pre">WEIBULL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Weibull',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.WEIBULL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weibull distribution.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.distributions.DistributionType.TRIANGULAR">
+<code class="sig-name descname"><span class="pre">TRIANGULAR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('Triangular',</span> <span class="pre">(RealType(),</span> <span class="pre">RealType(),</span> <span class="pre">RealType()))</span></em><a class="headerlink" href="#momba.model.distributions.DistributionType.TRIANGULAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triangular distribution.</p>
+</dd></dl>
+</dd></dl>
 </div>
 </div>
 
@@ -559,8 +1323,10 @@ Note that this function is still provisional, however, it provides a much more c
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Expressions</a><ul>
-<li><a class="reference internal" href="#reference">Reference</a></li>
+<li><a class="reference internal" href="#constructor-functions">Constructor Functions</a></li>
+<li><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
 <li><a class="reference internal" href="#operators">Operators</a></li>
+<li><a class="reference internal" href="#distributions">Distributions</a></li>
 </ul>
 </li>
 </ul>
