@@ -1,10 +1,10 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Contributing" href="../../contributing/index.html" /><link rel="prev" title="MOML Grammar" href="grammar.html" />
 
     <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
-        <title>momba.moml - Momba</title>
+        <title>Syntax-Aware Macros - Momba</title>
       <link rel="stylesheet" href="../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
     <link rel="stylesheet" href="../../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
@@ -113,7 +113,7 @@
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../guide/construction.html">Model Construction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../guide/exploration.html">Model Exploration</a></li>
@@ -142,9 +142,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../incubator/moml/index.html">MOML</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Feature Incubator</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../value-passing.html">Value Passing</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">MOML</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Syntax-Aware Macros</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -166,62 +170,44 @@
         <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <h1>Source code for momba.moml</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
-<span class="c1">#</span>
-<span class="c1"># Copyright (C) 2019-2020, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
+        <div class="section" id="syntax-aware-macros">
+<h1>Syntax-Aware Macros<a class="headerlink" href="#syntax-aware-macros" title="Permalink to this headline">¶</a></h1>
+</div>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
-
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">model</span>
-
-<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">expressions</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">parser</span>
-
-
-<span class="k">def</span> <span class="nf">parse_type</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_type</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">parse_expression</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Context</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Context</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_moml</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="expr"><a class="viewcode-back" href="../../incubator/moml/index.html#momba.moml.expr">[docs]</a><span class="k">def</span> <span class="nf">expr</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">macros</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
-        <span class="n">environment</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
-            <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">macros</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="p">),</span>
-    <span class="p">)</span></div>
-
-
-<span class="k">def</span> <span class="nf">prop</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">macros</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_property</span><span class="p">(</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
-        <span class="n">environment</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
-            <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">macros</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-</pre></div>
       </article>
       <footer>
         
     
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="../../contributing/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Contributing</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="grammar.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">MOML Grammar</div>
+                
+              </div>
+            </a>
         </div>
 
         <div class="related-information">
               Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
+            |
+            <a class="muted-link" href="../../_sources/incubator/moml/macros.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
         </div>
         
     <p style="padding: 0 0.75rem; margin-top: 0;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>

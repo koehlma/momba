@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Contributing" href="../../contributing/index.html" /><link rel="prev" title="Value Passing" href="../value-passing.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="MOML Grammar" href="grammar.html" /><link rel="prev" title="Value Passing" href="../value-passing.html" />
 
     <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
         <title>MOML - Momba</title>
@@ -144,7 +144,11 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Feature Incubator</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">MOML</a></li>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">MOML</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="macros.html">Syntax-Aware Macros</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -168,62 +172,58 @@
         </label>
         <div class="section" id="moml">
 <h1>MOML<a class="headerlink" href="#moml" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Momba Modeling Language</em> (MOML) is <strong>a model description language</strong> based on the <code class="docutils literal notranslate"><span class="pre">JANI</span> <span class="pre">specification</span> <span class="pre">&lt;http://www.jani-spec.org/&gt;</span></code><em>.
+<p>The <em>Momba Modeling Language</em> (MOML) is <strong>a model description language</strong> based on the <a class="reference external" href="http://www.jani-spec.org/">JANI-model specification</a>.
 In comparison to JANI, MOML is less verbose and thus easier to read and write.
-However, MOML is still a <strong>low-level language</strong> forcing you to specify every detail of your model explicitly.
-Depending on your use-case such fine grained control over the constructed model might not be necessary and you may want to consider using a <em>higher-level</em> language like <code class="docutils literal notranslate"><span class="pre">Modest</span> <span class="pre">&lt;http://www.modestchecker.net/&gt;</span></code></em>.
+However, MOML is still a <strong>low-level language</strong> forcing you to specify your model explicitly.
+Depending on your use-case such fine grained control over the constructed model might not be necessary and you may want to consider using a <em>higher-level</em> language like <a class="reference external" href="http://www.modestchecker.net/">Modest</a>.
 If you, however, want explicit control over every aspect of your model, give MOML a try.</p>
 <p>Momba comes with a converter to convert between MOML and JANI.
-Hence, you can use your MOML model with any tool supporting the JANI specification such as <code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">Modest</span> <span class="pre">Toolset</span> <span class="pre">&lt;http://www.modestchecker.net/&gt;</span></code>_ and <code class="docutils literal notranslate"><span class="pre">EPMC</span> <span class="pre">&lt;https://github.com/ISCAS-PMC/ePMC&gt;</span></code>_.</p>
-<dl class="py class">
-<dt id="momba.moml.expr">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.moml.</span></code><code class="sig-name descname"><span class="pre">expr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">macros</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/moml.html#expr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.moml.expr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-<p>.. code-block:: moml</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>model_type DTMC
+Hence, you can use your MOML model with any tool supporting the JANI specification.</p>
+<div class="highlight-moml notranslate"><div class="highlight"><pre><span></span><span class="k">model_type</span><span class="w"> </span><span class="n">DTMC</span><span class="w"></span>
 
-metadata:
-    "name": "Simple Die"
+<span class="k">metadata</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="s">"name"</span><span class="p">:</span><span class="w"> </span><span class="s">"Simple Die"</span><span class="w"></span>
 
-variable side : int[1,6] := 1 "side of a die"
+<span class="k">variable</span><span class="w"> </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">int</span><span class="p">[</span><span class="n">1</span><span class="p">,</span><span class="n">6</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="s">"side of a die"</span><span class="w"></span>
 
-automaton Die:
-    initial location l
+<span class="k">automaton</span><span class="w"> </span><span class="n">Die</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">initial</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="n">l</span><span class="w"></span>
 
-    edge from l:
-        to l:
-            probability 1 / 6
-            side := 1
-        to l:
-            probability 1 / 6
-            side := 2
-        to l:
-            probability 1 / 6
-            side := 3
-        to l:
-            probability 1 / 6
-            side := 4
-        to l:
-            probability 1 / 6
-            side := 5
-        to l:
-            probability 1 / 6
-            side := 6
+<span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">2</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">4</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">5</span><span class="w"></span>
+<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
+<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
+<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
 
-network:
-    instance die Die
-    composition die
+<span class="k">network</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="k">instance</span><span class="w"> </span><span class="n">die</span><span class="w"> </span><span class="n">Die</span><span class="w"></span>
+<span class="w">    </span><span class="k">composition</span><span class="w"> </span><span class="n">die</span><span class="w"></span>
 </pre></div>
 </div>
-<p>.. toctree::
-:maxdepth: 2</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>grammar
-</pre></div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="macros.html">Syntax-Aware Macros</a></li>
+</ul>
 </div>
 <div class="section" id="vs-code-support">
 <h2>VS Code Support<a class="headerlink" href="#vs-code-support" title="Permalink to this headline">¶</a></h2>
-<p>We provide a <code class="docutils literal notranslate"><span class="pre">VS</span> <span class="pre">Code</span> <span class="pre">extension</span> <span class="pre">for</span> <span class="pre">MOML</span> <span class="pre">&lt;https://marketplace.visualstudio.com/items?itemName=koehlma.moml-language&gt;</span></code>_:</p>
-<p>.. image:: vscode.jpg</p>
+<p>We provide a <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=koehlma.moml-language">VS Code extension for MOML</a>:</p>
+<img alt="../../_images/vscode.jpg" src="../../_images/vscode.jpg"/>
 </div>
 </div>
 
@@ -232,12 +232,12 @@ network:
         
     
         <div class="related-pages">
-          <a class="next-page" href="../../contributing/index.html">
+          <a class="next-page" href="grammar.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Contributing</div>
+                <div class="title">MOML Grammar</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>

@@ -144,7 +144,11 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../incubator/moml/index.html">MOML</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../incubator/moml/grammar.html">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -198,7 +202,7 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7fb7046ea040&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7fee42791460&gt;
 </pre></div>
 </div>
 </div>
@@ -236,16 +240,16 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'y1': Value(0),
+ 's2': Value(0),
+ 'w21': Value(0),
+ 'w12': Value(0),
+ 'z1': Value(0),
+ 'x2': Value(0),
+ 't': Value(0),
  'y2': Value(0),
  'x1': Value(0),
  'z2': Value(0),
- 's2': Value(0),
- 'w12': Value(0),
- 'w21': Value(0),
- 't': Value(0),
- 'x2': Value(0),
- 'y1': Value(0),
  's1': Value(0)}
 </pre></div>
 </div>
@@ -260,11 +264,11 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>timer: l
-node1: l
-wire21: l
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1: l
 wire12: l
+wire21: l
 node2: l
+timer: l
 </pre></div>
 </div>
 </div>
@@ -279,15 +283,15 @@ node2: l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>timer
-{}
-node1
-{}
-wire21
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1
 {}
 wire12
 {}
+wire21
+{}
 node2
+{}
+timer
 {}
 </pre></div>
 </div>
@@ -310,11 +314,11 @@ To this end, we query the outgoing transitions of the initial state and their re
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb6fd755b80&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb6fd755b20&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fee415b6af0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fee415b6b50&gt;.
 Action: snd_idle12
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb6fd755f40&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb6fd755fa0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fee415b6f10&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fee415b6f70&gt;.
 </pre></div>
 </div>
 </div>
@@ -334,20 +338,20 @@ Action: snd_idle12
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
 </pre></div>
 </div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'y1': Value(0),
+ 's2': Value(2),
+ 'w21': Value(5),
+ 'w12': Value(0),
+ 'z1': Value(0),
+ 'x2': Value(0),
+ 't': Value(0),
  'y2': Value(0),
  'x1': Value(0),
  'z2': Value(0),
- 's2': Value(0),
- 'w12': Value(5),
- 'w21': Value(0),
- 't': Value(0),
- 'x2': Value(0),
- 'y1': Value(0),
- 's1': Value(2)}
+ 's1': Value(0)}
 </pre></div>
 </div>
 </div>
