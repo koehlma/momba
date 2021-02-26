@@ -1,0 +1,93 @@
+name: Release Pipeline
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  build_momba:
+    name: Build Momba Core
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install Poetry
+      run: python -m pip install poetry
+    - name: Build momba
+      run: poetry build
+    - uses: actions/upload-artifact@v2
+      with:
+        name: packages
+        path: ./dist/*
+
+  build_engine_sdist:
+    name: Build Engine Source Distribution
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Maturin
+        run: python -m pip install git+https://github.com/koehlma/maturin.git
+      - name: Build engine sdist
+        run: |
+          cd engine
+          maturin sdist -o dist
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: ./engine/dist/*.tar.gz
+
+  build_engine_wheels:
+    name: Build Engine Wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-10.15]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==1.10.0
+      - name: Build wheels
+        run: |
+          cd engine
+          python -m cibuildwheel --output-dir ../wheelhouse
+        env:
+          CIBW_ARCHS: auto64
+          CIBW_BUILD: cp38-* cp39-*
+          CIBW_BEFORE_BUILD_LINUX: curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain nightly
+          CIBW_ENVIRONMENT_LINUX: PATH=$HOME/.cargo/bin:$PATH
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: ./wheelhouse/*.whl
+
+  publish:
+    name: Publish to PyPI
+    runs-on: ubuntu-20.04
+    environment: pypi
+    needs: [build_momba, build_engine_sdist, build_engine_wheels]
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: packages
+        path: dist
+    - name: Display files
+      run: ls -l dist
+    - name: Publish package to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        verify_metadata: false
+        password: ${{ secrets.PYPI_API_TOKEN }}
