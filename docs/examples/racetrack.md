@@ -1,6 +1,6 @@
 # Racetrack
 
-An example showcasing almost all nifty features of Momba centered around [Racetrack](https://racetrack.perspicuous-computing.science/).
+An example showcasing almost all nifty features of Momba is centered around [Racetrack](https://racetrack.perspicuous-computing.science/).
 Originally, Racetrack has been a pen and paper game where a car has to be steered on a two-dimensional grid from a start position to a goal position.
 We developed a formal model of this game using Momba.
 This page documents how you may use this model for your own research.
@@ -17,6 +17,51 @@ pip install racetrack
 ```
 
 Check out the source of the Racetrack model [here](https://github.com/koehlma/momba/tree/master/examples/racetrack).
+
+
+## Quickstart
+
+First, we import the necessary packages:
+
+```{jupyter-execute}
+import random
+
+from momba import engine
+
+from racetrack import model, tracks, svg
+```
+
+Let's select a start cell from the Barto-Big track and construct a {class}`~racetrack.model.Scenario`:
+```{jupyter-execute}
+start_cell = random.choice(list(tracks.BARTO_BIG.start_cells))
+scenario = model.Scenario(tracks.BARTO_BIG, start_cell)
+scenario
+```
+
+Based on the scenario description, we then build the actual model:
+```{jupyter-execute}
+mdp = model.construct_model(scenario)
+mdp
+```
+
+As you can see, this gave us an automaton {class}`~momba.model.Network`.
+
+Next, we construct an {class}`~momba.engine.Explorer` for model exploration:
+```{jupyter-execute}
+explorer = engine.Explorer.new_discrete_time(mdp)
+explorer
+```
+
+We can now inspect the initial state and visualize it:
+```{jupyter-execute}
+initial_state, = explorer.initial_states
+initial_state.global_env
+```
+
+```{jupyter-execute}
+svg.format_track(tracks.BARTO_BIG, car=initial_state.global_env["car_pos"].as_int)
+```
+
 
 
 ## The Model
@@ -49,6 +94,12 @@ Let's also include some auto-generated documentation for the {class}`~racetrack.
 
 ```{eval-rst}
 .. autoclass:: racetrack.model.Track
+    :members:
+```
+
+
+```{eval-rst}
+.. autoclass:: racetrack.model.Scenario
     :members:
 ```
 
