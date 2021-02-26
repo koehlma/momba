@@ -9,6 +9,18 @@ from pygments.lexer import RegexLexer
 from pygments import token
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(
+    0, os.path.join(os.path.dirname(__file__), "..", "examples", "racetrack")
+)
+
+os.environ["PYTHONPATH"] = ":".join(
+    (
+        os.path.join(os.path.dirname(__file__), "..", "examples", "racetrack"),
+        os.environ.get("PYTHONPATH", ""),
+    )
+)
+
+import racetrack  # noqa
 
 import momba  # noqa
 

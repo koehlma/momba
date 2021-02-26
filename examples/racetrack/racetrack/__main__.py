@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
-# Copyright (C) 2020, Michaela Klauck <klauck@cs.uni-saarland.de>
+# Copyright (C) 2021, Saarland University
+# Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -9,67 +9,86 @@ import typing as t
 
 import pathlib
 import random
-import sys
 
 import click
 
-import colorama
+from momba import engine, jani
 
-from momba import engine
+from . import console, model
 
-from racetrack import (
-    Scenario,
-    Coordinate,
-    Track,
-    Underground,
-    TankType,
-    CellType,
-    construct_model,
+
+@click.group()
+def main() -> None:
+    """
+    Racetrack
+    """
+
+
+@main.command()
+@click.argument("track_file", type=pathlib.Path)
+@click.argument("output_directory", type=pathlib.Path)
+@click.option(
+    "--speed-bound", type=int, default=3, help="Maximal allowed speed of the car."
 )
+@click.option(
+    "--acceleration-bound",
+    type=int,
+    default=2,
+    help="Maximal allowed acceleration of the car.",
+)
+@click.option(
+    "--allow-momba-operators",
+    default=False,
+    is_flag=True,
+    help="Use JANI extension `x-momba-operators`.",
+)
+@click.option(
+    "--indent", type=int, default=None, help="Indentation for the JANI files."
+)
+def generate(
+    track_file: pathlib.Path,
+    output_directory: pathlib.Path,
+    speed_bound: int,
+    acceleration_bound: int,
+    allow_momba_operators: bool,
+    indent: t.Optional[int],
+) -> None:
+    """
+    Generates a family of JANI models from the provided track file.
 
+    TRACK_FILE A Racetrack track in ASCII format.
+    OUTPUT_DIRECTORY A directory to write the JANI models to.
+    """
+    output_directory.mkdir(parents=True, exist_ok=True)
 
-colorama.init()
+    track = model.Track.from_source(track_file.read_text(encoding="utf-8"))
 
+    print("Generate scenarios...")
+    scenarios = tuple(model.generate_scenarios(track, speed_bound, acceleration_bound))
 
-# allow for deeper recursions as this may be necessary for some large tracks
-sys.setrecursionlimit(10 ** 6)
+    print(f"Generating {len(scenarios)} models...")
 
-
-_BACKGROUND_COLORS = {
-    CellType.BLANK: colorama.Back.BLACK,
-    CellType.BLOCKED: colorama.Back.RED,
-    CellType.GOAL: colorama.Back.GREEN,
-    CellType.START: colorama.Back.BLUE,
-}
-
-
-def format_cell(track: Track, cell: int, car: t.Optional[int] = None) -> str:
-    typ = track.get_cell_type(cell)
-    background = _BACKGROUND_COLORS[typ]
-    car_cell = cell == car
-    if car_cell:
-        foreground = colorama.Fore.RED if typ is CellType.GOAL else colorama.Fore.YELLOW
-    else:
-        foreground = (
-            colorama.Fore.WHITE if typ is CellType.BLANK else colorama.Fore.BLACK
-        )
-    symbol = "*" if car_cell else "."
-    return f"{background}{foreground}{symbol}{colorama.Style.RESET_ALL}"
-
-
-def format_track(track: Track, car: t.Optional[int] = None) -> str:
-    lines: t.List[str] = []
-    for y in range(track.height):
-        lines.append(
-            "".join(
-                format_cell(track, track.coordinate_to_cell(Coordinate(x, y)), car=car)
-                for x in range(track.width)
+    with click.progressbar(scenarios) as progressbar:
+        for scenario in progressbar:
+            network = model.construct_model(scenario)
+            filename = (
+                "car"
+                f"_{scenario.max_speed}"
+                f"_{scenario.max_acceleration}"
+                f"_{scenario.underground.name}"
+                f"_{scenario.tank_type.name}"
+                f"_{scenario.start_cell}.jani"
             )
-        )
-    return "\n".join(lines)
+            (output_directory / filename).write_bytes(
+                jani.dump_model(
+                    network,
+                    indent=indent,
+                    allow_momba_operators=allow_momba_operators,
+                )
+            )
 
 
-@click.command()
+@main.command()
 @click.argument("track_file", type=pathlib.Path)
 @click.option(
     "--crazy-driver",
@@ -88,15 +107,15 @@ def format_track(track: Track, car: t.Optional[int] = None) -> str:
 @click.option(
     "--underground",
     "underground_name",
-    type=click.Choice(tuple(underground.name for underground in Underground)),
-    default=Underground.TARMAC.name,
+    type=click.Choice(tuple(underground.name for underground in model.Underground)),
+    default=model.Underground.TARMAC.name,
     help="The underground to drive on.",
 )
 @click.option(
     "--tank-type",
     "tank_type_name",
-    type=click.Choice(tuple(tank_type.name for tank_type in TankType)),
-    default=TankType.LARGE.name,
+    type=click.Choice(tuple(tank_type.name for tank_type in model.TankType)),
+    default=model.TankType.LARGE.name,
     help="The tank type to drive with.",
 )
 def race(
@@ -107,11 +126,11 @@ def race(
     underground_name: str,
     tank_type_name: str,
 ) -> None:
-    track = Track.from_source(track_file.read_text(encoding="utf-8"))
+    track = model.Track.from_source(track_file.read_text(encoding="utf-8"))
     print("Input Track".center(track.width))
 
     print("=" * track.width)
-    print(format_track(track))
+    print(console.format_track(track))
     print("=" * track.width, end="\n\n")
 
     start_cell = int(
@@ -122,17 +141,17 @@ def race(
         )
     )
 
-    scenario = Scenario(
+    scenario = model.Scenario(
         track,
         start_cell=start_cell,
         max_acceleration=max_acceleration,
         max_speed=max_speed,
-        underground=Underground[underground_name],
-        tank_type=TankType[tank_type_name],
+        underground=model.Underground[underground_name],
+        tank_type=model.TankType[tank_type_name],
     )
 
     print("\nBuilding model...")
-    network = construct_model(scenario)
+    network = model.construct_model(scenario)
 
     # retrieve the instance of the car automaton we are going to control
     car_instance = next(
@@ -150,7 +169,7 @@ def race(
         fuel = state.global_env["fuel"].as_int
 
         print(f"\ndx: {dx}, dy: {dy}, fuel: {fuel}\n")
-        print(format_track(track, car_pos))
+        print(console.format_track(track, car_pos))
 
         if car_pos in scenario.track.goal_cells:
             print("\nGame won!")
@@ -189,7 +208,3 @@ def race(
         )
         decision = options[(chosen_ax, chosen_ay)]
         state = decision.destinations.pick().state
-
-
-if __name__ == "__main__":
-    race()

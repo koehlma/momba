@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 #
-# Copyright (C) 2019-2020, Michaela Klauck <klauck@cs.uni-saarland.de>
-# Copyright (C) 2020, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2020-2021, Saarland University
+# Copyright (C) 2020-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2020-2021, Michaela Klauck <klauck@cs.uni-saarland.de>
 
 from __future__ import annotations
 
@@ -11,14 +12,12 @@ import typing as t
 import enum
 import itertools
 import math
-import pathlib
 import re
 
 from functools import reduce
 
-import click
 
-from momba import jani, model
+from momba import model
 from momba.model import expressions, types
 from momba.model.expressions import logic_or, FALSE
 from momba.moml import expr, prop
@@ -41,12 +40,21 @@ class AccelerationModel(t.Protocol):
 
 
 class Underground(enum.Enum):
+    """
+    Undergrounds introduce probabilistic noise modeling slippery road conditions.
+    """
+
     TARMAC = expr("9 / 10"), lambda a: a
+    """ A very solid non-slippery underground introducing no noise. """
+
     SAND = (
         expr("5 / 10"),
         lambda a: expr("$a > 0 ? $a - 1 : ($a < 0 ? $a + 1 : 0)", a=a),
     )
+    """ A sandy underground introducing some noise, be cautious! """
+
     ICE = expr("3 / 10"), lambda a: expr("0")
+    """ A very slippy underground. """
 
     acceleration_probability: model.Expression
     acceleration_model: AccelerationModel
@@ -75,6 +83,25 @@ class CellType(enum.Enum):
 
 @d.dataclass(frozen=True)
 class Track:
+    """
+    Represents a *track*.
+
+    Attributes
+    ----------
+    width:
+        The width of the track.
+    height:
+        The height of the track.
+    blank_cells:
+        The set of blank cells.
+    blocked_cells:
+        The set of blocked cells.
+    start_cells:
+        The set of start cells.
+    goal_cells:
+        The set of goal cells.
+    """
+
     width: int
     height: int
 
@@ -446,71 +473,3 @@ def generate_scenarios(
                             max_speed,
                             max_acceleration,
                         )
-
-
-@click.command()
-@click.argument("track_file", type=pathlib.Path)
-@click.argument("output_directory", type=pathlib.Path)
-@click.option(
-    "--speed-bound", type=int, default=3, help="Maximal allowed speed of the car."
-)
-@click.option(
-    "--acceleration-bound",
-    type=int,
-    default=2,
-    help="Maximal allowed acceleration of the car.",
-)
-@click.option(
-    "--allow-momba-operators",
-    default=False,
-    is_flag=True,
-    help="Use JANI extension `x-momba-operators`.",
-)
-@click.option(
-    "--indent", type=int, default=None, help="Indentation for the JANI files."
-)
-def generate(
-    track_file: pathlib.Path,
-    output_directory: pathlib.Path,
-    speed_bound: int,
-    acceleration_bound: int,
-    allow_momba_operators: bool,
-    indent: t.Optional[int],
-) -> None:
-    """
-    Generates a family of JANI models from the provided track file.
-
-    TRACK_FILE A Racetrack track in ASCII format.
-    OUTPUT_DIRECTORY A directory to write the JANI models to.
-    """
-    output_directory.mkdir(parents=True, exist_ok=True)
-
-    track = Track.from_source(track_file.read_text(encoding="utf-8"))
-
-    print("Generate scenarios...")
-    scenarios = tuple(generate_scenarios(track, speed_bound, acceleration_bound))
-
-    print(f"Generating {len(scenarios)} models...")
-
-    with click.progressbar(scenarios) as progressbar:
-        for scenario in progressbar:
-            network = construct_model(scenario)
-            filename = (
-                "car"
-                f"_{scenario.max_speed}"
-                f"_{scenario.max_acceleration}"
-                f"_{scenario.underground.name}"
-                f"_{scenario.tank_type.name}"
-                f"_{scenario.start_cell}.jani"
-            )
-            (output_directory / filename).write_bytes(
-                jani.dump_model(
-                    network,
-                    indent=indent,
-                    allow_momba_operators=allow_momba_operators,
-                )
-            )
-
-
-if __name__ == "__main__":
-    generate()
