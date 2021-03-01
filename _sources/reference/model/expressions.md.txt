@@ -82,7 +82,7 @@ In any case, instead of constructing objects directly it is recommended to use t
 ```
 
 
-## Class Hierarchy
+## Class Reference
 
 ```{eval-rst}
 .. autoclass:: momba.model.expressions.BooleanConstant

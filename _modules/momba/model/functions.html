@@ -187,22 +187,59 @@
     <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">context</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="FunctionParameter"><a class="viewcode-back" href="../../../reference/model/functions.html#momba.model.FunctionParameter">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">FunctionParameter</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *function parameter*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name:</span>
+<span class="sd">        The name of the parameter.</span>
+<span class="sd">    typ:</span>
+<span class="sd">        The type of the parameter.</span>
+<span class="sd">    """</span>
+
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span>
+    <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span></div>
 
 
 <div class="viewcode-block" id="FunctionDefinition"><a class="viewcode-back" href="../../../reference/model/functions.html#momba.model.FunctionDefinition">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">FunctionDefinition</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *function definition*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name:</span>
+<span class="sd">        The name of the defined function.</span>
+<span class="sd">    parameters:</span>
+<span class="sd">        The parameters of the function.</span>
+<span class="sd">    returns:</span>
+<span class="sd">        The return type of the function.</span>
+<span class="sd">    body:</span>
+<span class="sd">        The body of the function.</span>
+<span class="sd">    """</span>
+
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">FunctionParameter</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
     <span class="n">returns</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span>
     <span class="n">body</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="CallExpression"><a class="viewcode-back" href="../../../reference/model/functions.html#momba.model.CallExpression">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">CallExpression</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *call expression*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    function:</span>
+<span class="sd">        The name of the function to be called.</span>
+<span class="sd">    arguments:</span>
+<span class="sd">        The arguments to be passed to the function.</span>
+<span class="sd">    """</span>
+
     <span class="n">function</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 
@@ -225,7 +262,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arguments</span></div>
 </pre></div>
       </article>
       <footer>

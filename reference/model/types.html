@@ -92,7 +92,7 @@
       <a href="../../index.html"><div class="brand">Momba</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -167,15 +167,167 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
         <div class="section" id="types">
 <h1>Types<a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://jani-spec.org">JANI-model</a> defines a type system for expressions.</p>
 <dl class="py class">
 <dt id="momba.model.Type">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.</span></code><code class="sig-name descname"><span class="pre">Type</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#Type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>type</em>.</p>
+<dl class="py method">
+<dt id="momba.model.Type.is_numeric">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">is_numeric</span></code><a class="headerlink" href="#momba.model.Type.is_numeric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the type is numeric or not.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.Type.is_assignable_from">
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#Type.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Type.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.INT">
+<code class="sig-prename descclassname"><span class="pre">types.</span></code><code class="sig-name descname"><span class="pre">INT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">IntegerType()</span></em><a class="headerlink" href="#momba.model.types.INT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.REAL">
+<code class="sig-prename descclassname"><span class="pre">types.</span></code><code class="sig-name descname"><span class="pre">REAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">RealType()</span></em><a class="headerlink" href="#momba.model.types.REAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.BOOL">
+<code class="sig-prename descclassname"><span class="pre">types.</span></code><code class="sig-name descname"><span class="pre">BOOL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">BoolType()</span></em><a class="headerlink" href="#momba.model.types.BOOL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.CLOCK">
+<code class="sig-prename descclassname"><span class="pre">types.</span></code><code class="sig-name descname"><span class="pre">CLOCK</span></code><em class="property"> <span class="pre">=</span> <span class="pre">ClockType()</span></em><a class="headerlink" href="#momba.model.types.CLOCK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.CONTINUOUS">
+<code class="sig-prename descclassname"><span class="pre">types.</span></code><code class="sig-name descname"><span class="pre">CONTINUOUS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">ContinuousType()</span></em><a class="headerlink" href="#momba.model.types.CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py function">
+<dt id="momba.model.types.array_of">
+<code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">array_of</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#array_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.array_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an array type with the given element type.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.model.types.set_of">
+<code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">set_of</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#set_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.set_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a set type with the given element type.</p>
+</dd></dl>
+<div class="section" id="class-hierarchy">
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="momba.model.types.NumericType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">NumericType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#NumericType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.NumericType" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="momba.model.types.NumericType.is_numeric">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">is_numeric</span></code><a class="headerlink" href="#momba.model.types.NumericType.is_numeric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the type is numeric or not.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.types.NumericType.bound">
+<code class="sig-name descname"><span class="pre">bound</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#NumericType.bound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.NumericType.bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bounds the numeric type with the given bounds.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.IntegerType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">IntegerType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#IntegerType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.IntegerType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>integer type</em>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Instead of instantiating new objects of this class use <a class="reference internal" href="#momba.model.types.INT" title="momba.model.types.INT"><code class="xref py py-attr docutils literal notranslate"><span class="pre">INT</span></code></a>.</p>
+</div>
+<dl class="py method">
+<dt id="momba.model.types.IntegerType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#IntegerType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.IntegerType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.RealType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">RealType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#RealType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.RealType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>real type</em>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Instead of instantiating new objects of this class use <a class="reference internal" href="#momba.model.types.REAL" title="momba.model.types.REAL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">REAL</span></code></a>.</p>
+</div>
+<dl class="py method">
+<dt id="momba.model.types.RealType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#RealType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.RealType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.BoolType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">BoolType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#BoolType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.BoolType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>boolean type</em>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Instead of instantiating new objects of this class use <a class="reference internal" href="#momba.model.types.BOOL" title="momba.model.types.BOOL"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BOOL</span></code></a>.</p>
+</div>
+<dl class="py method">
+<dt id="momba.model.types.BoolType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#BoolType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.BoolType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.ContinuousType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">ContinuousType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#ContinuousType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ContinuousType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>continuous type</em>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Instead of instantiating new objects of this class use <a class="reference internal" href="#momba.model.types.CONTINUOUS" title="momba.model.types.CONTINUOUS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CONTINUOUS</span></code></a>.</p>
+</div>
+<dl class="py method">
+<dt id="momba.model.types.ContinuousType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#ContinuousType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ContinuousType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.ArrayType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">ArrayType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#ArrayType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ArrayType" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <em>array type</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.types.ArrayType.element">
+<code class="sig-name descname"><span class="pre">element</span></code><a class="headerlink" href="#momba.model.types.ArrayType.element" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of the elements of the array.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.types.ArrayType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#ArrayType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ArrayType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.SetType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">SetType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#SetType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.SetType" title="Permalink to this definition">¶</a></dt>
+<dd><p>An <em>set type</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.types.SetType.element">
+<code class="sig-name descname"><span class="pre">element</span></code><a class="headerlink" href="#momba.model.types.SetType.element" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of the elements of the set.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.types.SetType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#SetType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.SetType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+</div>
 </div>
 
       </article>
@@ -218,8 +370,27 @@
 
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Types</a><ul>
+<li><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

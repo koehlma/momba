@@ -201,63 +201,102 @@
 
 
 <div class="viewcode-block" id="Type"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.Type">[docs]</a><span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *type*.</span>
+<span class="sd">    """</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Indicates whether the type is numeric or not.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Type.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.Type.is_assignable_from">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="sd">"""</span>
+<span class="sd">        Checks whether values of the other type can be assigned to</span>
+<span class="sd">        targets of this type.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">validate_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
 
 
-<span class="k">class</span> <span class="nc">NumericType</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="NumericType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.NumericType">[docs]</a><span class="k">class</span> <span class="nc">NumericType</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="n">Bound</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="n">Bound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoundedType</span><span class="p">:</span>
+<div class="viewcode-block" id="NumericType.bound"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.NumericType.bound">[docs]</a>    <span class="k">def</span> <span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="n">Bound</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="n">Bound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoundedType</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Bounds the numeric type with the given bounds.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">BoundedType</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">BoundedType</span><span class="o">.</span><span class="n">convert_bound</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span> <span class="n">BoundedType</span><span class="o">.</span><span class="n">convert_bound</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="IntegerType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.IntegerType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">IntegerType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    The *integer type*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        Instead of instantiating new objects of this class use :attr:`INT`.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.INT"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IntegerType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.IntegerType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">BoundedType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">base</span> <span class="o">==</span> <span class="n">INT</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="RealType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.RealType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RealType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    The *real type*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        Instead of instantiating new objects of this class use :attr:`REAL`.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.REAL"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span>
+<div class="viewcode-block" id="RealType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.RealType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="BoolType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.BoolType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BoolType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    The *boolean type*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        Instead of instantiating new objects of this class use :attr:`BOOL`.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.BOOL"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">BOOL</span>
+<div class="viewcode-block" id="BoolType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.BoolType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">BOOL</span></div></div>
 
 
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ClockType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    The *clock type*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        Instead of instantiating new objects of this class use :attr:`CLOCK`.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.CLOCK"</span>
 
@@ -267,13 +306,20 @@
         <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ContinuousType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ContinuousType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ContinuousType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    The *continuous type*.</span>
+
+<span class="sd">    .. hint::</span>
+<span class="sd">        Instead of instantiating new objects of this class use :attr:`CONTINUOUS`.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.CONTINUOUS"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span>
+<div class="viewcode-block" id="ContinuousType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ContinuousType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div></div>
 
 
 <span class="n">INT</span> <span class="o">=</span> <span class="n">IntegerType</span><span class="p">()</span>
@@ -285,6 +331,19 @@
 
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BoundedType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *bounded numeric type*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base:</span>
+<span class="sd">        The numeric base type.</span>
+<span class="sd">    lower_bound:</span>
+<span class="sd">        The optional lower bound for values of the type.</span>
+<span class="sd">    upper_bound:</span>
+<span class="sd">        The optional upper bound for values of the type.</span>
+<span class="sd">    """</span>
+
     <span class="n">base</span><span class="p">:</span> <span class="n">NumericType</span>
 
     <span class="n">lower_bound</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span>
@@ -331,36 +390,60 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ArrayType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ArrayType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ArrayType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    An *array type*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    element:</span>
+<span class="sd">        The type of the elements of the array.</span>
+<span class="sd">    """</span>
+
     <span class="n">element</span><span class="p">:</span> <span class="n">Type</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"Array(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="si">}</span><span class="s2">)"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ArrayType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ArrayType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span>
             <span class="n">typ</span><span class="o">.</span><span class="n">element</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">array_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayType</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<div class="viewcode-block" id="array_of"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.array_of">[docs]</a><span class="k">def</span> <span class="nf">array_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayType</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Constructs an array type with the given element type.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="SetType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.SetType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SetType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    An *set type*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    element:</span>
+<span class="sd">        The type of the elements of the set.</span>
+<span class="sd">    """</span>
+
     <span class="n">element</span><span class="p">:</span> <span class="n">Type</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"Set(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="si">}</span><span class="s2">)"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">SetType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">element</span><span class="p">)</span>
+<div class="viewcode-block" id="SetType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.SetType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">SetType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">element</span><span class="p">)</span></div></div>
 
 
-<span class="k">def</span> <span class="nf">set_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SetType</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">SetType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<div class="viewcode-block" id="set_of"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.set_of">[docs]</a><span class="k">def</span> <span class="nf">set_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SetType</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Constructs a set type with the given element type.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">SetType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
 
 
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

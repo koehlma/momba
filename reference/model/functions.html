@@ -174,8 +174,59 @@
 <h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="momba.model.FunctionDefinition">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.</span></code><code class="sig-name descname"><span class="pre">FunctionDefinition</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">t.Tuple[FunctionParameter,</span> <span class="pre">…]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">types.Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">expressions.Expression</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/functions.html#FunctionDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.FunctionDefinition" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.</span></code><code class="sig-name descname"><span class="pre">FunctionDefinition</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/functions.html#FunctionDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.FunctionDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>function definition</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.FunctionDefinition.name">
+<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#momba.model.FunctionDefinition.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the defined function.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.FunctionDefinition.parameters">
+<code class="sig-name descname"><span class="pre">parameters</span></code><a class="headerlink" href="#momba.model.FunctionDefinition.parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parameters of the function.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.FunctionDefinition.returns">
+<code class="sig-name descname"><span class="pre">returns</span></code><a class="headerlink" href="#momba.model.FunctionDefinition.returns" title="Permalink to this definition">¶</a></dt>
+<dd><p>The return type of the function.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.FunctionDefinition.body">
+<code class="sig-name descname"><span class="pre">body</span></code><a class="headerlink" href="#momba.model.FunctionDefinition.body" title="Permalink to this definition">¶</a></dt>
+<dd><p>The body of the function.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.functions.FunctionParameter">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.functions.</span></code><code class="sig-name descname"><span class="pre">FunctionParameter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/functions.html#FunctionParameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.functions.FunctionParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>function parameter</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.functions.FunctionParameter.name">
+<code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#momba.model.functions.FunctionParameter.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the parameter.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.functions.FunctionParameter.typ">
+<code class="sig-name descname"><span class="pre">typ</span></code><a class="headerlink" href="#momba.model.functions.FunctionParameter.typ" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of the parameter.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.functions.CallExpression">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.functions.</span></code><code class="sig-name descname"><span class="pre">CallExpression</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/functions.html#CallExpression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.functions.CallExpression" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>call expression</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.functions.CallExpression.function">
+<code class="sig-name descname"><span class="pre">function</span></code><a class="headerlink" href="#momba.model.functions.CallExpression.function" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the function to be called.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.functions.CallExpression.arguments">
+<code class="sig-name descname"><span class="pre">arguments</span></code><a class="headerlink" href="#momba.model.functions.CallExpression.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>The arguments to be passed to the function.</p>
+</dd></dl>
+</dd></dl>
 </div>
 
       </article>
