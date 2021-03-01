@@ -16,12 +16,38 @@ if t.TYPE_CHECKING:
 
 @d.dataclass(frozen=True)
 class FunctionParameter:
+    """
+    A *function parameter*.
+
+    Attributes
+    ----------
+    name:
+        The name of the parameter.
+    typ:
+        The type of the parameter.
+    """
+
     name: str
     typ: types.Type
 
 
 @d.dataclass(frozen=True)
 class FunctionDefinition:
+    """
+    A *function definition*.
+
+    Attributes
+    ----------
+    name:
+        The name of the defined function.
+    parameters:
+        The parameters of the function.
+    returns:
+        The return type of the function.
+    body:
+        The body of the function.
+    """
+
     name: str
     parameters: t.Tuple[FunctionParameter, ...]
     returns: types.Type
@@ -30,6 +56,17 @@ class FunctionDefinition:
 
 @d.dataclass(frozen=True)
 class CallExpression(expressions.Expression):
+    """
+    A *call expression*.
+
+    Attributes
+    ----------
+    function:
+        The name of the function to be called.
+    arguments:
+        The arguments to be passed to the function.
+    """
+
     function: str
     arguments: t.Tuple[expressions.Expression, ...]
 

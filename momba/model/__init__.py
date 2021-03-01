@@ -45,8 +45,6 @@ from .functions import FunctionDefinition
 
 from .networks import Link, Network
 
-from .properties import Property
-
 from .types import Type
 
 
@@ -90,8 +88,6 @@ __all__ = [
     # from `.networks`
     "Network",
     "Link",
-    # from `.property`
-    "Property",
     # from `.types`
     "Type",
 ]
