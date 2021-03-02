@@ -300,9 +300,9 @@ def _translate_trigonometric_expr(
     expr: expressions.Trigonometric, ctx: _TranslationContext
 ) -> _JSONObject:
     return {
-        "kind": "COMPREHENSION",
+        "kind": "TRIGONOMETRIC",
         "function": expr.operator.name,
-        "operand": _translate_expr(expr.operand),
+        "operand": _translate_expr(expr.operand, ctx),
     }
 
 
