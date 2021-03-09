@@ -4,21 +4,57 @@ import os
 import sys
 import subprocess
 import re
+import pathlib
+import urllib.request
+import zipfile
+import subprocess
 
 from pygments.lexer import RegexLexer
 from pygments import token
+
+
+MODEST_URL = (
+    "https://www.modestchecker.net/"
+    "Downloads/Modest-Toolset-v3.1.75-gcc6169502-linux-x64.zip"
+)
+MODEST_PATH = pathlib.Path(__file__).parent / "build" / "modest"
+MODEST_ZIP = MODEST_PATH / "Modest-Toolset.zip"
+MODEST_BIN = MODEST_PATH / "Modest"
+MODEST_EXE = MODEST_BIN / "modest"
+
+MODEST_PATH.mkdir(parents=True, exist_ok=True)
+
+if not MODEST_ZIP.exists():
+    response = urllib.request.urlopen(MODEST_URL)
+    assert response.status == 200
+    MODEST_ZIP.write_bytes(response.read())
+
+if not MODEST_EXE.exists():
+    with zipfile.ZipFile(MODEST_ZIP) as modest_zip:
+        modest_zip.extractall(MODEST_PATH)
+    subprocess.check_call(["chmod", "+x", MODEST_EXE])
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), "..", "examples", "racetrack")
 )
 
+os.environ["PATH"] = ":".join(
+    (
+        str(MODEST_BIN.resolve()),
+        os.environ.get("PATH", ""),
+    )
+)
+
+
 os.environ["PYTHONPATH"] = ":".join(
     (
         os.path.join(os.path.dirname(__file__), "..", "examples", "racetrack"),
+        os.path.join(os.path.dirname(__file__), "..", "examples", "guide"),
         os.environ.get("PYTHONPATH", ""),
     )
 )
+
 
 import racetrack  # noqa
 

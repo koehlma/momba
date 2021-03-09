@@ -1,4 +1,5 @@
 # Exploration Engine
+(momba_engine)=
 
 Momba comes with its own state space exploration engine.
 To use this engine, you have to install the optional dependency [`momba_engine`](https://pypi.org/project/momba_engine/) (or install Momba with the `all` feature flag).

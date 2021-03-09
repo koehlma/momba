@@ -101,6 +101,8 @@ class ModestChecker(checkers.Checker):
                         for definition in network.ctx.properties.values()
                     }
                 )
+            if properties is not None:
+                named_properties.update(properties)
             if property_names is not None:
                 for name in property_names:
                     named_properties[
