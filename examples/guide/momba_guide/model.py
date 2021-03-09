@@ -25,7 +25,7 @@ class Track:
     obstacles: t.Set[Cell]
 
     @classmethod
-    def from_ascii(cls, ascii: t.Tuple[str, ...]) -> "Map":
+    def from_ascii(cls, ascii: t.Tuple[str, ...]) -> "Track":
         width = len(ascii[0])
         height = len(ascii)
         obstacles = set()
