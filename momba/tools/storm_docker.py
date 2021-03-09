@@ -40,21 +40,17 @@ _result_regex = re.compile(
 
 
 class Toolset:
-    client: docker.DockerClient
+    client: t.Any
     tag: str
 
-    def __init__(
-        self, client: t.Optional[docker.DockerClient] = None, tag: str = "travis"
-    ) -> None:
+    def __init__(self, client: t.Optional[t.Any] = None, tag: str = "travis") -> None:
         self.client = client or docker.from_env()
         self.tag = tag
 
     def pull(self) -> None:
         self.client.images.pull(DOCKER_IMAGE, tag=self.tag)
 
-    def run(
-        self, arguments: t.Sequence[str], mounts: t.Sequence[docker.types.Mount] = ()
-    ) -> str:
+    def run(self, arguments: t.Sequence[str], mounts: t.Sequence[t.Any] = ()) -> str:
         command = ["sh", "-c", "'", "./storm"]
         command.extend(arguments)
         command.extend((";", "exit 0", "'"))
