@@ -30,10 +30,10 @@ Momba also provides APIs to directly interface with various tools.
 
 ```{jupyter-execute}
 from momba.moml import expr, prop
-from momba.tools.modest import checker
+from momba.tools.modest import checker as modest_checker
 
 
-values = checker.check(
+values = modest_checker.check(
     model.network,
     properties={
         "goal": prop(
@@ -47,3 +47,21 @@ float(values["goal"])
 ```
 
 Here, we invoke `mcsta` of the [Modest Toolset](https://www.modestchecker.net/) to compute the maximal probability of winning the game on the given track, i.e., the probability to win the game if all moves taken are optimal.
+
+
+```{jupyter-execute}
+from momba.tools.storm_docker import checker as storm_checker
+
+
+values = storm_checker.check(
+    model.network,
+    properties={
+        "goal": prop(
+            "min({ Pmax(F($is_finished)) | initial })",
+            is_finished=model.has_finished(expr("pos_x"), model.track)
+        ),
+    },
+)
+
+print(float(values["goal"]))
+```
