@@ -121,3 +121,7 @@ class ModestChecker(checkers.Checker):
 
 toolset = Toolset("modest")
 checker = ModestChecker(toolset)
+
+
+def get_checker(*, accept_license: bool) -> checkers.Checker:
+    return checker

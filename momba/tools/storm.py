@@ -124,3 +124,12 @@ checker_sparse = StormChecker(toolset, engine="sparse")
 checker_dd = StormChecker(toolset, engine="dd")
 
 checker = checker_sparse
+
+
+def get_checker(*, accept_license: bool) -> checkers.Checker:
+    try:
+        from . import storm_docker
+
+        return storm_docker.checker
+    except ImportError:
+        return checker
