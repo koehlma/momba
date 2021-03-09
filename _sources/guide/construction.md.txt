@@ -1,4 +1,5 @@
 # Model Construction
+(model_construction)=
 
 Momba provides *append-only* APIs for incremental model construction, i.e., one can define a model incrementally but one cannot change already defined parts of a model.
 For instance, it is possible to add a location to an already defined automaton but it is not possible to remove a location from the automaton.

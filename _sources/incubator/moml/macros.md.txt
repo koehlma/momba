@@ -3,4 +3,6 @@
 
 ```{eval-rst}
 .. autofunction:: momba.moml.expr
+
+.. autofunction:: momba.moml.prop
 ```
