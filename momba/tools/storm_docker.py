@@ -53,7 +53,7 @@ class Toolset:
         self.client.images.pull(DOCKER_IMAGE, tag=self.tag)
 
     def run(
-        self, arguments: t.Sequence[str], mounts: t.List[docker.types.Mount] = []
+        self, arguments: t.Sequence[str], mounts: t.Sequence[docker.types.Mount] = ()
     ) -> str:
         command = ["sh", "-c", "'", "./storm"]
         command.extend(arguments)
@@ -63,7 +63,7 @@ class Toolset:
             command=" ".join(command),
             working_dir="/opt/storm/build/bin/",
             auto_remove=True,
-            mounts=mounts,
+            mounts=list(mounts),
         ).decode("utf-8")
 
 
