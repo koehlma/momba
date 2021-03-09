@@ -173,12 +173,22 @@
         <div class="section" id="user-guide">
 <span id="guide"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
 <p>This <em>user guide</em> covers popular use cases of Momba by example.</p>
+<p>Dealing with formal models encompasses a variety of tasks which can be challenging from time to time—especially for newcomers.
+Everything starts with the <em>construction</em> of a model or a family thereof.
+Often there already exists a textual or other, more formal, description of the scenario to be modeled, such as a rough sketch of the desired behavior or a circuit diagram.
+Then, after a formal model has been conceived, one has to <em>validate</em> that the model actually adequately models what should be modeled.
+In this regard models are just like any other human artifact, inadequate initially but over time it gets better.
+Only after confidence in the model has been established, one is able to harvest the benefits by handing over the model to <em>analysis</em> tools, e.g., a model checker.</p>
+<p>In <a class="reference internal" href="construction.html"><span class="doc std std-doc">Model Construction</span></a>, we explain how Momba’s model construction API can be leveraged to programmatically construct models based upon existing <em>scenario descriptions</em>.
+Scenario descriptions go beyond what is possible with mere parametrization and existing tools.
+A scenario description may be any kind of Python object encoding details of the system to be modeled.</p>
+<p>In <a class="reference internal" href="exploration.html"><span class="doc std std-doc">Model Exploration</span></a>, we demonstrate how Momba’s explicit state space exploration engine can be used to validate a model by interactive simulation or connecting it to a testing framework such as <a class="reference external" href="https://pytest.org/">pytest</a>.
+The exploration engine can be used to harvest Python’s vast ecosystem by interfacing with all kinds of libraries, for instance, for visualization.
+Furthermore, it is possible to integrate logic written in Python with a model, e.g., have a controller written in Python control a modelled plant.</p>
+<p>In <a class="reference internal" href="analysis.html"><span class="doc std std-doc">Model Analysis</span></a>, we show how to invoke external model analysis tools via unified interfaces provided by Momba.
+Thanks to Momba’s first-class support for <a class="reference external" href="https://jani-spec.org">JANI-model</a>, several state-of-the-art analysis tools are readily available for model checking and other analysis tasks.</p>
+<p>This user guide is meant to be read from start to finish as the sections build on top of each other.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="construction.html">Model Construction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exploration.html">Model Exploration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis.html">Model Analysis</a></li>
-</ul>
 </div>
 </div>
 

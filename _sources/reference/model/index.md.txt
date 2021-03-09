@@ -1,4 +1,5 @@
 # Momba Models
+(momba_models)=
 
 The package `momba.model` contains the core data structures for the representation of quantitative models.
 Momba's internal model representation closely follows the [JANI specification](https://jani-spec.org).
