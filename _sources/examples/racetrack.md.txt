@@ -1,4 +1,5 @@
 # Racetrack
+(example_racetrack)=
 
 An example showcasing almost all nifty features of Momba is centered around [Racetrack](https://racetrack.perspicuous-computing.science/).
 Originally, Racetrack has been a pen and paper game where a car has to be steered on a two-dimensional grid from a start position to a goal position.

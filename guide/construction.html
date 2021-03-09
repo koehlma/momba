@@ -193,6 +193,7 @@ The goal is to reach the end of the <em>track</em> without crashing into an obst
 </div>
 </div>
 <p>Every <code class="docutils literal notranslate"><span class="pre">x</span></code> represents an obstacle and the player starts on the left and moves forward to the right.
+The player wins, if and only if it moves beyond the <em>finishing line</em>, i.e., reaches the end of the track.
 Now, given such a track, we would like to create a model of the game.
 Note that this goes beyond what is possible with mere parametrization of a model.</p>
 <p>First, we create a more formal representation of the scenario to be modeled.
@@ -257,7 +258,7 @@ To construct a model, we first have to create a modeling context of the respecti
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7f97244938e0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7f717c3e05e0&gt;
 </pre></div>
 </div>
 </div>
@@ -286,7 +287,7 @@ To construct a model, we first have to create a modeling context of the respecti
 <div class="cell_output docutils container">
 </div>
 </div>
-<p>Each of these actions corresponds to a distance moved on the <span class="math notranslate nohighlight">\(y\)</span>-axis:</p>
+<p>Each of these action types corresponds to a distance moved on the <span class="math notranslate nohighlight">\(y\)</span>-axis:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">moves</span> <span class="o">=</span> <span class="p">{</span><span class="n">left_action</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">right_action</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stay_action</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>

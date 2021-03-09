@@ -22,6 +22,7 @@ Finally, thanks to the JANI-model interchange format, several state-of-the-art m
 * **built-in exploration engine** for PTAs, MDPs and other model types
 * interfaces to state-of-the-art model checkers, e.g., [The Modest Toolset](http://www.modestchecker.net/) and [Storm](https://www.stormchecker.org/)
 * pythonic and **statically typed** APIs to thinker with formal models
+* hassle-free out-of-the-box support for **Windows, Linux, and MacOS**
 
 
 ## Getting Started

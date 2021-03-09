@@ -20,6 +20,7 @@ TRACK = (
 ```
 
 Every `x` represents an obstacle and the player starts on the left and moves forward to the right.
+The player wins, if and only if it moves beyond the *finishing line*, i.e., reaches the end of the track.
 Now, given such a track, we would like to create a model of the game.
 Note that this goes beyond what is possible with mere parametrization of a model.
 
@@ -95,7 +96,7 @@ right_action = ctx.create_action_type("right")
 stay_action = ctx.create_action_type("stay")
 ```
 
-Each of these actions corresponds to a distance moved on the {math}`y`-axis:
+Each of these action types corresponds to a distance moved on the {math}`y`-axis:
 
 ```{jupyter-execute}
 moves = {left_action: -1, right_action: 1, stay_action: 0}

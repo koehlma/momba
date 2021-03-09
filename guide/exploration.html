@@ -174,23 +174,20 @@
 <h1>Model Exploration<a class="headerlink" href="#model-exploration" title="Permalink to this headline">¶</a></h1>
 <p>In the previous section, we defined a formal model of a simple jump ‘n’ run game.
 Here, we demonstrate how to use Momba’s state space exploration engine to explore the state space of this model.</p>
-<p>First, we import the model:</p>
+<p>For the following examples, we have to import the model defined in <a class="reference internal" href="construction.html#id1"><span class="std std-ref">Model Construction</span></a>:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba_guide</span> <span class="kn">import</span> <span class="n">model</span>
-
-<span class="n">model</span><span class="o">.</span><span class="n">network</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.model.networks.Network at 0x7fc5c42cbe50&gt;
-</pre></div>
-</div>
 </div>
 </div>
 <p>The package <a class="reference internal" href="../reference/engine.html#momba-engine"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">momba.engine</span></code></span></a> exposes the API for state space exploration.
-We import the package and create a discrete time explorer for our MDP automaton network:</p>
+Momba’s state space exploration engine supports a variety of different model types including <em>Probabilistic Timed Automata</em> (PTAs) and <em>Markov Decision Processes</em> (MDPs).
+It is written in <a class="reference external" href="https://www.rust-lang.org">Rust</a>.</p>
+<p>We import the package and create a <em>discrete time explorer</em> for our MDP automaton network:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba</span> <span class="kn">import</span> <span class="n">engine</span>
@@ -206,20 +203,29 @@ We import the package and create a discrete time explorer for our MDP automaton 
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">state</span><span class="p">,)</span> <span class="o">=</span> <span class="n">explorer</span><span class="o">.</span><span class="n">initial_states</span>
-
-<span class="n">state</span><span class="o">.</span><span class="n">global_env</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'pos_x': Value(0), 'pos_y': Value(0)}
+</div>
+</div>
+<p>Remember that we declared two global variables, <code class="docutils literal notranslate"><span class="pre">pos_x</span></code> and <code class="docutils literal notranslate"><span class="pre">pos_y</span></code>, which hold the position of the player on the track.
+The values of these variables can be accessed as follows:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">state</span><span class="o">.</span><span class="n">global_env</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'pos_y': Value(0), 'pos_x': Value(0)}
 </pre></div>
 </div>
 </div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">global_env</span></code> attributes contains a mapping from global variable names to the values of these variables.
+<p>The <code class="docutils literal notranslate"><span class="pre">global_env</span></code> attributes contains a mapping from variable names to the values of these variables.
 As defined in the model, the player starts at the position <span class="math notranslate nohighlight">\((0, 0)\)</span> on the track.</p>
-<p>Having a state, we can ask for the outgoing transitions of this state:</p>
+<p>Having a state, we can also ask for the outgoing transitions of this state:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">transition</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">transitions</span><span class="p">:</span>
@@ -233,32 +239,37 @@ As defined in the model, the player starts at the position <span class="math not
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Move: left
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Move: stay
   Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(-1)}
-    Locals: {'has_crashed': Value(True), 'is_finished': Value(False)}
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
   Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
-    Locals: {'has_crashed': Value(False), 'is_finished': Value(False)}
-Move: stay
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
+Move: left
   Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
-    Locals: {'has_crashed': Value(False), 'is_finished': Value(False)}
+    Globals: {'pos_y': Value(-1), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(True)}
   Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
-    Locals: {'has_crashed': Value(False), 'is_finished': Value(False)}
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
 Move: right
   Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(1)}
-    Locals: {'has_crashed': Value(False), 'is_finished': Value(False)}
+    Globals: {'pos_y': Value(1), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
   Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
-    Locals: {'has_crashed': Value(False), 'is_finished': Value(False)}
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
 </pre></div>
 </div>
 </div>
 </div>
-<p>Based on this API, it is straightforward to develop a domain specific tool for interactive model exploration or test various aspects of the model.</p>
+<p>As specified in the model, we can keep our current <span class="math notranslate nohighlight">\(y\)</span> position or move left or right.
+As the model is probabilistic, there are multiple destinations with different probabilities for each transition.
+As the player starts on a left-most position on the track, successfully moving left leads to a crash into the wall.
+This is also reflected in the successor state where <code class="docutils literal notranslate"><span class="pre">has_crashed</span></code> becomes <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>Based on this API, it is straightforward to develop a domain specific tool for interactive model exploration or test various aspects of the model.
+For a more elaborate example where we programmed an interactive racing game including some visualizations based on a model using Momba’s state space exploration engine, check out the <a class="reference internal" href="../examples/racetrack.html#example-racetrack"><span class="std std-ref">Racetrack</span></a> example.</p>
 </div>
 
       </article>
