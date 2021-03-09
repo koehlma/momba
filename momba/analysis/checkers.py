@@ -18,6 +18,10 @@ Result = t.Mapping[str, fractions.Fraction]
 
 
 class Checker(abc.ABC):
+    @property
+    def description(self) -> str:
+        return self.__class__.__name__
+
     @abc.abstractmethod
     def check(
         self,
@@ -46,6 +50,10 @@ class CrossChecker(Checker):
     checkers: t.Sequence[Checker]
 
     allowed_delta: fractions.Fraction = fractions.Fraction("1e-4")
+
+    @property
+    def description(self) -> str:
+        return f"CrossChecker (Δ = {float(self.allowed_delta)})"
 
     def check(
         self,

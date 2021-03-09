@@ -69,6 +69,10 @@ class StormChecker(checkers.Checker):
 
     engine: str = "dd"
 
+    @property
+    def description(self) -> str:
+        return f"Storm in Docker (engine = {self.engine})"
+
     def check(
         self,
         network: model.Network,

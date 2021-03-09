@@ -12,7 +12,7 @@ As Momba tries to install the tools for you, it suffices to just install Momba w
 pip install momba[all]
 ```
 
-For the following examples, we have to import the model defined in [Model Construction](model_construction).
+For the following examples, we have to import the model defined in [Model Construction](model_construction):
 
 
 ```{jupyter-execute}
@@ -62,7 +62,7 @@ results = {
 }
 
 for checker, values in results.items():
-    print(f"{checker.__class__.__name__}")
+    print(f"{checker.description}:")
     for prop_name, prop_value in values.items():
         print(f"  Property {prop_name!r}: {float(prop_value)}")
 ```

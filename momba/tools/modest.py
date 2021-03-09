@@ -9,7 +9,9 @@ import fractions
 import json
 import pathlib
 import subprocess
+import sys
 import tempfile
+
 
 from .. import model
 from ..analysis import checkers
@@ -20,6 +22,73 @@ from .errors import ToolError, ToolTimeoutError
 
 Timeout = t.Optional[t.Union[float, int]]
 Command = t.Sequence[t.Union[str, pathlib.Path]]
+
+
+_MODEST_URL = "https://www.modestchecker.net/Downloads/"
+
+_USER_HOME = pathlib.Path("~").expanduser()
+
+_is_windows = sys.platform == "win32"
+_is_macos = sys.platform == "darwin"
+
+
+if _is_windows:
+    _DATA_PATH = _USER_HOME / "Application Data" / "koehlma" / "Momba"
+    _MODEST_PLATFORM = "win"
+elif _is_macos:
+    _DATA_PATH = _USER_HOME / "Library" / "Application Support" / "Momba"
+    _MODEST_PLATFORM = "osx"
+else:
+    _DATA_PATH = _USER_HOME / ".local" / "share" / "momba"
+    _MODEST_PLATFORM = "linux"
+
+
+_MODEST_PATH = _DATA_PATH / "modest"
+
+if _is_windows:
+    _MODEST_EXE = _MODEST_PATH / "Modest" / "modest.exe"
+else:
+    _MODEST_EXE = _MODEST_PATH / "Modest" / "modest"
+
+
+_FILE_REGEX = (
+    r"""<a href="(?P<file>Modest-Toolset-(?P<version>[v.0-9\-a-z]+?)"""
+    r"""-(?P<platform>[a-z]+)-x64\.zip)"""
+)
+
+
+def _install_locally() -> None:
+    import os
+    import re
+    import stat
+    import zipfile
+
+    from urllib import request
+
+    response = request.urlopen(_MODEST_URL)
+    if response.status != 200:
+        raise Exception(f"unable to download Modest (error {response.status})")
+    page = response.read().decode("utf-8")
+    for match in re.finditer(_FILE_REGEX, page):
+        if match["platform"] != _MODEST_PLATFORM:
+            continue
+        response = request.urlopen(f"{_MODEST_URL}{match['file']}")
+        if response.status != 200:
+            raise Exception(f"unable to download Modest (error {response.status})")
+        with tempfile.TemporaryDirectory(prefix="momba") as temp_directory:
+            zip_path = pathlib.Path(temp_directory) / "modest.zip"
+            zip_path.write_bytes(response.read())
+            with zipfile.ZipFile(zip_path) as zip_file:
+                zip_file.extractall(_MODEST_PATH)
+        os.chmod(_MODEST_EXE, os.stat(_MODEST_EXE).st_mode | stat.S_IEXEC)
+        break
+    else:
+        raise Exception(f"unable to download Modest for platform {_MODEST_PLATFORM}")
+
+
+def _setup_locally() -> None:
+    if not _MODEST_EXE.exists():
+        _install_locally()
 
 
 @d.dataclass(eq=False)
@@ -84,6 +153,10 @@ class Toolset:
 class ModestChecker(checkers.Checker):
     toolset: Toolset
 
+    @property
+    def description(self) -> str:
+        return "Modest (mcsta)"
+
     def check(
         self,
         network: model.Network,
@@ -124,4 +197,6 @@ checker = ModestChecker(toolset)
 
 
 def get_checker(*, accept_license: bool) -> checkers.Checker:
-    return checker
+    _setup_locally()
+    toolset = Toolset(_MODEST_EXE)
+    return ModestChecker(toolset)
