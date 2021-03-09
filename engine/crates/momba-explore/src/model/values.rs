@@ -380,4 +380,28 @@ impl Value {
             (left, right) => panic!("Invalid operands in expression ({:?} > {:?}).", left, right),
         }
     }
+
+    #[inline(always)]
+    pub fn apply_sin(self) -> Value {
+        match self {
+            Float64(operand) => Float64(operand.sin().try_into().unwrap()),
+            operand => panic!("Invalid operand in expression (sin {:?}).", operand),
+        }
+    }
+
+    #[inline(always)]
+    pub fn apply_cos(self) -> Value {
+        match self {
+            Float64(operand) => Float64(operand.cos().try_into().unwrap()),
+            operand => panic!("Invalid operand in expression (sin {:?}).", operand),
+        }
+    }
+
+    #[inline(always)]
+    pub fn apply_tan(self) -> Value {
+        match self {
+            Float64(operand) => Float64(operand.tan().try_into().unwrap()),
+            operand => panic!("Invalid operand in expression (sin {:?}).", operand),
+        }
+    }
 }

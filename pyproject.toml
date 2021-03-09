@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "momba"
-version = "1.0.0.dev4"
+version = "0.3.2"
 description = "A Python library for quantitative models."
 authors = [
     "Maximilian Köhl <koehl@cs.uni-saarland.de>"
 ]
 license = "MIT"
 readme = "README.md"
-repository = "https://dgit.cs.uni-saarland.de/koehlma/momba.git"
-homepage = "https://depend.cs.uni-saarland.de/~koehl/momba/"
+repository = "https://github.com/koehlma/momba.git"
+homepage = "https://koehlma.github.io/momba/"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Development Status :: 2 - Pre-Alpha",
@@ -18,9 +18,10 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 click = { version = "^7.0", optional = true }
-momba_engine = { version = "*", optional = true }
 mxu = "^0.0.6"
 immutables = "^0.14"
+# `release.py` replaces "*" with the precise version
+momba_engine = { version = "*", optional = true }
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -36,6 +37,7 @@ jupyter_sphinx = "^0.3.2"
 maturin = "^0.9.4"
 furo = "^2021.2.21b25"
 myst-parser = "^0.13.3"
+tomlkit = "^0.7.0"
 
 [tool.poetry.scripts]
 momba-moml = "momba.moml.__main__:main"

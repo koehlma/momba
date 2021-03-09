@@ -16,9 +16,9 @@ jobs:
       with:
         python-version: 3.8
     - name: Install Poetry
-      run: python -m pip install poetry
+      run: python -m pip install poetry tomlkit
     - name: Build momba
-      run: poetry build
+      run: python release.py
     - uses: actions/upload-artifact@v2
       with:
         name: packages

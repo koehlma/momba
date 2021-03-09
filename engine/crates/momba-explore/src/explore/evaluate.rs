@@ -355,6 +355,22 @@ impl<const BANKS: usize> Scope<BANKS> {
                     )
                 })
             }
+            Expression::Trigonometric(TrigonometricExpression{ function, operand}) => {
+                let operand = compile!(operand);
+
+                macro_rules! compile_trigonometric {
+                    ($function:ident) => {
+                        construct!(move |env, stack| evaluate!(operand, env, stack).$function())
+                    };
+                }
+
+                match function {
+                    TrigonometricFunction::Sin => compile_trigonometric!(apply_sin),
+                    TrigonometricFunction::Cos => compile_trigonometric!(apply_cos),
+                    TrigonometricFunction::Tan => compile_trigonometric!(apply_tan),
+                    _ => panic!("trigonometric function {:?} not implemented", function),
+                }
+            }
             _ => panic!("not implemented {:?}", expression),
         }
     }

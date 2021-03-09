@@ -645,9 +645,7 @@ class ArrayValue(Expression):
 
     def __post_init__(self) -> None:
         if not self.elements:
-            raise errors.InvalidOperationError(
-                "array value expression needs to have elements"
-            )
+            raise errors.ModelingError("array value expression needs to have elements")
 
     @property
     def children(self) -> t.Sequence[Expression]:

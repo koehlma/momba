@@ -274,7 +274,7 @@ def _reward_bound(jani_property: t.Any) -> properties.RewardBound:
     )
 
 
-def _property(jani_property: t.Any) -> properties.Property:
+def _property(jani_property: t.Any) -> expressions.Expression:
     if "op" not in jani_property:
         raise InvalidJANIError(f"{jani_property!r} is not a valid JANI property")
     if jani_property["op"] == "filter":

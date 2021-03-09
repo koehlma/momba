@@ -7,22 +7,12 @@ from __future__ import annotations
 
 
 class ModelingError(Exception):
-    """ A modeling error."""
+    """
+    A general modeling error.
+    """
 
 
 class InvalidTypeError(ModelingError):
-    pass
-
-
-class NotAConstantError(ModelingError):
-    pass
-
-
-class NotAVariableError(ModelingError):
-    pass
-
-
-class InvalidOperationError(ModelingError):
     pass
 
 
@@ -35,9 +25,7 @@ class TypeConstructionError(ModelingError):
 
 
 class InvalidDeclarationError(ModelingError):
-    """
-    Declaration is invalid.
-    """
+    pass
 
 
 class UnboundIdentifierError(ModelingError):
@@ -45,4 +33,4 @@ class UnboundIdentifierError(ModelingError):
 
 
 class NotFoundError(ModelingError):
-    """Entity not found. """
+    pass

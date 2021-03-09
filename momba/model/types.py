@@ -28,12 +28,23 @@ Bound = t.Optional[t.Union["expressions.ValueOrExpression", "ellipsis"]]
 
 
 class Type(abc.ABC):
+    """
+    A *type*.
+    """
+
     @property
     def is_numeric(self) -> bool:
+        """
+        Indicates whether the type is numeric or not.
+        """
         return False
 
     @abc.abstractmethod
     def is_assignable_from(self, typ: Type) -> bool:
+        """
+        Checks whether values of the other type can be assigned to
+        targets of this type.
+        """
         raise NotImplementedError()
 
     def validate_in(self, scope: context.Scope) -> None:
@@ -56,6 +67,13 @@ class NumericType(Type, abc.ABC):
 
 @d.dataclass(frozen=True)
 class IntegerType(NumericType):
+    """
+    The *integer type*.
+
+    .. hint::
+        Instead of instantiating new objects of this class use :attr:`INT`.
+    """
+
     def __str__(self) -> str:
         return "types.INT"
 
@@ -67,6 +85,13 @@ class IntegerType(NumericType):
 
 @d.dataclass(frozen=True)
 class RealType(NumericType):
+    """
+    The *real type*.
+
+    .. hint::
+        Instead of instantiating new objects of this class use :attr:`REAL`.
+    """
+
     def __str__(self) -> str:
         return "types.REAL"
 
@@ -76,6 +101,13 @@ class RealType(NumericType):
 
 @d.dataclass(frozen=True)
 class BoolType(Type):
+    """
+    The *boolean type*.
+
+    .. hint::
+        Instead of instantiating new objects of this class use :attr:`BOOL`.
+    """
+
     def __str__(self) -> str:
         return "types.BOOL"
 
@@ -85,6 +117,13 @@ class BoolType(Type):
 
 @d.dataclass(frozen=True)
 class ClockType(NumericType):
+    """
+    The *clock type*.
+
+    .. hint::
+        Instead of instantiating new objects of this class use :attr:`CLOCK`.
+    """
+
     def __str__(self) -> str:
         return "types.CLOCK"
 
@@ -96,6 +135,13 @@ class ClockType(NumericType):
 
 @d.dataclass(frozen=True)
 class ContinuousType(NumericType):
+    """
+    The *continuous type*.
+
+    .. hint::
+        Instead of instantiating new objects of this class use :attr:`CONTINUOUS`.
+    """
+
     def __str__(self) -> str:
         return "types.CONTINUOUS"
 
@@ -112,6 +158,19 @@ CONTINUOUS = ContinuousType()
 
 @d.dataclass(frozen=True)
 class BoundedType(NumericType):
+    """
+    A *bounded numeric type*.
+
+    Attributes
+    ----------
+    base:
+        The numeric base type.
+    lower_bound:
+        The optional lower bound for values of the type.
+    upper_bound:
+        The optional upper bound for values of the type.
+    """
+
     base: NumericType
 
     lower_bound: t.Optional[expressions.Expression]
@@ -160,6 +219,15 @@ class BoundedType(NumericType):
 
 @d.dataclass(frozen=True)
 class ArrayType(Type):
+    """
+    An *array type*.
+
+    Attributes
+    ----------
+    element:
+        The type of the elements of the array.
+    """
+
     element: Type
 
     def __str__(self) -> str:
@@ -172,11 +240,23 @@ class ArrayType(Type):
 
 
 def array_of(element: Type) -> ArrayType:
+    """
+    Constructs an array type with the given element type.
+    """
     return ArrayType(element)
 
 
 @d.dataclass(frozen=True)
 class SetType(Type):
+    """
+    An *set type*.
+
+    Attributes
+    ----------
+    element:
+        The type of the elements of the set.
+    """
+
     element: Type
 
     def __str__(self) -> str:
@@ -187,6 +267,9 @@ class SetType(Type):
 
 
 def set_of(element: Type) -> SetType:
+    """
+    Constructs a set type with the given element type.
+    """
     return SetType(element)
 
 
