@@ -21,7 +21,7 @@ from momba_guide import model
 
 ## Model Checking
 
-Imagine you would like to know the maximal probability of winning the game assuming the player preforms optimal moves.
+Imagine you would like to know the maximal probability of winning the game assuming the player performs optimal moves.
 Put into a property definition, this may look as follows:
 
 ```{jupyter-execute}
