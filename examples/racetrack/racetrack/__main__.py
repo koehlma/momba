@@ -20,7 +20,7 @@ from . import console, model
 @click.group()
 def main() -> None:
     """
-    Racetrack
+    A formal model of the pen-and-paper game *Racetrack*.
     """
 
 
@@ -126,6 +126,9 @@ def race(
     underground_name: str,
     tank_type_name: str,
 ) -> None:
+    """
+    Runs an interactive simulation where you can steer the car.
+    """
     track = model.Track.from_source(track_file.read_text(encoding="utf-8"))
     print("Input Track".center(track.width))
 

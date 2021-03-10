@@ -3,13 +3,13 @@
 In the previous section, we defined a formal model of a simple jump 'n' run game.
 Here, we demonstrate how to use Momba's state space exploration engine to explore the state space of this model.
 
-For the following examples, we have to import the model defined in [Model Construction](model_construction):
+For the following examples, we have to import the model defined in [Model Construction](construction):
 
 ```{jupyter-execute}
 from momba_guide import model
 ```
 
-The package [`momba.engine`](momba_engine) exposes the API for state space exploration.
+The package [`momba.engine`](../reference/engine) exposes the API for state space exploration.
 Momba's state space exploration engine supports a variety of different model types including *Probabilistic Timed Automata* (PTAs) and *Markov Decision Processes* (MDPs).
 It is written in [Rust](https://www.rust-lang.org).
 
@@ -55,4 +55,4 @@ As the player starts on a left-most position on the track, successfully moving l
 This is also reflected in the successor state where `has_crashed` becomes `True`.
 
 Based on this API, it is straightforward to develop a domain specific tool for interactive model exploration or test various aspects of the model.
-For a more elaborate example where we programmed an interactive racing game including some visualizations based on a model using Momba's state space exploration engine, check out the [Racetrack](example_racetrack) example.
+For a more elaborate example where we programmed an interactive racing game including some visualizations based on a model using Momba's state space exploration engine, check out the [Racetrack](../examples/racetrack/index) example.

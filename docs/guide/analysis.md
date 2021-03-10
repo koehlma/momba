@@ -12,7 +12,7 @@ As Momba tries to install the tools for you, it suffices to just install Momba w
 pip install momba[all]
 ```
 
-For the following examples, we have to import the model defined in [Model Construction](model_construction):
+For the following examples, we have to import the model defined in [Model Construction](construction):
 
 
 ```{jupyter-execute}

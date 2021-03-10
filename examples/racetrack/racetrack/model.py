@@ -14,19 +14,33 @@ import itertools
 import math
 import re
 
-from functools import reduce
-
 
 from momba import model
 from momba.model import expressions, types
-from momba.model.expressions import logic_or, FALSE
 from momba.moml import expr, prop
 
 
 class TankType(enum.Enum):
+    """
+    An enumeration of different *tank types*.
+
+    The actual tank size is calculate based on the size of the
+    track and *capacity factor*.
+
+    Attributes
+    ----------
+    capacity_factor:
+        The capacity factor associated with the tank size.
+    """
+
     SMALL = 0.5
+    """ A small tank. """
+
     MEDIUM = 0.75
+    """ A medium-sized tank. """
+
     LARGE = 1
+    """ A large tank. """
 
     capacity_factor: float
 
@@ -41,20 +55,36 @@ class AccelerationModel(t.Protocol):
 
 class Underground(enum.Enum):
     """
-    Undergrounds introduce probabilistic noise modeling slippery road conditions.
+    An enumeration of different *undergrounds*.
+
+    Undergrounds introduce probabilistic noise modeling
+    slippery road conditions.
+
+    Attributes
+    ----------
+    acceleration_probability:
+        An expression for the probability that the acceleration succeeds.
+    acceleration_model:
+        A function for computing the *abnormal* acceleration.
     """
 
     TARMAC = expr("9 / 10"), lambda a: a
-    """ A very solid non-slippery underground introducing no noise. """
+    """
+    A very solid non-slippery underground introducing no noise.
+    """
 
     SAND = (
         expr("5 / 10"),
         lambda a: expr("$a > 0 ? $a - 1 : ($a < 0 ? $a + 1 : 0)", a=a),
     )
-    """ A sandy underground introducing some noise, be cautious! """
+    """
+    A sandy underground introducing some noise, be cautious!
+    """
 
     ICE = expr("3 / 10"), lambda a: expr("0")
-    """ A very slippy underground. """
+    """
+    A very slippy underground.
+    """
 
     acceleration_probability: model.Expression
     acceleration_model: AccelerationModel
@@ -70,15 +100,41 @@ class Underground(enum.Enum):
 
 @d.dataclass(frozen=True)
 class Coordinate:
+    """
+    Represents a coordinate on the track.
+    """
+
     x: int
+    """ The :math:`x` coordinate. """
+
     y: int
+    """ The :math:`y` coordinate. """
 
 
 class CellType(enum.Enum):
+    """
+    An enumeration of *cell types*.
+    """
+
     BLANK = "."
+    """
+    A *blank cell* where one can drive.
+    """
+
     BLOCKED = "x"
+    """
+    A cell *blocked* by an obstacle.
+    """
+
     START = "s"
+    """
+    A start cell.
+    """
+
     GOAL = "g"
+    """
+    A goal cell.
+    """
 
 
 @d.dataclass(frozen=True)
@@ -112,9 +168,15 @@ class Track:
 
     @property
     def size(self) -> int:
+        """
+        The total size, i.e., number of cells, of the track.
+        """
         return self.width * self.height
 
     def get_cell_type(self, cell: int) -> CellType:
+        """
+        Retrives the type of the given *cell*.
+        """
         if cell in self.blank_cells:
             return CellType.BLANK
         elif cell in self.blocked_cells:
@@ -126,17 +188,29 @@ class Track:
             return CellType.GOAL
 
     def cell_to_coordinate(self, cell: int) -> Coordinate:
+        """
+        Computes the *coordinate* of the given *cell*.
+        """
         return Coordinate(cell % self.width, cell // self.width)
 
     def coordinate_to_cell(self, coordinate: Coordinate) -> int:
+        """
+        Computes the *cell* at the given *coordinate*.
+        """
         return coordinate.y * self.width + coordinate.x
 
     @property
     def cells(self) -> t.Iterable[int]:
+        """
+        An iterable of the *cells* of the track.
+        """
         return tuple(range(0, self.width * self.height))
 
     @property
     def textual_description(self) -> str:
+        """
+        Converts the track into is textual description.
+        """
         lines = [f"dim: {self.width} {self.height}"]
         for y in range(self.height):
             lines.append(
@@ -149,7 +223,9 @@ class Track:
 
     @classmethod
     def from_source(cls, source: str) -> Track:
-        """ Reads a track from a textual specification. """
+        """
+        Converts a textual specification of a track into a :class:`Track`.
+        """
         firstline, _, remainder = source.partition("\n")
         track = "".join(line.strip() for line in remainder.splitlines())
 
@@ -284,7 +360,7 @@ def construct_model(scenario: Scenario) -> model.Network:
     step = ctx.create_action_type("step").create_pattern()
 
     goal_cells = track.goal_cells
-    on_goal = reduce(logic_or, (expr("car_pos == $g", g=g) for g in goal_cells), FALSE)
+    on_goal = expressions.logic_any(*(expr("car_pos == $g", g=g) for g in goal_cells))
 
     ctx.define_property(
         "goalProbability", prop("min({ Pmax(F($on_goal)) | initial })", on_goal=on_goal)
@@ -388,14 +464,14 @@ def construct_model(scenario: Scenario) -> model.Network:
         )
 
         def is_blocked_at(pos: model.Expression) -> model.Expression:
-            return logic_or(
+            return expressions.logic_any(
                 *(
                     expr("$pos == $cell", pos=pos, cell=cell)
                     for cell in track.blocked_cells
                 )
             )
 
-        will_crash = logic_or(
+        will_crash = expressions.logic_any(
             *(
                 is_blocked_at(
                     expr(
