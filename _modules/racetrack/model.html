@@ -39,6 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-image-pos.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/fix-source-link.css" />
     <link rel="stylesheet" href="../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
@@ -121,11 +122,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../examples/racetrack.html">Racetrack</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../examples/racetrack/index.html">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/game.html">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/model.html">The Model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../reference/model/context.html">Context</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../reference/model/automata.html">Automata</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../reference/model/networks.html">Networks</a></li>
@@ -142,9 +148,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/grammar.html">MOML Grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
@@ -187,24 +193,38 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
-
 
 <span class="kn">from</span> <span class="nn">momba</span> <span class="kn">import</span> <span class="n">model</span>
 <span class="kn">from</span> <span class="nn">momba.model</span> <span class="kn">import</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
-<span class="kn">from</span> <span class="nn">momba.model.expressions</span> <span class="kn">import</span> <span class="n">logic_or</span><span class="p">,</span> <span class="n">FALSE</span>
 <span class="kn">from</span> <span class="nn">momba.moml</span> <span class="kn">import</span> <span class="n">expr</span><span class="p">,</span> <span class="n">prop</span>
 
 
-<span class="k">class</span> <span class="nc">TankType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="TankType"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.TankType">[docs]</a><span class="k">class</span> <span class="nc">TankType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    An enumeration of different *tank types*.</span>
+
+<span class="sd">    The actual tank size is calculate based on the size of the</span>
+<span class="sd">    track and *capacity factor*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    capacity_factor:</span>
+<span class="sd">        The capacity factor associated with the tank size.</span>
+<span class="sd">    """</span>
+
     <span class="n">SMALL</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="sd">""" A small tank. """</span>
+
     <span class="n">MEDIUM</span> <span class="o">=</span> <span class="mf">0.75</span>
+    <span class="sd">""" A medium-sized tank. """</span>
+
     <span class="n">LARGE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="sd">""" A large tank. """</span>
 
     <span class="n">capacity_factor</span><span class="p">:</span> <span class="nb">float</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capacity_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor</span> <span class="o">=</span> <span class="n">capacity_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor</span> <span class="o">=</span> <span class="n">capacity_factor</span></div>
 
 
 <span class="k">class</span> <span class="nc">AccelerationModel</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Protocol</span><span class="p">):</span>
@@ -212,22 +232,38 @@
         <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="Underground"><a class="viewcode-back" href="../../examples/racetrack.html#racetrack.model.Underground">[docs]</a><span class="k">class</span> <span class="nc">Underground</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="Underground"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Underground">[docs]</a><span class="k">class</span> <span class="nc">Underground</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    Undergrounds introduce probabilistic noise modeling slippery road conditions.</span>
+<span class="sd">    An enumeration of different *undergrounds*.</span>
+
+<span class="sd">    Undergrounds introduce probabilistic noise modeling</span>
+<span class="sd">    slippery road conditions.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    acceleration_probability:</span>
+<span class="sd">        An expression for the probability that the acceleration succeeds.</span>
+<span class="sd">    acceleration_model:</span>
+<span class="sd">        A function for computing the *abnormal* acceleration.</span>
 <span class="sd">    """</span>
 
     <span class="n">TARMAC</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"9 / 10"</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">a</span>
-    <span class="sd">""" A very solid non-slippery underground introducing no noise. """</span>
+    <span class="sd">"""</span>
+<span class="sd">    A very solid non-slippery underground introducing no noise.</span>
+<span class="sd">    """</span>
 
     <span class="n">SAND</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">expr</span><span class="p">(</span><span class="s2">"5 / 10"</span><span class="p">),</span>
         <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"$a &gt; 0 ? $a - 1 : ($a &lt; 0 ? $a + 1 : 0)"</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="sd">""" A sandy underground introducing some noise, be cautious! """</span>
+    <span class="sd">"""</span>
+<span class="sd">    A sandy underground introducing some noise, be cautious!</span>
+<span class="sd">    """</span>
 
     <span class="n">ICE</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"3 / 10"</span><span class="p">),</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
-    <span class="sd">""" A very slippy underground. """</span>
+    <span class="sd">"""</span>
+<span class="sd">    A very slippy underground.</span>
+<span class="sd">    """</span>
 
     <span class="n">acceleration_probability</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span>
     <span class="n">acceleration_model</span><span class="p">:</span> <span class="n">AccelerationModel</span>
@@ -241,20 +277,46 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_model</span> <span class="o">=</span> <span class="n">acceleration_model</span></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Coordinate"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Coordinate">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Coordinate</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a coordinate on the track.</span>
+<span class="sd">    """</span>
+
     <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="sd">""" The :math:`x` coordinate. """</span>
+
     <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="sd">""" The :math:`y` coordinate. """</span></div>
 
 
-<span class="k">class</span> <span class="nc">CellType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="CellType"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.CellType">[docs]</a><span class="k">class</span> <span class="nc">CellType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    An enumeration of *cell types*.</span>
+<span class="sd">    """</span>
+
     <span class="n">BLANK</span> <span class="o">=</span> <span class="s2">"."</span>
+    <span class="sd">"""</span>
+<span class="sd">    A *blank cell* where one can drive.</span>
+<span class="sd">    """</span>
+
     <span class="n">BLOCKED</span> <span class="o">=</span> <span class="s2">"x"</span>
+    <span class="sd">"""</span>
+<span class="sd">    A cell *blocked* by an obstacle.</span>
+<span class="sd">    """</span>
+
     <span class="n">START</span> <span class="o">=</span> <span class="s2">"s"</span>
+    <span class="sd">"""</span>
+<span class="sd">    A start cell.</span>
+<span class="sd">    """</span>
+
     <span class="n">GOAL</span> <span class="o">=</span> <span class="s2">"g"</span>
+    <span class="sd">"""</span>
+<span class="sd">    A goal cell.</span>
+<span class="sd">    """</span></div>
 
 
-<div class="viewcode-block" id="Track"><a class="viewcode-back" href="../../examples/racetrack.html#racetrack.model.Track">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Track"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Track</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Represents a *track*.</span>
@@ -285,9 +347,15 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The total size, i.e., number of cells, of the track.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
 
-    <span class="k">def</span> <span class="nf">get_cell_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellType</span><span class="p">:</span>
+<div class="viewcode-block" id="Track.get_cell_type"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.get_cell_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_cell_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellType</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrives the type of the given *cell*.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blank_cells</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CellType</span><span class="o">.</span><span class="n">BLANK</span>
         <span class="k">elif</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocked_cells</span><span class="p">:</span>
@@ -296,20 +364,32 @@
             <span class="k">return</span> <span class="n">CellType</span><span class="o">.</span><span class="n">START</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_cells</span>
-            <span class="k">return</span> <span class="n">CellType</span><span class="o">.</span><span class="n">GOAL</span>
+            <span class="k">return</span> <span class="n">CellType</span><span class="o">.</span><span class="n">GOAL</span></div>
 
-    <span class="k">def</span> <span class="nf">cell_to_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Coordinate</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Coordinate</span><span class="p">(</span><span class="n">cell</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">cell</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+<div class="viewcode-block" id="Track.cell_to_coordinate"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.cell_to_coordinate">[docs]</a>    <span class="k">def</span> <span class="nf">cell_to_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Coordinate</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Computes the *coordinate* of the given *cell*.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">Coordinate</span><span class="p">(</span><span class="n">cell</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">cell</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">coordinate_to_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">x</span>
+<div class="viewcode-block" id="Track.coordinate_to_cell"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.coordinate_to_cell">[docs]</a>    <span class="k">def</span> <span class="nf">coordinate_to_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Computes the *cell* at the given *coordinate*.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">x</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">cells</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        An iterable of the *cells* of the track.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">textual_description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Converts the track into is textual description.</span>
+<span class="sd">        """</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"dim: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">):</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -320,9 +400,11 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Track.from_source"><a class="viewcode-back" href="../../examples/racetrack.html#racetrack.model.Track.from_source">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Track.from_source"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.from_source">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_source</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Track</span><span class="p">:</span>
-        <span class="sd">""" Reads a track from a textual specification. """</span>
+        <span class="sd">"""</span>
+<span class="sd">        Converts a textual specification of a track into a :class:`Track`.</span>
+<span class="sd">        """</span>
         <span class="n">firstline</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">track</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">remainder</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
 
@@ -373,7 +455,7 @@
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="Scenario"><a class="viewcode-back" href="../../examples/racetrack.html#racetrack.model.Scenario">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Scenario"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Scenario">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Scenario</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    A scenario description comprising a track, start cell, tank type, underground,</span>
@@ -457,7 +539,7 @@
     <span class="n">step</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
 
     <span class="n">goal_cells</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">goal_cells</span>
-    <span class="n">on_goal</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">logic_or</span><span class="p">,</span> <span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_pos == $g"</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">goal_cells</span><span class="p">),</span> <span class="n">FALSE</span><span class="p">)</span>
+    <span class="n">on_goal</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_pos == $g"</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">goal_cells</span><span class="p">))</span>
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
         <span class="s2">"goalProbability"</span><span class="p">,</span> <span class="n">prop</span><span class="p">(</span><span class="s2">"min({ Pmax(F($on_goal)) | initial })"</span><span class="p">,</span> <span class="n">on_goal</span><span class="o">=</span><span class="n">on_goal</span><span class="p">)</span>
@@ -561,14 +643,14 @@
         <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">is_blocked_at</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">logic_or</span><span class="p">(</span>
+            <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
                 <span class="o">*</span><span class="p">(</span>
                     <span class="n">expr</span><span class="p">(</span><span class="s2">"$pos == $cell"</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">blocked_cells</span>
                 <span class="p">)</span>
             <span class="p">)</span>
 
-        <span class="n">will_crash</span> <span class="o">=</span> <span class="n">logic_or</span><span class="p">(</span>
+        <span class="n">will_crash</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
             <span class="o">*</span><span class="p">(</span>
                 <span class="n">is_blocked_at</span><span class="p">(</span>
                     <span class="n">expr</span><span class="p">(</span>

@@ -39,6 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/fix-image-pos.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fix-source-link.css" />
     <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
@@ -121,11 +122,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/racetrack.html">Racetrack</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/racetrack/index.html">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/game.html">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/model.html">The Model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/context.html">Context</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/automata.html">Automata</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/networks.html">Networks</a></li>
@@ -142,9 +148,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/grammar.html">MOML Grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
@@ -242,7 +248,7 @@ To this end, we define a class <code class="docutils literal notranslate"><span 
 <p>With this in place, we are now ready to construct the model.</p>
 <div class="section" id="modeling-with-momba">
 <h2>Modeling with Momba<a class="headerlink" href="#modeling-with-momba" title="Permalink to this headline">¶</a></h2>
-<p>The package <a class="reference internal" href="../reference/model/index.html#id1"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">momba.model</span></code></span></a> provides the core modeling API for model construction.
+<p>The package <a class="reference internal" href="../reference/model/index.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">momba.model</span></code></span></a> provides the core modeling API for model construction.
 At the heart of every model is a <em>modeling context</em> (<a class="reference internal" href="../reference/model/context.html#momba.model.Context" title="momba.model.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">Context</span></code></a>) of a specific <em>model type</em> (<a class="reference internal" href="../reference/model/context.html#momba.model.ModelType" title="momba.model.ModelType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelType</span></code></a>).
 Every modeling context can hold several automata and automata networks comprised of these automata.
 Also, global variables, constants, functions, and properties are declared on the modeling context.
@@ -258,7 +264,7 @@ To construct a model, we first have to create a modeling context of the respecti
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7f43dcce2970&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7fdb88a19f10&gt;
 </pre></div>
 </div>
 </div>
@@ -332,7 +338,7 @@ To construct a model, we first have to create a modeling context of the respecti
 <div class="cell_output docutils container">
 </div>
 </div>
-<p>With the help of Momba’s <a class="reference internal" href="../incubator/moml/macros.html#moml-macros"><span class="std std-ref"><em>syntax-aware macros</em></span></a> we now define two functions computing whether the player <em>has crashed</em> or <em>has finished</em> depending on the position:</p>
+<p>With the help of Momba’s <a class="reference internal" href="../incubator/moml/macros.html"><span class="doc std std-doc"><em>syntax-aware macros</em></span></a> we now define two functions computing whether the player <em>has crashed</em> or <em>has finished</em> depending on the position:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba.moml</span> <span class="kn">import</span> <span class="n">expr</span>

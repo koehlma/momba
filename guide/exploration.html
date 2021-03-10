@@ -39,6 +39,7 @@
 </style><link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/fix-image-pos.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/fix-source-link.css" />
     <link rel="stylesheet" href="../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
   <body dir="">
@@ -121,11 +122,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/racetrack.html">Racetrack</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../examples/racetrack/index.html">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/game.html">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/racetrack/model.html">The Model</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/context.html">Context</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/automata.html">Automata</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../reference/model/networks.html">Networks</a></li>
@@ -142,9 +148,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../reference/analysis.html">Analysis Interfaces</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/grammar.html">MOML Grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
@@ -174,7 +180,7 @@
 <h1>Model Exploration<a class="headerlink" href="#model-exploration" title="Permalink to this headline">¶</a></h1>
 <p>In the previous section, we defined a formal model of a simple jump ‘n’ run game.
 Here, we demonstrate how to use Momba’s state space exploration engine to explore the state space of this model.</p>
-<p>For the following examples, we have to import the model defined in <a class="reference internal" href="construction.html#id1"><span class="std std-ref">Model Construction</span></a>:</p>
+<p>For the following examples, we have to import the model defined in <a class="reference internal" href="construction.html"><span class="doc std std-doc">Model Construction</span></a>:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba_guide</span> <span class="kn">import</span> <span class="n">model</span>
@@ -184,7 +190,7 @@ Here, we demonstrate how to use Momba’s state space exploration engine to expl
 <div class="cell_output docutils container">
 </div>
 </div>
-<p>The package <a class="reference internal" href="../reference/engine.html#momba-engine"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">momba.engine</span></code></span></a> exposes the API for state space exploration.
+<p>The package <a class="reference internal" href="../reference/engine.html"><span class="doc std std-doc"><code class="docutils literal notranslate"><span class="pre">momba.engine</span></code></span></a> exposes the API for state space exploration.
 Momba’s state space exploration engine supports a variety of different model types including <em>Probabilistic Timed Automata</em> (PTAs) and <em>Markov Decision Processes</em> (MDPs).
 It is written in <a class="reference external" href="https://www.rust-lang.org">Rust</a>.</p>
 <p>We import the package and create a <em>discrete time explorer</em> for our MDP automaton network:</p>
@@ -218,7 +224,7 @@ The values of these variables can be accessed as follows:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'pos_x': Value(0), 'pos_y': Value(0)}
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'pos_y': Value(0), 'pos_x': Value(0)}
 </pre></div>
 </div>
 </div>
@@ -239,27 +245,27 @@ As defined in the model, the player starts at the position <span class="math not
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Move: stay
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Move: right
   Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
     Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
   Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
+    Globals: {'pos_y': Value(1), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
+Move: stay
+  Probability: 0.6
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
+    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
+  Probability: 0.4
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
     Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
 Move: left
   Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
+    Globals: {'pos_y': Value(0), 'pos_x': Value(1)}
     Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
   Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(-1)}
+    Globals: {'pos_y': Value(-1), 'pos_x': Value(1)}
     Locals: {'is_finished': Value(False), 'has_crashed': Value(True)}
-Move: right
-  Probability: 0.4
-    Globals: {'pos_x': Value(1), 'pos_y': Value(0)}
-    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
-  Probability: 0.6
-    Globals: {'pos_x': Value(1), 'pos_y': Value(1)}
-    Locals: {'is_finished': Value(False), 'has_crashed': Value(False)}
 </pre></div>
 </div>
 </div>
@@ -269,7 +275,7 @@ As the model is probabilistic, there are multiple destinations with different pr
 As the player starts on a left-most position on the track, successfully moving left leads to a crash into the wall.
 This is also reflected in the successor state where <code class="docutils literal notranslate"><span class="pre">has_crashed</span></code> becomes <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <p>Based on this API, it is straightforward to develop a domain specific tool for interactive model exploration or test various aspects of the model.
-For a more elaborate example where we programmed an interactive racing game including some visualizations based on a model using Momba’s state space exploration engine, check out the <a class="reference internal" href="../examples/racetrack.html#example-racetrack"><span class="std std-ref">Racetrack</span></a> example.</p>
+For a more elaborate example where we programmed an interactive racing game including some visualizations based on a model using Momba’s state space exploration engine, check out the <a class="reference internal" href="../examples/racetrack/index.html"><span class="doc std std-doc">Racetrack</span></a> example.</p>
 </div>
 
       </article>

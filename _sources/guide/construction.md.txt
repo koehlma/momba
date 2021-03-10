@@ -65,7 +65,7 @@ With this in place, we are now ready to construct the model.
 
 ## Modeling with Momba
 
-The package [`momba.model`](momba_models) provides the core modeling API for model construction.
+The package [`momba.model`](../reference/model/index) provides the core modeling API for model construction.
 At the heart of every model is a *modeling context* ({class}`~momba.model.Context`) of a specific *model type* ({class}`~momba.model.ModelType`).
 Every modeling context can hold several automata and automata networks comprised of these automata.
 Also, global variables, constants, functions, and properties are declared on the modeling context.
@@ -125,7 +125,7 @@ environment_automaton.scope.declare_variable(
 )
 ```
 
-With the help of Momba's [*syntax-aware macros*](moml_macros) we now define two functions computing whether the player *has crashed* or *has finished* depending on the position:
+With the help of Momba's [*syntax-aware macros*](../incubator/moml/macros) we now define two functions computing whether the player *has crashed* or *has finished* depending on the position:
 
 ```{jupyter-execute}
 from momba.moml import expr

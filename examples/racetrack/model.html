@@ -1,0 +1,483 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="API Documentation" href="../../reference/index.html" /><link rel="prev" title="Interactive Game" href="game.html" />
+
+    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+        <title>The Model - Momba</title>
+      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+    <link rel="stylesheet" href="../../_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-image-pos.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-source-link.css" />
+    <link rel="stylesheet" href="../../_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Momba</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../_static/images/logo_with_text.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/construction.html">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/exploration.html">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../guide/analysis.html">Model Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Racetrack</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="game.html">Interactive Game</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">The Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/index.html">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/model/index.html">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/context.html">Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/automata.html">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/networks.html">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/actions.html">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/expressions.html">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/properties.html">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/types.html">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/functions.html">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/model/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/engine.html">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/jani.html">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reference/analysis.html">Analysis Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../incubator/value-passing.html">Value Passing</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/grammar.html">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing/index.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="the-model">
+<h1>The Model<a class="headerlink" href="#the-model" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This part of the documentation is still incomplete.</p>
+</div>
+<p>This part of the documentation demonstrates how to utilize <a class="reference external" href="https://www.sphinx-doc.org/en/master/">Sphinx</a> with embedded <a class="reference external" href="https://jupyter.org/">Jupyter Notebook</a> cells to document a model.
+To this end, we first import the model:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">racetrack</span> <span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">tracks</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="section" id="tracks">
+<h2>Tracks<a class="headerlink" href="#tracks" title="Permalink to this headline">¶</a></h2>
+<p>Let’s have a look at the <em>Barto-Big</em> track:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tracks</span><span class="o">.</span><span class="n">BARTO_BIG</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/model_1_0.svg" src="../../_images/model_1_0.svg"/></div>
+</div>
+<p>When used is a Jupyter notebook, a track is rendered as an SVG.
+The start cells are colored blue, goal cells green, and blocked cells red.
+Internally, a track is represented by its width, height, and a sets for each type of cell.
+The <em>cells</em> of a track are enumerated from top-left to bottom-right.</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">tracks</span><span class="o">.</span><span class="n">BARTO_BIG</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Track(width=30, height=33, blank_cells={10, 11, 12, 13, 14, 15, 16, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 212, 213, 214, 215, 216, 217, 218, 219, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 242, 243, 244, 245, 246, 247, 248, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 272, 273, 274, 275, 276, 277, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 302, 303, 304, 305, 306, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 332, 333, 334, 335, 336, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 361, 362, 363, 364, 365, 366, 371, 372, 373, 374, 375, 376, 377, 378, 391, 392, 393, 394, 395, 396, 401, 402, 403, 404, 405, 406, 421, 422, 423, 424, 425, 426, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 451, 452, 453, 454, 455, 456, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 481, 482, 483, 484, 485, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 511, 512, 513, 514, 515, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 541, 542, 543, 544, 545, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 571, 572, 573, 574, 575, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 601, 602, 603, 604, 605, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 631, 632, 633, 634, 635, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662, 663, 664, 665, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 893, 894, 895, 896, 897, 898, 899, 900, 901, 902, 903, 904, 905, 923, 924, 925, 926, 927, 928, 929, 930, 931, 932, 933, 934, 935, 953, 954, 955, 956, 957, 958, 959}, blocked_cells={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 83, 84, 85, 86, 87, 88, 89, 90, 91, 116, 117, 118, 119, 120, 121, 146, 147, 148, 149, 150, 151, 176, 177, 178, 179, 180, 181, 192, 193, 206, 207, 208, 209, 210, 211, 220, 221, 222, 223, 224, 236, 237, 238, 239, 240, 241, 249, 250, 251, 252, 253, 254, 255, 266, 267, 268, 269, 270, 271, 278, 279, 280, 281, 282, 295, 296, 297, 298, 299, 300, 301, 307, 308, 309, 310, 323, 324, 325, 326, 327, 328, 329, 330, 331, 337, 338, 339, 340, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 367, 368, 369, 370, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 397, 398, 399, 400, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 427, 428, 429, 430, 444, 445, 446, 447, 448, 449, 450, 457, 458, 459, 475, 476, 477, 478, 479, 480, 486, 487, 488, 489, 506, 507, 508, 509, 510, 516, 517, 518, 519, 537, 538, 539, 540, 546, 547, 548, 549, 568, 569, 570, 576, 577, 578, 579, 580, 599, 600, 606, 607, 608, 609, 610, 611, 630, 636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739, 740, 741, 742, 756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799, 800, 801, 802, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 886, 887, 888, 889, 890, 891, 892, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 917, 918, 919, 920, 921, 922, 936, 937, 938, 939, 940, 941, 942, 943, 944, 945, 946, 947, 948, 949, 950, 951, 952, 966, 967, 968, 969, 970, 971, 972, 973, 974, 975, 976, 977, 978, 979, 980, 981, 982}, start_cells={960, 961, 962, 963, 964, 965}, goal_cells={983, 984, 985, 986, 987, 988, 989})
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s also include some auto-generated documentation for the <a class="reference internal" href="#racetrack.model.Track" title="racetrack.model.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">Track</span></code></a> class.</p>
+<dl class="py class">
+<dt id="racetrack.model.Track">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Track</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blank_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocked_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_cells</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a <em>track</em>.</p>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.width">
+<code class="sig-name descname"><span class="pre">width</span></code><a class="headerlink" href="#racetrack.model.Track.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>The width of the track.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.height">
+<code class="sig-name descname"><span class="pre">height</span></code><a class="headerlink" href="#racetrack.model.Track.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>The height of the track.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.blank_cells">
+<code class="sig-name descname"><span class="pre">blank_cells</span></code><a class="headerlink" href="#racetrack.model.Track.blank_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of blank cells.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.blocked_cells">
+<code class="sig-name descname"><span class="pre">blocked_cells</span></code><a class="headerlink" href="#racetrack.model.Track.blocked_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of blocked cells.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.start_cells">
+<code class="sig-name descname"><span class="pre">start_cells</span></code><a class="headerlink" href="#racetrack.model.Track.start_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of start cells.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Track.goal_cells">
+<code class="sig-name descname"><span class="pre">goal_cells</span></code><a class="headerlink" href="#racetrack.model.Track.goal_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of goal cells.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.cell_to_coordinate">
+<code class="sig-name descname"><span class="pre">cell_to_coordinate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Track.cell_to_coordinate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Track.cell_to_coordinate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the <em>coordinate</em> of the given <em>cell</em>.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.cells">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cells</span></code><a class="headerlink" href="#racetrack.model.Track.cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterable of the <em>cells</em> of the track.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.coordinate_to_cell">
+<code class="sig-name descname"><span class="pre">coordinate_to_cell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Track.coordinate_to_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Track.coordinate_to_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the <em>cell</em> at the given <em>coordinate</em>.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.from_source">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_source</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Track.from_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Track.from_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a textual specification of a track into a <a class="reference internal" href="#racetrack.model.Track" title="racetrack.model.Track"><code class="xref py py-class docutils literal notranslate"><span class="pre">Track</span></code></a>.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.get_cell_type">
+<code class="sig-name descname"><span class="pre">get_cell_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Track.get_cell_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Track.get_cell_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrives the type of the given <em>cell</em>.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.size">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">size</span></code><a class="headerlink" href="#racetrack.model.Track.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total size, i.e., number of cells, of the track.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="racetrack.model.Track.textual_description">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">textual_description</span></code><a class="headerlink" href="#racetrack.model.Track.textual_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the track into is textual description.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="racetrack.model.Coordinate">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Coordinate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Coordinate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Coordinate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a coordinate on the track.</p>
+<dl class="py attribute">
+<dt id="racetrack.model.Coordinate.x">
+<code class="sig-name descname"><span class="pre">x</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#racetrack.model.Coordinate.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <span class="math notranslate nohighlight">\(x\)</span> coordinate.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Coordinate.y">
+<code class="sig-name descname"><span class="pre">y</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#racetrack.model.Coordinate.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <span class="math notranslate nohighlight">\(y\)</span> coordinate.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="racetrack.model.CellType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">CellType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#CellType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.CellType" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration of <em>cell types</em>.</p>
+<dl class="py attribute">
+<dt id="racetrack.model.CellType.BLANK">
+<code class="sig-name descname"><span class="pre">BLANK</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'.'</span></em><a class="headerlink" href="#racetrack.model.CellType.BLANK" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>blank cell</em> where one can drive.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.CellType.BLOCKED">
+<code class="sig-name descname"><span class="pre">BLOCKED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'x'</span></em><a class="headerlink" href="#racetrack.model.CellType.BLOCKED" title="Permalink to this definition">¶</a></dt>
+<dd><p>A cell <em>blocked</em> by an obstacle.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.CellType.GOAL">
+<code class="sig-name descname"><span class="pre">GOAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'g'</span></em><a class="headerlink" href="#racetrack.model.CellType.GOAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>A goal cell.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.CellType.START">
+<code class="sig-name descname"><span class="pre">START</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'s'</span></em><a class="headerlink" href="#racetrack.model.CellType.START" title="Permalink to this definition">¶</a></dt>
+<dd><p>A start cell.</p>
+</dd></dl>
+</dd></dl>
+</div>
+<div class="section" id="scenarios">
+<h2>Scenarios<a class="headerlink" href="#scenarios" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="racetrack.model.Scenario">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Scenario</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">track</span></em>, <em class="sig-param"><span class="pre">start_cell</span></em>, <em class="sig-param"><span class="pre">tank_type=&lt;TankType.LARGE:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">underground=&lt;Underground.TARMAC:</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/'</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">left=IntegerConstant(integer=9)</span></em>, <em class="sig-param"><span class="pre">right=IntegerConstant(integer=10))</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">max_speed=1</span></em>, <em class="sig-param"><span class="pre">max_acceleration=1</span></em>, <em class="sig-param"><span class="pre">fuel_model=&lt;function</span> <span class="pre">fuel_model_regular&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>A scenario description comprising a track, start cell, tank type, underground,
+maximal speed and acceleration values, and a fuel model.</p>
+</dd></dl>
+<dl class="py class">
+<dt id="racetrack.model.Underground">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Underground</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Underground"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Underground" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration of different <em>undergrounds</em>.</p>
+<p>Undergrounds introduce probabilistic noise modeling
+slippery road conditions.</p>
+<dl class="py attribute">
+<dt id="racetrack.model.Underground.acceleration_probability">
+<code class="sig-name descname"><span class="pre">acceleration_probability</span></code><a class="headerlink" href="#racetrack.model.Underground.acceleration_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>An expression for the probability that the acceleration succeeds.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Underground.acceleration_model">
+<code class="sig-name descname"><span class="pre">acceleration_model</span></code><a class="headerlink" href="#racetrack.model.Underground.acceleration_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function for computing the <em>abnormal</em> acceleration.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Underground.TARMAC">
+<code class="sig-name descname"><span class="pre">TARMAC</span></code><em class="property"> <span class="pre">=</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;,</span> <span class="pre">left=IntegerConstant(integer=9),</span> <span class="pre">right=IntegerConstant(integer=10)),</span> <span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#racetrack.model.Underground.TARMAC" title="Permalink to this definition">¶</a></dt>
+<dd><p>A very solid non-slippery underground introducing no noise.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Underground.SAND">
+<code class="sig-name descname"><span class="pre">SAND</span></code><em class="property"> <span class="pre">=</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;,</span> <span class="pre">left=IntegerConstant(integer=5),</span> <span class="pre">right=IntegerConstant(integer=10)),</span> <span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#racetrack.model.Underground.SAND" title="Permalink to this definition">¶</a></dt>
+<dd><p>A sandy underground introducing some noise, be cautious!</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.Underground.ICE">
+<code class="sig-name descname"><span class="pre">ICE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/',</span> <span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;,</span> <span class="pre">left=IntegerConstant(integer=3),</span> <span class="pre">right=IntegerConstant(integer=10)),</span> <span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)</span></em><a class="headerlink" href="#racetrack.model.Underground.ICE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A very slippy underground.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="racetrack.model.TankType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">TankType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#TankType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.TankType" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration of different <em>tank types</em>.</p>
+<p>The actual tank size is calculate based on the size of the
+track and <em>capacity factor</em>.</p>
+<dl class="py attribute">
+<dt id="racetrack.model.TankType.capacity_factor">
+<code class="sig-name descname"><span class="pre">capacity_factor</span></code><a class="headerlink" href="#racetrack.model.TankType.capacity_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The capacity factor associated with the tank size.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.TankType.SMALL">
+<code class="sig-name descname"><span class="pre">SMALL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0.5</span></em><a class="headerlink" href="#racetrack.model.TankType.SMALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>A small tank.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.TankType.MEDIUM">
+<code class="sig-name descname"><span class="pre">MEDIUM</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0.75</span></em><a class="headerlink" href="#racetrack.model.TankType.MEDIUM" title="Permalink to this definition">¶</a></dt>
+<dd><p>A medium-sized tank.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="racetrack.model.TankType.LARGE">
+<code class="sig-name descname"><span class="pre">LARGE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#racetrack.model.TankType.LARGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>A large tank.</p>
+</dd></dl>
+</dd></dl>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+    
+        <div class="related-pages">
+          <a class="next-page" href="../../reference/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Documentation</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="game.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Interactive Game</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
+            |
+            <a class="muted-link" href="../../_sources/examples/racetrack/model.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+    <p style="padding: 0 0.75rem; margin-top: 0;"><a href="https://www.uni-saarland.de/impressum.html">Imprint</a></p>
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">The Model</a><ul>
+<li><a class="reference internal" href="#tracks">Tracks</a></li>
+<li><a class="reference internal" href="#scenarios">Scenarios</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script src="../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
