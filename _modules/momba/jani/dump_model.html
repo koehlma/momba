@@ -192,7 +192,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">model</span>
-<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">functions</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">checks</span>
 <span class="kn">from</span> <span class="nn">..metadata</span> <span class="kn">import</span> <span class="n">version</span>
 
@@ -536,6 +536,16 @@
         <span class="s2">"op"</span><span class="p">:</span> <span class="s2">"nondet"</span><span class="p">,</span>
         <span class="s2">"var"</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">variable</span><span class="p">,</span>
         <span class="s2">"exp"</span><span class="p">:</span> <span class="n">_dump_prop</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">condition</span><span class="p">,</span> <span class="n">ctx</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@_dump_prop</span><span class="o">.</span><span class="n">register</span>
+<span class="k">def</span> <span class="nf">_dum_call</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="n">functions</span><span class="o">.</span><span class="n">CallExpression</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">JANIContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">JSON</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="n">ModelFeature</span><span class="o">.</span><span class="n">FUNCTIONS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"op"</span><span class="p">:</span> <span class="s2">"call"</span><span class="p">,</span>
+        <span class="s2">"function"</span><span class="p">:</span> <span class="n">expr</span><span class="o">.</span><span class="n">function</span><span class="p">,</span>
+        <span class="s2">"args"</span><span class="p">:</span> <span class="p">[</span><span class="n">_dump_prop</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="n">ctx</span><span class="p">)</span> <span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">expr</span><span class="o">.</span><span class="n">arguments</span><span class="p">],</span>
     <span class="p">}</span>
 
 
