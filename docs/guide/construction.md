@@ -184,7 +184,7 @@ for action_type, delta in moves.items():
             ),
             model.create_destination(
                 ready_location,
-                probability=expr("1 - 0.4"),
+                probability=expr("1 - 0.6"),
                 assignments={
                     "pos_x": new_pos_x,
                     "is_finished": has_finished(new_pos_x, track),
