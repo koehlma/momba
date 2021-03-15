@@ -13,7 +13,7 @@ import json
 import warnings
 
 from .. import model
-from ..model import context, expressions, operators, properties, types
+from ..model import context, expressions, operators, properties, types, functions
 from ..utils import checks
 from ..metadata import version
 
@@ -357,6 +357,16 @@ def _dump_selection(expr: expressions.Selection, ctx: JANIContext) -> JSON:
         "op": "nondet",
         "var": expr.variable,
         "exp": _dump_prop(expr.condition, ctx),
+    }
+
+
+@_dump_prop.register
+def _dum_call(expr: functions.CallExpression, ctx: JANIContext) -> JSON:
+    ctx.require(ModelFeature.FUNCTIONS)
+    return {
+        "op": "call",
+        "function": expr.function,
+        "args": [_dump_prop(argument, ctx) for argument in expr.arguments],
     }
 
 
