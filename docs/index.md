@@ -16,7 +16,7 @@ Finally, thanks to the JANI-model interchange format, several state-of-the-art m
 
 Please cite Momba as follows:
 
-Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Python*. In: J. F. Groote and K. G. Larsen (eds.) 27th International Conference on Tools and Algorithms for the Construction and Analysis of Systems, TACAS 2021. DOI: https://doi.org/10.1007/978-3-030-72013-1_23.
+Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Python*. In: J. F. Groote and K. G. Larsen (eds.) 27th International Conference on Tools and Algorithms for the Construction and Analysis of Systems, TACAS 2021. DOI: [https://doi.org/10.1007/978-3-030-72013-1_23](https://doi.org/10.1007/978-3-030-72013-1_23).
 
 
 ## Features
