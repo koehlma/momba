@@ -54,7 +54,7 @@ jobs:
         mv dist/* artifacts
     - name: Export development requirements
       run: |
-        poetry export --without-hashes --dev -f requirements.txt --output artifacts/dev-requirements.txt
+        poetry export --without-hashes --extras all --dev -f requirements.txt --output artifacts/dev-requirements.txt
     - name: Build Engine
       run: |
         cd engine
