@@ -38,7 +38,7 @@
     :members:
     :member-order: bysource
 
-.. autoclass:: momba.model.types.CLockType
+.. autoclass:: momba.model.types.ClockType
     :members:
     :member-order: bysource
 
@@ -46,7 +46,7 @@
     :members:
     :member-order: bysource
 
-.. autoclass:: momba.model.types.BoundType
+.. autoclass:: momba.model.types.BoundedType
     :members:
     :member-order: bysource
 
