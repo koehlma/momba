@@ -34,7 +34,7 @@ class Track:
                 if symbol == "x":
                     obstacles.add(Cell(x, y))
         return cls(width, height, obstacles)
-
+    
 
 track = Track.from_ascii(TRACK)
 track
