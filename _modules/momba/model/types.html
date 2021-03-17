@@ -3,9 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
         <title>momba.model.types - Momba</title>
-      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+      <link rel="stylesheet" href="../../../_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
     <link rel="stylesheet" href="../../../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css">
     
@@ -294,7 +294,7 @@
         <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">BOOL</span></div></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="ClockType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ClockType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ClockType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    The *clock type*.</span>
@@ -306,10 +306,10 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"types.CLOCK"</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ClockType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ClockType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">BoundedType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">base</span> <span class="o">==</span> <span class="n">INT</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div></div>
 
 
 <div class="viewcode-block" id="ContinuousType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ContinuousType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -335,7 +335,7 @@
 <span class="n">CONTINUOUS</span> <span class="o">=</span> <span class="n">ContinuousType</span><span class="p">()</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="BoundedType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.BoundedType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BoundedType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    A *bounded numeric type*.</span>
@@ -392,8 +392,8 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">bound</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
+<div class="viewcode-block" id="BoundedType.is_assignable_from"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.BoundedType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ArrayType"><a class="viewcode-back" href="../../../reference/model/types.html#momba.model.ArrayType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

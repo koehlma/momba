@@ -3,9 +3,9 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Functions" href="functions.html" /><link rel="prev" title="Properties" href="properties.html" />
 
-    <meta name="generator" content="sphinx-3.5.1, furo 2021.02.21.beta25"/>
+    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
         <title>Types - Momba</title>
-      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=33d2fc4f3f180ec1ffc6524e273e21d7d58cbe49">
+      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
     <link rel="stylesheet" href="../../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
     
@@ -287,6 +287,21 @@ targets of this type.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
+<dt id="momba.model.types.ClockType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">ClockType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#ClockType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ClockType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <em>clock type</em>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Instead of instantiating new objects of this class use <a class="reference internal" href="#momba.model.types.CLOCK" title="momba.model.types.CLOCK"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CLOCK</span></code></a>.</p>
+</div>
+<dl class="py method">
+<dt id="momba.model.types.ClockType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#ClockType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ClockType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
 <dt id="momba.model.types.ContinuousType">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">ContinuousType</span></code><a class="reference internal" href="../../_modules/momba/model/types.html#ContinuousType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ContinuousType" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <em>continuous type</em>.</p>
@@ -297,6 +312,32 @@ targets of this type.</p>
 <dl class="py method">
 <dt id="momba.model.types.ContinuousType.is_assignable_from">
 <code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#ContinuousType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.ContinuousType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether values of the other type can be assigned to
+targets of this type.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.model.types.BoundedType">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.model.types.</span></code><code class="sig-name descname"><span class="pre">BoundedType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#BoundedType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.BoundedType" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <em>bounded numeric type</em>.</p>
+<dl class="py attribute">
+<dt id="momba.model.types.BoundedType.base">
+<code class="sig-name descname"><span class="pre">base</span></code><a class="headerlink" href="#momba.model.types.BoundedType.base" title="Permalink to this definition">¶</a></dt>
+<dd><p>The numeric base type.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.BoundedType.lower_bound">
+<code class="sig-name descname"><span class="pre">lower_bound</span></code><a class="headerlink" href="#momba.model.types.BoundedType.lower_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>The optional lower bound for values of the type.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt id="momba.model.types.BoundedType.upper_bound">
+<code class="sig-name descname"><span class="pre">upper_bound</span></code><a class="headerlink" href="#momba.model.types.BoundedType.upper_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>The optional upper bound for values of the type.</p>
+</dd></dl>
+<dl class="py method">
+<dt id="momba.model.types.BoundedType.is_assignable_from">
+<code class="sig-name descname"><span class="pre">is_assignable_from</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/model/types.html#BoundedType.is_assignable_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.types.BoundedType.is_assignable_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether values of the other type can be assigned to
 targets of this type.</p>
 </dd></dl>
