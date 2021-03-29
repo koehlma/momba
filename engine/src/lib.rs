@@ -6,10 +6,10 @@ use pyo3::prelude::*;
 
 use momba_explore;
 
-enum WrappedExplorer {
-    MDPExplorer(Arc<momba_explore::MDPExplorer>),
-    Zone64Explorer(Arc<momba_explore::Explorer<momba_explore::time::Float64Zone>>),
-}
+// enum WrappedExplorer {
+//     MDPExplorer(Arc<momba_explore::MDPExplorer>),
+//     Zone64Explorer(Arc<momba_explore::Explorer<momba_explore::time::Float64Zone>>),
+// }
 
 struct Value(momba_explore::model::Value);
 

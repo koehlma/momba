@@ -1,7 +1,6 @@
 //! Data structures for communicating with external tools.
 
 use serde::{Deserialize, Serialize};
-use time::TimeType;
 
 use crate::model;
 use crate::time;

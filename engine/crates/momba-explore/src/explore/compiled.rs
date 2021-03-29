@@ -8,13 +8,7 @@ use crate::time;
 use super::evaluate;
 use super::*;
 
-pub type ActionLabelIndex = usize;
-
 pub type LocationIndex = usize;
-
-pub type EdgeIndex = usize;
-
-pub type DestinationIndex = usize;
 
 pub type GlobalEnvironment<'s> = evaluate::Environment<'s, 2>;
 pub type EdgeEnvironment<'s> = evaluate::Environment<'s, 3>;

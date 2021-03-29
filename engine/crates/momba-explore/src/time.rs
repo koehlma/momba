@@ -11,8 +11,6 @@ use serde::{Deserialize, Serialize};
 use clock_zones;
 use clock_zones::Zone;
 
-use crate::Explorer;
-
 use super::model;
 
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
