@@ -58,6 +58,7 @@ jobs:
     - name: Build Engine
       run: |
         cd engine
+        rustup update stable
         maturin build --manylinux=off --no-sdist --out ../artifacts -i $(which python)
     - uses: actions/upload-artifact@v2
       with:
