@@ -1,11 +1,12 @@
 <!doctype html>
 <html class="no-js">
   <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="JANI Models" href="jani.html" /><link rel="prev" title="Exceptions" href="model/exceptions.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="JANI Models" href="jani.html" /><link rel="prev" title="Exceptions" href="model/exceptions.html" />
 
-    <meta name="generator" content="sphinx-3.5.2, furo 2021.02.28.beta28"/>
+    <meta name="generator" content="sphinx-3.5.3, furo 2021.03.20.beta31"/>
         <title>Exploration Engine - Momba</title>
-      <link rel="stylesheet" href="../_static/styles/furo.css?digest=be5985a4059b5c2cd56ed0804790452beca62674">
+      <link rel="stylesheet" href="../_static/styles/furo.css?digest=978e1795dfe158b585dda6a8417f6411828bf3ed">
     <link rel="stylesheet" href="../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css">
     
@@ -208,7 +209,7 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f84a9a6a220&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f144c261640&gt;
 </pre></div>
 </div>
 </div>
@@ -246,17 +247,17 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
- 'x2': Value(0),
- 's2': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'w12': Value(0),
  'y2': Value(0),
- 't': Value(0),
- 'w12': Value(0),
  'x1': Value(0),
- 'w21': Value(0),
- 'z1': Value(0),
  's1': Value(0),
- 'y1': Value(0)}
+ 'z1': Value(0),
+ 't': Value(0),
+ 'z2': Value(0),
+ 'w21': Value(0),
+ 'y1': Value(0),
+ 'x2': Value(0),
+ 's2': Value(0)}
 </pre></div>
 </div>
 </div>
@@ -270,11 +271,11 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1: l
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node2: l
+timer: l
+node1: l
 wire21: l
 wire12: l
-node2: l
-timer: l
 </pre></div>
 </div>
 </div>
@@ -289,15 +290,15 @@ timer: l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node2
+{}
+timer
+{}
+node1
 {}
 wire21
 {}
 wire12
-{}
-node2
-{}
-timer
 {}
 </pre></div>
 </div>
@@ -320,11 +321,11 @@ To this end, we query the outgoing transitions of the initial state and their re
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f849ac7ad60&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f849ac7a550&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f143e3f2370&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f143e3f23d0&gt;.
 Action: snd_idle21
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f849ac7a640&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f849ac7adf0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f143e3f2790&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f143e3f27f0&gt;.
 </pre></div>
 </div>
 </div>
@@ -344,20 +345,20 @@ Action: snd_idle21
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
 </pre></div>
 </div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
- 'x2': Value(0),
- 's2': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'w12': Value(0),
  'y2': Value(0),
- 't': Value(0),
- 'w12': Value(5),
  'x1': Value(0),
- 'w21': Value(0),
+ 's1': Value(0),
  'z1': Value(0),
- 's1': Value(2),
- 'y1': Value(0)}
+ 't': Value(0),
+ 'z2': Value(0),
+ 'w21': Value(5),
+ 'y1': Value(0),
+ 'x2': Value(0),
+ 's2': Value(2)}
 </pre></div>
 </div>
 </div>
