@@ -114,11 +114,11 @@ This automaton will have one location:
 ready_location = environment_automaton.create_location("ready", initial=True)
 ```
 
-To keep track of whether the player reached the goal or crashed into an obstacle or a wall, we declare two local variables `is_finished` and `has_crashed` for the environment automaton:
+To keep track of whether the player reached the goal or crashed into an obstacle or a wall, we declare two local variables `has_won` and `has_crashed` for the environment automaton:
 
 ```{jupyter-execute}
 environment_automaton.scope.declare_variable(
-    "is_finished", typ=model.types.BOOL, initial_value=False
+    "has_won", typ=model.types.BOOL, initial_value=False
 )
 environment_automaton.scope.declare_variable(
     "has_crashed", typ=model.types.BOOL, initial_value=False
@@ -159,7 +159,7 @@ In particular, the function {func}`~momba.moml.expr` can be used to build expres
 We use the same approach to define an expression indicating whether a move can be performed:
 
 ```{jupyter-execute}
-can_move = expr("not is_finished and not has_crashed")
+can_move = expr("not has_won and not has_crashed")
 ```
 
 Now, with these definitions in place, we create the edges of the automaton:
@@ -178,7 +178,7 @@ for action_type, delta in moves.items():
                 assignments={
                     "pos_x": new_pos_x,
                     "pos_y": new_pos_y,
-                    "is_finished": has_finished(new_pos_x, track),
+                    "has_won": has_finished(new_pos_x, track),
                     "has_crashed": has_crashed(new_pos_x, new_pos_y, track),
                 },
             ),
@@ -187,7 +187,7 @@ for action_type, delta in moves.items():
                 probability=expr("1 - 0.6"),
                 assignments={
                     "pos_x": new_pos_x,
-                    "is_finished": has_finished(new_pos_x, track),
+                    "has_won": has_finished(new_pos_x, track),
                     "has_crashed": has_crashed(new_pos_x, expr("pos_y"), track),
                 },
             ),

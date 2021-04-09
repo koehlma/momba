@@ -1,4 +1,4 @@
-## Exceptions
+# Exceptions
 
 ```{warning}
 The class hierarchy is provisional for now.

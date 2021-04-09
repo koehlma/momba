@@ -2,7 +2,7 @@
 
 The `racetrack` packages installs a command line tool:
 
-```plain
+```text
 Usage: racetrack [OPTIONS] COMMAND [ARGS]...
 
   A formal model of the pen-and-paper game *Racetrack*.
