@@ -34,7 +34,7 @@ class Track:
                 if symbol == "x":
                     obstacles.add(Cell(x, y))
         return cls(width, height, obstacles)
-    
+
 
 track = Track.from_ascii(TRACK)
 track
@@ -66,7 +66,7 @@ ready_location = environment_automaton.create_location("ready", initial=True)
 
 
 environment_automaton.scope.declare_variable(
-    "is_finished", typ=model.types.BOOL, initial_value=False
+    "has_won", typ=model.types.BOOL, initial_value=False
 )
 environment_automaton.scope.declare_variable(
     "has_crashed", typ=model.types.BOOL, initial_value=False
@@ -76,7 +76,7 @@ environment_automaton.scope.declare_variable(
 from momba.moml import expr
 
 
-def has_finished(x: model.Expression, track: Track) -> model.Expression:
+def has_won(x: model.Expression, track: Track) -> model.Expression:
     return expr("$x >= $width", x=x, width=track.width)
 
 
@@ -99,7 +99,7 @@ def has_crashed(
     return model.expressions.logic_or(out_of_bounds, on_obstacle)
 
 
-can_move = expr("not is_finished and not has_crashed")
+can_move = expr("not has_won and not has_crashed")
 
 
 for action_type, delta in moves.items():
@@ -115,7 +115,7 @@ for action_type, delta in moves.items():
                 assignments={
                     "pos_x": new_pos_x,
                     "pos_y": new_pos_y,
-                    "is_finished": has_finished(new_pos_x, track),
+                    "has_won": has_won(new_pos_x, track),
                     "has_crashed": has_crashed(new_pos_x, new_pos_y, track),
                 },
             ),
@@ -124,7 +124,7 @@ for action_type, delta in moves.items():
                 probability=expr("1 - 0.6"),
                 assignments={
                     "pos_x": new_pos_x,
-                    "is_finished": has_finished(new_pos_x, track),
+                    "has_won": has_won(new_pos_x, track),
                     "has_crashed": has_crashed(new_pos_x, expr("pos_y"), track),
                 },
             ),

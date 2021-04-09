@@ -29,7 +29,7 @@ def game(screen):
 
         if not state.transitions:
             screen.clear()
-            if state.get_local_env(model.environment)["is_finished"].as_bool:
+            if state.get_local_env(model.environment)["has_won"].as_bool:
                 screen.centre("Congratulations, you won! 🏆", screen.height // 2)
             if state.get_local_env(model.environment)["has_crashed"].as_bool:
                 screen.centre("You crashed! 💥", screen.height // 2)

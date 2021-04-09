@@ -29,8 +29,8 @@ from momba.moml import expr, prop
 
 properties = {
     "goal": prop(
-        "min({ Pmax(F($is_finished)) | initial })",
-        is_finished=model.has_finished(expr("pos_x"), model.track)
+        "min({ Pmax(F($has_won)) | initial })",
+        has_won=model.has_won(expr("pos_x"), model.track)
     ),
 }
 ```
