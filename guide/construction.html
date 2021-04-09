@@ -265,7 +265,7 @@ To construct a model, we first have to create a modeling context of the respecti
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7f6c3c13d7c0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Context model_type=ModelType.MDP at 0x7f8d9c284f40&gt;
 </pre></div>
 </div>
 </div>
@@ -324,11 +324,11 @@ To construct a model, we first have to create a modeling context of the respecti
 <div class="cell_output docutils container">
 </div>
 </div>
-<p>To keep track of whether the player reached the goal or crashed into an obstacle or a wall, we declare two local variables <code class="docutils literal notranslate"><span class="pre">is_finished</span></code> and <code class="docutils literal notranslate"><span class="pre">has_crashed</span></code> for the environment automaton:</p>
+<p>To keep track of whether the player reached the goal or crashed into an obstacle or a wall, we declare two local variables <code class="docutils literal notranslate"><span class="pre">has_won</span></code> and <code class="docutils literal notranslate"><span class="pre">has_crashed</span></code> for the environment automaton:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">environment_automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
-    <span class="s2">"is_finished"</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">False</span>
+    <span class="s2">"has_won"</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 <span class="n">environment_automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
     <span class="s2">"has_crashed"</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="kc">False</span>
@@ -377,7 +377,7 @@ In particular, the function <a class="reference internal" href="../incubator/mom
 We use the same approach to define an expression indicating whether a move can be performed:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">can_move</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"not is_finished and not has_crashed"</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">can_move</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"not has_won and not has_crashed"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -400,7 +400,7 @@ We use the same approach to define an expression indicating whether a move can b
                 <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
                     <span class="s2">"pos_x"</span><span class="p">:</span> <span class="n">new_pos_x</span><span class="p">,</span>
                     <span class="s2">"pos_y"</span><span class="p">:</span> <span class="n">new_pos_y</span><span class="p">,</span>
-                    <span class="s2">"is_finished"</span><span class="p">:</span> <span class="n">has_finished</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
+                    <span class="s2">"has_won"</span><span class="p">:</span> <span class="n">has_finished</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
                     <span class="s2">"has_crashed"</span><span class="p">:</span> <span class="n">has_crashed</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">new_pos_y</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
                 <span class="p">},</span>
             <span class="p">),</span>
@@ -409,7 +409,7 @@ We use the same approach to define an expression indicating whether a move can b
                 <span class="n">probability</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"1 - 0.6"</span><span class="p">),</span>
                 <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
                     <span class="s2">"pos_x"</span><span class="p">:</span> <span class="n">new_pos_x</span><span class="p">,</span>
-                    <span class="s2">"is_finished"</span><span class="p">:</span> <span class="n">has_finished</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
+                    <span class="s2">"has_won"</span><span class="p">:</span> <span class="n">has_finished</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">track</span><span class="p">),</span>
                     <span class="s2">"has_crashed"</span><span class="p">:</span> <span class="n">has_crashed</span><span class="p">(</span><span class="n">new_pos_x</span><span class="p">,</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"pos_y"</span><span class="p">),</span> <span class="n">track</span><span class="p">),</span>
                 <span class="p">},</span>
             <span class="p">),</span>
