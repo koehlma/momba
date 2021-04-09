@@ -12,7 +12,7 @@ from racetrack import model, tracks
 ```
 
 
-### Tracks
+## Tracks
 
 Let's have a look at the *Barto-Big* track:
 ```{jupyter-execute}
