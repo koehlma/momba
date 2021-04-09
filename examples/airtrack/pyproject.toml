@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "airtrack"
+version = "0.2.2"
+description = "A formal model of an airplane using Momba."
+authors = [
+    "Maximilian Köhl <koehl@cs.uni-saarland.de>",
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/koehlma/momba.git"
+homepage = "https://github.com/koehlma/momba"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 2 - Pre-Alpha",
+    "Operating System :: OS Independent"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^7.1.2"
+colorama = "^0.4.4"
+momba = { version = "^0.3.3", extras = ["all"] }
+
+[tool.poetry.scripts]
+racetrack = "airtrack.__main__:main"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -18,6 +18,7 @@ sys.path.insert(
 os.environ["PYTHONPATH"] = ":".join(
     (
         os.path.join(os.path.dirname(__file__), "..", "examples", "racetrack"),
+        os.path.join(os.path.dirname(__file__), "..", "examples", "airtrack"),
         os.path.join(os.path.dirname(__file__), "..", "examples", "guide"),
         os.environ.get("PYTHONPATH", ""),
     )
