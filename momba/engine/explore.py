@@ -87,7 +87,7 @@ def _action(action: t.Any, explorer: Explorer[TimeTypeT]) -> t.Optional[Action]:
     arguments = action.arguments()
     return Action(
         explorer.network.ctx.get_action_type_by_name(label),
-        tuple(arguments),
+        tuple(Value(value) for value in arguments),
     )
 
 
@@ -135,16 +135,7 @@ class Transition(t.Generic[TimeTypeT]):
 
     @property
     def action(self) -> t.Optional[Action]:
-        action = self._transition.result_action()
-        if action.is_silent():
-            return None
-        label = action.label()
-        assert isinstance(label, str)
-        arguments = action.arguments()
-        return Action(
-            self.explorer.network.ctx.get_action_type_by_name(label),
-            tuple(arguments),
-        )
+        return _action(self._transition.result_action(), self.explorer)
 
     @property
     def action_vector(self) -> t.Mapping[model.Instance, t.Optional[Action]]:
