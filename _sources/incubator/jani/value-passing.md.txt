@@ -1,6 +1,6 @@
 # Value Passing
 
-This document specifies the JANI feature *x-momba-value-passing* which extends the *JANI model interchange format* (`JANI-model <http://www.jani-spec.org/>`_) with *value passing* via synchronization inspired by LOTOS.
+This document specifies the JANI feature *x-momba-value-passing* which extends the *JANI model interchange format* ([JANI-model](http://www.jani-spec.org/>)) with *value passing* via synchronization inspired by LOTOS.
 In principle, JANI-model already allows for efficient value passing via transient global variables [BDHHJT17]_.
 While perfectly adequate for model checking purposes, this approach to value passing has two shortcomings:
 (1) it restricts compositionality by not allowing two instances of the same automaton to participate in a synchronization while passing values over the same global variables and

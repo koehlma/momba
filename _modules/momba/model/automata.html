@@ -150,8 +150,12 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/jani/index.html">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/jani/value-passing.html">Value Passing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/jani/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../incubator/moml/grammar.html">MOML Grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
@@ -192,7 +196,7 @@
 
 <span class="kn">from</span> <span class="nn">mxu.maps</span> <span class="kn">import</span> <span class="n">FrozenMap</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">observations</span><span class="p">,</span> <span class="n">types</span>
 
 <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">context</span>
@@ -400,6 +404,7 @@
     <span class="n">guard</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">rate</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">annotation</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">observation</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">observations</span><span class="o">.</span><span class="n">Observation</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Edge.create_edge_scope"><a class="viewcode-back" href="../../../reference/model/automata.html#momba.model.Edge.create_edge_scope">[docs]</a>    <span class="k">def</span> <span class="nf">create_edge_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">:</span>
         <span class="sd">"""</span>
@@ -603,6 +608,7 @@
         <span class="n">guard</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rate</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">annotation</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Annotation</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">observations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">observations</span><span class="o">.</span><span class="n">Observation</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Creates an edge and adds it to the automaton.</span>
@@ -618,6 +624,7 @@
             <span class="n">guard</span><span class="p">,</span>
             <span class="n">rate</span><span class="p">,</span>
             <span class="n">FrozenMap</span><span class="p">(</span><span class="n">annotation</span><span class="p">),</span>
+            <span class="nb">frozenset</span><span class="p">(</span><span class="n">observations</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
 

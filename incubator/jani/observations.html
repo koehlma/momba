@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="MOML Grammar" href="grammar.html" /><link rel="prev" title="Observations" href="../jani/observations.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="MOML" href="../moml/index.html" /><link rel="prev" title="Value Passing" href="value-passing.html" />
 
     <meta name="generator" content="sphinx-3.5.3, furo 2021.03.20.beta31"/>
-        <title>MOML - Momba</title>
+        <title>Observations - Momba</title>
       <link rel="stylesheet" href="../../_static/styles/furo.css?digest=978e1795dfe158b585dda6a8417f6411828bf3ed">
     <link rel="stylesheet" href="../../_static/pygments.css">
     <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
@@ -94,7 +94,7 @@
       <a href="../../index.html"><div class="brand">Momba</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -150,14 +150,14 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Feature Incubator</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="../jani/index.html">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../jani/value-passing.html">Value Passing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../jani/observations.html">Observations</a></li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">JANI Extensions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="value-passing.html">Value Passing</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Observations</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">MOML</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="macros.html">Syntax-Aware Macros</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../moml/grammar.html">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
 </li>
 </ul>
@@ -178,63 +178,27 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
-        <div class="section" id="moml">
-<h1>MOML<a class="headerlink" href="#moml" title="Permalink to this headline">¶</a></h1>
-<p>The <em>Momba Modeling Language</em> (MOML) is <strong>a model description language</strong> based on the <a class="reference external" href="http://www.jani-spec.org/">JANI-model specification</a>.
-In comparison to JANI, MOML is less verbose and thus easier to read and write.
-However, MOML is still a <strong>low-level language</strong> forcing you to specify your model explicitly.
-Depending on your use-case such fine grained control over the constructed model might not be necessary and you may want to consider using a <em>higher-level</em> language like <a class="reference external" href="http://www.modestchecker.net/">Modest</a>.
-If you, however, want explicit control over every aspect of your model, give MOML a try.</p>
-<p>Momba comes with a converter to convert between MOML and JANI.
-Hence, you can use your MOML model with any tool supporting the JANI specification.</p>
-<div class="highlight-moml notranslate"><div class="highlight"><pre><span></span><span class="k">model_type</span><span class="w"> </span><span class="n">DTMC</span><span class="w"></span>
-
-<span class="k">metadata</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="s">"name"</span><span class="p">:</span><span class="w"> </span><span class="s">"Simple Die"</span><span class="w"></span>
-
-<span class="k">variable</span><span class="w"> </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">int</span><span class="p">[</span><span class="n">1</span><span class="p">,</span><span class="n">6</span><span class="p">]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="s">"side of a die"</span><span class="w"></span>
-
-<span class="k">automaton</span><span class="w"> </span><span class="n">Die</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">initial</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="n">l</span><span class="w"></span>
-
-<span class="w">    </span><span class="k">edge</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">1</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">2</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">3</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">4</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">5</span><span class="w"></span>
-<span class="w">        </span><span class="k">to</span><span class="w"> </span><span class="n">l</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="k">probability</span><span class="w"> </span><span class="n">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-<span class="w">            </span><span class="n">side</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">6</span><span class="w"></span>
-
-<span class="k">network</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="k">instance</span><span class="w"> </span><span class="n">die</span><span class="w"> </span><span class="n">Die</span><span class="w"></span>
-<span class="w">    </span><span class="k">composition</span><span class="w"> </span><span class="n">die</span><span class="w"></span>
+        <div class="section" id="observations">
+<h1>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h1>
+<p>This document specifies the JANI extension <code class="docutils literal notranslate"><span class="pre">x-observations</span></code> extending the <em>JANI model interchange format</em> with support for <em>observations</em>.
+When enabled, edges can be annotated with a field <code class="docutils literal notranslate"><span class="pre">observation</span></code> containing a non-empty array inducing a probability distribution over actions for each transition.
+When taken, any of the actions will be <em>observed</em> with the specified probability.</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="p">[...],</span>
+    <span class="s2">"?observation"</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">({</span>
+        <span class="s2">"label"</span><span class="o">:</span> <span class="nx">Identifier</span><span class="p">,</span>
+        <span class="s2">"?arguments"</span><span class="o">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">of</span><span class="p">(</span><span class="nx">Expression</span><span class="p">),</span>
+        <span class="s2">"?probability"</span><span class="o">:</span> <span class="nx">Expression</span>
+    <span class="p">})</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="grammar.html">MOML Grammar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="macros.html">Syntax-Aware Macros</a></li>
-</ul>
-</div>
-<div class="section" id="vs-code-support">
-<h2>VS Code Support<a class="headerlink" href="#vs-code-support" title="Permalink to this headline">¶</a></h2>
-<p>We provide a <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=koehlma.moml-language">VS Code extension for MOML</a>:</p>
-<img alt="../../_images/vscode.jpg" src="../../_images/vscode.jpg"/>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add support for observations when entering or leaving a state.</p>
 </div>
 </div>
 
@@ -243,23 +207,23 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
         
     
         <div class="related-pages">
-          <a class="next-page" href="grammar.html">
+          <a class="next-page" href="../moml/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">MOML Grammar</div>
+                <div class="title">MOML</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../jani/observations.html">
+          <a class="prev-page" href="value-passing.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Observations</div>
+                <div class="title">Value Passing</div>
                 
               </div>
             </a>
@@ -268,7 +232,7 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
         <div class="related-information">
               Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
             |
-            <a class="muted-link" href="../../_sources/incubator/moml/index.md.txt"
+            <a class="muted-link" href="../../_sources/incubator/jani/observations.md.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -278,27 +242,8 @@ Hence, you can use your MOML model with any tool supporting the JANI specificati
 
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">MOML</a><ul>
-<li><a class="reference internal" href="#vs-code-support">VS Code Support</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

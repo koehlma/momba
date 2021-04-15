@@ -13,6 +13,6 @@ Please expect things to break.
 ```{toctree}
 :maxdepth: 2
 
-value-passing
+jani/index
 moml/index
 ```

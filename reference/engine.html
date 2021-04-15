@@ -150,8 +150,12 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../incubator/index.html">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../incubator/value-passing.html">Value Passing</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/jani/index.html">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../incubator/jani/value-passing.html">Value Passing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../incubator/jani/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../incubator/moml/index.html">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/grammar.html">MOML Grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../incubator/moml/macros.html">Syntax-Aware Macros</a></li>
 </ul>
@@ -209,7 +213,7 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7fb3b85da0d0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f036d4d01c0&gt;
 </pre></div>
 </div>
 </div>
@@ -247,17 +251,17 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'x1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
  'y2': Value(0),
- 'w21': Value(0),
- 'w12': Value(0),
- 't': Value(0),
- 'x2': Value(0),
- 'y1': Value(0),
- 'z1': Value(0),
- 's1': Value(0),
  's2': Value(0),
- 'z2': Value(0)}
+ 'w12': Value(0),
+ 'x2': Value(0),
+ 's1': Value(0),
+ 'w21': Value(0),
+ 'z1': Value(0),
+ 'y1': Value(0),
+ 't': Value(0),
+ 'x1': Value(0)}
 </pre></div>
 </div>
 </div>
@@ -271,11 +275,11 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1: l
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>wire12: l
 wire21: l
-wire12: l
 node2: l
 timer: l
+node1: l
 </pre></div>
 </div>
 </div>
@@ -290,15 +294,15 @@ timer: l
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>node1
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>wire12
 {}
 wire21
-{}
-wire12
 {}
 node2
 {}
 timer
+{}
+node1
 {}
 </pre></div>
 </div>
@@ -321,11 +325,11 @@ To this end, we query the outgoing transitions of the initial state and their re
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb3b1f9a4f0&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb3b1f9a550&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f036c738a00&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f036c738a60&gt;.
 Action: snd_idle12
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb3b1f9aa00&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7fb3b1f9a9a0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f036c738e80&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f036c738790&gt;.
 </pre></div>
 </div>
 </div>
@@ -345,20 +349,20 @@ Action: snd_idle12
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
 </pre></div>
 </div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'x1': Value(0),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'z2': Value(0),
  'y2': Value(0),
- 'w21': Value(5),
- 'w12': Value(0),
- 't': Value(0),
+ 's2': Value(0),
+ 'w12': Value(5),
  'x2': Value(0),
- 'y1': Value(0),
+ 's1': Value(3),
+ 'w21': Value(0),
  'z1': Value(0),
- 's1': Value(0),
- 's2': Value(2),
- 'z2': Value(0)}
+ 'y1': Value(0),
+ 't': Value(0),
+ 'x1': Value(0)}
 </pre></div>
 </div>
 </div>
