@@ -107,6 +107,13 @@ pub struct CompiledEdge<Z: time::TimeType> {
     pub reference: model::EdgeReference,
     pub guard: CompiledGuard<Z>,
     pub destinations: Vec<CompiledDestination<Z>>,
+    pub observations: Vec<CompiledObservation>,
+}
+
+pub struct CompiledObservation {
+    pub label: LabelIndex,
+    pub arguments: Vec<evaluate::CompiledExpression<3>>,
+    pub probability: evaluate::CompiledExpression<3>,
 }
 
 pub struct CompiledVisibleEdge<Z: time::TimeType> {
@@ -169,10 +176,28 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
                     .collect(),
             })
             .collect();
+        let observations = edge
+            .observations
+            .iter()
+            .map(|observation| CompiledObservation {
+                label: network
+                    .declarations
+                    .action_labels
+                    .get_index_of(&observation.label)
+                    .unwrap(),
+                arguments: observation
+                    .arguments
+                    .iter()
+                    .map(|argument| edge_scope.compile(argument))
+                    .collect(),
+                probability: edge_scope.compile(&observation.probability),
+            })
+            .collect();
         CompiledEdge {
             reference,
             guard,
             destinations,
+            observations,
         }
     }
 
@@ -392,11 +417,12 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
 
     pub fn compute_transition<'c>(
         &self,
-        zone: &Z::Valuations,
+        state: &State<Z::Valuations>,
         global_env: &GlobalEnvironment,
         link: &'c CompiledLink,
         link_edges: &[&LinkEdge<'c, Z>],
     ) -> Option<Transition<'c, Z>> {
+        let zone = &state.valuations;
         debug_assert_eq!(link.sync_vector.len(), link_edges.len());
         let mut slots = link.slots_template.clone();
         let mut valuations = zone.clone();
@@ -434,7 +460,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
             .into_iter()
             .collect::<Option<Box<[_]>>>()
             .map(|slots| {
-                let actions = link
+                let actions: Box<[Action]> = link
                     .sync_vector
                     .iter()
                     .map(|vector_item| {
@@ -446,6 +472,28 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                                 .map(|slot_index| slots[*slot_index].clone())
                                 .collect(),
                         )
+                    })
+                    .collect();
+                let observations = link_edges
+                    .iter()
+                    .zip(actions.iter())
+                    .map(|(link_edge, action)| {
+                        let edge_env = state.edge_env(action.arguments());
+                        link_edge
+                            .compiled
+                            .base
+                            .observations
+                            .iter()
+                            .map(|observation| Observation {
+                                label: observation.label,
+                                arguments: observation
+                                    .arguments
+                                    .iter()
+                                    .map(|argument| argument.evaluate(&edge_env))
+                                    .collect(),
+                                probability: observation.probability.evaluate(&edge_env),
+                            })
+                            .collect::<Box<_>>()
                     })
                     .collect();
                 Transition {
@@ -468,6 +516,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                                 .collect(),
                         ),
                     },
+                    observations,
                 }
             })
     }

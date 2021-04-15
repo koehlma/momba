@@ -99,6 +99,17 @@ pub struct Edge {
     pub pattern: ActionPattern,
     pub guard: Guard,
     pub destinations: Vec<Destination>,
+    pub observations: Vec<Observation>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+pub struct Observation {
+    /// The label of the action type.
+    pub label: String,
+    /// The arguments of the action.
+    pub arguments: Vec<Expression>,
+    /// The probability with which the observation is observed.
+    pub probability: Expression,
 }
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]

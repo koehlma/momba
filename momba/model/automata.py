@@ -12,7 +12,7 @@ import collections
 
 from mxu.maps import FrozenMap
 
-from . import actions, errors, expressions, types
+from . import actions, errors, expressions, observations, types
 
 if t.TYPE_CHECKING:
     from . import context
@@ -220,6 +220,7 @@ class Edge:
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
     annotation: t.Optional[Annotation] = None
+    observation: t.FrozenSet[observations.Observation] = frozenset()
 
     def create_edge_scope(self, parent: context.Scope) -> context.Scope:
         """
@@ -423,6 +424,7 @@ class Automaton:
         guard: t.Optional[expressions.Expression] = None,
         rate: t.Optional[expressions.Expression] = None,
         annotation: t.Optional[Annotation] = None,
+        observations: t.AbstractSet[observations.Observation] = frozenset(),
     ) -> None:
         """
         Creates an edge and adds it to the automaton.
@@ -438,6 +440,7 @@ class Automaton:
             guard,
             rate,
             FrozenMap(annotation),
+            frozenset(observations),
         )
         self.add_edge(edge)
 

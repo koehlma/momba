@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-from . import errors, expressions, operators, properties, types
+from . import errors, expressions, operators, observations, properties, types
 
 from .actions import (
     ActionType,
@@ -52,6 +52,7 @@ __all__ = [
     "errors",
     "expressions",
     "operators",
+    "observations",
     "properties",
     "types",
     # from `.actions`

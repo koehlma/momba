@@ -4,5 +4,15 @@ members = [
     "engine/crates/clock-zones",
     "engine/crates/momba-explore",
     "engine/crates/momba-sidekick",
+    "engine/crates/momba-diagnosis",
+    "engine/crates/synthsens-verify",
 ]
 exclude = ["private"]
+
+[profile.release]
+opt-level = 3
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = true
+panic = 'abort'

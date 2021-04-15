@@ -642,6 +642,20 @@ def _translate_instance(
                 "pattern": action,
                 "guard": guard,
                 "destinations": destinations,
+                "observations": [
+                    {
+                        "label": observation.action_type.label,
+                        "arguments": [
+                            _translate_expr(argument, edge_ctx)
+                            for argument in observation.arguments
+                        ],
+                        "probability": _translate_expr(
+                            observation.probability or expressions.RealConstant(1.0),
+                            edge_ctx,
+                        ),
+                    }
+                    for observation in edge.observation
+                ],
             }
         )
 

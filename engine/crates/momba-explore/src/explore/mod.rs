@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 use itertools::Itertools;
 
+use crate::model::{LabelIndex, Value};
+
 use super::model;
 use super::time;
 
@@ -140,12 +142,20 @@ impl<V> State<V> {
     }
 }
 
+#[derive(Hash, Eq, PartialEq, Clone, Debug)]
+pub struct Observation {
+    pub label: LabelIndex,
+    pub arguments: Box<[Value]>,
+    pub probability: Value,
+}
+
 /// A *transition* of an automaton network.
 pub struct Transition<'e, T: time::TimeType> {
     pub(crate) edges: Box<[&'e CompiledEdge<T>]>,
     pub(crate) actions: Box<[Action]>,
     pub(crate) valuations: T::Valuations,
     pub(crate) action: Action,
+    pub(crate) observations: Box<[Box<[Observation]>]>,
 }
 
 impl<'e, T: time::TimeType> Transition<'e, T> {
@@ -179,6 +189,7 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
             actions: self.actions,
             valuations,
             action: self.action,
+            observations: self.observations,
         }
     }
 
@@ -187,6 +198,10 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
             .iter()
             .map(|edge| edge.reference.clone())
             .collect()
+    }
+
+    pub fn observations(&self) -> &[Box<[Observation]>] {
+        &self.observations
     }
 }
 
@@ -334,6 +349,14 @@ impl<T: time::TimeType> Explorer<T> {
                                 actions: Box::new([Action::Silent]),
                                 valuations,
                                 action: Action::Silent,
+                                observations: edge
+                                    .observations
+                                    .iter()
+                                    .map(|observation| {
+                                        let edge_env = state.edge_env(&[]);
+                                        todo!("observations on silent edges are not supported yet");
+                                    })
+                                    .collect(),
                             })
                         }
                     }
@@ -355,7 +378,7 @@ impl<T: time::TimeType> Explorer<T> {
                             .multi_cartesian_product()
                             .filter_map(|edges| {
                                 self.compiled_network.compute_transition(
-                                    &state.valuations,
+                                    &state,
                                     &global_env,
                                     link,
                                     &edges,
