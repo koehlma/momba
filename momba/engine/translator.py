@@ -13,6 +13,7 @@ import dataclasses as d
 import typing as t
 
 import functools
+import fractions
 import json
 
 from .. import model
@@ -650,7 +651,8 @@ def _translate_instance(
                             for argument in observation.arguments
                         ],
                         "probability": _translate_expr(
-                            observation.probability or expressions.RealConstant(1.0),
+                            observation.probability
+                            or expressions.RealConstant(fractions.Fraction(1.0)),
                             edge_ctx,
                         ),
                     }
