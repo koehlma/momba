@@ -208,13 +208,13 @@ pub trait Zone<B: Bound> {
 /// Returns an iterator over the clocks of a zone.
 #[inline(always)]
 pub fn clocks<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Clock> {
-    (0..zone.num_clocks()).map(|index| Clock(index))
+    (0..zone.num_clocks()).map(Clock)
 }
 
 /// Returns an iterator over the variables of a zone.
 #[inline(always)]
 pub fn variables<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Variable> {
-    (1..zone.num_clocks()).map(|index| Variable(index))
+    (1..zone.num_clocks()).map(Variable)
 }
 
 /// An implementation of [Zone] as *difference bound matrix*.
