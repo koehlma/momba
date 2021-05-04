@@ -6,7 +6,7 @@ use crate::clocks::*;
 use crate::constants::*;
 use crate::storage::*;
 
-/// A *clock constraint* bounding the difference of two clocks.
+/// A *clock constraint* bounding the difference between two clocks.
 pub struct Constraint<B: Bound> {
     pub(crate) left: Clock,
     pub(crate) right: Clock,
