@@ -137,7 +137,9 @@ impl<B: Bound> Constraint<B> {
 }
 
 /// Represents a zone with a specific *[bound type][Bound]*.
-pub trait Zone<B: Bound> {
+pub trait Zone {
+    type Bound: Bound;
+
     /// Constructs a new zone without any constraints besides clocks being positive.
     fn new_unconstrained(num_variables: usize) -> Self;
     /// Constructs a new zone where all clocks are set to zero.
@@ -146,7 +148,7 @@ pub trait Zone<B: Bound> {
     /// Constructs a new zone from the given iterable of [constraints][Constraint].
     fn with_constraints<U>(num_variables: usize, constraints: U) -> Self
     where
-        U: IntoIterator<Item = Constraint<B>>;
+        U: IntoIterator<Item = Constraint<Self::Bound>>;
 
     /// Returns the number of clock variables of this zone.
     fn num_variables(&self) -> usize;
@@ -158,17 +160,17 @@ pub trait Zone<B: Bound> {
     fn num_clocks(&self) -> usize;
 
     /// Retrieves the difference bound for `left - right`.
-    fn get_bound(&self, left: impl AnyClock, right: impl AnyClock) -> &B;
+    fn get_bound(&self, left: impl AnyClock, right: impl AnyClock) -> &Self::Bound;
 
     /// Checks whether the zone is empty.
     fn is_empty(&self) -> bool;
 
     /// Adds a [constraint][Constraint] to the zone.
-    fn add_constraint(&mut self, constraint: Constraint<B>);
+    fn add_constraint(&mut self, constraint: Constraint<Self::Bound>);
     /// Adds all [constraints][Constraint] from the given iterable to the zone.
     fn add_constraints<U>(&mut self, constraints: U)
     where
-        U: IntoIterator<Item = Constraint<B>>;
+        U: IntoIterator<Item = Constraint<Self::Bound>>;
 
     /// Intersects two zones.
     fn intersect(&mut self, other: &Self);
@@ -183,18 +185,18 @@ pub trait Zone<B: Bound> {
     fn past(&mut self);
 
     /// Resets the given clock variable to the specified constant.
-    fn reset(&mut self, clock: Variable, value: B::Constant);
+    fn reset(&mut self, clock: Variable, value: <Self::Bound as Bound>::Constant);
 
     /// Checks whether the value of the given clock is unbounded.
     fn is_unbounded(&self, clock: impl AnyClock) -> bool;
 
     /// Returns the upper bound for the value of the given clock.
-    fn get_upper_bound(&self, clock: impl AnyClock) -> Option<B::Constant>;
+    fn get_upper_bound(&self, clock: impl AnyClock) -> Option<<Self::Bound as Bound>::Constant>;
     /// Returns the lower bound for the value of the given clock.
-    fn get_lower_bound(&self, clock: impl AnyClock) -> Option<B::Constant>;
+    fn get_lower_bound(&self, clock: impl AnyClock) -> Option<<Self::Bound as Bound>::Constant>;
 
     /// Checks whether the given constraint is satisfied by the zone.
-    fn is_satisfied(&self, constraint: Constraint<B>) -> bool;
+    fn is_satisfied(&self, constraint: Constraint<Self::Bound>) -> bool;
 
     /// Checks whether the zone includes the other zone.
     fn includes(&self, other: &Self) -> bool;
@@ -207,13 +209,13 @@ pub trait Zone<B: Bound> {
 
 /// Returns an iterator over the clocks of a zone.
 #[inline(always)]
-pub fn clocks<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Clock> {
+pub fn clocks<Z: Zone>(zone: &Z) -> impl Iterator<Item = Clock> {
     (0..zone.num_clocks()).map(Clock)
 }
 
 /// Returns an iterator over the variables of a zone.
 #[inline(always)]
-pub fn variables<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Variable> {
+pub fn variables<Z: Zone>(zone: &Z) -> impl Iterator<Item = Variable> {
     (1..zone.num_clocks()).map(Variable)
 }
 
@@ -291,7 +293,9 @@ impl<B: Bound, L: Layout<B>> Dbm<B, L> {
     }
 }
 
-impl<B: Bound, L: Layout<B>> Zone<B> for Dbm<B, L> {
+impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
+    type Bound = B;
+
     fn new_unconstrained(num_variables: usize) -> Self {
         Dbm::new(num_variables, B::unbounded())
     }
