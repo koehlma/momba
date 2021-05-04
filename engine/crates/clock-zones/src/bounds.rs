@@ -18,6 +18,9 @@ pub trait Bound: Clone {
     /// Returns the bound for `< 0`.
     fn lt_zero() -> Self;
 
+    /// Constructs a new bound.
+    fn new(is_strict: bool, constant: Self::Constant) -> Self;
+
     /// Constructs a new bound `≤ constant`.
     fn new_le(constant: Self::Constant) -> Self;
     /// Constructs a new bound `< constant`.
@@ -71,6 +74,15 @@ macro_rules! int_bound_impl {
             #[inline(always)]
             fn lt_zero() -> Self {
                 0
+            }
+
+            #[inline(always)]
+            fn new(is_strict: bool, constant: Self::Constant) -> Self {
+                if is_strict {
+                    Self::new_lt(constant)
+                } else {
+                    Self::new_le(constant)
+                }
             }
 
             #[inline(always)]
@@ -171,6 +183,14 @@ impl<C: Constant> Bound for ConstantBound<C> {
         ConstantBound {
             constant: Some(C::zero()),
             is_strict: true,
+        }
+    }
+
+    #[inline(always)]
+    fn new(is_strict: bool, constant: Self::Constant) -> Self {
+        ConstantBound {
+            constant: Some(constant),
+            is_strict,
         }
     }
 
