@@ -236,15 +236,11 @@ impl<B: Bound, L: Layout<B>> Dbm<B, L> {
     fn new(num_variables: usize, default: B) -> Self {
         let dimension = num_variables + 1;
         let mut layout = L::new(num_variables, default);
-        unsafe {
-            // This is safe because we know that the clock indices are
-            // within the dimensions of the DBM.
-            layout.set_unchecked(Clock::ZERO, Clock::ZERO, B::le_zero());
-            for index in 1..dimension {
-                let clock = Clock::from_index(index);
-                layout.set_unchecked(Clock::ZERO, clock, B::le_zero());
-                layout.set_unchecked(clock, clock, B::le_zero());
-            }
+        layout.set(Clock::ZERO, Clock::ZERO, B::le_zero());
+        for index in 1..dimension {
+            let clock = Clock::from_index(index);
+            layout.set(Clock::ZERO, clock, B::le_zero());
+            layout.set(clock, clock, B::le_zero());
         }
         Dbm {
             dimension,
@@ -253,20 +249,9 @@ impl<B: Bound, L: Layout<B>> Dbm<B, L> {
         }
     }
 
-    #[inline(always)]
-    fn check_clock(&self, clock: impl AnyClock) {
-        assert!(clock.into_index() < self.dimension, "invalid clock index");
-    }
-
     /// Canonicalize the DBM given that a particular clock has been touched.
-    ///
-    /// This method is unsafe because it does not check wether the index of the
-    /// touched clock is within the dimensions of the DBM.
-    ///
-    /// Providing a clock which is not within the dimensions
-    /// of the DBM is undefined behavior.
     #[inline(always)]
-    unsafe fn canonicalize_touched(&mut self, touched: Clock) {
+    fn canonicalize_touched(&mut self, touched: Clock) {
         for index in 0..self.dimension {
             let left = Clock::from_index(index);
             for index in 0..self.dimension {
@@ -274,10 +259,10 @@ impl<B: Bound, L: Layout<B>> Dbm<B, L> {
                 let bound = self
                     .layout
                     .get(left, touched)
-                    .add(self.layout.get_unchecked(touched, right))
+                    .add(self.layout.get(touched, right))
                     .expect("overflow while adding bounds");
                 if bound.is_tighter_than(self.layout.get(left, right)) {
-                    self.layout.set_unchecked(left, right, bound);
+                    self.layout.set(left, right, bound);
                 }
             }
         }
@@ -286,9 +271,7 @@ impl<B: Bound, L: Layout<B>> Dbm<B, L> {
     fn canonicalize(&mut self) {
         for index in 0..self.dimension {
             let touched = Clock::from_index(index);
-            // This is safe because the touched clock is within
-            // the dimensions of the DBM.
-            unsafe { self.canonicalize_touched(touched) };
+            self.canonicalize_touched(touched);
         }
     }
 }
@@ -333,23 +316,18 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
 
     #[inline(always)]
     fn is_empty(&self) -> bool {
-        // This is safe because the zero clock is always present.
-        unsafe { self.layout.get_unchecked(Clock::ZERO, Clock::ZERO) }
+        self.layout
+            .get(Clock::ZERO, Clock::ZERO)
             .is_tighter_than(&B::le_zero())
     }
 
     fn add_constraint(&mut self, constraint: Constraint<B>) {
-        self.check_clock(constraint.left);
-        self.check_clock(constraint.right);
         let bound = self.layout.get(constraint.left, constraint.right);
         if constraint.bound.is_tighter_than(&bound) {
-            unsafe {
-                // This is safe because we just checked the clocks.
-                self.layout
-                    .set_unchecked(constraint.left, constraint.right, constraint.bound);
-                self.canonicalize_touched(constraint.left);
-                self.canonicalize_touched(constraint.right);
-            }
+            self.layout
+                .set(constraint.left, constraint.right, constraint.bound);
+            self.canonicalize_touched(constraint.left);
+            self.canonicalize_touched(constraint.right);
         }
     }
 
@@ -371,20 +349,13 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
             let left = Clock::from_index(index);
             for index in 0..self.dimension {
                 let right = Clock::from_index(index);
-                unsafe {
-                    // This is safe because we know that the clock indices are
-                    // within the dimensions of the DBMs.
-                    if other
-                        .layout
-                        .get_unchecked(left, right)
-                        .is_tighter_than(&self.layout.get(left, right))
-                    {
-                        self.layout.set_unchecked(
-                            left,
-                            right,
-                            other.layout.get(left, right).clone(),
-                        );
-                    }
+                if other
+                    .layout
+                    .get(left, right)
+                    .is_tighter_than(&self.layout.get(left, right))
+                {
+                    self.layout
+                        .set(left, right, other.layout.get(left, right).clone());
                 }
             }
         }
@@ -394,9 +365,7 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
     fn future(&mut self) {
         for index in 1..self.dimension {
             let left = Clock::from_index(index);
-            // This is safe because we know that the clock index is
-            // within the dimensions of the DBMs.
-            unsafe { self.layout.set_unchecked(left, Clock::ZERO, B::unbounded()) };
+            self.layout.set(left, Clock::ZERO, B::unbounded());
         }
     }
     fn past(&mut self) {
@@ -420,29 +389,24 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
     fn reset(&mut self, clock: Variable, value: B::Constant) {
         let le_pos_value = B::new_le(value.clone());
         let le_neg_value = B::new_le(value.checked_neg().unwrap());
-        self.check_clock(clock);
         for index in 0..self.dimension {
             let other = Clock::from_index(index);
-            // This is safe because the index of `other` is guaranteed to be
-            // within the dimensions of the DBM and we checked `clock`.
-            unsafe {
-                self.layout.set_unchecked(
-                    clock,
-                    other,
-                    self.layout
-                        .get_unchecked(Clock::ZERO, other)
-                        .add(&le_pos_value)
-                        .unwrap(),
-                );
-                self.layout.set(
-                    other,
-                    clock,
-                    self.layout
-                        .get_unchecked(other, Clock::ZERO)
-                        .add(&le_neg_value)
-                        .unwrap(),
-                );
-            }
+            self.layout.set(
+                clock,
+                other,
+                self.layout
+                    .get(Clock::ZERO, other)
+                    .add(&le_pos_value)
+                    .unwrap(),
+            );
+            self.layout.set(
+                other,
+                clock,
+                self.layout
+                    .get(other, Clock::ZERO)
+                    .add(&le_neg_value)
+                    .unwrap(),
+            );
         }
     }
 
@@ -475,16 +439,12 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
             let left = Clock::from_index(index);
             for index in 0..self.dimension {
                 let right = Clock::from_index(index);
-                unsafe {
-                    // This is safe because we know that the indices are within
-                    // the dimensions of the DBM.
-                    if self
-                        .layout
-                        .get_unchecked(left, right)
-                        .is_tighter_than(other.layout.get(left, right))
-                    {
-                        return false;
-                    }
+                if self
+                    .layout
+                    .get(left, right)
+                    .is_tighter_than(other.layout.get(left, right))
+                {
+                    return false;
                 }
             }
         }
@@ -497,12 +457,8 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
             let left = Clock::from_index(index);
             for index in 0..min(self.dimension, other.dimension) {
                 let right = Clock::from_index(index);
-                // This is safe because we know that the clock indices
-                // are within the dimensions of both DBMs.
-                unsafe {
-                    let bound = self.layout.get_unchecked(left, right);
-                    other.layout.set_unchecked(left, right, bound.clone());
-                }
+                let bound = self.layout.get(left, right);
+                other.layout.set(left, right, bound.clone());
             }
         }
         other.canonicalize();
