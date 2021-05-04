@@ -41,7 +41,7 @@ impl<V> State<V> {
         &self,
         explorer: &'e Explorer<T>,
         automaton_name: &str,
-    ) -> &'e String {
+    ) -> Option<&'e String> {
         explorer
             .network
             .automata
@@ -61,7 +61,6 @@ impl<V> State<V> {
                             .map(|(location_name, _)| location_name)
                     })
             })
-            .expect("Invalid automaton name or explorer passed to `State::get_location_of`.")
     }
 
     /// Returns the value of the provided global variable.
@@ -72,14 +71,13 @@ impl<V> State<V> {
         &self,
         explorer: &Explorer<T>,
         identifier: &str,
-    ) -> &model::Value {
+    ) -> Option<&model::Value> {
         explorer
             .network
             .declarations
             .global_variables
             .get_index_of(identifier)
             .and_then(|index| self.global_store.get(index))
-            .expect("Invalid variable name or explorer passed to `State::get_global_value`.")
     }
 
     /// Returns the value of the provided transient variable.
@@ -500,8 +498,12 @@ impl<T: time::TimeType> Explorer<T> {
             valuations: self
                 .compiled_network
                 .zone_compiler
-                .externalize(transition.valuations.clone()),
+                .externalize(&transition.valuations),
         }
+    }
+
+    pub fn get_time_type(&self) -> &T {
+        &self.compiled_network.zone_compiler
     }
 }
 

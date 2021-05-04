@@ -3,7 +3,7 @@ use std::convert::TryFrom;
 /// Represents either the constant *zero clock* or a *clock variable*.
 #[derive(Clone, Eq, PartialEq, Hash, Copy, Debug)]
 #[repr(transparent)]
-pub struct Clock(usize);
+pub struct Clock(pub(crate) usize);
 
 impl Clock {
     /// The constant zero clock.
@@ -24,7 +24,7 @@ impl Clock {
 /// Represents a *clock variable*.
 #[derive(Clone, Eq, PartialEq, Hash, Copy, Debug)]
 #[repr(transparent)]
-pub struct Variable(usize);
+pub struct Variable(pub(crate) usize);
 
 impl Variable {
     /// Retrieves the number of the variable.

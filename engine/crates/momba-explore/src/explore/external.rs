@@ -20,9 +20,9 @@ pub struct Transition<T: time::TimeType> {
     pub(crate) valuations: T::External,
 }
 
-// impl<T: time::TimeType> Transition<T> {
-//     /// Returns a JSON string representing the transition.
-//     pub fn json(&self) -> String {
-//         serde_json::to_string(self).unwrap()
-//     }
-// }
+impl<T: time::TimeType> Transition<T> {
+    /// Returns a JSON string representing the transition.
+    pub fn to_json(&self) -> String {
+        serde_json::to_string(self).unwrap()
+    }
+}

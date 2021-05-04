@@ -1,17 +1,97 @@
 //! Algorithms and data structures for representing time.
 
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    convert::{TryFrom, TryInto},
+    env::var,
+};
 
 use num_traits::cast::FromPrimitive;
 
 use indexmap::IndexSet;
 
+use ordered_float::NotNan;
 use serde::{Deserialize, Serialize};
 
-use clock_zones;
-use clock_zones::Zone;
+use clock_zones::{Bound, Clock, Variable, Zone};
 
 use super::model;
+
+#[derive(Clone, Eq, PartialEq, Hash, Serialize, Deserialize, Debug)]
+pub struct ExternalZone {
+    pub constraints: Vec<ExternalConstraint>,
+}
+
+#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Hash, Debug)]
+pub struct ExternalConstraint {
+    pub left: model::Clock,
+    pub right: model::Clock,
+    pub is_strict: bool,
+    pub bound: NotNan<f64>,
+}
+
+fn to_clock(clock: clock_zones::Clock, variables: &IndexSet<String>) -> model::Clock {
+    clock
+        .try_into()
+        .map(|variable: clock_zones::Variable| model::Clock::Variable {
+            identifier: variables
+                .get_index(variable.number())
+                .expect("there should be a name for the clock variable")
+                .clone(),
+        })
+        .unwrap_or(model::Clock::Zero)
+}
+
+fn from_clock(clock: &model::Clock, variables: &IndexSet<String>) -> clock_zones::Clock {
+    match clock {
+        model::Clock::Zero => clock_zones::Clock::ZERO,
+        model::Clock::Variable { identifier } => clock_zones::Clock::variable(
+            variables
+                .get_index_of(identifier)
+                .expect("theres should be a clock variable with the provided name"),
+        )
+        .into(),
+    }
+}
+
+fn externalize_zone<B: Bound, Z: Zone<B>>(zone: &Z, variables: &IndexSet<String>) -> ExternalZone
+where
+    B::Constant: Into<NotNan<f64>>,
+{
+    let mut constraints = Vec::new();
+    for left in clock_zones::clocks(zone) {
+        for right in clock_zones::clocks(zone) {
+            let bound = zone.get_bound(left, right);
+            if !bound.is_unbounded() {
+                constraints.push(ExternalConstraint {
+                    left: to_clock(left, variables),
+                    right: to_clock(right, variables),
+                    is_strict: bound.is_strict(),
+                    bound: bound.constant().unwrap().into(),
+                })
+            }
+        }
+    }
+    ExternalZone { constraints }
+}
+
+fn internalize_zone<B: Bound, Z: Zone<B>>(
+    externalized: &ExternalZone,
+    variables: &IndexSet<String>,
+) -> Z
+where
+    B::Constant: From<NotNan<f64>>,
+{
+    let mut zone = Z::new_unconstrained(variables.len());
+    for constraint in &externalized.constraints {
+        zone.add_constraint(clock_zones::Constraint::new(
+            from_clock(&constraint.left, variables),
+            from_clock(&constraint.right, variables),
+            clock_zones::Bound::new(constraint.is_strict, constraint.bound.into()),
+        ))
+    }
+    zone
+}
 
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct Constraint<T: TimeType> {
@@ -26,7 +106,7 @@ pub trait TimeType: Sized {
     type Valuations: Eq + PartialEq + std::hash::Hash + Clone;
 
     /// Type used to represent partially infinite sets of clock valuations externally.
-    type External: Eq + PartialEq + std::hash::Hash + Clone;
+    type External: Serialize + Eq + PartialEq + std::hash::Hash + Clone;
 
     /// Type used to represent the difference between two clocks.
     type CompiledDifference: Clone;
@@ -75,7 +155,9 @@ pub trait TimeType: Sized {
     /// Extrapolates the future of the given valuations.
     fn future(&self, valuations: Self::Valuations) -> Self::Valuations;
 
-    fn externalize(&self, valuations: Self::Valuations) -> Self::External;
+    fn externalize(&self, valuations: &Self::Valuations) -> Self::External;
+
+    fn internalize(&self, externalized: &Self::External) -> Self::Valuations;
 }
 
 /// A time representation not supporting any real-valued clocks.
@@ -150,8 +232,12 @@ impl TimeType for NoClocks {
         ()
     }
 
-    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
-        valuations
+    fn externalize(&self, valuations: &Self::Valuations) -> Self::External {
+        valuations.clone()
+    }
+
+    fn internalize(&self, externalized: &Self::External) -> Self::Valuations {
+        externalized.clone()
     }
 }
 
@@ -162,15 +248,6 @@ pub struct Float64Zone {
 }
 
 impl Float64Zone {
-    fn clock_to_index(&self, clock: &model::Clock) -> usize {
-        match clock {
-            model::Clock::Zero => 0,
-            model::Clock::Variable { identifier } => {
-                self.clock_variables.get_index_of(identifier).unwrap() + 1
-            }
-        }
-    }
-
     fn apply_constraint(
         &self,
         zone: &mut <Self as TimeType>::Valuations,
@@ -198,13 +275,13 @@ impl Float64Zone {
 }
 
 impl TimeType for Float64Zone {
-    type Valuations = clock_zones::DBM<clock_zones::ConstantBound<ordered_float::NotNan<f64>>>;
+    type Valuations = clock_zones::ZoneF64;
 
-    type External = Self::Valuations;
+    type External = ExternalZone;
 
-    type CompiledDifference = (usize, usize);
+    type CompiledDifference = (clock_zones::Clock, clock_zones::Clock);
 
-    type CompiledClocks = Vec<usize>;
+    type CompiledClocks = Vec<clock_zones::Clock>;
 
     fn new(network: &model::Network) -> Result<Self, String> {
         Ok(Float64Zone {
@@ -217,13 +294,16 @@ impl TimeType for Float64Zone {
         left: &model::Clock,
         right: &model::Clock,
     ) -> Self::CompiledDifference {
-        (self.clock_to_index(left), self.clock_to_index(right))
+        (
+            from_clock(left, &self.clock_variables),
+            from_clock(right, &self.clock_variables),
+        )
     }
 
     fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks {
         clocks
             .iter()
-            .map(|clock| self.clock_to_index(clock))
+            .map(|clock| from_clock(clock, &self.clock_variables))
             .collect()
     }
 
@@ -266,7 +346,10 @@ impl TimeType for Float64Zone {
         clocks: &Self::CompiledClocks,
     ) -> Self::Valuations {
         for clock in clocks {
-            valuations.reset(*clock, ordered_float::NotNan::new(0.0).unwrap());
+            valuations.reset(
+                clock_zones::Variable::try_from(*clock).unwrap(),
+                ordered_float::NotNan::new(0.0).unwrap(),
+            );
         }
         valuations
     }
@@ -277,28 +360,23 @@ impl TimeType for Float64Zone {
         valuations
     }
 
-    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
-        valuations
+    fn externalize(&self, valuations: &Self::Valuations) -> Self::External {
+        externalize_zone(valuations, &self.clock_variables)
+    }
+
+    fn internalize(&self, externalized: &Self::External) -> Self::Valuations {
+        internalize_zone(externalized, &self.clock_variables)
     }
 }
 
 /// A time representation using [f64] clock zones.
-#[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
+#[derive(Eq, PartialEq, Clone, Debug)]
 pub struct GlobalTime {
     clock_variables: IndexSet<String>,
-    global_clock: usize,
+    global_clock: clock_zones::Variable,
 }
 
 impl GlobalTime {
-    fn clock_to_index(&self, clock: &model::Clock) -> usize {
-        match clock {
-            model::Clock::Zero => 0,
-            model::Clock::Variable { identifier } => {
-                self.clock_variables.get_index_of(identifier).unwrap() + 1
-            }
-        }
-    }
-
     fn apply_constraint(
         &self,
         valuations: &mut <Self as TimeType>::Valuations,
@@ -330,15 +408,15 @@ impl GlobalTime {
 }
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct GlobalValuations {
-    zone: clock_zones::DBM<clock_zones::ConstantBound<ordered_float::NotNan<f64>>>,
-    global_clock: usize,
+    zone: clock_zones::Dbm<clock_zones::ConstantBound<ordered_float::NotNan<f64>>>,
+    global_clock: clock_zones::Variable,
 }
 
 impl GlobalValuations {
-    fn new_unconstrained(num_clocks: usize) -> Self {
+    fn new_unconstrained(num_variables: usize) -> Self {
         GlobalValuations {
-            zone: clock_zones::DBM::new_unconstrained(num_clocks),
-            global_clock: num_clocks,
+            zone: clock_zones::Dbm::new_unconstrained(num_variables),
+            global_clock: clock_zones::Clock::variable(num_variables),
         }
     }
 
@@ -361,16 +439,18 @@ impl GlobalValuations {
 impl TimeType for GlobalTime {
     type Valuations = GlobalValuations;
 
-    type External = Self::Valuations;
+    type External = ExternalZone;
 
-    type CompiledDifference = (usize, usize);
+    type CompiledDifference = (clock_zones::Clock, clock_zones::Clock);
 
-    type CompiledClocks = Vec<usize>;
+    type CompiledClocks = Vec<clock_zones::Clock>;
 
     fn new(network: &model::Network) -> Result<Self, String> {
+        let mut variables = network.declarations.clock_variables.clone();
+        variables.insert("__momba_explore_global".to_owned());
         Ok(GlobalTime {
-            clock_variables: network.declarations.clock_variables.clone(),
-            global_clock: network.declarations.clock_variables.len() + 1,
+            global_clock: clock_zones::Clock::variable(variables.len() - 1),
+            clock_variables: variables,
         })
     }
 
@@ -379,13 +459,16 @@ impl TimeType for GlobalTime {
         left: &model::Clock,
         right: &model::Clock,
     ) -> Self::CompiledDifference {
-        (self.clock_to_index(left), self.clock_to_index(right))
+        (
+            from_clock(left, &self.clock_variables),
+            from_clock(right, &self.clock_variables),
+        )
     }
 
     fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks {
         clocks
             .iter()
-            .map(|clock| self.clock_to_index(clock))
+            .map(|clock| from_clock(clock, &self.clock_variables))
             .collect()
     }
 
@@ -397,7 +480,7 @@ impl TimeType for GlobalTime {
         &self,
         constraints: Vec<Constraint<Self>>,
     ) -> Result<Self::Valuations, String> {
-        let mut valuations = Self::Valuations::new_unconstrained(self.clock_variables.len() + 1);
+        let mut valuations = Self::Valuations::new_unconstrained(self.clock_variables.len());
         for constraint in constraints {
             self.apply_constraint(&mut valuations, constraint);
         }
@@ -431,9 +514,10 @@ impl TimeType for GlobalTime {
         clocks: &Self::CompiledClocks,
     ) -> Self::Valuations {
         for clock in clocks {
-            valuations
-                .zone
-                .reset(*clock, ordered_float::NotNan::new(0.0).unwrap());
+            valuations.zone.reset(
+                clock_zones::Variable::try_from(*clock).unwrap(),
+                ordered_float::NotNan::new(0.0).unwrap(),
+            );
         }
         valuations
     }
@@ -444,7 +528,16 @@ impl TimeType for GlobalTime {
         valuations
     }
 
-    fn externalize(&self, valuations: Self::Valuations) -> Self::External {
-        valuations
+    fn externalize(&self, valuations: &Self::Valuations) -> Self::External {
+        externalize_zone(&valuations.zone, &self.clock_variables)
+    }
+
+    fn internalize(&self, externalized: &Self::External) -> Self::Valuations {
+        let zone: clock_zones::Dbm<clock_zones::ConstantBound<ordered_float::NotNan<f64>>> =
+            internalize_zone(externalized, &self.clock_variables);
+        GlobalValuations {
+            global_clock: clock_zones::Clock::variable(zone.num_variables() - 1),
+            zone,
+        }
     }
 }

@@ -151,6 +151,12 @@ pub trait Zone<B: Bound> {
     /// Returns the number of clock variables of this zone.
     fn num_variables(&self) -> usize;
 
+    /// Returns the number of clocks of this zone.
+    ///
+    /// Note: This is always `num_variables + 1` as there is the constant
+    /// zero clock plus the clock variables.
+    fn num_clocks(&self) -> usize;
+
     /// Retrieves the difference bound for `left - right`.
     fn get_bound(&self, left: impl AnyClock, right: impl AnyClock) -> &B;
 
@@ -197,6 +203,18 @@ pub trait Zone<B: Bound> {
     ///
     /// Added clocks will be unconstrained.
     fn resize(&self, num_variables: usize) -> Self;
+}
+
+/// Returns an iterator over the clocks of a zone.
+#[inline(always)]
+pub fn clocks<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Clock> {
+    (0..zone.num_clocks()).map(|index| Clock(index))
+}
+
+/// Returns an iterator over the variables of a zone.
+#[inline(always)]
+pub fn variables<Z: Zone<B>, B: Bound>(zone: &Z) -> impl Iterator<Item = Variable> {
+    (1..zone.num_clocks()).map(|index| Variable(index))
 }
 
 /// An implementation of [Zone] as *difference bound matrix*.
@@ -297,6 +315,11 @@ impl<B: Bound, L: Layout<B>> Zone<B> for Dbm<B, L> {
     #[inline(always)]
     fn num_variables(&self) -> usize {
         self.dimension - 1
+    }
+
+    #[inline(always)]
+    fn num_clocks(&self) -> usize {
+        self.dimension
     }
 
     #[inline(always)]
