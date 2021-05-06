@@ -1,10 +1,15 @@
 //! Algorithms and data structures for state space exploration.
 
+use std::marker::PhantomData;
+
 use serde::{Deserialize, Serialize};
 
 use itertools::Itertools;
 
-use crate::model::{LabelIndex, Value};
+use crate::{
+    model::{EdgeReference, LabelIndex, Value},
+    time::Time,
+};
 
 use super::model;
 use super::time;
@@ -12,8 +17,6 @@ use super::time;
 mod actions;
 mod compiled;
 mod evaluate;
-
-pub mod external;
 
 use compiled::*;
 
@@ -25,19 +28,19 @@ pub use actions::*;
 /// values of the global variables, and a potentially infinite set of clock valuations
 /// using the respective [TimeType][time::TimeType].
 #[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Debug)]
-pub struct State<V> {
+pub struct State<T: time::Time> {
     locations: Box<[LocationIndex]>,
     global_store: Box<[model::Value]>,
     transient_store: Box<[model::Value]>,
-    valuations: V,
+    valuations: T::Valuations,
 }
 
-impl<V> State<V> {
+impl<T: time::Time> State<T> {
     /// Returns the name of the location the automaton with the provided name is in.
     ///
     /// Panics in case the state has not been produced by the provided explorer or there
     /// is no automaton with the provided name in the automaton network.
-    pub fn get_location_of<'e, T: time::TimeType>(
+    pub fn get_location_of<'e>(
         &self,
         explorer: &'e Explorer<T>,
         automaton_name: &str,
@@ -67,7 +70,7 @@ impl<V> State<V> {
     ///
     /// Panics in case the state has not been produced by the provided explorer or there
     /// is no global variable with the provided name in the automaton network.
-    pub fn get_global_value<T: time::TimeType>(
+    pub fn get_global_value(
         &self,
         explorer: &Explorer<T>,
         identifier: &str,
@@ -94,7 +97,7 @@ impl<V> State<V> {
     }
 
     /// Returns the clock valuations associated with the state.
-    pub fn valuations(&self) -> &V {
+    pub fn valuations(&self) -> &T::Valuations {
         &self.valuations
     }
 
@@ -108,10 +111,7 @@ impl<V> State<V> {
         evaluate::Environment::new([&self.global_store, &self.transient_store, edge_store])
     }
 
-    fn future<T: time::TimeType>(
-        state: State<T::Valuations>,
-        compiled_network: &CompiledNetwork<T>,
-    ) -> State<T::Valuations> {
+    fn future(state: State<T>, compiled_network: &CompiledNetwork<T>) -> State<T> {
         let env = evaluate::Environment::new([&state.global_store, &state.transient_store]);
 
         let mut valuations = compiled_network.zone_compiler.future(state.valuations);
@@ -147,19 +147,64 @@ pub struct Observation {
     pub probability: Value,
 }
 
-/// A *transition* of an automaton network.
-pub struct Transition<'e, T: time::TimeType> {
-    pub(crate) edges: Box<[&'e CompiledEdge<T>]>,
+pub(crate) struct BareTransition<T: time::Time> {
     pub(crate) actions: Box<[Action]>,
     pub(crate) valuations: T::Valuations,
     pub(crate) action: Action,
     pub(crate) observations: Box<[Box<[Observation]>]>,
 }
 
-impl<'e, T: time::TimeType> Transition<'e, T> {
+pub trait AnyTransition<T: time::Time> {
+    fn result_action(&self) -> &Action;
+
+    fn valuations(&self) -> &T::Valuations;
+}
+
+/// A *transition* of an automaton network.
+pub struct DetachedTransition<T: time::Time> {
+    pub(crate) edges: Vec<EdgeReference>,
+    pub(crate) bare: BareTransition<T>,
+}
+
+impl<T: time::Time> DetachedTransition<T> {
+    /// Attaches the transition to the lifetime of the explorer.
+    pub fn attach(self, explorer: &Explorer<T>) -> Transition<T> {
+        todo!()
+    }
+
+    pub fn valuations(&self) -> &T::Valuations {
+        &self.bare.valuations
+    }
+
+    pub fn result_action(&self) -> &Action {
+        &self.bare.action
+    }
+}
+
+/// A *transition* attached to an [Explorer].
+pub struct Transition<'e, T: time::Time> {
+    pub(crate) edges: Box<[&'e CompiledEdge<T>]>,
+    pub(crate) bare: BareTransition<T>,
+}
+
+impl<'e, T: time::Time> Transition<'e, T> {
+    /// Detaches the transition from the lifetime of the explorer.
+    pub fn detach(self) -> DetachedTransition<T> {
+        DetachedTransition {
+            edges: self
+                .edges
+                .into_iter()
+                .map(|edge| edge.reference.clone())
+                .collect(),
+            bare: self.bare,
+        }
+    }
+}
+
+impl<'e, T: time::Time> Transition<'e, T> {
     /// Returns a slice of actions the participating automata perform.
     pub fn local_actions(&self) -> &[Action] {
-        &self.actions
+        &self.bare.actions
     }
 
     /// Returns a vector of indices of the participating automata.
@@ -172,22 +217,24 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
 
     /// Returns the clock valuations for which the transition is performed.
     pub fn valuations(&self) -> &T::Valuations {
-        &self.valuations
+        &self.bare.valuations
     }
 
     /// Returns the resulting action.
     pub fn result_action(&self) -> &Action {
-        &self.action
+        &self.bare.action
     }
 
     /// Replaces the valuations of the transition.
     pub fn replace_valuations(self, valuations: T::Valuations) -> Self {
         Transition {
             edges: self.edges,
-            actions: self.actions,
-            valuations,
-            action: self.action,
-            observations: self.observations,
+            bare: BareTransition {
+                actions: self.bare.actions,
+                valuations,
+                action: self.bare.action,
+                observations: self.bare.observations,
+            },
         }
     }
 
@@ -199,17 +246,17 @@ impl<'e, T: time::TimeType> Transition<'e, T> {
     }
 
     pub fn observations(&self) -> &[Box<[Observation]>] {
-        &self.observations
+        &self.bare.observations
     }
 }
 
 /// A *destination* of a transition.
-pub struct Destination<'c, T: time::TimeType> {
+pub struct Destination<'c, T: time::Time> {
     pub(crate) probability: f64,
     pub(crate) destinations: Box<[&'c CompiledDestination<T>]>,
 }
 
-impl<'c, T: time::TimeType> Destination<'c, T> {
+impl<'c, T: time::Time> Destination<'c, T> {
     /// Returns the probability of the destination.
     pub fn probability(&self) -> f64 {
         self.probability
@@ -217,12 +264,12 @@ impl<'c, T: time::TimeType> Destination<'c, T> {
 }
 
 /// A state space explorer for a particular automaton network.
-pub struct Explorer<T: time::TimeType> {
+pub struct Explorer<T: time::Time> {
     pub network: model::Network,
     pub(crate) compiled_network: CompiledNetwork<T>,
 }
 
-impl<T: time::TimeType> Explorer<T> {
+impl<T: time::Time> Explorer<T> {
     /// Constructs a new state space explorer from the provided network.
     pub fn new(network: model::Network) -> Self {
         let compiled = CompiledNetwork::new(&network);
@@ -233,7 +280,7 @@ impl<T: time::TimeType> Explorer<T> {
     }
 
     /// Returns a vector of initial states of the network.
-    pub fn initial_states(&self) -> Vec<State<T::Valuations>> {
+    pub fn initial_states(&self) -> Vec<State<T>> {
         let global_scope = self.network.global_scope();
         self.network
             .initial_states
@@ -280,7 +327,7 @@ impl<T: time::TimeType> Explorer<T> {
                             .collect(),
                     )
                     .unwrap();
-                State::<T::Valuations>::future(
+                State::<T>::future(
                     State {
                         locations,
                         global_store,
@@ -294,7 +341,7 @@ impl<T: time::TimeType> Explorer<T> {
     }
 
     /// Returns a vector of outgoing transitions of the given state.
-    pub fn transitions<'c>(&'c self, state: &State<T::Valuations>) -> Vec<Transition<'c, T>> {
+    pub fn transitions<'c>(&'c self, state: &State<T>) -> Vec<Transition<'c, T>> {
         let global_env = state.global_env();
         let enabled_edges = self
             .compiled_network
@@ -344,17 +391,19 @@ impl<T: time::TimeType> Explorer<T> {
                         } else {
                             Some(Transition {
                                 edges: Box::new([edge]),
-                                actions: Box::new([Action::Silent]),
-                                valuations,
-                                action: Action::Silent,
-                                observations: edge
-                                    .observations
-                                    .iter()
-                                    .map(|observation| {
-                                        let edge_env = state.edge_env(&[]);
-                                        todo!("observations on silent edges are not supported yet");
-                                    })
-                                    .collect(),
+                                bare: BareTransition {
+                                    actions: Box::new([Action::Silent]),
+                                    valuations,
+                                    action: Action::Silent,
+                                    observations: edge
+                                        .observations
+                                        .iter()
+                                        .map(|observation| {
+                                            let edge_env = state.edge_env(&[]);
+                                            todo!("observations on silent edges are not supported yet");
+                                        })
+                                        .collect(),
+                                },
                             })
                         }
                     }
@@ -394,7 +443,7 @@ impl<T: time::TimeType> Explorer<T> {
     /// Panics if the transition has not been generated from the provided state.
     pub fn destinations<'c>(
         &'c self,
-        state: &State<T::Valuations>,
+        state: &State<T>,
         transition: &Transition<'c, T>,
     ) -> Vec<Destination<'c, T>> {
         transition
@@ -403,9 +452,12 @@ impl<T: time::TimeType> Explorer<T> {
             .map(|edge| edge.destinations.iter())
             .multi_cartesian_product()
             .map(|destinations| Destination {
-                probability: transition.actions.iter().zip(destinations.iter()).fold(
-                    1.0,
-                    |probability, (action, destination)| {
+                probability: transition
+                    .bare
+                    .actions
+                    .iter()
+                    .zip(destinations.iter())
+                    .fold(1.0, |probability, (action, destination)| {
                         let edge_env = state.edge_env(action.arguments());
                         probability
                             * destination
@@ -413,8 +465,7 @@ impl<T: time::TimeType> Explorer<T> {
                                 .evaluate(&edge_env)
                                 .unwrap_float64()
                                 .into_inner()
-                    },
-                ),
+                    }),
                 destinations: destinations.into(),
             })
             .collect()
@@ -425,10 +476,10 @@ impl<T: time::TimeType> Explorer<T> {
     /// Panics if the destination has not been generated from the provided state and transition.
     pub fn successor<'c>(
         &'c self,
-        state: &State<T::Valuations>,
+        state: &State<T>,
         transition: &Transition<'c, T>,
         destination: &Destination<T>,
-    ) -> State<T::Valuations> {
+    ) -> State<T> {
         let mut targets = vec![
             model::Value::Vector(state.global_store.clone().into()),
             model::Value::Vector(state.transient_store.clone().into()),
@@ -436,6 +487,7 @@ impl<T: time::TimeType> Explorer<T> {
         for index in 0..self.compiled_network.assignment_groups.len() {
             let global_store = targets[0].clone();
             for (action, automaton_destination) in transition
+                .bare
                 .actions
                 .iter()
                 .zip(destination.destinations.iter())
@@ -467,7 +519,7 @@ impl<T: time::TimeType> Explorer<T> {
             .compiled_network
             .compute_transient_values(&targets[0].unwrap_vector());
 
-        let state = State::<T::Valuations>::future(
+        let state = State::<T>::future(
             State {
                 locations,
                 global_store: targets[0].unwrap_vector().clone().into(),
@@ -486,28 +538,18 @@ impl<T: time::TimeType> Explorer<T> {
         state
     }
 
-    pub fn externalize_transition(&self, transition: &Transition<T>) -> external::Transition<T> {
-        external::Transition {
-            edge_vector: transition
-                .edges
-                .iter()
-                .map(|edge| edge.reference.clone())
-                .collect(),
-            action_vector: transition.actions.clone(),
-            action: transition.action.clone(),
-            valuations: self
-                .compiled_network
-                .zone_compiler
-                .externalize(&transition.valuations),
-        }
-    }
-
     pub fn get_time_type(&self) -> &T {
         &self.compiled_network.zone_compiler
     }
 }
 
-/// A specialization of [Explorer] for MDPs using [NoClocks][time::NoClocks].
-///
-/// MDPs do not have any real-valued clocks.
-pub type MDPExplorer = Explorer<time::NoClocks>;
+/// Type definitions for *Markov Decision Processes* (MDPs).
+pub mod mdp {
+    /// The [Time][super::time::Time] type to use for MDPs.
+    pub type Time = super::time::NoClocks;
+
+    /// The [Explorer][super::Explorer] type to use for MDPs.
+    pub type Explorer = super::Explorer<Time>;
+    /// The [State][super::State] type to use for MDPs.
+    pub type State = super::State<Time>;
+}

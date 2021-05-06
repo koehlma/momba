@@ -45,7 +45,7 @@ fn count_states(count: Count) {
     let model_path = Path::new(&count.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+    let explorer: Explorer<time::NoClocks> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
@@ -56,14 +56,14 @@ fn count_states(count: Count) {
     let mut visited: HashSet<State<_>> = HashSet::new();
     let mut pending: Vec<_> = explorer.initial_states();
 
-    for state in pending.iter() {
-        println!("{:?}", state);
-        let mut valuations = state.valuations().clone();
-        println!("{:?}", valuations);
-        valuations.future();
-        println!("{:?}", valuations);
-        visited.insert(state.clone());
-    }
+    // for state in pending.iter() {
+    //     println!("{:?}", state);
+    //     // let mut valuations = state.valuations().clone();
+    //     // println!("{:?}", valuations);
+    //     // valuations.future();
+    //     // println!("{:?}", valuations);
+    //     visited.insert(state.clone());
+    // }
 
     let mut count_transitions = 0;
 
@@ -72,7 +72,7 @@ fn count_states(count: Count) {
     while let Some(state) = pending.pop() {
         processed += 1;
 
-        if processed % 5000 == 0 {
+        if processed % 20000 == 0 {
             let duration = start.elapsed();
             println!(
                 "States: {} ({:.2} [states/s], [waiting {}])",
@@ -81,18 +81,20 @@ fn count_states(count: Count) {
                 pending.len(),
             )
         }
-        let transitions = explorer.transitions(&state);
 
-        for transition in transitions {
-            count_transitions += 1;
-            let destinations = explorer.destinations(&state, &transition);
-            for destination in destinations {
-                let successor = explorer.successor(&state, &transition, &destination);
-                //pending.push(successor);
-                if visited.insert(successor.clone()) {
+        if !visited.contains(&state) {
+            let transitions = explorer.transitions(&state);
+
+            for transition in transitions {
+                count_transitions += 1;
+                let destinations = explorer.destinations(&state, &transition);
+                for destination in destinations {
+                    let successor = explorer.successor(&state, &transition, &destination);
                     pending.push(successor);
                 }
             }
+
+            visited.insert(state);
         }
     }
 

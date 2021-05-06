@@ -9,13 +9,13 @@ use super::*;
 ///
 /// When faced with a non-deterministic chose between multiple transitions, the simulator
 /// uses an oracle to determine which transition to choose.
-pub trait Oracle<T: time::TimeType> {
+pub trait Oracle<T: time::Time> {
     /// Chooses a transition from a vector of transitions.
     fn choose<'e, 't>(
         &self,
-        state: &State<T::Valuations>,
-        transitions: &'t Vec<Transition<'e, T>>,
-    ) -> &'t Transition<'e, T>;
+        state: &State<T>,
+        transitions: &'t Vec<DetachedTransition<'e, T>>,
+    ) -> &'t DetachedTransition<'e, T>;
 }
 
 /// An [Oracle] choosing a transition uniformly at random.
@@ -28,12 +28,12 @@ impl UniformOracle {
     }
 }
 
-impl<T: time::TimeType> Oracle<T> for UniformOracle {
+impl<T: time::Time> Oracle<T> for UniformOracle {
     fn choose<'e, 't>(
         &self,
-        _state: &State<T::Valuations>,
-        transitions: &'t Vec<Transition<'e, T>>,
-    ) -> &'t Transition<'e, T> {
+        _state: &State<T>,
+        transitions: &'t Vec<DetachedTransition<'e, T>>,
+    ) -> &'t DetachedTransition<'e, T> {
         let mut rng = rand::thread_rng();
         transitions.iter().choose(&mut rng).unwrap()
     }
@@ -48,13 +48,13 @@ impl<T: time::TimeType> Oracle<T> for UniformOracle {
 pub struct InjectionOracle {}
 
 /// A simulator used to simulate random runs.
-pub struct Simulator<O: Oracle<T>, T: time::TimeType> {
+pub struct Simulator<O: Oracle<T>, T: time::Time> {
     pub(crate) oracle: O,
 
     _phontom_time_type: std::marker::PhantomData<T>,
 }
 
-impl<O: Oracle<T>, T: time::TimeType> Simulator<O, T> {
+impl<O: Oracle<T>, T: time::Time> Simulator<O, T> {
     /// Creates a new simulator with the given oracle.
     pub fn new(oracle: O) -> Self {
         Simulator {
