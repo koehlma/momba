@@ -2,11 +2,10 @@ use std::sync::Arc;
 
 use pyo3::{PyObject, Python};
 
-use crate::time::{ConvertValuations, Time};
-use crate::{transitions, values};
+use crate::{time, transitions, values};
 
 #[derive(Clone)]
-pub struct State<T: Time> {
+pub struct State<T: time::Time> {
     pub explorer: Arc<momba_explore::Explorer<T>>,
     pub state: Arc<momba_explore::State<T>>,
 }
@@ -20,9 +19,9 @@ pub trait DynState: Send + Sync {
     fn transitions(&self) -> Vec<crate::PyTransition>;
 }
 
-impl<T: Time> DynState for State<T>
+impl<T: time::Time> DynState for State<T>
 where
-    T::Valuations: ConvertValuations,
+    T::Valuations: time::ConvertValuations,
 {
     fn get_global_value(&self, identifier: &str) -> Option<values::Value> {
         self.state
@@ -38,7 +37,7 @@ where
     }
 
     fn valuations(&self, py: Python) -> PyObject {
-        ConvertValuations::to_python(py, self.state.valuations().clone())
+        time::ConvertValuations::to_python(py, self.state.valuations().clone())
     }
 
     fn transitions(&self) -> Vec<crate::PyTransition> {
