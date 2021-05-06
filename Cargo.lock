@@ -76,7 +76,7 @@ dependencies = [
 
 [[package]]
 name = "clock-zones"
-version = "0.1.4"
+version = "0.4.1"
 dependencies = [
  "ordered-float",
 ]
@@ -135,6 +135,12 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "downcast-rs"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
 name = "either"
@@ -349,8 +355,12 @@ dependencies = [
 name = "momba_engine"
 version = "0.3.5"
 dependencies = [
+ "clock-zones",
+ "downcast-rs",
  "momba-explore",
+ "ordered-float",
  "pyo3",
+ "pyo3-generic-wrap",
  "serde_json",
 ]
 
@@ -486,25 +496,24 @@ dependencies = [
 
 [[package]]
 name = "pyo3"
-version = "0.12.4"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf6bbbe8f70d179260b3728e5d04eb012f4f0c7988e58c11433dd689cecaa72e"
+checksum = "4837b8e8e18a102c23f79d1e9a110b597ea3b684c95e874eb1ad88f8683109c3"
 dependencies = [
+ "cfg-if",
  "ctor",
  "indoc",
  "inventory",
  "libc",
  "parking_lot",
  "paste",
- "pyo3cls",
+ "pyo3-macros",
  "unindent",
 ]
 
 [[package]]
-name = "pyo3-derive-backend"
-version = "0.12.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10ecd0eb6ed7b3d9965b4f4370b5b9e99e3e5e8742000e1c452c018f8c2a322f"
+name = "pyo3-generic-wrap"
+version = "0.1.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -512,12 +521,31 @@ dependencies = [
 ]
 
 [[package]]
-name = "pyo3cls"
-version = "0.12.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d344fdaa6a834a06dd1720ff104ea12fe101dad2e8db89345af9db74c0bb11a0"
+name = "pyo3-generic-wrap-example"
+version = "0.1.0"
 dependencies = [
- "pyo3-derive-backend",
+ "pyo3",
+ "pyo3-generic-wrap",
+]
+
+[[package]]
+name = "pyo3-macros"
+version = "0.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a47f2c300ceec3e58064fd5f8f5b61230f2ffd64bde4970c81fdd0563a2db1bb"
+dependencies = [
+ "pyo3-macros-backend",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "pyo3-macros-backend"
+version = "0.13.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "87b097e5d84fcbe3e167f400fbedd657820a375b034c78bd852050749a575d66"
+dependencies = [
+ "proc-macro2",
  "quote",
  "syn",
 ]

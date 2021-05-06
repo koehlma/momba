@@ -1,6 +1,6 @@
 use pyo3::prelude::*;
 
-pub trait Trait: 'static + Send + Sync {
+pub trait Trait {
     fn say_hello(&self, message: &str) -> String;
 }
 
@@ -27,7 +27,7 @@ pub struct MyClass<T: Trait> {
 #[pyo3_generic_wrap::pymethods]
 impl<T: Trait> MyClass<T>
 where
-    T: Send,
+    T: 'static + Send + Sync,
 {
     fn say_hello(&self, message: &str) -> String {
         self.inner.say_hello(message)
