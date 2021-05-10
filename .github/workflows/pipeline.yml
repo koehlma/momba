@@ -83,7 +83,7 @@ jobs:
     - name: Install packages
       run: |
         pip install -r artifacts/dev-requirements.txt
-        pip install --upgrade --no-index --find-links artifacts momba[all] momba_engine
+        pip install --ignore-installed artifacts/*.whl
     - name: Run tests
       run: |
         pytest tests
@@ -106,7 +106,7 @@ jobs:
     - name: Install packages
       run: |
         pip install -r artifacts/dev-requirements.txt
-        pip install --upgrade --no-index --find-links artifacts momba[all] momba_engine
+        pip install --ignore-installed artifacts/*.whl
     - name: Run MypPy
       run: |
         mypy momba
@@ -129,7 +129,7 @@ jobs:
     - name: Install packages
       run: |
         pip install -r artifacts/dev-requirements.txt
-        pip install --upgrade --no-index --find-links artifacts momba[all] momba_engine
+        pip install --ignore-installed artifacts/*.whl
     - name: Build documentation
       run: |
         sphinx-build docs build/docs
