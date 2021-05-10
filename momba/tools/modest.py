@@ -104,7 +104,7 @@ class Toolset:
         timeout: Timeout = None,
         capture_output: bool = True,
     ) -> t.Mapping[str, t.Any]:
-        """ Runs `modest check` with the provided arguments. """
+        """Runs `modest check` with the provided arguments."""
         with tempfile.TemporaryDirectory(prefix="modest") as directory_name:
             output_file = pathlib.Path(directory_name) / "output.json"
             command: Command = (
