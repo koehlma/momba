@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use pyo3::{PyObject, Python};
 
@@ -45,10 +45,10 @@ where
             .transitions(&self.state)
             .into_iter()
             .map(|transition| crate::PyTransition {
-                transition: Arc::new(transitions::Transition {
+                transition: Box::new(transitions::Transition {
                     explorer: self.explorer.clone(),
                     state: self.state.clone(),
-                    transition: Arc::new(transition.detach()),
+                    transition: unsafe { std::mem::transmute(Arc::new(RwLock::new(transition))) },
                 }),
             })
             .collect()

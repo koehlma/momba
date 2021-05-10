@@ -172,6 +172,19 @@ impl<T: time::Time> DetachedTransition<T> {
         todo!()
     }
 
+    pub fn edge_vector(&self) -> &[EdgeReference] {
+        &self.edges
+    }
+
+    pub fn action_vector(&self) -> &[Action] {
+        &self.bare.actions
+    }
+
+    /// Replaces the valuations of the transition.
+    pub fn set_valuations(&mut self, valuations: T::Valuations) {
+        self.bare.valuations = valuations;
+    }
+
     pub fn valuations(&self) -> &T::Valuations {
         &self.bare.valuations
     }
@@ -223,6 +236,10 @@ impl<'e, T: time::Time> Transition<'e, T> {
     /// Returns the resulting action.
     pub fn result_action(&self) -> &Action {
         &self.bare.action
+    }
+
+    pub fn set_valuations(&mut self, valuations: T::Valuations) {
+        self.bare.valuations = valuations;
     }
 
     /// Replaces the valuations of the transition.

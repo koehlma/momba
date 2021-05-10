@@ -118,9 +118,9 @@ fn random_walk(walk: Simulate) {
             .expect("Error while reading model file!"),
     );
 
-    let simulator = simulate::Simulator::new(simulate::UniformOracle::new());
+    // let simulator = simulate::Simulator::new(simulate::UniformOracle::new());
 
-    simulator.simulate(&explorer, 100);
+    // simulator.simulate(&explorer, 100);
 }
 
 fn main() {

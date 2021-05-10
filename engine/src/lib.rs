@@ -1,8 +1,10 @@
 use std::sync::Arc;
 
 use pyo3::prelude::*;
+use transitions::DynTransition;
 
 pub mod actions;
+pub mod destinations;
 pub mod explorer;
 pub mod states;
 pub mod time;
@@ -39,6 +41,33 @@ impl<T: time::Time> From<actions::Action<T>> for PyAction {
         PyAction {
             action: Arc::new(action),
         }
+    }
+}
+
+#[pyclass(name = "Destination")]
+pub struct PyDestination {
+    destination: Arc<dyn destinations::DynDestination>,
+}
+
+impl<T: time::Time> From<destinations::Destination<T>> for PyDestination
+where
+    T::Valuations: time::ConvertValuations,
+{
+    fn from(destination: destinations::Destination<T>) -> Self {
+        PyDestination {
+            destination: Arc::new(destination),
+        }
+    }
+}
+
+#[pymethods]
+impl PyDestination {
+    fn probability(&self) -> f64 {
+        self.destination.probability()
+    }
+
+    fn successor(&self) -> PyState {
+        self.destination.successor()
     }
 }
 
@@ -79,7 +108,7 @@ impl PyState {
 
 #[pyclass(name = "Transition")]
 pub struct PyTransition {
-    transition: Arc<dyn transitions::DynTransition>,
+    transition: Box<dyn transitions::DynTransition>,
 }
 
 #[pymethods]
@@ -90,6 +119,22 @@ impl PyTransition {
 
     pub fn action(&self) -> PyAction {
         self.transition.action()
+    }
+
+    pub fn action_vector(&self) -> Vec<PyAction> {
+        self.transition.action_vector()
+    }
+
+    pub fn edge_vector(&self) -> String {
+        self.transition.edge_vector()
+    }
+
+    pub fn replace_valuations(&mut self, valuations: &PyAny) -> PyResult<()> {
+        self.transition.replace_valuations(valuations)
+    }
+
+    pub fn destinations(&self) -> Vec<PyDestination> {
+        self.transition.destinations()
     }
 }
 

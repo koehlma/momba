@@ -1,6 +1,6 @@
-use std::convert::TryInto;
-
-use pyo3::{exceptions::PyValueError, PyAny, PyCell, PyObject, PyResult, Python, ToPyObject};
+use pyo3::{
+    exceptions::PyValueError, PyAny, PyCell, PyObject, PyRef, PyResult, Python, ToPyObject,
+};
 
 use crate::zones;
 
@@ -36,7 +36,11 @@ impl ConvertValuations for clock_zones::ZoneF64 {
     }
 
     fn from_python(obj: &PyAny) -> PyResult<Self> {
-        //let x: &zones::PyZone = obj.try_into()?;
-        todo!()
+        let value: PyRef<zones::PyZone> = obj.extract()?;
+        value
+            .zone
+            .downcast_ref::<clock_zones::ZoneF64>()
+            .cloned()
+            .ok_or_else(|| PyValueError::new_err("valuations have to be a ZoneF64"))
     }
 }

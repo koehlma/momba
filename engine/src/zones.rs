@@ -294,7 +294,6 @@ where
 
 /// Python object representing a [Zone].
 #[pyclass(name = "Zone")]
-#[derive(Debug)]
 pub struct PyZone {
     pub(crate) zone: Box<dyn DynZone>,
 }
