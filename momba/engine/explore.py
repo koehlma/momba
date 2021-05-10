@@ -15,12 +15,13 @@ from .. import model
 from ..model import expressions
 from ..utils.distribution import Distribution
 
-from .time import DiscreteTime, TimeType
-from .translator import Translation, translate_network
+from .time import DiscreteTime, TimeType, CompiledNetwork
 from .values import Value
 
 
 TimeTypeT = t.TypeVar("TimeTypeT", bound=TimeType)
+
+Parameters = t.Optional[t.Mapping[str, expressions.ValueOrExpression]]
 
 
 @d.dataclass(frozen=True)
@@ -75,7 +76,7 @@ class Destination(t.Generic[TimeTypeT]):
         """
         return State(
             self.explorer,
-            self._destination.successor(self._state, self._transition),
+            self._destination.successor(),
         )
 
 
@@ -127,7 +128,7 @@ class Transition(t.Generic[TimeTypeT]):
         instances = set()
         for edge_reference in json.loads(self._transition.edge_vector()):
             automaton_name = edge_reference["location"]["automaton"]["name"]
-            instance = self.explorer._translation.instance_name_to_instance[
+            instance = self.explorer._compiled.translation.instance_name_to_instance[
                 automaton_name
             ]
             instances.add(instance)
@@ -135,7 +136,7 @@ class Transition(t.Generic[TimeTypeT]):
 
     @property
     def action(self) -> t.Optional[Action]:
-        return _action(self._transition.result_action(), self.explorer)
+        return _action(self._transition.action(), self.explorer)
 
     @property
     def action_vector(self) -> t.Mapping[model.Instance, t.Optional[Action]]:
@@ -144,7 +145,7 @@ class Transition(t.Generic[TimeTypeT]):
             json.loads(self._transition.edge_vector()), self._transition.action_vector()
         ):
             automaton_name = edge_reference["location"]["automaton"]["name"]
-            instance = self.explorer._translation.instance_name_to_instance[
+            instance = self.explorer._compiled.translation.instance_name_to_instance[
                 automaton_name
             ]
             action_vector[instance] = _action(action, self.explorer)
@@ -157,12 +158,14 @@ class Transition(t.Generic[TimeTypeT]):
             automaton_name = edge_reference["location"]["automaton"]["name"]
             location_name = edge_reference["location"]["name"]
             edge_index = edge_reference["index"]
-            instance = self.explorer._translation.instance_name_to_instance[
+            instance = self.explorer._compiled.translation.instance_name_to_instance[
                 automaton_name
             ]
-            location = self.explorer._translation.reversed_instance_to_location_names[
-                instance
-            ][location_name]
+            location = (
+                self.explorer._compiled.translation.reversed_instance_to_location_names[
+                    instance
+                ][location_name]
+            )
             location_edges = instance.automaton.get_outgoing_edges(location)
             counter = 0
             for edge in instance.automaton.edges:
@@ -179,11 +182,15 @@ class Transition(t.Generic[TimeTypeT]):
     def destinations(self) -> Distribution[Destination[TimeTypeT]]:
         destinations = tuple(
             Destination(self.explorer, self._state, self._transition, destination)
-            for destination in self._transition.destinations(self._state)
+            for destination in self._transition.destinations()
         )
         return Distribution(
             {destination: destination.probability for destination in destinations}
         )
+
+    @functools.cached_property
+    def valuations(self) -> TimeTypeT:
+        return self.explorer.time_type.load_valuations(self._transition.valuations())
 
 
 @d.dataclass(frozen=True, repr=False)
@@ -206,9 +213,10 @@ class State(t.Generic[TimeTypeT]):
         """
         The global environment, i.e., a mapping from global variables to values.
         """
+        declarations = self.explorer._compiled.translation.declarations
         return {
             name: Value(self._state.get_global_value(declaration.identifier))
-            for name, declaration in self.explorer._translation.declarations.globals_table.items()
+            for name, declaration in declarations.globals_table.items()
             if not declaration.is_transient
         }
 
@@ -216,11 +224,10 @@ class State(t.Generic[TimeTypeT]):
         """
         Returns the local environment of the provided automaton instance.
         """
+        declarations = self.explorer._compiled.translation.declarations
         return {
             name: Value(self._state.get_global_value(declaration.identifier))
-            for name, declaration in self.explorer._translation.declarations.locals_table[
-                instance
-            ].items()
+            for name, declaration in declarations.locals_table[instance].items()
         }
 
     @functools.cached_property
@@ -231,10 +238,12 @@ class State(t.Generic[TimeTypeT]):
         A mapping from instances to locations.
         """
         return {
-            instance: self.explorer._translation.reversed_instance_to_location_names[
+            instance: self.explorer._compiled.translation.reversed_instance_to_location_names[
                 instance
-            ][self._state.get_location_of(name)]
-            for instance, name in self.explorer._translation.instance_names.items()
+            ][
+                self._state.get_location_of(name)
+            ]
+            for instance, name in self.explorer._compiled.translation.instance_names.items()
         }
 
     @functools.cached_property
@@ -249,7 +258,7 @@ class State(t.Generic[TimeTypeT]):
 
     @property
     def valuations(self) -> TimeTypeT:
-        raise NotImplementedError()
+        return self.explorer.time_type.load_valuations(self._state.valuations())
 
 
 class Explorer(t.Generic[TimeTypeT]):
@@ -276,32 +285,24 @@ class Explorer(t.Generic[TimeTypeT]):
     network: model.Network
     time_type: t.Type[TimeTypeT]
 
-    _translation: Translation
-    _compiled: t.Any
+    _compiled: CompiledNetwork
 
     def __init__(
         self,
         network: model.Network,
         time_type: t.Type[TimeTypeT],
         *,
-        parameters: t.Optional[t.Mapping[str, expressions.ValueOrExpression]] = None,
+        parameters: Parameters = None,
     ) -> None:
         self.network = network
         self.time_type = time_type
-        self._translation = translate_network(
-            network,
-            parameters={
-                name: expressions.ensure_expr(expr)
-                for name, expr in (parameters or {}).items()
-            },
-        )
-        self._compiled = self.time_type.compile(network, self._translation)
+        self._compiled = self.time_type.compile(network, parameters=parameters)
 
     @staticmethod
     def new_discrete_time(
         network: model.Network,
         *,
-        parameters: t.Optional[t.Mapping[str, expressions.ValueOrExpression]] = None,
+        parameters: Parameters = None,
     ) -> Explorer[DiscreteTime]:
         """
         Creates a new discrete time explorer.
@@ -314,5 +315,5 @@ class Explorer(t.Generic[TimeTypeT]):
         The initial states of the network.
         """
         return frozenset(
-            State(self, state) for state in self._compiled.initial_states()
+            State(self, state) for state in self._compiled.internal.initial_states()
         )

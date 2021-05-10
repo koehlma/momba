@@ -18,19 +18,19 @@ pub struct CompiledAssignment {
     pub value: evaluate::CompiledExpression<3>,
 }
 
-pub struct CompiledAutomaton<Z: time::TimeType> {
+pub struct CompiledAutomaton<Z: time::Time> {
     pub reference: model::AutomatonReference,
     pub locations: Vec<CompiledLocation<Z>>,
 }
 
-pub struct CompiledLocation<Z: time::TimeType> {
+pub struct CompiledLocation<Z: time::Time> {
     pub reference: model::LocationReference,
     pub invariant: Vec<CompiledClockConstraint<Z>>,
     pub internal_edges: Vec<CompiledEdge<Z>>,
     pub visible_edges: Vec<Vec<CompiledVisibleEdge<Z>>>,
 }
 
-impl<Z: time::TimeType> CompiledLocation<Z> {
+impl<Z: time::Time> CompiledLocation<Z> {
     fn new(
         network: &model::Network,
         global_scope: &evaluate::Scope<2>,
@@ -103,7 +103,7 @@ impl<Z: time::TimeType> CompiledLocation<Z> {
     }
 }
 
-pub struct CompiledEdge<Z: time::TimeType> {
+pub struct CompiledEdge<Z: time::Time> {
     pub reference: model::EdgeReference,
     pub guard: CompiledGuard<Z>,
     pub destinations: Vec<CompiledDestination<Z>>,
@@ -116,12 +116,12 @@ pub struct CompiledObservation {
     pub probability: evaluate::CompiledExpression<3>,
 }
 
-pub struct CompiledVisibleEdge<Z: time::TimeType> {
+pub struct CompiledVisibleEdge<Z: time::Time> {
     pub base: CompiledEdge<Z>,
     pub write_arguments: Box<[(usize, evaluate::CompiledExpression<2>)]>,
 }
 
-impl<Z: time::TimeType> CompiledEdge<Z> {
+impl<Z: time::Time> CompiledEdge<Z> {
     pub fn new(
         network: &model::Network,
         time_type: &Z,
@@ -210,18 +210,18 @@ impl<Z: time::TimeType> CompiledEdge<Z> {
     }
 }
 
-pub struct CompiledGuard<Z: time::TimeType> {
+pub struct CompiledGuard<Z: time::Time> {
     pub boolean_condition: evaluate::CompiledExpression<2>,
     pub clock_constraints: Vec<CompiledClockConstraint<Z>>,
 }
 
-pub struct CompiledClockConstraint<T: time::TimeType> {
+pub struct CompiledClockConstraint<T: time::Time> {
     pub difference: T::CompiledDifference,
     pub is_strict: bool,
     pub bound: evaluate::CompiledExpression<2>,
 }
 
-impl<T: time::TimeType> CompiledClockConstraint<T> {
+impl<T: time::Time> CompiledClockConstraint<T> {
     pub fn compile(
         time_type: &T,
         constraint: &model::ClockConstraint,
@@ -243,7 +243,7 @@ impl<T: time::TimeType> CompiledClockConstraint<T> {
     }
 }
 
-pub struct CompiledDestination<Z: time::TimeType> {
+pub struct CompiledDestination<Z: time::Time> {
     pub automaton_index: usize,
     pub reference: model::DestinationReference,
     pub location: LocationIndex,
@@ -263,7 +263,7 @@ impl SyncVectorItem {
         self.slot_mapping[argument_index]
     }
 
-    pub fn compute_link_edges<'c, Z: time::TimeType>(
+    pub fn compute_link_edges<'c, Z: time::Time>(
         &'c self,
         global_env: &evaluate::Environment<2>,
         enabled_edges: &Box<[Box<[Box<[&'c CompiledVisibleEdge<Z>]>]>]>,
@@ -286,7 +286,7 @@ impl SyncVectorItem {
     }
 }
 
-pub struct LinkEdge<'c, Z: time::TimeType> {
+pub struct LinkEdge<'c, Z: time::Time> {
     pub compiled: &'c CompiledVisibleEdge<Z>,
     pub write_slots: Box<[(usize, model::Value)]>,
 }
@@ -305,7 +305,7 @@ pub enum CompiledLinkResult {
     },
 }
 
-pub struct CompiledNetwork<Z: time::TimeType> {
+pub struct CompiledNetwork<Z: time::Time> {
     pub zone_compiler: Z,
     pub automata: Box<[CompiledAutomaton<Z>]>,
     pub links: Box<[CompiledLink]>,
@@ -313,7 +313,7 @@ pub struct CompiledNetwork<Z: time::TimeType> {
     pub assignment_groups: IndexSet<usize>,
 }
 
-impl<Z: time::TimeType> CompiledNetwork<Z> {
+impl<Z: time::Time> CompiledNetwork<Z> {
     pub fn new(network: &model::Network) -> Self {
         let zone_compiler = Z::new(network).unwrap();
         let global_scope = network.global_scope();
@@ -417,7 +417,7 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
 
     pub fn compute_transition<'c>(
         &self,
-        state: &State<Z::Valuations>,
+        state: &State<Z>,
         global_env: &GlobalEnvironment,
         link: &'c CompiledLink,
         link_edges: &[&LinkEdge<'c, Z>],
@@ -501,22 +501,24 @@ impl<Z: time::TimeType> CompiledNetwork<Z> {
                         .iter()
                         .map(|link_edge| &link_edge.compiled.base)
                         .collect(),
-                    valuations,
-                    actions,
-                    action: match &link.result {
-                        CompiledLinkResult::Silent => Action::Silent,
-                        CompiledLinkResult::Labeled {
-                            action_label,
-                            slot_mapping,
-                        } => Action::new(
-                            *action_label,
-                            slot_mapping
-                                .iter()
-                                .map(|slot_index| slots[*slot_index].clone())
-                                .collect(),
-                        ),
+                    bare: BareTransition {
+                        valuations,
+                        actions,
+                        action: match &link.result {
+                            CompiledLinkResult::Silent => Action::Silent,
+                            CompiledLinkResult::Labeled {
+                                action_label,
+                                slot_mapping,
+                            } => Action::new(
+                                *action_label,
+                                slot_mapping
+                                    .iter()
+                                    .map(|slot_index| slots[*slot_index].clone())
+                                    .collect(),
+                            ),
+                        },
+                        observations,
                     },
-                    observations,
                 }
             })
     }

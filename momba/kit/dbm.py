@@ -223,13 +223,13 @@ class DBM(AbstractDBM[ClockT], t.Generic[ClockT]):
 
     @classmethod
     def create_unconstrained(cls, clocks: Clocks[ClockT]) -> DBM[ClockT]:
-        """ Creates a DBM without any constraints. """
+        """Creates a DBM without any constraints."""
         frozen_clocks = _freeze_clocks(clocks)
         return DBM(frozen_clocks, _create_matrix(frozen_clocks))
 
     @classmethod
     def create_zero(cls, clocks: Clocks[ClockT]) -> DBM[ClockT]:
-        """ Creates a DBM where all clocks are constraint to be zero. """
+        """Creates a DBM where all clocks are constraint to be zero."""
         frozen_clocks = _freeze_clocks(clocks)
         matrix = _create_matrix(frozen_clocks)
         for clock in frozen_clocks:

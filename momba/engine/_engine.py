@@ -7,6 +7,8 @@ from __future__ import annotations
 
 try:
     import momba_engine as engine
+
+    zones = engine.zones
 except ImportError:
     raise ImportError(
         "Missing optional dependency `momba_engine`.\n"
@@ -14,4 +16,4 @@ except ImportError:
     )
 
 
-__all__ = ["engine"]
+__all__ = ["engine", "zones"]
