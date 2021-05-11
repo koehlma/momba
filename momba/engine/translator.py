@@ -20,6 +20,9 @@ from .. import model
 from ..model import actions, expressions, operators
 
 
+if t.TYPE_CHECKING:
+    from .explore import Parameters
+
 _JSONObject = t.Dict[str, t.Any]
 
 
@@ -804,6 +807,7 @@ def _translate_network(
     ],
     declarations: Declarations,
     parameters: t.Mapping[str, model.Expression],
+    global_clock: bool,
 ) -> str:
     ctx = _TranslationContext(parameters, declarations, network.ctx.global_scope, None)
     return json.dumps(
@@ -821,7 +825,8 @@ def _translate_network(
                     declaration.identifier
                     for declaration in declarations.all_declarations
                     if declaration.typ == model.types.CLOCK
-                ],
+                ]
+                + (["global_clock"] if global_clock else []),
                 "action_labels": _compute_action_types(network),
             },
             "automata": {
@@ -870,9 +875,7 @@ class Translation:
 
 
 def translate_network(
-    network: model.Network,
-    *,
-    parameters: t.Optional[t.Mapping[str, model.Expression]] = None,
+    network: model.Network, *, parameters: Parameters = None, global_clock: bool = False
 ) -> Translation:
     instance_names = _compute_instance_names(network)
     declarations = _compute_declarations(network, instance_names)
@@ -885,7 +888,11 @@ def translate_network(
             instance_names,
             instance_to_location_names,
             declarations,
-            parameters or {},
+            {
+                name: expressions.ensure_expr(expr)
+                for name, expr in (parameters or {}).items()
+            },
+            global_clock,
         ),
         instance_names,
         declarations,

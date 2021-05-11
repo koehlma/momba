@@ -298,7 +298,7 @@ class BinaryPathOperator(Operator, enum.Enum):
 
 
 class UnaryPathOperator(Operator, enum.Enum):
-    """ LTL unary path operators. """
+    """LTL unary path operators."""
 
     # requires JANI extension `derived-operators`
     EVENTUALLY = "F"

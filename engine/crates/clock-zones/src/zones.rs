@@ -196,7 +196,7 @@ pub trait Zone {
     fn get_lower_bound(&self, clock: impl AnyClock) -> Option<<Self::Bound as Bound>::Constant>;
 
     /// Checks whether the given constraint is satisfied by the zone.
-    fn is_satisfied(&self, constraint: Constraint<Self::Bound>) -> bool;
+    fn is_satisfied(&self, constraint: &Constraint<Self::Bound>) -> bool;
 
     /// Checks whether the zone includes the other zone.
     fn includes(&self, other: &Self) -> bool;
@@ -205,6 +205,9 @@ pub trait Zone {
     ///
     /// Added clocks will be unconstrained.
     fn resize(&self, num_variables: usize) -> Self;
+
+    /// Checks wether the clock is valid for the zone.
+    fn check_clock(&self, clock: impl AnyClock) -> bool;
 }
 
 /// Returns an iterator over the clocks of a zone.
@@ -428,7 +431,7 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
         )
     }
 
-    fn is_satisfied(&self, constraint: Constraint<B>) -> bool {
+    fn is_satisfied(&self, constraint: &Constraint<B>) -> bool {
         !constraint
             .bound
             .is_tighter_than(self.layout.get(constraint.left, constraint.right))
@@ -463,6 +466,10 @@ impl<B: Bound, L: Layout<B>> Zone for Dbm<B, L> {
         }
         other.canonicalize();
         other
+    }
+
+    fn check_clock(&self, clock: impl AnyClock) -> bool {
+        clock.into_index() < self.dimension
     }
 }
 
