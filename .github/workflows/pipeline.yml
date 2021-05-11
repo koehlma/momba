@@ -133,6 +133,9 @@ jobs:
     - name: Build documentation
       run: |
         sphinx-build docs build/docs
+    - name: Create CNAME file
+      run: |
+        echo "momba.dev" > build/docs/CNAME
     - name: Deploy documentation
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
