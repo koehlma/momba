@@ -162,7 +162,7 @@ pub struct Generator {
     inject: Inject,
     observable_indices: HashSet<usize>,
     fault_indices: HashSet<usize>,
-    imprecisions: Imprecisions,
+    imprecisions: super::observer::Imprecisions,
     timing: HashMap<usize, Timing>,
 }
 
@@ -172,7 +172,7 @@ impl Generator {
         inject: Inject,
         observable_indices: HashSet<usize>,
         fault_indices: HashSet<usize>,
-        imprecisions: Imprecisions,
+        imprecisions: super::observer::Imprecisions,
         timing: HashMap<usize, Timing>,
     ) -> Self {
         network

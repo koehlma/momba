@@ -40,6 +40,8 @@ pub mod robust;
 
 pub mod external;
 
+use clock_zones::Zone;
+
 use rand_distr::Distribution;
 
 use std::convert::TryInto;
@@ -176,7 +178,7 @@ fn main() {
             let start = Instant::now();
 
             let mut diagnoser = robust::Diagnoser::new(
-                robust::Imprecisions::new(
+                robust::observer::Imprecisions::new(
                     // allow for some extra slack due to floating point imprecisions
                     parameters.clock_drift + 0.001,
                     max_latency + 0.001,
@@ -221,7 +223,7 @@ fn main() {
             for (index, observation) in observations.into_iter().enumerate() {
                 println!("Pushing observation {}.", index);
                 println!("{:?}", observation);
-                diagnoser.push(robust::Observation::new(
+                diagnoser.push(robust::observer::Observation::new(
                     observation.time,
                     momba_explore::LabeledAction::new_with_network(
                         &network,
@@ -257,6 +259,28 @@ fn main() {
             for prefix in active_prefixes {
                 println!("{:?}", prefix);
             }
+
+            // let state = diagnoser
+            //     .prefixes
+            //     .iter()
+            //     .next()
+            //     .unwrap()
+            //     .1
+            //     .states
+            //     .iter()
+            //     .next()
+            //     .unwrap();
+
+            // for left in clock_zones::clocks(state.state.valuations()) {
+            //     for right in clock_zones::clocks(state.state.valuations()) {
+            //         println!(
+            //             "{:?} - {:?} {:?}",
+            //             left,
+            //             right,
+            //             state.state.valuations().get_bound(left, right)
+            //         );
+            //     }
+            // }
 
             serde_json::to_writer(
                 BufWriter::new(
@@ -324,7 +348,7 @@ fn main() {
                             .unwrap()
                     })
                     .collect(),
-                robust::Imprecisions::new(
+                robust::observer::Imprecisions::new(
                     diagnose_parameters.clock_drift,
                     diagnose_parameters.min_latency(),
                     diagnose_parameters.max_latency(),
