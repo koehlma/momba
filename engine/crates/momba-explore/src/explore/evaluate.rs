@@ -207,7 +207,9 @@ impl<const BANKS: usize> Scope<BANKS> {
             Expression::Name(NameExpression { identifier }) => {
                 ctx.get_stack_index(identifier).map_or_else(
                     || {
-                        let address = self.get_address(identifier).unwrap();
+                        let address = self
+                            .get_address(identifier)
+                            .expect(&format!("invalid identifier `{}`", identifier));
                         construct!(move |env, _| env.get_value(&address).clone())
                     },
                     |index| construct!(move |_, stack| stack[index].clone()),
@@ -355,7 +357,7 @@ impl<const BANKS: usize> Scope<BANKS> {
                     )
                 })
             }
-            Expression::Trigonometric(TrigonometricExpression{ function, operand}) => {
+            Expression::Trigonometric(TrigonometricExpression { function, operand }) => {
                 let operand = compile!(operand);
 
                 macro_rules! compile_trigonometric {
