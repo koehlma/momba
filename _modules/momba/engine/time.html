@@ -278,6 +278,26 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">load_valuations</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">valuations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GlobalTime</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">zones</span><span class="o">.</span><span class="n">_wrap_zone</span><span class="p">(</span><span class="n">valuations</span><span class="p">,</span> <span class="n">zones</span><span class="o">.</span><span class="n">ZoneF64</span><span class="p">))</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ZoneF64</span><span class="p">(</span><span class="n">TimeType</span><span class="p">):</span>
+    <span class="n">zone</span><span class="p">:</span> <span class="n">zones</span><span class="o">.</span><span class="n">Zone</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
+        <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Parameters</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledNetwork</span><span class="p">:</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="n">translate_network</span><span class="p">(</span>
+            <span class="n">network</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">global_clock</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">CompiledNetwork</span><span class="p">(</span>
+            <span class="n">translation</span><span class="p">,</span> <span class="n">_engine</span><span class="o">.</span><span class="n">Explorer</span><span class="o">.</span><span class="n">new_global_time</span><span class="p">(</span><span class="n">translation</span><span class="o">.</span><span class="n">json_network</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_valuations</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">valuations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ZoneF64</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">zones</span><span class="o">.</span><span class="n">_wrap_zone</span><span class="p">(</span><span class="n">valuations</span><span class="p">,</span> <span class="n">zones</span><span class="o">.</span><span class="n">ZoneF64</span><span class="p">))</span>
 </pre></div>
       </article>
       <footer>

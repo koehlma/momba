@@ -500,7 +500,17 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span>
             <span class="n">State</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">internal</span><span class="o">.</span><span class="n">initial_states</span><span class="p">()</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
+    <span class="k">def</span> <span class="nf">_states_and_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">internal</span><span class="o">.</span><span class="n">count_states_and_transitions</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">count_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states_and_transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">count_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states_and_transitions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 </pre></div>
       </article>
       <footer>
