@@ -145,10 +145,11 @@ class VariableDeclaration(IdentifierDeclaration):
     initial_value: t.Optional[expressions.Expression] = None
 
     def __post_init__(self) -> None:
-        if self.is_transient and self.initial_value is None:
-            raise errors.ModelingError(
-                "transient variables must have an initial value", self
-            )
+        # if self.is_transient and self.initial_value is None:
+        #     raise errors.ModelingError(
+        #         "transient variables must have an initial value", self
+        #     )
+        pass
 
     def validate(self, scope: Scope) -> None:
         if self.initial_value is not None:
