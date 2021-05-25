@@ -45,7 +45,7 @@ fn count_states(count: Count) {
     let model_path = Path::new(&count.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    let explorer: Explorer<time::NoClocks> = Explorer::new(
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
