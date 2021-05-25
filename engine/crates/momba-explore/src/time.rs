@@ -4,6 +4,7 @@ use std::{
     collections::HashSet,
     convert::{TryFrom, TryInto},
     env::var,
+    fmt::Debug,
 };
 
 use num_traits::cast::FromPrimitive;
@@ -25,9 +26,9 @@ pub struct Constraint<T: Time> {
 }
 
 /// An interface for dealing with different ways of representing time.
-pub trait Time: Sized + Sync + Send {
+pub trait Time: Sized + Sync + Send + Debug {
     /// Type used to represent potentially infinite sets of clock valuations.
-    type Valuations: Eq + PartialEq + std::hash::Hash + Clone + Sync + Send;
+    type Valuations: Eq + PartialEq + std::hash::Hash + Clone + Sync + Send + Debug;
 
     /// Type used to represent the difference between two clocks.
     type CompiledDifference: Clone + Sync + Send;
@@ -232,7 +233,7 @@ impl Time for Float64Zone {
         &self,
         constraints: Vec<Constraint<Self>>,
     ) -> Result<Self::Valuations, String> {
-        let mut valuations = Self::Valuations::new_unconstrained(self.variables.len());
+        let mut valuations = Self::Valuations::new_zero(self.variables.len());
         for constraint in constraints {
             self.apply_constraint(&mut valuations, constraint);
         }
