@@ -492,7 +492,7 @@ class Automaton:
     def create_instance(
         self,
         *,
-        arguments: t.Sequence[expressions.Expression] = (),
+        arguments: t.Sequence[expressions.ValueOrExpression] = (),
         input_enable: t.AbstractSet[actions.ActionType] = frozenset(),
         comment: t.Optional[str] = None,
     ) -> Instance:
@@ -502,7 +502,9 @@ class Automaton:
         Passes the parameters to :class:`Instance`.
         """
         return Instance(
-            self, arguments=tuple(arguments), input_enable=frozenset(input_enable)
+            self,
+            arguments=tuple(map(expressions.ensure_expr, arguments)),
+            input_enable=frozenset(input_enable),
         )
 
 
