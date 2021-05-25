@@ -329,10 +329,11 @@
     <span class="n">initial_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_transient</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
-                <span class="s2">"transient variables must have an initial value"</span><span class="p">,</span> <span class="bp">self</span>
-            <span class="p">)</span>
+        <span class="c1"># if self.is_transient and self.initial_value is None:</span>
+        <span class="c1">#     raise errors.ModelingError(</span>
+        <span class="c1">#         "transient variables must have an initial value", self</span>
+        <span class="c1">#     )</span>
+        <span class="k">pass</span>
 
 <div class="viewcode-block" id="VariableDeclaration.validate"><a class="viewcode-back" href="../../../reference/model/context.html#momba.model.VariableDeclaration.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

@@ -676,7 +676,7 @@
 <div class="viewcode-block" id="Automaton.create_instance"><a class="viewcode-back" href="../../../reference/model/automata.html#momba.model.Automaton.create_instance">[docs]</a>    <span class="k">def</span> <span class="nf">create_instance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
         <span class="n">input_enable</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
         <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Instance</span><span class="p">:</span>
@@ -686,7 +686,9 @@
 <span class="sd">        Passes the parameters to :class:`Instance`.</span>
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="n">Instance</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arguments</span><span class="p">),</span> <span class="n">input_enable</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">input_enable</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">,</span> <span class="n">arguments</span><span class="p">)),</span>
+            <span class="n">input_enable</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">input_enable</span><span class="p">),</span>
         <span class="p">)</span></div></div>
 
 
