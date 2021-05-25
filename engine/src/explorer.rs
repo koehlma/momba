@@ -1,4 +1,8 @@
-use std::sync::Arc;
+use std::{sync::Arc, time::Instant};
+
+use hashbrown::HashSet;
+
+use momba_explore::State;
 
 use crate::{states, time};
 
@@ -18,9 +22,11 @@ impl<T: time::Time> From<momba_explore::Explorer<T>> for Explorer<T> {
 /// Trait to dynamically abstract over [Explorer][momba_explore::Explorer].
 pub trait DynExplorer: Send + Sync {
     fn initial_states(&self) -> Vec<crate::PyState>;
+
+    fn count_states_and_transitions(&self) -> (usize, usize);
 }
 
-impl<T: time::Time> DynExplorer for Explorer<T>
+impl<T: time::Time + Eq> DynExplorer for Explorer<T>
 where
     T::Valuations: time::ConvertValuations,
 {
@@ -36,5 +42,47 @@ where
                 .into()
             })
             .collect()
+    }
+
+    fn count_states_and_transitions(&self) -> (usize, usize) {
+        let mut visited: HashSet<State<_>> = HashSet::new();
+        let mut pending: Vec<_> = self.explorer.initial_states();
+
+        let mut count_transitions = 0;
+
+        let start = Instant::now();
+
+        let mut processed = 0;
+
+        while let Some(state) = pending.pop() {
+            processed += 1;
+
+            if processed % 20000 == 0 {
+                let duration = start.elapsed();
+                println!(
+                    "States: {} ({:.2} [states/s], [waiting {}])",
+                    visited.len(),
+                    (processed as f64) / duration.as_secs_f64(),
+                    pending.len(),
+                )
+            }
+
+            if !visited.contains(&state) {
+                let transitions = self.explorer.transitions(&state);
+
+                for transition in transitions {
+                    count_transitions += 1;
+                    let destinations = self.explorer.destinations(&state, &transition);
+                    for destination in destinations {
+                        let successor = self.explorer.successor(&state, &transition, &destination);
+                        pending.push(successor);
+                    }
+                }
+
+                visited.insert(state);
+            }
+        }
+
+        (visited.len(), count_transitions)
     }
 }

@@ -174,6 +174,10 @@ impl PyExplorer {
     fn initial_states(&self) -> Vec<PyState> {
         self.explorer.initial_states()
     }
+
+    fn count_states_and_transitions(&self) -> (usize, usize) {
+        self.explorer.count_states_and_transitions()
+    }
 }
 
 /// A Python module implemented in Rust.

@@ -317,3 +317,13 @@ class Explorer(t.Generic[TimeTypeT]):
         return frozenset(
             State(self, state) for state in self._compiled.internal.initial_states()
         )
+
+    @functools.cached_property
+    def _states_and_transitions(self) -> t.Tuple[int, int]:
+        return self._compiled.internal.count_states_and_transitions()
+
+    def count_states(self) -> int:
+        return self._states_and_transitions[0]
+
+    def count_transitions(self) -> int:
+        return self._states_and_transitions[1]

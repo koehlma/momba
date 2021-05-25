@@ -94,3 +94,23 @@ class GlobalTime(TimeType):
     @classmethod
     def load_valuations(cls, valuations: t.Any) -> GlobalTime:
         return cls(zones._wrap_zone(valuations, zones.ZoneF64))
+
+
+@d.dataclass(frozen=True)
+class ZoneF64(TimeType):
+    zone: zones.Zone[float]
+
+    @staticmethod
+    def compile(
+        network: model.Network, *, parameters: Parameters = None
+    ) -> CompiledNetwork:
+        translation = translate_network(
+            network, parameters=parameters, global_clock=False
+        )
+        return CompiledNetwork(
+            translation, _engine.Explorer.new_global_time(translation.json_network)
+        )
+
+    @classmethod
+    def load_valuations(cls, valuations: t.Any) -> ZoneF64:
+        return cls(zones._wrap_zone(valuations, zones.ZoneF64))

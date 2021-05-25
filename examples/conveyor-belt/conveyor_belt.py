@@ -16,7 +16,7 @@ import pathlib
 import click
 import tomlkit
 
-from momba import model
+from momba import engine, model
 from momba.engine import translator
 from momba.moml import expr
 
@@ -321,6 +321,19 @@ def build(scenario: pathlib.Path, output: pathlib.Path) -> None:
     output.write_text(
         translator.translate_network(network).json_network, encoding="utf-8"
     )
+
+
+@main.command()
+@click.argument("scenario", type=pathlib.Path)
+def count(scenario: pathlib.Path) -> None:
+    """
+    Counts the number of zones and transitions.
+    """
+    conveyor = load_scenario(scenario)
+    network = build_model(conveyor)
+    explorer = engine.Explorer(network, time_type=engine.time.ZoneF64)
+    print(f"States: {explorer.count_states()}")
+    print(f"Transitions: {explorer.count_transitions()}")
 
 
 if __name__ == "__main__":
