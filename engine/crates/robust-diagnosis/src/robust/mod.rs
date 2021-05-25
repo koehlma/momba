@@ -19,13 +19,17 @@ pub mod observer;
 
 use observer::{Observation, ObservationIndex};
 
+/// A *history item* with an observation and a *tracking clock*.
+///
+/// The *tracking clock* tracks the time since the event corresponding to
+/// the observation has happened.
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct HistoryItem {
-    observation: ObservationIndex,
-    tracking_clock: clock_zones::Variable,
+    pub observation: ObservationIndex,
+    pub tracking_clock: clock_zones::Variable,
 }
 
-/// A state used by a diagnoser.
+/// A *diagnosis state* used by a [Diagnoser].
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct DiagnosisState {
     pub state: Rc<State<time::Float64Zone>>,
@@ -50,7 +54,6 @@ type Prefix = im::HashSet<ObservationIndex>;
 
 #[derive(Clone, Debug)]
 pub struct StateSet {
-    pub(crate) states: im::HashSet<Rc<DiagnosisState>>,
     marked: HashMap<Rc<DiagnosisState>, HashSet<ObservationIndex>>,
 }
 
@@ -62,7 +65,7 @@ pub struct Diagnoser {
     pub(crate) explore_counter: AtomicUsize,
 
     observations: im::HashSet<ObservationIndex>,
-    local_time: NotNan<f64>,
+    time: NotNan<f64>,
 
     pub(crate) prefixes: HashMap<Prefix, StateSet>,
 
@@ -78,11 +81,6 @@ pub struct Diagnoser {
     ///
     /// [None] means that we keep an unbounded history in states.
     history_bound: Option<usize>,
-}
-
-enum StackItem {
-    Explore(Rc<DiagnosisState>),
-    Populate((Rc<DiagnosisState>, Vec<Rc<DiagnosisState>>)),
 }
 
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -111,7 +109,7 @@ impl Diagnoser {
             explore_counter: AtomicUsize::new(0),
 
             observations: im::HashSet::new(),
-            local_time: NotNan::new(0.0).unwrap(),
+            time: NotNan::new(0.0).unwrap(),
 
             prefixes: HashMap::new(),
 
@@ -129,20 +127,26 @@ impl Diagnoser {
         diagnoser.prefixes.insert(
             im::HashSet::new(),
             StateSet {
-                states: diagnoser
-                    .explorer
-                    .initial_states()
+                marked: diagnoser
+                    .explore_states(
+                        &diagnoser
+                            .explorer
+                            .initial_states()
+                            .into_iter()
+                            .map(|initial_state| {
+                                Rc::new(DiagnosisState {
+                                    state: Rc::new(initial_state),
+                                    expected: None,
+                                    faults: im::HashSet::new(),
+                                    history: im::Vector::new(),
+                                })
+                            })
+                            .collect::<Box<[_]>>(),
+                    )
                     .into_iter()
-                    .map(|initial_state| {
-                        diagnoser.explore_states(Rc::new(DiagnosisState {
-                            state: Rc::new(initial_state),
-                            expected: None,
-                            faults: im::HashSet::new(),
-                            history: im::Vector::new(),
-                        }))
-                    })
-                    .fold(im::HashSet::new(), |states, element| states.union(element)),
-                marked: HashMap::new(),
+                    .map(|state| (state, HashSet::new()))
+                    .collect(),
+                //marked: HashMap::new(),
             },
         );
 
@@ -165,13 +169,13 @@ impl Diagnoser {
             .collect();
 
         for (prefix, state_set) in self.prefixes.iter() {
-            state_counter += state_set.states.len();
+            state_counter += state_set.marked.len();
 
             if !green_observations.is_subset(prefix) {
                 continue;
             }
 
-            for state in state_set.states.iter() {
+            for state in state_set.marked.keys() {
                 // println!("{:?}", state.failures);
                 possible_failures.extend(state.faults.iter().cloned());
                 if state.faults.is_empty() {
@@ -198,38 +202,14 @@ impl Diagnoser {
         }
     }
 
-    fn explore_states(&self, state: Rc<DiagnosisState>) -> im::HashSet<Rc<DiagnosisState>> {
-        let mut stack: Vec<_> = vec![state.clone()];
+    fn explore_states(&self, states: &[Rc<DiagnosisState>]) -> HashSet<Rc<DiagnosisState>> {
+        let mut stack: Vec<_> = states.iter().cloned().collect();
         let mut visited: HashSet<_> = stack.iter().cloned().collect();
 
-        let mut successors = im::HashSet::new();
-
-        // let mut processed = 0;
+        let mut successors = HashSet::new();
 
         while let Some(state) = stack.pop() {
             let transitions = self.explorer.transitions(&state.state);
-
-            // processed += 1;
-            // if processed % 20000 == 0 {
-            //     println!("processed {} states", processed);
-            //     if state.history.len() != 0 {
-            //         println!("{:?}", expected);
-            //         println!("{:?}", state.history);
-            //         for item in &state.history {
-            //             println!(
-            //                 "[{:?} {:?}]",
-            //                 state
-            //                     .state
-            //                     .valuations()
-            //                     .get_lower_bound(item.tracking_clock),
-            //                 state
-            //                     .state
-            //                     .valuations()
-            //                     .get_upper_bound(item.tracking_clock),
-            //             )
-            //         }
-            //     }
-            // }
 
             let mut is_interaction_state = false;
 
@@ -367,7 +347,7 @@ impl Diagnoser {
         let delta = self
             .observer
             .imprecisions
-            .approximate_drift_delta(observation.time, self.local_time);
+            .approximate_drift_delta(observation.time, self.time);
         let bound = delta.upper_bound - observation.base_latency
             + observation.jitter_bound
             + self.observer.imprecisions.max_latency;
@@ -410,7 +390,7 @@ impl Diagnoser {
     }
 
     fn advance_time(&mut self, time: NotNan<f64>) {
-        self.local_time = time;
+        self.time = time;
 
         let mut work_set: IndexSet<Prefix> = self
             .prefixes
@@ -425,62 +405,48 @@ impl Diagnoser {
 
         while let Some(prefix) = work_set.pop() {
             let frontier = self.frontier(&prefix);
-
             if !frontier.is_empty() {
-                for state in self.prefixes[&prefix].states.clone() {
-                    let marked = self
+                for observation in frontier.iter() {
+                    let states = self
                         .prefixes
                         .get_mut(&prefix)
                         .unwrap()
                         .marked
-                        .entry(state.clone())
-                        .or_insert_with(|| HashSet::new())
-                        .clone();
-
-                    for observation in frontier.symmetric_difference(&marked) {
-                        self.prefixes
-                            .get_mut(&prefix)
-                            .unwrap()
-                            .marked
-                            .get_mut(&state)
-                            .unwrap()
-                            .insert(*observation);
+                        .iter_mut()
+                        .filter_map(|(state, marked)| {
+                            if marked.insert(*observation) {
+                                Some(Rc::new(state.with_expected(Some(*observation))))
+                            } else {
+                                None
+                            }
+                        })
+                        .collect::<Box<[Rc<DiagnosisState>]>>();
+                    if !states.is_empty() {
                         let mut successor = prefix.clone();
                         successor.insert(*observation);
+
                         if !self.prefixes.contains_key(&successor) {
                             self.prefixes.insert(
                                 successor.clone(),
                                 StateSet {
-                                    states: im::HashSet::new(),
                                     marked: HashMap::new(),
                                 },
                             );
                         }
-                        let mut found_successors = false;
-                        for successor_state in self.explore_states(
-                            Rc::new(state.with_expected(Some(*observation))),
-                            // Some(*observation),
-                            // &mut hashbrown::HashMap::new(),
-                            // &mut Vec::new(),
-                            //&mut cache,
-                        ) {
-                            self.prefixes
-                                .get_mut(&successor)
-                                .unwrap()
-                                .states
-                                .insert(successor_state.clone());
-                            found_successors = true;
+                        for successor_state in self.explore_states(&states) {
+                            let state_set = self.prefixes.get_mut(&successor).unwrap();
+                            state_set
+                                .marked
+                                .entry(successor_state)
+                                .or_insert_with(|| HashSet::new());
                         }
-                        // if is_interesting {
-                        //     println!("found successors: {}", found_successors);
-                        // }
                         work_set.insert(successor);
                     }
                 }
+
                 let is_stable = frontier
                     .iter()
                     .all(|observation| self.is_settled(self.observer.get(*observation)));
-                // println!("{}", is_stable);
                 if is_stable {
                     self.prefixes.remove(&prefix);
                 }
@@ -489,23 +455,16 @@ impl Diagnoser {
 
         let mut explained = self.pending.clone();
         for (key, state_set) in self.prefixes.iter() {
-            if !state_set.states.is_empty() {
+            if !state_set.marked.is_empty() {
                 explained = explained.intersection(key.clone());
             }
         }
 
         self.pending = self.pending.clone().symmetric_difference(explained.clone());
 
-        // self.states.extend(
-        //     self.states
-        //         .drain()
-        //         .filter(|(_, states)| !states.is_empty())
-        //         .map(|(key, value)| (key.symmetric_difference(explained.clone()), value)),
-        // );
-
         let mut fresh_states = HashMap::new();
         for (key, state_set) in self.prefixes.drain() {
-            if !state_set.states.is_empty() {
+            if !state_set.marked.is_empty() {
                 let new_key = key.difference(explained.clone());
                 assert!(fresh_states.insert(new_key, state_set).is_none());
             }
@@ -518,12 +477,13 @@ impl Diagnoser {
         self.prefixes.keys()
     }
 
+    /// Pushes a new [Observation] into the diagnoser.
     pub fn push(&mut self, observation: Observation) {
         let time = observation.time.clone();
-        let reference = self.observer.insort(observation);
-        self.observations.insert(reference);
-        self.pending.insert(reference);
-        assert!(self.local_time <= time);
+        let index = self.observer.insort(observation);
+        self.observations.insert(index);
+        self.pending.insert(index);
+        assert!(self.time <= time);
         self.advance_time(time);
     }
 }
