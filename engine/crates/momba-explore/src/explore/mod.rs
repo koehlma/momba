@@ -27,12 +27,21 @@ pub use actions::*;
 /// Every state keeps track of the locations the automata of the network are in, the
 /// values of the global variables, and a potentially infinite set of clock valuations
 /// using the respective [TimeType][time::TimeType].
-#[derive(Serialize, Deserialize, Clone, Hash, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, Clone, Eq, PartialEq, Debug)]
 pub struct State<T: time::Time> {
     locations: Box<[LocationIndex]>,
     global_store: Box<[model::Value]>,
     transient_store: Box<[model::Value]>,
     valuations: T::Valuations,
+}
+
+impl<T: time::Time> std::hash::Hash for State<T> {
+    fn hash<H: std::hash::Hasher>(&self, hasher: &mut H) {
+        self.locations.hash(hasher);
+        self.global_store.hash(hasher);
+        self.transient_store.hash(hasher);
+        self.valuations.hash(hasher);
+    }
 }
 
 impl<T: time::Time> State<T> {
@@ -536,7 +545,7 @@ impl<T: time::Time> Explorer<T> {
             .compiled_network
             .compute_transient_values(&targets[0].unwrap_vector());
 
-        let state = State::<T>::future(
+        let successor = State::<T>::future(
             State {
                 locations,
                 global_store: targets[0].unwrap_vector().clone().into(),
@@ -547,12 +556,15 @@ impl<T: time::Time> Explorer<T> {
         );
 
         // The truth of the guard should imply the truth of the invariants.
-        assert!(!self
+        if self
             .compiled_network
             .zone_compiler
-            .is_empty(&state.valuations));
+            .is_empty(&successor.valuations)
+        {
+            panic!("the truth of the guards should imply the truth of the invariants");
+        }
 
-        state
+        successor
     }
 
     pub fn get_time_type(&self) -> &T {
