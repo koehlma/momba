@@ -49,7 +49,7 @@ assert GENERATE_PARAMETERS.exists()
 
 
 def _generate_scenarios(*, fault_sporadic: bool = False) -> t.Iterator[Scenario]:
-    for length in (4, 6, 10):
+    for length in range(4, 30):
         yield Scenario(
             length=length,
             sensors=tuple(
@@ -88,8 +88,9 @@ def main() -> None:
 
 @main.command()
 @click.argument("output_dir", type=pathlib.Path, metavar="output")
+@click.option("--runs", type=int, default=1000)
 @click.option("--processes", type=int, default=max(multiprocessing.cpu_count() - 1, 1))
-def run(output_dir: pathlib.Path, processes: int) -> None:
+def run(output_dir: pathlib.Path, runs: int, processes: int) -> None:
     pool = multiprocessing.Pool(processes)
 
     output_dir = output_dir.absolute()
@@ -134,9 +135,9 @@ def run(output_dir: pathlib.Path, processes: int) -> None:
             GENERATE_PARAMETERS,
             model.generated_path / f"observations_{index}.json",
             model.generated_path / f"events_{index}.json",
-            60_000,  # 60s
+            120_000,  # 60s
         )
-        for model, index in itertools.product(models, range(100))
+        for model, index in itertools.product(models, range(runs))
     )
 
     with click.progressbar(
@@ -167,7 +168,7 @@ def run(output_dir: pathlib.Path, processes: int) -> None:
             model.generated_path / f"diagnosis_{index}.json",
             history_bound=2,
         )
-        for model, index in itertools.product(models, range(100))
+        for model, index in itertools.product(models, range(runs))
     )
 
     with click.progressbar(
