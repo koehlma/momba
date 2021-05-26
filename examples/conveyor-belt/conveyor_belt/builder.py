@@ -1,23 +1,12 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2021, Saarland University
 # Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
-"""
-A family of industrial automation conveyor belt models.
-"""
-
 import dataclasses as d
 import typing as t
 
-import pathlib
-
-import click
-import tomlkit
-
-from momba import engine, model
-from momba.engine import translator
+from momba import model
 from momba.moml import expr
 
 
@@ -32,7 +21,7 @@ class Sensor:
 
 
 @d.dataclass(frozen=True)
-class Conveyor:
+class Scenario:
     length: int
     sensors: t.Tuple[Sensor, ...]
 
@@ -78,7 +67,7 @@ def _build_action_types(ctx: model.Context) -> _ActionTypes:
 
 
 def _build_conveyor_automaton(
-    ctx: model.Context, conveyor: Conveyor, action_types: _ActionTypes
+    ctx: model.Context, scenario: Scenario, action_types: _ActionTypes
 ) -> model.Automaton:
     automaton = ctx.create_automaton(name="Conveyor")
 
@@ -87,11 +76,11 @@ def _build_conveyor_automaton(
     location_running = automaton.create_location(
         "running",
         initial=True,
-        progress_invariant=expr("t <= $bound", bound=conveyor.running_tick_upper_bound),
+        progress_invariant=expr("t <= $bound", bound=scenario.running_tick_upper_bound),
     )
     location_fault = automaton.create_location(
         "fault",
-        progress_invariant=expr("t <= $bound", bound=conveyor.fault_tick_upper_bound),
+        progress_invariant=expr("t <= $bound", bound=scenario.fault_tick_upper_bound),
     )
 
     automaton.create_edge(
@@ -101,13 +90,13 @@ def _build_conveyor_automaton(
                 location_running,
                 assignments={
                     "position": expr(
-                        "(position + 1) % $length", length=conveyor.length
+                        "(position + 1) % $length", length=scenario.length
                     ),
                     "t": model.ensure_expr(0),
                 },
             )
         },
-        guard=expr("t >= $bound", bound=conveyor.running_tick_lower_bound),
+        guard=expr("t >= $bound", bound=scenario.running_tick_lower_bound),
     )
     automaton.create_edge(
         location_running,
@@ -121,13 +110,13 @@ def _build_conveyor_automaton(
                 location_fault,
                 assignments={
                     "position": expr(
-                        "(position + 1) % $length", length=conveyor.length
+                        "(position + 1) % $length", length=scenario.length
                     ),
                     "t": model.ensure_expr(0),
                 },
             )
         },
-        guard=expr("t >= $bound", bound=conveyor.fault_tick_lower_bound),
+        guard=expr("t >= $bound", bound=scenario.fault_tick_lower_bound),
     )
 
     return automaton
@@ -216,14 +205,14 @@ def _build_sensor_automaton(
     return automaton
 
 
-def build_model(conveyor: Conveyor) -> model.Network:
+def build_model(scenario: Scenario) -> model.Network:
     ctx = model.Context(model.ModelType.TA)
 
     ctx.global_scope.declare_variable("position", typ=model.types.INT, initial_value=0)
 
     action_types = _build_action_types(ctx)
 
-    conveyor_automaton = _build_conveyor_automaton(ctx, conveyor, action_types)
+    conveyor_automaton = _build_conveyor_automaton(ctx, scenario, action_types)
     sensor_automaton = _build_sensor_automaton(ctx, action_types)
 
     conveyor_instance = conveyor_automaton.create_instance()
@@ -239,13 +228,13 @@ def build_model(conveyor: Conveyor) -> model.Network:
                 )
             ),
         )
-        for sensor in conveyor.sensors
+        for sensor in scenario.sensors
     ]
 
     network = ctx.create_network()
 
     network.add_instance(conveyor_instance)
-    if conveyor.fault_friction:
+    if scenario.fault_friction:
         network.create_link(
             {
                 conveyor_instance: action_types.fault_friction.create_pattern(),
@@ -277,64 +266,3 @@ def build_model(conveyor: Conveyor) -> model.Network:
             )
 
     return network
-
-
-def load_scenario(scenario: pathlib.Path) -> Conveyor:
-    data = tomlkit.loads(scenario.read_text("utf-8"))
-    return Conveyor(
-        length=data["length"],
-        sensors=tuple(
-            Sensor(
-                position=sensor["position"],
-                tick_lower_bound=sensor.get("tick_lower_bound", 100),
-                tick_upper_bound=sensor.get("tick_upper_bound", 100),
-                fault_sporadic=sensor.get("fault_sporadic", False),
-            )
-            for sensor in data.get("sensors", ())
-        ),
-        running_tick_lower_bound=data.get("running_tick_lower_bound", 500),
-        running_tick_upper_bound=data.get("running_tick_upper_bound", 550),
-        fault_tick_lower_bound=data.get("fault_tick_lower_bound", 600),
-        fault_tick_upper_bound=data.get("fault_tick_upper_bound", 750),
-        fault_friction=data.get("fault_friction", True),
-    )
-
-
-@click.group()
-def main() -> None:
-    """
-    A family of industrial automation conveyor belt models.
-    """
-
-
-@main.command()
-@click.argument("scenario", type=pathlib.Path)
-@click.option(
-    "-o", "--output", type=pathlib.Path, default=pathlib.Path("conveyor_belt.json")
-)
-def build(scenario: pathlib.Path, output: pathlib.Path) -> None:
-    """
-    Builds and outputs the model in MombaIR.
-    """
-    conveyor = load_scenario(scenario)
-    network = build_model(conveyor)
-    output.write_text(
-        translator.translate_network(network).json_network, encoding="utf-8"
-    )
-
-
-@main.command()
-@click.argument("scenario", type=pathlib.Path)
-def count(scenario: pathlib.Path) -> None:
-    """
-    Counts the number of zones and transitions.
-    """
-    conveyor = load_scenario(scenario)
-    network = build_model(conveyor)
-    explorer = engine.Explorer(network, time_type=engine.time.ZoneF64)
-    print(f"States: {explorer.count_states()}")
-    print(f"Transitions: {explorer.count_transitions()}")
-
-
-if __name__ == "__main__":
-    main()

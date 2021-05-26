@@ -129,8 +129,8 @@ struct GenerateCommand {
     #[clap(about = "File to write the events to")]
     events: String,
 
-    #[clap(long, default_value = "100")]
-    steps: usize,
+    #[clap(about = "Time to run the simulation for")]
+    simulation_time: NotNan<f64>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Clone, Debug)]
@@ -372,7 +372,7 @@ fn main() {
                     .collect(),
             );
 
-            let result = generator.generate(command.steps);
+            let result = generator.generate(command.simulation_time);
 
             let observations: Vec<_> = result
                 .observations

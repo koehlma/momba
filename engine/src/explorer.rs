@@ -57,15 +57,15 @@ where
         while let Some(state) = pending.pop() {
             processed += 1;
 
-            if processed % 20000 == 0 {
-                let duration = start.elapsed();
-                println!(
-                    "States: {} ({:.2} [states/s], [waiting {}])",
-                    visited.len(),
-                    (processed as f64) / duration.as_secs_f64(),
-                    pending.len(),
-                )
-            }
+            // if processed % 20000 == 0 {
+            //     let duration = start.elapsed();
+            //     println!(
+            //         "States: {} ({:.2} [states/s], [waiting {}])",
+            //         visited.len(),
+            //         (processed as f64) / duration.as_secs_f64(),
+            //         pending.len(),
+            //     )
+            // }
 
             if !visited.contains(&state) {
                 let transitions = self.explorer.transitions(&state);

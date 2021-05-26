@@ -242,7 +242,7 @@ impl Generator {
         Vec::new()
     }
 
-    pub fn generate(&self, steps: usize) -> GeneratorResult {
+    pub fn generate(&self, simulation_time: NotNan<f64>) -> GeneratorResult {
         let mut rng = rand::thread_rng();
         let mut state = self
             .explorer
@@ -259,7 +259,7 @@ impl Generator {
         let mut discrete_time = 0;
         let mut continuous_time = NotNan::new(0.0).unwrap();
 
-        while observations < steps {
+        while continuous_time < simulation_time {
             let transitions = self.explorer.transitions(&state);
             let contain_fault =
                 transitions
@@ -310,23 +310,23 @@ impl Generator {
                 .into_inner();
             continuous_time =
                 ordered_float::NotNan::new(rng.gen_range(lower_bound..=upper_bound)).unwrap();
-            println!(
-                "[{:?}, {:?}] {:?} {:?} {:?}",
-                lower_bound,
-                upper_bound,
-                transition
-                    .valuations()
-                    .get_bound(self.global_clock, clock_zones::Clock::ZERO),
-                transition
-                    .valuations()
-                    .get_bound(clock_zones::Clock::ZERO, self.global_clock),
-                continuous_time
-            );
+            // println!(
+            //     "[{:?}, {:?}] {:?} {:?} {:?}",
+            //     lower_bound,
+            //     upper_bound,
+            //     transition
+            //         .valuations()
+            //         .get_bound(self.global_clock, clock_zones::Clock::ZERO),
+            //     transition
+            //         .valuations()
+            //         .get_bound(clock_zones::Clock::ZERO, self.global_clock),
+            //     continuous_time
+            // );
             let mut valuations = transition.valuations().clone();
             debug_assert!(!valuations.is_empty());
             valuations.add_constraint(clock_zones::Constraint::new_le(
                 self.global_clock,
-                continuous_time + 1e-15,
+                continuous_time + 1e-10,
             ));
             // println!(
             //     "{:?} {:?} {:?}",
@@ -337,7 +337,7 @@ impl Generator {
             debug_assert!(!valuations.is_empty());
             valuations.add_constraint(clock_zones::Constraint::new_ge(
                 self.global_clock,
-                continuous_time - 1e-15,
+                continuous_time - 1e-10,
             ));
             // println!(
             //     "{:?} {:?} {:?}",
@@ -380,12 +380,12 @@ impl Generator {
                         observable_events.push(event);
                         observations += 1;
                     };
-                    println!(
-                        "{} {:?} (t={})",
-                        labeled.label(&self.explorer.network).unwrap(),
-                        labeled.arguments(),
-                        continuous_time
-                    );
+                    // println!(
+                    //     "{} {:?} (t={})",
+                    //     labeled.label(&self.explorer.network).unwrap(),
+                    //     labeled.arguments(),
+                    //     continuous_time
+                    // );
                 }
                 _ => (),
             }
@@ -418,7 +418,7 @@ impl Generator {
                     self.imprecisions.min_drift_slope.into_inner()
                         ..=self.imprecisions.max_drift_slope.into_inner(),
                 );
-            println!("{} {} {} {:?}", observer_time, event_time, delta, event);
+            // println!("{} {} {} {:?}", observer_time, event_time, delta, event);
             observations.push(Observation {
                 time: observer_time,
                 event,
