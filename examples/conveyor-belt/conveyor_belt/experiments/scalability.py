@@ -106,7 +106,7 @@ def run(
 
     print("Building models...")
     models = []
-    for fault_sporadic in (True, False):
+    for fault_sporadic in (False,):  # (True, False):
         for scenario in _generate_scenarios(fault_sporadic=fault_sporadic):
             identifier = f"length_{scenario.length}_sporadic_{fault_sporadic}"
             network = build_model(scenario)
