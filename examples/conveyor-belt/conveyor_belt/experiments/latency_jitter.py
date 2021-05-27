@@ -138,7 +138,7 @@ def analyze(data_dir: pathlib.Path, exclude_fault_runs: bool) -> None:
             if contains_fault and exclude_fault_runs:
                 continue
             records = json.loads(result_file.read_text(encoding="utf-8"))
-            values.append(len(records) / records[-1]["duration"])
+            values.append(records[-1]["duration"] / (len(records) - 1))
         boxplots.append(
             boxplot.Box.from_data(
                 out_dir.name.replace("_", " "),

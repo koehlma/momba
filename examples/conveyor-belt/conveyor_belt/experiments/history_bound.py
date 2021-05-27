@@ -161,12 +161,12 @@ def analyze(data_dir: pathlib.Path, exclude_fault_runs: bool) -> None:
             first_offset = mid_offset - len(records) // 4
             second_offset = mid_offset + len(records) // 4
             second_quarter[bound].append(
-                (mid_offset - first_offset)
-                / (records[mid_offset]["duration"] - records[first_offset]["duration"])
+                (records[mid_offset]["duration"] - records[first_offset]["duration"])
+                / (mid_offset - first_offset)
             )
             last_quarter[bound].append(
-                (len(records) - second_offset)
-                / (records[-1]["duration"] - records[second_offset]["duration"])
+                (records[-1]["duration"] - records[second_offset]["duration"])
+                / (len(records) - second_offset)
             )
 
     for name, values in (

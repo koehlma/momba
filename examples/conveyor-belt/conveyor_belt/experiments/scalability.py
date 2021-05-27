@@ -88,9 +88,12 @@ def main() -> None:
 
 @main.command()
 @click.argument("output_dir", type=pathlib.Path, metavar="output")
+@click.option("--history-bound", type=int, default=2)
 @click.option("--runs", type=int, default=1000)
 @click.option("--processes", type=int, default=max(multiprocessing.cpu_count() - 1, 1))
-def run(output_dir: pathlib.Path, runs: int, processes: int) -> None:
+def run(
+    output_dir: pathlib.Path, history_bound: int, runs: int, processes: int
+) -> None:
     pool = multiprocessing.Pool(processes)
 
     output_dir = output_dir.absolute()
@@ -166,7 +169,7 @@ def run(output_dir: pathlib.Path, runs: int, processes: int) -> None:
             DIAGNOSIS_PARAMETERS,
             model.generated_path / f"observations_{index}.json",
             model.generated_path / f"diagnosis_{index}.json",
-            history_bound=2,
+            history_bound=history_bound,
         )
         for model, index in itertools.product(models, range(runs))
     )
@@ -182,23 +185,39 @@ def run(output_dir: pathlib.Path, runs: int, processes: int) -> None:
 
 @main.command()
 @click.argument("output_dir", type=pathlib.Path, metavar="output")
-def analyze(output_dir: pathlib.Path) -> None:
+@click.option("--exclude-fault-runs", type=bool, default=False, is_flag=True)
+def analyze(output_dir: pathlib.Path, exclude_fault_runs: bool) -> None:
     generated_dir = output_dir / "generated"
+
+    results: t.Dict[bool, t.Dict[int, float]] = {True: {}, False: {}}
 
     for model_dir in generated_dir.iterdir():
         match = re.match(r"length_(\d+)_sporadic_(True|False)", model_dir.name)
         assert match is not None
         length = int(match[1])
         fault_sporadic = match[2] == "True"
-        obs_per_sec = []
+        secs_per_obs = []
         for result_path in model_dir.glob("diagnosis_*.json"):
+            match = re.search(r"diagnosis_(\d+)", result_path.stem)
+            assert match is not None
+            trace = int(match[1])
             data = json.loads(result_path.read_text(encoding="utf-8"))
-            obs_per_sec.append(len(data) / data[-1]["duration"])
-        print(
-            length,
-            fault_sporadic,
-            statistics.mean(obs_per_sec),
-        )
+            if exclude_fault_runs:
+                events = json.loads(
+                    (model_dir / f"events_{trace}.json").read_text(encoding="utf-8")
+                )
+                contains_fault = any(
+                    event["label"] == "fault_friction" for event in events
+                )
+                if contains_fault:
+                    continue
+            secs_per_obs.append(data[-1]["duration"] / (len(data) - 1))
+        results[fault_sporadic][length] = statistics.mean(secs_per_obs)
+
+    for fault_sporadic in results.keys():
+        print(fault_sporadic)
+        for (length, value) in sorted(results[fault_sporadic].items()):
+            print(f"({length},{value})")
 
 
 if __name__ == "__main__":
