@@ -4,9 +4,13 @@
 # Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 import dataclasses as d
+import typing as t
 
+import multiprocessing
 import pathlib
 import subprocess
+
+import click
 
 
 binary = (
@@ -90,3 +94,31 @@ class DiagnoseJob:
 
 def run_diagnose_job(job: DiagnoseJob) -> None:
     diagnose(job.model, job.parameters, job.observations, job.output, job.history_bound)
+
+
+PROCESSES = multiprocessing.cpu_count() - 1
+
+
+class ProcessPool:
+    _pool: t.Any
+
+    def __init__(self, processes: t.Optional[int] = None) -> None:
+        self._pool = multiprocessing.Pool(processes or PROCESSES)
+
+    def run_generate_jobs(self, jobs: t.Sequence[GenerateJob]) -> None:
+        with click.progressbar(
+            self._pool.imap_unordered(run_generate_job, jobs),
+            length=len(jobs),
+            show_pos=True,
+        ) as bar:
+            for _ in bar:
+                pass
+
+    def run_diagnose_jobs(self, jobs: t.Sequence[DiagnoseJob]) -> None:
+        with click.progressbar(
+            self._pool.imap_unordered(run_diagnose_job, jobs),
+            length=len(jobs),
+            show_pos=True,
+        ) as bar:
+            for _ in bar:
+                pass
