@@ -2,23 +2,23 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone, Debug)]
 pub struct AutomatonReference {
-    pub(crate) name: String,
+    pub name: String,
 }
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone, Debug)]
 pub struct LocationReference {
-    pub(crate) automaton: AutomatonReference,
-    pub(crate) name: String,
+    pub automaton: AutomatonReference,
+    pub name: String,
 }
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone, Debug)]
 pub struct EdgeReference {
-    pub(crate) location: LocationReference,
-    pub(crate) index: usize,
+    pub location: LocationReference,
+    pub index: usize,
 }
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Hash, Clone, Debug)]
 pub struct DestinationReference {
-    pub(crate) edge: EdgeReference,
-    pub(crate) index: usize,
+    pub edge: EdgeReference,
+    pub index: usize,
 }

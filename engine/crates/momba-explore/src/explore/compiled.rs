@@ -108,6 +108,7 @@ pub struct CompiledEdge<Z: time::Time> {
     pub guard: CompiledGuard<Z>,
     pub destinations: Vec<CompiledDestination<Z>>,
     pub observations: Vec<CompiledObservation>,
+    pub numeric_reference: (usize, usize),
 }
 
 pub struct CompiledObservation {
@@ -198,6 +199,7 @@ impl<Z: time::Time> CompiledEdge<Z> {
             guard,
             destinations,
             observations,
+            numeric_reference: (automaton_index, edge.number),
         }
     }
 

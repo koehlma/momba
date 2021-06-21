@@ -129,6 +129,10 @@ impl PyTransition {
         self.transition.edge_vector()
     }
 
+    pub fn numeric_reference_vector(&self) -> Vec<(usize, usize)> {
+        self.transition.numeric_reference_vector()
+    }
+
     pub fn replace_valuations(&mut self, valuations: &PyAny) -> PyResult<()> {
         self.transition.replace_valuations(valuations)
     }

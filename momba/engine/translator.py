@@ -568,7 +568,7 @@ def _translate_instance(
         for location, location_name in location_names.items()
     }
 
-    for edge in instance.automaton.edges:
+    for number, edge in enumerate(instance.automaton.edges):
         outgoing = locations[location_names[edge.location]]["edges"]
         action = _translate_action_pattern(edge.action_pattern, ctx)
 
@@ -643,6 +643,7 @@ def _translate_instance(
 
         outgoing.append(
             {
+                "number": number,
                 "pattern": action,
                 "guard": guard,
                 "destinations": destinations,
@@ -859,6 +860,7 @@ class Translation:
     instance_to_location_names: t.Mapping[
         model.Instance, t.Mapping[model.Location, str]
     ]
+    instance_vector: t.Tuple[model.Instance, ...]
 
     @functools.cached_property
     def instance_name_to_instance(self) -> t.Mapping[str, model.Instance]:
@@ -897,4 +899,6 @@ def translate_network(
         instance_names,
         declarations,
         instance_to_location_names,
+        # HACK: this relies on dictionaries being ordered on both the Python and Rust side
+        instance_vector=tuple(instance_names.keys()),
     )

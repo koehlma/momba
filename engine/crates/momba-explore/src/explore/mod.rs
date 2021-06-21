@@ -274,6 +274,10 @@ impl<'e, T: time::Time> Transition<'e, T> {
     pub fn observations(&self) -> &[Box<[Observation]>] {
         &self.bare.observations
     }
+
+    pub fn numeric_reference_vector(&self) -> Vec<(usize, usize)> {
+        self.edges.iter().map(|edge| edge.numeric_reference.clone()).collect()
+    }
 }
 
 /// A *destination* of a transition.

@@ -153,30 +153,19 @@ class Transition(t.Generic[TimeTypeT]):
 
     @property
     def edge_vector(self) -> t.Mapping[model.Instance, model.Edge]:
-        edge_vector = {}
-        for edge_reference in json.loads(self._transition.edge_vector()):
-            automaton_name = edge_reference["location"]["automaton"]["name"]
-            location_name = edge_reference["location"]["name"]
-            edge_index = edge_reference["index"]
-            instance = self.explorer._compiled.translation.instance_name_to_instance[
-                automaton_name
-            ]
-            location = (
-                self.explorer._compiled.translation.reversed_instance_to_location_names[
-                    instance
-                ][location_name]
-            )
-            location_edges = instance.automaton.get_outgoing_edges(location)
-            counter = 0
-            for edge in instance.automaton.edges:
-                if edge not in location_edges:
-                    continue
-                if counter == edge_index:
-                    edge_vector[instance] = edge
-                    break
-                else:
-                    counter += 1
-        return edge_vector
+        return {
+            instance: instance.automaton.edges[index]
+            for instance, index in self.index_vector.items()
+        }
+
+    @functools.cached_property
+    def index_vector(self) -> t.Mapping[model.Instance, int]:
+        return {
+            self.explorer._compiled.translation.instance_vector[
+                instance_index
+            ]: edge_index
+            for instance_index, edge_index in self._transition.numeric_reference_vector()
+        }
 
     @functools.cached_property
     def destinations(self) -> Distribution[Destination[TimeTypeT]]:

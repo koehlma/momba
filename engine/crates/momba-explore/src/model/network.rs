@@ -96,6 +96,7 @@ pub enum Clock {
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Clone, Debug)]
 pub struct Edge {
+    pub number: usize,
     pub pattern: ActionPattern,
     pub guard: Guard,
     pub destinations: Vec<Destination>,

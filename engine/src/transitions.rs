@@ -25,6 +25,8 @@ pub trait DynTransition: DowncastSync {
     fn edge_vector(&self) -> String;
     fn action_vector(&self) -> Vec<PyAction>;
 
+    fn numeric_reference_vector(&self) -> Vec<(usize, usize)>;
+
     fn destinations(&self) -> Vec<PyDestination>;
 
     fn replace_valuations(&mut self, valuations: &PyAny) -> PyResult<()>;
@@ -46,6 +48,10 @@ where
 
     fn edge_vector(&self) -> String {
         serde_json::to_string(&self.transition.read().unwrap().edges()).unwrap()
+    }
+
+    fn numeric_reference_vector(&self) -> Vec<(usize, usize)> {
+        self.transition.read().unwrap().numeric_reference_vector()
     }
 
     fn action_vector(&self) -> Vec<PyAction> {
