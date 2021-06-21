@@ -337,30 +337,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">edge_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">Edge</span><span class="p">]:</span>
-        <span class="n">edge_vector</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">edge_reference</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_transition</span><span class="o">.</span><span class="n">edge_vector</span><span class="p">()):</span>
-            <span class="n">automaton_name</span> <span class="o">=</span> <span class="n">edge_reference</span><span class="p">[</span><span class="s2">"location"</span><span class="p">][</span><span class="s2">"automaton"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]</span>
-            <span class="n">location_name</span> <span class="o">=</span> <span class="n">edge_reference</span><span class="p">[</span><span class="s2">"location"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]</span>
-            <span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_reference</span><span class="p">[</span><span class="s2">"index"</span><span class="p">]</span>
-            <span class="n">instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">instance_name_to_instance</span><span class="p">[</span>
-                <span class="n">automaton_name</span>
-            <span class="p">]</span>
-            <span class="n">location</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">reversed_instance_to_location_names</span><span class="p">[</span>
-                    <span class="n">instance</span>
-                <span class="p">][</span><span class="n">location_name</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="n">location_edges</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">get_outgoing_edges</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">edge</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">location_edges</span><span class="p">:</span>
-                    <span class="k">continue</span>
-                <span class="k">if</span> <span class="n">counter</span> <span class="o">==</span> <span class="n">edge_index</span><span class="p">:</span>
-                    <span class="n">edge_vector</span><span class="p">[</span><span class="n">instance</span><span class="p">]</span> <span class="o">=</span> <span class="n">edge</span>
-                    <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">edge_vector</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">instance</span><span class="p">:</span> <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_vector</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
+    <span class="k">def</span> <span class="nf">index_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">instance_vector</span><span class="p">[</span>
+                <span class="n">instance_index</span>
+            <span class="p">]:</span> <span class="n">edge_index</span>
+            <span class="k">for</span> <span class="n">instance_index</span><span class="p">,</span> <span class="n">edge_index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transition</span><span class="o">.</span><span class="n">numeric_reference_vector</span><span class="p">()</span>
+        <span class="p">}</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">destinations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Distribution</span><span class="p">[</span><span class="n">Destination</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">]]:</span>
