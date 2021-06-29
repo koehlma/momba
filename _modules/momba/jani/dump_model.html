@@ -819,7 +819,9 @@
     <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instance_vector</span><span class="p">:</span>
         <span class="n">jani_instance</span><span class="p">:</span> <span class="n">_JANIMap</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"automaton"</span><span class="p">:</span> <span class="n">ctx</span><span class="o">.</span><span class="n">get_name</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="p">)}</span>
         <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">input_enable</span><span class="p">:</span>
-            <span class="n">jani_instance</span><span class="p">[</span><span class="s2">"input-enable"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">input_enable</span><span class="p">)</span>
+            <span class="n">jani_instance</span><span class="p">[</span><span class="s2">"input-enable"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="n">action_typ</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">action_typ</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">input_enable</span>
+            <span class="p">)</span>
         <span class="n">jani_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jani_instance</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"elements"</span><span class="p">:</span> <span class="n">jani_elements</span><span class="p">,</span>
