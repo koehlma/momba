@@ -635,7 +635,9 @@ def _dump_system(network: model.Network, ctx: JANIContext) -> JSON:
     for instance in instance_vector:
         jani_instance: _JANIMap = {"automaton": ctx.get_name(instance.automaton)}
         if instance.input_enable:
-            jani_instance["input-enable"] = list(instance.input_enable)
+            jani_instance["input-enable"] = list(
+                action_typ.label for action_typ in instance.input_enable
+            )
         jani_elements.append(jani_instance)
     return {
         "elements": jani_elements,
