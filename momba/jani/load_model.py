@@ -794,13 +794,13 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
         )
         automaton = network.ctx.get_automaton_by_name(element["automaton"])
         input_enable = element.get("input-enable", None)
-        instances.append(
-            automaton.create_instance(
-                input_enable=frozenset()
-                if input_enable is None
-                else frozenset(input_enable)
-            )
+        instance = automaton.create_instance(
+            input_enable=frozenset()
+            if input_enable is None
+            else frozenset(input_enable)
         )
+        network.add_instance(instance)
+        instances.append(instance)
     if "syncs" in jani_system:
         for jani_vector in jani_system["syncs"]:
             vector: t.Dict[model.Instance, model.ActionPattern] = {}
