@@ -8,6 +8,7 @@ from __future__ import annotations
 import dataclasses as d
 import typing as t
 
+import collections
 import enum
 
 from . import actions, errors, functions, expressions, types
@@ -230,16 +231,16 @@ class Scope:
     ctx: Context
     parent: t.Optional[Scope]
 
-    _declarations: t.Dict[str, IdentifierDeclaration]
-    _functions: t.Dict[str, functions.FunctionDefinition]
+    _declarations: t.OrderedDict[str, IdentifierDeclaration]
+    _functions: t.OrderedDict[str, functions.FunctionDefinition]
 
     _type_cache: t.Dict[expressions.Expression, types.Type]
 
     def __init__(self, ctx: Context, parent: t.Optional[Scope] = None):
         self.ctx = ctx
         self.parent = parent
-        self._declarations = {}
-        self._functions = {}
+        self._declarations = collections.OrderedDict()
+        self._functions = collections.OrderedDict()
         self._type_cache = {}
 
     def __repr__(self) -> str:
@@ -253,22 +254,22 @@ class Scope:
         return frozenset(self._declarations.values())
 
     @property
-    def variable_declarations(self) -> t.AbstractSet[VariableDeclaration]:
+    def variable_declarations(self) -> t.Sequence[VariableDeclaration]:
         """
         Variable declarations of the scope.
         """
-        return frozenset(
+        return tuple(
             declaration
             for declaration in self._declarations.values()
             if isinstance(declaration, VariableDeclaration)
         )
 
     @property
-    def constant_declarations(self) -> t.AbstractSet[ConstantDeclaration]:
+    def constant_declarations(self) -> t.Sequence[ConstantDeclaration]:
         """
         Constant declarations of the scope.
         """
-        return frozenset(
+        return tuple(
             declaration
             for declaration in self._declarations.values()
             if isinstance(declaration, ConstantDeclaration)

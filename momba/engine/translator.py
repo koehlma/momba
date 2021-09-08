@@ -854,6 +854,8 @@ def _translate_network(
 
 @d.dataclass(frozen=True)
 class Translation:
+    network: model.Network
+    parameters: t.Mapping[str, model.Expression]
     json_network: str
     instance_names: t.Mapping[model.Instance, str]
     declarations: Declarations
@@ -875,6 +877,15 @@ class Translation:
             for instance, mapping in self.instance_to_location_names.items()
         }
 
+    def translate_global_expression(self, expr: model.Expression) -> str:
+        ctx = _TranslationContext(
+            self.parameters,
+            self.declarations,
+            self.network.ctx.global_scope,
+            None,
+        )
+        return json.dumps(_translate_expr(expr, ctx))
+
 
 def translate_network(
     network: model.Network, *, parameters: Parameters = None, global_clock: bool = False
@@ -884,16 +895,18 @@ def translate_network(
     instance_to_location_names = {
         instance: _compute_location_names(instance) for instance in network.instances
     }
+    ctx_parameters = {
+        name: expressions.ensure_expr(expr) for name, expr in (parameters or {}).items()
+    }
     return Translation(
+        network,
+        ctx_parameters,
         _translate_network(
             network,
             instance_names,
             instance_to_location_names,
             declarations,
-            {
-                name: expressions.ensure_expr(expr)
-                for name, expr in (parameters or {}).items()
-            },
+            ctx_parameters,
             global_clock,
         ),
         instance_names,

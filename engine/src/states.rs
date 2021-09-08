@@ -16,6 +16,11 @@ pub trait DynState: Send + Sync {
 
     fn valuations(&self, py: Python) -> PyObject;
 
+    fn evaluate_global_expression(
+        &self,
+        expr: &momba_explore::evaluate::CompiledExpression<2>,
+    ) -> Option<values::Value>;
+
     fn transitions(&self) -> Vec<crate::PyTransition>;
 }
 
@@ -52,5 +57,12 @@ where
                 }),
             })
             .collect()
+    }
+
+    fn evaluate_global_expression(
+        &self,
+        expr: &momba_explore::evaluate::CompiledExpression<2>,
+    ) -> Option<values::Value> {
+        Some(self.state.evaluate(expr).into())
     }
 }

@@ -182,6 +182,24 @@ impl PyExplorer {
     fn count_states_and_transitions(&self) -> (usize, usize) {
         self.explorer.count_states_and_transitions()
     }
+
+    fn compile_global_expression(&self, json_representation: &str) -> CompiledExpression {
+        let expr =
+            serde_json::from_str(json_representation).expect("Error while loading expression");
+        self.explorer.compile_global_expression(&expr)
+    }
+}
+
+#[pyclass(name = "CompiledExpression")]
+pub struct CompiledExpression {
+    pub expr: momba_explore::evaluate::CompiledExpression<2>,
+}
+
+#[pymethods]
+impl CompiledExpression {
+    fn evaluate(&self, state: &PyState) -> Option<values::Value> {
+        state.state.evaluate_global_expression(&self.expr)
+    }
 }
 
 /// A Python module implemented in Rust.

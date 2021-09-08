@@ -250,6 +250,14 @@ class State(t.Generic[TimeTypeT]):
         return self.explorer.time_type.load_valuations(self._state.valuations())
 
 
+@d.dataclass(frozen=True, repr=False)
+class CompiledGlobalExpression(t.Generic[TimeTypeT]):
+    _compiled: t.Any
+
+    def evaluate(self, state: State[TimeTypeT]) -> Value:
+        return self._compiled.evaluate(state._state)
+
+
 class Explorer(t.Generic[TimeTypeT]):
     """
     Main interface to the state space exploration engine.
@@ -310,6 +318,17 @@ class Explorer(t.Generic[TimeTypeT]):
     @functools.cached_property
     def _states_and_transitions(self) -> t.Tuple[int, int]:
         return self._compiled.internal.count_states_and_transitions()
+
+    def compile_global_expression(
+        self, expr: model.Expression
+    ) -> CompiledGlobalExpression[TimeTypeT]:
+        json_representation = self._compiled.translation.translate_global_expression(
+            expr
+        )
+        compiled = self._compiled.internal.compile_global_expression(
+            json_representation
+        )
+        return CompiledGlobalExpression(_compiled=compiled)
 
     def count_states(self) -> int:
         return self._states_and_transitions[0]

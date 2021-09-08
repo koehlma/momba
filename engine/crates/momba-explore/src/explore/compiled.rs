@@ -6,6 +6,7 @@ use crate::model;
 use crate::time;
 
 use super::evaluate;
+use super::evaluate::Scope;
 use super::*;
 
 pub type LocationIndex = usize;
@@ -309,6 +310,7 @@ pub enum CompiledLinkResult {
 
 pub struct CompiledNetwork<Z: time::Time> {
     pub zone_compiler: Z,
+    pub global_scope: Scope<2>,
     pub automata: Box<[CompiledAutomaton<Z>]>,
     pub links: Box<[CompiledLink]>,
     pub transient_values: Box<[evaluate::CompiledExpression<1>]>,
@@ -410,11 +412,19 @@ impl<Z: time::Time> CompiledNetwork<Z> {
             .collect();
         CompiledNetwork {
             zone_compiler,
+            global_scope,
             automata,
             links,
             transient_values,
             assignment_groups,
         }
+    }
+
+    pub fn compile_global_expression(
+        &self,
+        expr: &model::Expression,
+    ) -> evaluate::CompiledExpression<2> {
+        self.global_scope.compile(expr)
     }
 
     pub fn compute_transition<'c>(

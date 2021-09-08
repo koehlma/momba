@@ -4,7 +4,7 @@ use hashbrown::HashSet;
 
 use momba_explore::State;
 
-use crate::{states, time};
+use crate::{states, time, CompiledExpression};
 
 #[derive(Clone)]
 pub struct Explorer<T: time::Time> {
@@ -22,6 +22,11 @@ impl<T: time::Time> From<momba_explore::Explorer<T>> for Explorer<T> {
 /// Trait to dynamically abstract over [Explorer][momba_explore::Explorer].
 pub trait DynExplorer: Send + Sync {
     fn initial_states(&self) -> Vec<crate::PyState>;
+
+    fn compile_global_expression(
+        &self,
+        expr: &momba_explore::model::Expression,
+    ) -> CompiledExpression;
 
     fn count_states_and_transitions(&self) -> (usize, usize);
 }
@@ -42,6 +47,18 @@ where
                 .into()
             })
             .collect()
+    }
+
+    fn compile_global_expression(
+        &self,
+        expr: &momba_explore::model::Expression,
+    ) -> CompiledExpression {
+        CompiledExpression {
+            expr: self
+                .explorer
+                .compiled_network
+                .compile_global_expression(expr),
+        }
     }
 
     fn count_states_and_transitions(&self) -> (usize, usize) {

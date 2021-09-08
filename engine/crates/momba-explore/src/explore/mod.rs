@@ -14,9 +14,9 @@ use crate::{
 use super::model;
 use super::time;
 
-mod actions;
-mod compiled;
-mod evaluate;
+pub mod actions;
+pub mod compiled;
+pub mod evaluate;
 
 use compiled::*;
 
@@ -103,6 +103,11 @@ impl<T: time::Time> State<T> {
             .get_index_of(identifier)
             .and_then(|index| self.transient_store.get(index))
             .expect("Invalid variable name or explorer passed to `State::get_transient_value`.")
+    }
+
+    /// Evaluates a compiled expression on the state.
+    pub fn evaluate(&self, expr: &evaluate::CompiledExpression<2>) -> model::Value {
+        expr.evaluate(&self.global_env())
     }
 
     /// Returns the clock valuations associated with the state.
@@ -276,7 +281,10 @@ impl<'e, T: time::Time> Transition<'e, T> {
     }
 
     pub fn numeric_reference_vector(&self) -> Vec<(usize, usize)> {
-        self.edges.iter().map(|edge| edge.numeric_reference.clone()).collect()
+        self.edges
+            .iter()
+            .map(|edge| edge.numeric_reference.clone())
+            .collect()
     }
 }
 
@@ -296,7 +304,7 @@ impl<'c, T: time::Time> Destination<'c, T> {
 /// A state space explorer for a particular automaton network.
 pub struct Explorer<T: time::Time> {
     pub network: model::Network,
-    pub(crate) compiled_network: CompiledNetwork<T>,
+    pub compiled_network: CompiledNetwork<T>,
 }
 
 impl<T: time::Time> Explorer<T> {
