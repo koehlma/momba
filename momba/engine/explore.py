@@ -255,7 +255,7 @@ class CompiledGlobalExpression(t.Generic[TimeTypeT]):
     _compiled: t.Any
 
     def evaluate(self, state: State[TimeTypeT]) -> Value:
-        return self._compiled.evaluate(state._state)
+        return Value(_value=self._compiled.evaluate(state._state))
 
 
 class Explorer(t.Generic[TimeTypeT]):
