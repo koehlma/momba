@@ -192,6 +192,7 @@
 <span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">d</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
+<span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">enum</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
@@ -414,16 +415,16 @@
     <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span>
     <span class="n">parent</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Scope</span><span class="p">]</span>
 
-    <span class="n">_declarations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IdentifierDeclaration</span><span class="p">]</span>
-    <span class="n">_functions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">]</span>
+    <span class="n">_declarations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IdentifierDeclaration</span><span class="p">]</span>
+    <span class="n">_functions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">]</span>
 
     <span class="n">_type_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Scope</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_type_cache</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -437,22 +438,22 @@
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">variable_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">VariableDeclaration</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">variable_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">VariableDeclaration</span><span class="p">]:</span>
         <span class="sd">"""</span>
 <span class="sd">        Variable declarations of the scope.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="n">declaration</span>
             <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">VariableDeclaration</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">constant_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">ConstantDeclaration</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">constant_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">ConstantDeclaration</span><span class="p">]:</span>
         <span class="sd">"""</span>
 <span class="sd">        Constant declarations of the scope.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
             <span class="n">declaration</span>
             <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">ConstantDeclaration</span><span class="p">)</span>

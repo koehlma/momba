@@ -434,6 +434,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="o">.</span><span class="n">time_type</span><span class="o">.</span><span class="n">load_valuations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">valuations</span><span class="p">())</span></div>
 
 
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CompiledGlobalExpression</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">]):</span>
+    <span class="n">_compiled</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span>
+
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">_state</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="Explorer"><a class="viewcode-back" href="../../../reference/engine.html#momba.engine.Explorer">[docs]</a><span class="k">class</span> <span class="nc">Explorer</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Generic</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">]):</span>
     <span class="sd">"""</span>
 <span class="sd">    Main interface to the state space exploration engine.</span>
@@ -494,6 +502,17 @@
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">_states_and_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">internal</span><span class="o">.</span><span class="n">count_states_and_transitions</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">compile_global_expression</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledGlobalExpression</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">]:</span>
+        <span class="n">json_representation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">translation</span><span class="o">.</span><span class="n">translate_global_expression</span><span class="p">(</span>
+            <span class="n">expr</span>
+        <span class="p">)</span>
+        <span class="n">compiled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">internal</span><span class="o">.</span><span class="n">compile_global_expression</span><span class="p">(</span>
+            <span class="n">json_representation</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">CompiledGlobalExpression</span><span class="p">(</span><span class="n">_compiled</span><span class="o">=</span><span class="n">compiled</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">count_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_states_and_transitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
