@@ -978,13 +978,13 @@
         <span class="p">)</span>
         <span class="n">automaton</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">get_automaton_by_name</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="s2">"automaton"</span><span class="p">])</span>
         <span class="n">input_enable</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"input-enable"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">automaton</span><span class="o">.</span><span class="n">create_instance</span><span class="p">(</span>
-                <span class="n">input_enable</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">input_enable</span> <span class="ow">is</span> <span class="kc">None</span>
-                <span class="k">else</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">input_enable</span><span class="p">)</span>
-            <span class="p">)</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_instance</span><span class="p">(</span>
+            <span class="n">input_enable</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">input_enable</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">input_enable</span><span class="p">)</span>
         <span class="p">)</span>
+        <span class="n">network</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="n">instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
     <span class="k">if</span> <span class="s2">"syncs"</span> <span class="ow">in</span> <span class="n">jani_system</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">jani_vector</span> <span class="ow">in</span> <span class="n">jani_system</span><span class="p">[</span><span class="s2">"syncs"</span><span class="p">]:</span>
             <span class="n">vector</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">ActionPattern</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
