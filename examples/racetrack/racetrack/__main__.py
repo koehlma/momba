@@ -166,7 +166,9 @@ def race(
     (state,) = explorer.initial_states
 
     while True:
-        car_pos = state.global_env["car_pos"].as_int
+        car_x = state.global_env["car_x"].as_int
+        car_y = state.global_env["car_y"].as_int
+        car_pos = car_y * track.width + car_x
         dx = state.global_env["car_dx"].as_int
         dy = state.global_env["car_dy"].as_int
         fuel = state.global_env["fuel"].as_int

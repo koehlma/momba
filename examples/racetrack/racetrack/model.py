@@ -347,10 +347,16 @@ def construct_model(scenario: Scenario) -> model.Network:
     )
 
     ctx.global_scope.declare_variable(
-        "car_pos",
+        "car_x",
         types.INT.bound(0, track.size - 1),
-        initial_value=scenario.start_cell,
+        initial_value=scenario.start_cell % track.width,
     )
+    ctx.global_scope.declare_variable(
+        "car_y",
+        types.INT.bound(0, track.size - 1),
+        initial_value=scenario.start_cell // track.width,
+    )
+
     ctx.global_scope.declare_variable(
         "fuel",
         types.INT.bound(0, scenario.tank_size),
@@ -359,8 +365,12 @@ def construct_model(scenario: Scenario) -> model.Network:
 
     step = ctx.create_action_type("step").create_pattern()
 
+    car_pos = expr("car_y * WIDTH + car_x")
+
     goal_cells = track.goal_cells
-    on_goal = expressions.logic_any(*(expr("car_pos == $g", g=g) for g in goal_cells))
+    on_goal = expressions.logic_any(
+        *(expr("$car_pos == $g", car_pos=car_pos, g=g) for g in goal_cells)
+    )
 
     ctx.define_property(
         "goalProbability", prop("min({ Pmax(F($on_goal)) | initial })", on_goal=on_goal)
@@ -454,13 +464,10 @@ def construct_model(scenario: Scenario) -> model.Network:
         automaton = ctx.create_automaton(name="controller")
         initial = automaton.create_location(initial=True)
 
-        car_x = expr("car_pos % WIDTH")
-        car_y = expr("car_pos // WIDTH")
-
         offtrack = expr(
             "$x >= WIDTH or $x < 0 or $y >= HEIGHT or $y < 0",
-            x=expr("$car_x + car_dx", car_x=car_x),
-            y=expr("$car_y + car_dy", car_y=car_y),
+            x=expr("car_x + car_dx"),
+            y=expr("car_y + car_dy"),
         )
 
         def is_blocked_at(pos: model.Expression) -> model.Expression:
@@ -475,10 +482,8 @@ def construct_model(scenario: Scenario) -> model.Network:
             *(
                 is_blocked_at(
                     expr(
-                        "floor($car_x + ($speed / $max_speed) * car_dx)"
-                        " + WIDTH * floor($car_y + ($speed / $max_speed) * car_dy)",
-                        car_x=car_x,
-                        car_y=car_y,
+                        "floor(car_x + ($speed / $max_speed) * car_dx)"
+                        " + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)",
                         speed=speed,
                         max_speed=scenario.max_speed,
                     )
@@ -496,23 +501,15 @@ def construct_model(scenario: Scenario) -> model.Network:
             will_crash=will_crash,
         )
 
-        next_car_pos = expr(
-            """
-            floor(
-                max(min($car_x + car_dx, WIDTH - 1), 0)
-                + (WIDTH * max(min($car_y + car_dy, HEIGHT - 1), 0))
-            )
-            """,
-            car_x=car_x,
-            car_y=car_y,
-        )
+        next_car_x = expr("max(min(car_x + car_dx, WIDTH - 1), 0)")
+        next_car_y = expr("max(min(car_y + car_dy, HEIGHT - 1), 0))")
 
         automaton.create_edge(
             source=initial,
             destinations={
                 model.create_destination(
                     initial,
-                    assignments={"car_pos": next_car_pos},
+                    assignments={"car_x": next_car_x, "car_y": next_car_y},
                 )
             },
             action_pattern=step,
