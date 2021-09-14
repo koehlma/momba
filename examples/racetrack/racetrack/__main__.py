@@ -165,7 +165,9 @@ def race(
 
     (state,) = explorer.initial_states
 
-    while True:
+    running = True
+
+    while running:
         car_x = state.global_env["car_x"].as_int
         car_y = state.global_env["car_y"].as_int
         car_pos = car_y * track.width + car_x
@@ -213,3 +215,8 @@ def race(
         )
         decision = options[(chosen_ax, chosen_ay)]
         state = decision.destinations.pick().state
+
+        while not all(
+            car_instance in transition.edge_vector for transition in state.transitions
+        ):
+            state = random.choice(state.transitions).destinations.pick().state

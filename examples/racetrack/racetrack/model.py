@@ -480,7 +480,8 @@ def construct_model(scenario: Scenario) -> model.Network:
 
     def construct_controller_automaton() -> model.Automaton:
         automaton = ctx.create_automaton(name="controller")
-        initial = automaton.create_location(initial=True)
+        cars_turn = automaton.create_location(initial=True)
+        env_turn = automaton.create_location()
 
         offtrack = expr(
             "$x >= WIDTH or $x < 0 or $y >= HEIGHT or $y < 0",
@@ -523,15 +524,20 @@ def construct_model(scenario: Scenario) -> model.Network:
         next_car_y = expr("max(min(car_y + car_dy, HEIGHT - 1), 0))")
 
         automaton.create_edge(
-            source=initial,
+            source=cars_turn,
+            destinations={model.create_destination(env_turn)},
+            action_pattern=step,
+            guard=not_terminated,
+        )
+
+        automaton.create_edge(
+            source=env_turn,
             destinations={
                 model.create_destination(
-                    initial,
+                    cars_turn,
                     assignments={"car_x": next_car_x, "car_y": next_car_y},
                 )
             },
-            action_pattern=step,
-            guard=not_terminated,
         )
 
         return automaton
