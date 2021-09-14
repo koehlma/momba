@@ -365,19 +365,37 @@ def construct_model(scenario: Scenario) -> model.Network:
 
     step = ctx.create_action_type("step").create_pattern()
 
-    car_pos = expr("car_y * WIDTH + car_x")
+    def is_goal_at(pos: model.Expression) -> model.Expression:
+        return expressions.logic_any(
+            *(expr("$pos == $cell", pos=pos, cell=cell) for cell in track.goal_cells)
+        )
 
-    goal_cells = track.goal_cells
-    on_goal = expressions.logic_any(
-        *(expr("$car_pos == $g", car_pos=car_pos, g=g) for g in goal_cells)
+    will_pass_goal = expressions.logic_any(
+        *(
+            is_goal_at(
+                expr(
+                    "floor(car_x + ($speed / $max_speed) * car_dx)"
+                    " + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)",
+                    speed=speed,
+                    max_speed=scenario.max_speed,
+                )
+            )
+            for speed in range(scenario.max_speed + 1)
+        )
     )
 
     ctx.define_property(
-        "goalProbability", prop("min({ Pmax(F($on_goal)) | initial })", on_goal=on_goal)
+        "goalProbability",
+        prop(
+            "min({ Pmax(F($will_pass_goal)) | initial })", will_pass_goal=will_pass_goal
+        ),
     )
     ctx.define_property(
         "goalProbabilityFuel",
-        prop("min({ Pmax(F($on_goal and fuel > 0)) | initial })", on_goal=on_goal),
+        prop(
+            "min({ Pmax(F($will_pass_goal and fuel > 0)) | initial })",
+            will_pass_goal=will_pass_goal,
+        ),
     )
 
     def construct_car_automaton() -> model.Automaton:
@@ -493,10 +511,10 @@ def construct_model(scenario: Scenario) -> model.Network:
         )
 
         not_terminated = expr(
-            "not ($on_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"
+            "not ($will_pass_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"
             " and not $offtrack"
             " and not $will_crash",
-            on_goal=on_goal,
+            will_pass_goal=will_pass_goal,
             offtrack=offtrack,
             will_crash=will_crash,
         )
