@@ -664,7 +664,8 @@
 
     <span class="k">def</span> <span class="nf">construct_controller_automaton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
         <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"controller"</span><span class="p">)</span>
-        <span class="n">initial</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">cars_turn</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">env_turn</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">()</span>
 
         <span class="n">offtrack</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
             <span class="s2">"$x &gt;= WIDTH or $x &lt; 0 or $y &gt;= HEIGHT or $y &lt; 0"</span><span class="p">,</span>
@@ -707,15 +708,20 @@
         <span class="n">next_car_y</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(min(car_y + car_dy, HEIGHT - 1), 0))"</span><span class="p">)</span>
 
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
-            <span class="n">source</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">cars_turn</span><span class="p">,</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">env_turn</span><span class="p">)},</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+            <span class="n">guard</span><span class="o">=</span><span class="n">not_terminated</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">env_turn</span><span class="p">,</span>
             <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
-                    <span class="n">initial</span><span class="p">,</span>
+                    <span class="n">cars_turn</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span><span class="s2">"car_x"</span><span class="p">:</span> <span class="n">next_car_x</span><span class="p">,</span> <span class="s2">"car_y"</span><span class="p">:</span> <span class="n">next_car_y</span><span class="p">},</span>
                 <span class="p">)</span>
             <span class="p">},</span>
-            <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
-            <span class="n">guard</span><span class="o">=</span><span class="n">not_terminated</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">automaton</span>
