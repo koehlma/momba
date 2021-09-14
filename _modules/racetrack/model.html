@@ -531,10 +531,16 @@
     <span class="p">)</span>
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
-        <span class="s2">"car_pos"</span><span class="p">,</span>
+        <span class="s2">"car_x"</span><span class="p">,</span>
         <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span><span class="p">,</span>
+        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span> <span class="o">%</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
+        <span class="s2">"car_y"</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span> <span class="o">//</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+    <span class="p">)</span>
+
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
         <span class="s2">"fuel"</span><span class="p">,</span>
         <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">),</span>
@@ -543,15 +549,37 @@
 
     <span class="n">step</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
 
-    <span class="n">goal_cells</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">goal_cells</span>
-    <span class="n">on_goal</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_pos == $g"</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">goal_cells</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">is_goal_at</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"$pos == $cell"</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">goal_cells</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="n">will_pass_goal</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">(</span>
+            <span class="n">is_goal_at</span><span class="p">(</span>
+                <span class="n">expr</span><span class="p">(</span>
+                    <span class="s2">"floor(car_x + ($speed / $max_speed) * car_dx)"</span>
+                    <span class="s2">" + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)"</span><span class="p">,</span>
+                    <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
+                    <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
-        <span class="s2">"goalProbability"</span><span class="p">,</span> <span class="n">prop</span><span class="p">(</span><span class="s2">"min({ Pmax(F($on_goal)) | initial })"</span><span class="p">,</span> <span class="n">on_goal</span><span class="o">=</span><span class="n">on_goal</span><span class="p">)</span>
+        <span class="s2">"goalProbability"</span><span class="p">,</span>
+        <span class="n">prop</span><span class="p">(</span>
+            <span class="s2">"min({ Pmax(F($will_pass_goal)) | initial })"</span><span class="p">,</span> <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span>
+        <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
         <span class="s2">"goalProbabilityFuel"</span><span class="p">,</span>
-        <span class="n">prop</span><span class="p">(</span><span class="s2">"min({ Pmax(F($on_goal and fuel &gt; 0)) | initial })"</span><span class="p">,</span> <span class="n">on_goal</span><span class="o">=</span><span class="n">on_goal</span><span class="p">),</span>
+        <span class="n">prop</span><span class="p">(</span>
+            <span class="s2">"min({ Pmax(F($will_pass_goal and fuel &gt; 0)) | initial })"</span><span class="p">,</span>
+            <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span><span class="p">,</span>
+        <span class="p">),</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">construct_car_automaton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
@@ -638,13 +666,10 @@
         <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"controller"</span><span class="p">)</span>
         <span class="n">initial</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">car_x</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_pos % WIDTH"</span><span class="p">)</span>
-        <span class="n">car_y</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_pos // WIDTH"</span><span class="p">)</span>
-
         <span class="n">offtrack</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
             <span class="s2">"$x &gt;= WIDTH or $x &lt; 0 or $y &gt;= HEIGHT or $y &lt; 0"</span><span class="p">,</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"$car_x + car_dx"</span><span class="p">,</span> <span class="n">car_x</span><span class="o">=</span><span class="n">car_x</span><span class="p">),</span>
-            <span class="n">y</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"$car_y + car_dy"</span><span class="p">,</span> <span class="n">car_y</span><span class="o">=</span><span class="n">car_y</span><span class="p">),</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_x + car_dx"</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_y + car_dy"</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">is_blocked_at</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
@@ -659,10 +684,8 @@
             <span class="o">*</span><span class="p">(</span>
                 <span class="n">is_blocked_at</span><span class="p">(</span>
                     <span class="n">expr</span><span class="p">(</span>
-                        <span class="s2">"floor($car_x + ($speed / $max_speed) * car_dx)"</span>
-                        <span class="s2">" + WIDTH * floor($car_y + ($speed / $max_speed) * car_dy)"</span><span class="p">,</span>
-                        <span class="n">car_x</span><span class="o">=</span><span class="n">car_x</span><span class="p">,</span>
-                        <span class="n">car_y</span><span class="o">=</span><span class="n">car_y</span><span class="p">,</span>
+                        <span class="s2">"floor(car_x + ($speed / $max_speed) * car_dx)"</span>
+                        <span class="s2">" + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)"</span><span class="p">,</span>
                         <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
                         <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -672,31 +695,23 @@
         <span class="p">)</span>
 
         <span class="n">not_terminated</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
-            <span class="s2">"not ($on_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"</span>
+            <span class="s2">"not ($will_pass_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"</span>
             <span class="s2">" and not $offtrack"</span>
             <span class="s2">" and not $will_crash"</span><span class="p">,</span>
-            <span class="n">on_goal</span><span class="o">=</span><span class="n">on_goal</span><span class="p">,</span>
+            <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span><span class="p">,</span>
             <span class="n">offtrack</span><span class="o">=</span><span class="n">offtrack</span><span class="p">,</span>
             <span class="n">will_crash</span><span class="o">=</span><span class="n">will_crash</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="n">next_car_pos</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
-            <span class="sd">"""</span>
-<span class="sd">            floor(</span>
-<span class="sd">                max(min($car_x + car_dx, WIDTH - 1), 0)</span>
-<span class="sd">                + (WIDTH * max(min($car_y + car_dy, HEIGHT - 1), 0))</span>
-<span class="sd">            )</span>
-<span class="sd">            """</span><span class="p">,</span>
-            <span class="n">car_x</span><span class="o">=</span><span class="n">car_x</span><span class="p">,</span>
-            <span class="n">car_y</span><span class="o">=</span><span class="n">car_y</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">next_car_x</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(min(car_x + car_dx, WIDTH - 1), 0)"</span><span class="p">)</span>
+        <span class="n">next_car_y</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(min(car_y + car_dy, HEIGHT - 1), 0))"</span><span class="p">)</span>
 
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
             <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">initial</span><span class="p">,</span>
-                    <span class="n">assignments</span><span class="o">=</span><span class="p">{</span><span class="s2">"car_pos"</span><span class="p">:</span> <span class="n">next_car_pos</span><span class="p">},</span>
+                    <span class="n">assignments</span><span class="o">=</span><span class="p">{</span><span class="s2">"car_x"</span><span class="p">:</span> <span class="n">next_car_x</span><span class="p">,</span> <span class="s2">"car_y"</span><span class="p">:</span> <span class="n">next_car_y</span><span class="p">},</span>
                 <span class="p">)</span>
             <span class="p">},</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>

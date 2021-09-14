@@ -50,7 +50,13 @@ initial_state.global_env
 ```
 
 ```{jupyter-execute}
-svg.format_track(tracks.BARTO_BIG, car=initial_state.global_env["car_pos"].as_int)
+svg.format_track(
+    tracks.BARTO_BIG,
+    car=(
+        tracks.BARTO_BIG.width * initial_state.global_env["car_y"].as_int
+        + initial_state.global_env["car_x"].as_int
+    ),
+)
 ```
 
 For further details on what to do with the model, we refer to the [user guide](../../guide/index).
