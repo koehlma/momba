@@ -98,7 +98,7 @@ class Underground(enum.Enum):
         self.acceleration_model = acceleration_model
 
 
-@d.dataclass(frozen=True)
+@d.dataclass(frozen=True, order=True)
 class Coordinate:
     """
     Represents a coordinate on the track.
@@ -161,19 +161,12 @@ class Track:
     width: int
     height: int
 
-    blank_cells: t.Set[int]
-    blocked_cells: t.Set[int]
-    start_cells: t.Set[int]
-    goal_cells: t.Set[int]
+    blank_cells: t.FrozenSet[Coordinate]
+    blocked_cells: t.FrozenSet[Coordinate]
+    start_cells: t.FrozenSet[Coordinate]
+    goal_cells: t.FrozenSet[Coordinate]
 
-    @property
-    def size(self) -> int:
-        """
-        The total size, i.e., number of cells, of the track.
-        """
-        return self.width * self.height
-
-    def get_cell_type(self, cell: int) -> CellType:
+    def get_cell_type(self, cell: Coordinate) -> CellType:
         """
         Retrives the type of the given *cell*.
         """
@@ -187,35 +180,16 @@ class Track:
             assert cell in self.goal_cells
             return CellType.GOAL
 
-    def cell_to_coordinate(self, cell: int) -> Coordinate:
-        """
-        Computes the *coordinate* of the given *cell*.
-        """
-        return Coordinate(cell % self.width, cell // self.width)
-
-    def coordinate_to_cell(self, coordinate: Coordinate) -> int:
-        """
-        Computes the *cell* at the given *coordinate*.
-        """
-        return coordinate.y * self.width + coordinate.x
-
-    @property
-    def cells(self) -> t.Iterable[int]:
-        """
-        An iterable of the *cells* of the track.
-        """
-        return tuple(range(0, self.width * self.height))
-
     @property
     def textual_description(self) -> str:
         """
-        Converts the track into is textual description.
+        Converts the track into its textual description.
         """
         lines = [f"dim: {self.width} {self.height}"]
         for y in range(self.height):
             lines.append(
                 "".join(
-                    self.get_cell_type(self.coordinate_to_cell(Coordinate(x, y))).value
+                    self.get_cell_type(Coordinate(x, y)).value
                     for x in range(self.width)
                 )
             )
@@ -227,20 +201,36 @@ class Track:
         Converts a textual specification of a track into a :class:`Track`.
         """
         firstline, _, remainder = source.partition("\n")
-        track = "".join(line.strip() for line in remainder.splitlines())
-
         dimension = re.match(r"dim: (?P<height>\d+) (?P<width>\d+)", firstline)
         assert dimension is not None, "invalid format: dimension missing"
-
         width, height = int(dimension["width"]), int(dimension["height"])
-        assert (
-            len(track) == width * height
-        ), "given track dimensions do not match actual track size"
 
-        blank_cells = {match.start() for match in re.finditer(r"\.", track)}
-        blocked_cells = {match.start() for match in re.finditer(r"x", track)}
-        start_cells = {match.start() for match in re.finditer(r"s", track)}
-        goal_cells = {match.start() for match in re.finditer(r"g", track)}
+        track = [
+            list(line.strip())
+            for line in remainder.splitlines(keepends=False)
+            if line.strip()
+        ]
+
+        assert (
+            len(track) == height
+        ), "given track height does not match actual track height"
+        assert all(
+            len(row) == width for row in track
+        ), "given track width does not match actual track width"
+
+        def get_coordinates(expected_cell_char: str) -> t.FrozenSet[Coordinate]:
+            return frozenset(
+                Coordinate(x, y)
+                for y, row in enumerate(track)
+                for x, cell_char in enumerate(row)
+                if cell_char == expected_cell_char
+            )
+
+        blank_cells = get_coordinates(".")
+        blocked_cells = get_coordinates("x")
+        start_cells = get_coordinates("s")
+        goal_cells = get_coordinates("g")
+
         assert len(start_cells) > 0, "no start cell specified"
         assert len(goal_cells) > 0, "no goal cell specified"
 
@@ -285,15 +275,15 @@ class Scenario:
 
     track: Track
 
-    start_cell: int
+    start_cell: Coordinate
 
     tank_type: TankType = TankType.LARGE
     underground: Underground = Underground.TARMAC
 
-    max_speed: int = 1
+    max_speed: t.Optional[int] = None
     max_acceleration: int = 1
 
-    fuel_model: FuelModel = fuel_model_regular
+    fuel_model: t.Optional[FuelModel] = fuel_model_regular
 
     def __post_init__(self) -> None:
         assert (
@@ -313,6 +303,7 @@ class Scenario:
     def compute_consumption(
         self, dx: model.Expression, dy: model.Expression
     ) -> model.Expression:
+        assert self.fuel_model is not None, "no fuel model has been defined"
         return self.fuel_model(self, dx, dy)
 
 
@@ -328,89 +319,116 @@ def construct_model(scenario: Scenario) -> model.Network:
 
     ctx.global_scope.declare_constant("WIDTH", types.INT, value=track.width)
     ctx.global_scope.declare_constant("HEIGHT", types.INT, value=track.height)
-    ctx.global_scope.declare_constant("TRACK_SIZE", types.INT, value=track.size)
-    ctx.global_scope.declare_constant(
-        "TANK_SIZE",
-        types.INT,
-        value=scenario.tank_size,
+
+    speed_bound = (
+        max(scenario.track.width, scenario.track.height) + scenario.max_acceleration
     )
 
     ctx.global_scope.declare_variable(
         "car_dx",
-        types.INT.bound(-scenario.max_speed, scenario.max_speed),
+        types.INT.bound(-speed_bound, speed_bound),
         initial_value=0,
     )
     ctx.global_scope.declare_variable(
         "car_dy",
-        types.INT.bound(-scenario.max_speed, scenario.max_speed),
+        types.INT.bound(-speed_bound, speed_bound),
         initial_value=0,
     )
 
     ctx.global_scope.declare_variable(
         "car_x",
-        types.INT.bound(0, track.size - 1),
-        initial_value=scenario.start_cell % track.width,
+        types.INT.bound(-1, track.width),
+        initial_value=scenario.start_cell.x,
     )
     ctx.global_scope.declare_variable(
         "car_y",
-        types.INT.bound(0, track.size - 1),
-        initial_value=scenario.start_cell // track.width,
+        types.INT.bound(-1, track.height),
+        initial_value=scenario.start_cell.y,
     )
 
-    ctx.global_scope.declare_variable(
-        "fuel",
-        types.INT.bound(0, scenario.tank_size),
-        initial_value=scenario.tank_size,
-    )
+    if scenario.fuel_model is not None:
+        ctx.global_scope.declare_variable(
+            "fuel",
+            types.INT.bound(0, scenario.tank_size),
+            initial_value=scenario.tank_size,
+        )
 
-    step = ctx.create_action_type("step").create_pattern()
+    accelerate = ctx.create_action_type("accelerate").create_pattern()
+    # The environment is about to move the car.
+    move_tick = ctx.create_action_type("move_tick").create_pattern()
+    # The environment is about to check the state of the car.
+    check_tick = ctx.create_action_type("check_tick").create_pattern()
+    # The environment is about to delegate the decision back to the car.
+    delegate = ctx.create_action_type("delegate").create_pattern()
 
-    def is_goal_at(pos: model.Expression) -> model.Expression:
+    def is_at_cell(
+        cells: t.Iterable[Coordinate],
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ):
         return expressions.logic_any(
-            *(expr("$pos == $cell", pos=pos, cell=cell) for cell in track.goal_cells)
-        )
-
-    will_pass_goal = expressions.logic_any(
-        *(
-            is_goal_at(
+            *(
                 expr(
-                    "floor(car_x + ($speed / $max_speed) * car_dx)"
-                    " + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)",
-                    speed=speed,
-                    max_speed=scenario.max_speed,
+                    "$car_x == $cell_x and $car_y == $cell_y ",
+                    car_x=car_x,
+                    car_y=car_y,
+                    cell_x=cell.x,
+                    cell_y=cell.y,
                 )
+                for cell in cells
             )
-            for speed in range(scenario.max_speed + 1)
         )
-    )
 
+    def is_at_goal(
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ) -> model.Expression:
+        return is_at_cell(track.goal_cells, car_x, car_y)
+
+    def is_at_blocked(
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ) -> model.Expression:
+        return is_at_cell(track.blocked_cells, car_x, car_y)
+
+    def is_off_track(
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ):
+        return expr(
+            "$car_x >= WIDTH or $car_x < 0 or $car_y >= HEIGHT or $car_y < 0",
+            car_x=car_x,
+            car_y=car_y,
+        )
+
+    # In case the fuel is empty before reaching the goal, the model goes
+    # into a dead state without transitions. Hence, this property also
+    # covers the consumption of fuel.
     ctx.define_property(
         "goalProbability",
-        prop(
-            "min({ Pmax(F($will_pass_goal)) | initial })", will_pass_goal=will_pass_goal
-        ),
-    )
-    ctx.define_property(
-        "goalProbabilityFuel",
-        prop(
-            "min({ Pmax(F($will_pass_goal and fuel > 0)) | initial })",
-            will_pass_goal=will_pass_goal,
-        ),
+        prop("min({ Pmax(F($is_at_goal)) | initial })", is_at_goal=is_at_goal()),
     )
 
     def construct_car_automaton() -> model.Automaton:
         automaton = ctx.create_automaton(name="car")
         initial = automaton.create_location(initial=True)
 
-        def update_speed(
+        def compute_speed(
             current: model.Expression, acceleration: expressions.ValueOrExpression
         ) -> model.Expression:
-            return expr(
-                "max(min($current + $acceleration, $max_speed), -$max_speed)",
-                current=current,
-                acceleration=acceleration,
-                max_speed=scenario.max_speed,
-            )
+            if scenario.max_speed is None:
+                return expr(
+                    "$current + $acceleration",
+                    current=current,
+                    acceleration=acceleration,
+                )
+            else:
+                return expr(
+                    "max(min($current + $acceleration, $max_speed), -$max_speed)",
+                    current=current,
+                    acceleration=acceleration,
+                    max_speed=scenario.max_speed,
+                )
 
         for ax, ay in itertools.product(scenario.possible_accelerations, repeat=2):
             automaton.create_edge(
@@ -419,19 +437,19 @@ def construct_model(scenario: Scenario) -> model.Network:
                     model.create_destination(
                         location=initial,
                         assignments={
-                            "car_dx": update_speed(expr("car_dx"), ax),
-                            "car_dy": update_speed(expr("car_dy"), ay),
+                            "car_dx": compute_speed(expr("car_dx"), ax),
+                            "car_dy": compute_speed(expr("car_dy"), ay),
                         },
                         probability=scenario.underground.acceleration_probability,
                     ),
                     model.create_destination(
                         location=initial,
                         assignments={
-                            "car_dx": update_speed(
+                            "car_dx": compute_speed(
                                 expr("car_dx"),
                                 scenario.underground.acceleration_model(ax),
                             ),
-                            "car_dy": update_speed(
+                            "car_dy": compute_speed(
                                 expr("car_dy"),
                                 scenario.underground.acceleration_model(ay),
                             ),
@@ -442,7 +460,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                         ),
                     ),
                 },
-                action_pattern=step,
+                action_pattern=accelerate,
                 annotation={"ax": ax, "ay": ay},
             )
 
@@ -452,8 +470,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         automaton = ctx.create_automaton(name="tank")
         initial = automaton.create_location(initial=True)
 
-        car_dx, car_dy = expr("car_dx"), expr("car_dy")
-        fuel_model = scenario.compute_consumption
+        consumption = scenario.compute_consumption(expr("car_dx"), expr("car_dy"))
         automaton.create_edge(
             source=initial,
             destinations={
@@ -461,95 +478,115 @@ def construct_model(scenario: Scenario) -> model.Network:
                     initial,
                     assignments={
                         "fuel": expr(
-                            "min(TANK_SIZE, max(0, fuel - floor($consumption)))",
-                            consumption=fuel_model(car_dx, car_dy),
+                            "fuel - floor($consumption)", consumption=consumption
                         )
                     },
                 )
             },
-            action_pattern=step,
+            action_pattern=check_tick,
             guard=expr(
                 "fuel >= $consumption",
-                consumption=scenario.compute_consumption(
-                    expr("car_dx"), expr("car_dy")
-                ),
+                consumption=consumption,
             ),
         )
 
         return automaton
 
-    def construct_controller_automaton() -> model.Automaton:
-        automaton = ctx.create_automaton(name="controller")
-        cars_turn = automaton.create_location(initial=True)
-        env_turn = automaton.create_location()
+    def construct_environment_automaton() -> model.Automaton:
+        automaton = ctx.create_automaton(name="environment")
 
-        offtrack = expr(
-            "$x >= WIDTH or $x < 0 or $y >= HEIGHT or $y < 0",
-            x=expr("car_x + car_dx"),
-            y=expr("car_y + car_dy"),
+        automaton.scope.declare_variable(
+            "start_x", typ=types.INT.bound(-1, track.width), initial_value=0
+        )
+        automaton.scope.declare_variable(
+            "start_y", typ=types.INT.bound(-1, track.height), initial_value=0
+        )
+        automaton.scope.declare_variable(
+            "counter",
+            typ=types.INT.bound(0, max(track.width, track.height) + 1),
+            initial_value=0,
         )
 
-        def is_blocked_at(pos: model.Expression) -> model.Expression:
-            return expressions.logic_any(
-                *(
-                    expr("$pos == $cell", pos=pos, cell=cell)
-                    for cell in track.blocked_cells
-                )
-            )
+        wait_for_car = automaton.create_location("wait_for_car", initial=True)
+        move_car = automaton.create_location("move_car")
+        env_check = automaton.create_location("env_check")
 
-        will_crash = expressions.logic_any(
-            *(
-                is_blocked_at(
-                    expr(
-                        "floor(car_x + ($speed / $max_speed) * car_dx)"
-                        " + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)",
-                        speed=speed,
-                        max_speed=scenario.max_speed,
-                    )
-                )
-                for speed in range(scenario.max_speed + 1)
-            )
-        )
+        move_ticks = expr("max(abs(car_dx), abs(car_dy))")
 
-        not_terminated = expr(
-            "not ($will_pass_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"
-            " and not $offtrack"
-            " and not $will_crash",
-            will_pass_goal=will_pass_goal,
-            offtrack=offtrack,
-            will_crash=will_crash,
-        )
-
-        next_car_x = expr("max(min(car_x + car_dx, WIDTH - 1), 0)")
-        next_car_y = expr("max(min(car_y + car_dy, HEIGHT - 1), 0))")
-
+        # Wait for the decision of the car.
         automaton.create_edge(
-            source=cars_turn,
-            destinations={model.create_destination(env_turn)},
-            action_pattern=step,
-            guard=not_terminated,
-        )
-
-        automaton.create_edge(
-            source=env_turn,
+            source=wait_for_car,
             destinations={
                 model.create_destination(
-                    cars_turn,
-                    assignments={"car_x": next_car_x, "car_y": next_car_y},
+                    location=move_car,
+                    assignments={
+                        "counter": expr("0"),
+                        "start_x": expr("car_x"),
+                        "start_y": expr("car_y"),
+                    },
                 )
             },
+            action_pattern=accelerate,
+        )
+
+        # Move the car or delegate the decision back to the car.
+        automaton.create_edge(
+            source=move_car,
+            destinations={
+                model.create_destination(
+                    env_check,
+                    assignments={
+                        "counter": expr("counter + 1"),
+                        "car_x": expr(
+                            "start_x + floor((counter + 1) * (car_dx / $move_ticks) + 0.5)",
+                            move_ticks=move_ticks,
+                        ),
+                        "car_y": expr(
+                            "start_y + floor((counter + 1) * (car_dy / $move_ticks) + 0.5)",
+                            move_ticks=move_ticks,
+                        ),
+                    },
+                )
+            },
+            guard=expr("counter < $move_ticks", move_ticks=move_ticks),
+            action_pattern=move_tick,
+        )
+        automaton.create_edge(
+            source=move_car,
+            destinations={model.create_destination(wait_for_car)},
+            guard=expr("counter >= $move_ticks", move_ticks=move_ticks),
+            action_pattern=delegate,
+        )
+
+        # Checker whether we should terminate or continue moving the car.
+        should_terminate = expr(
+            "$is_off_track or $is_at_goal or $is_at_blocked",
+            is_off_track=is_off_track(),
+            is_at_goal=is_at_goal(),
+            is_at_blocked=is_at_blocked(),
+        )
+        automaton.create_edge(
+            source=env_check,
+            destinations={model.create_destination(move_car)},
+            guard=expr("not $should_terminate", should_terminate=should_terminate),
+            action_pattern=check_tick,
         )
 
         return automaton
 
     car = construct_car_automaton().create_instance()
-    tank = construct_tank_automaton().create_instance()
-    controller = construct_controller_automaton().create_instance()
+    environment = construct_environment_automaton().create_instance()
 
-    network.create_link(
-        {car: step, tank: step, controller: step},
-        result=step,
-    )
+    check_tick_vector = {environment: check_tick}
+
+    if scenario.fuel_model:
+        tank = construct_tank_automaton().create_instance()
+        check_tick_vector[tank] = check_tick
+
+    network.create_link({car: accelerate, environment: accelerate}, result=accelerate)
+    network.create_link({environment: move_tick}, result=move_tick)
+    network.create_link(check_tick_vector, result=check_tick)
+    network.create_link({environment: delegate}, result=delegate)
 
     return network
 

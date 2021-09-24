@@ -23,11 +23,13 @@ _BACKGROUND_COLORS = {
 }
 
 
-def format_cell(track: model.Track, cell: int, car: t.Optional[int] = None) -> str:
+def format_cell(
+    track: model.Track, cell: model.Coordinate, car: t.Optional[model.Coordinate] = None
+) -> str:
     typ = track.get_cell_type(cell)
     background = _BACKGROUND_COLORS[typ]
-    car_cell = cell == car
-    if car_cell:
+    is_car_cell = cell == car
+    if is_car_cell:
         foreground = (
             colorama.Fore.RED if typ is model.CellType.GOAL else colorama.Fore.YELLOW
         )
@@ -35,18 +37,16 @@ def format_cell(track: model.Track, cell: int, car: t.Optional[int] = None) -> s
         foreground = (
             colorama.Fore.WHITE if typ is model.CellType.BLANK else colorama.Fore.BLACK
         )
-    symbol = "*" if car_cell else "."
+    symbol = "*" if is_car_cell else "."
     return f"{background}{foreground}{symbol}{colorama.Style.RESET_ALL}"
 
 
-def format_track(track: model.Track, car: t.Optional[int] = None) -> str:
+def format_track(track: model.Track, car: t.Optional[model.Coordinate] = None) -> str:
     lines: t.List[str] = []
     for y in range(track.height):
         lines.append(
             "".join(
-                format_cell(
-                    track, track.coordinate_to_cell(model.Coordinate(x, y)), car=car
-                )
+                format_cell(track, model.Coordinate(x, y), car=car)
                 for x in range(track.width)
             )
         )

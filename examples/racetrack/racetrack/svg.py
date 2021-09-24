@@ -26,7 +26,7 @@ class SVG:
     source: str
 
 
-def format_track(track: model.Track, car: t.Optional[int] = None) -> SVG:
+def format_track(track: model.Track, car: t.Optional[model.Coordinate] = None) -> SVG:
     height_px = track.height * 10
     width_px = track.width * 10
     svg = ['<?xml version="1.0" encoding="UTF-8"?>']
@@ -38,23 +38,24 @@ def format_track(track: model.Track, car: t.Optional[int] = None) -> SVG:
             viewBox="0 0 {width_px} {height_px}">
         """
     )
-    for cell in track.cells:
-        coordinate = track.cell_to_coordinate(cell)
-        if cell == car:
-            color = _CAR_COLOR
-        else:
-            color = _CELL_COLORS[track.get_cell_type(cell)]
-        svg.append(
-            f"""<rect
-                x="{coordinate.x * 10}"
-                y="{coordinate.y * 10}"
-                width="10"
-                height="10"
-                fill="{color}"
-                stroke="black"
-                stroke-width="2pt"
-                />
-            """
-        )
+    for x in range(track.width):
+        for y in range(track.height):
+            cell = model.Coordinate(x, y)
+            if cell == car:
+                color = _CAR_COLOR
+            else:
+                color = _CELL_COLORS[track.get_cell_type(cell)]
+            svg.append(
+                f"""<rect
+                    x="{x * 10}"
+                    y="{y * 10}"
+                    width="10"
+                    height="10"
+                    fill="{color}"
+                    stroke="black"
+                    stroke-width="2pt"
+                    />
+                """
+            )
     svg.append("</svg>")
     return SVG("\n".join(svg))

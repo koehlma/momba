@@ -79,12 +79,13 @@ def generate(
                 f"_{scenario.tank_type.name}"
                 f"_{scenario.start_cell}.jani"
             )
-            (output_directory / filename).write_bytes(
+            (output_directory / filename).write_text(
                 jani.dump_model(
                     network,
                     indent=indent,
                     allow_momba_operators=allow_momba_operators,
-                )
+                ),
+                encoding="utf-8",
             )
 
 
@@ -97,7 +98,7 @@ def generate(
     default=False,
     help="Drive randomly instead of interactively.",
 )
-@click.option("--max-speed", type=int, default=2, help="Top speed of the car.")
+@click.option("--max-speed", type=int, default=None, help="Top speed of the car.")
 @click.option(
     "--max-acceleration",
     type=int,
@@ -121,7 +122,7 @@ def generate(
 def race(
     track_file: pathlib.Path,
     crazy_driver: bool,
-    max_speed: int,
+    max_speed: t.Optional[int],
     max_acceleration: int,
     underground_name: str,
     tank_type_name: str,
@@ -136,13 +137,23 @@ def race(
     print(console.format_track(track))
     print("=" * track.width, end="\n\n")
 
-    start_cell = int(
-        click.prompt(
-            "Please select a start cell",
-            type=click.Choice(tuple(map(str, sorted(track.start_cells)))),
-            show_choices=True,
+    start_cell = model.Coordinate(
+        *map(
+            int,
+            click.prompt(
+                "Please select a start cell",
+                type=click.Choice(
+                    tuple(
+                        f"{coordinate.x} {coordinate.y}"
+                        for coordinate in sorted(track.start_cells)
+                    )
+                ),
+                show_choices=True,
+            ).split(),
         )
     )
+
+    start_cell = random.choice(list(track.start_cells))
 
     scenario = model.Scenario(
         track,
@@ -170,15 +181,15 @@ def race(
     while running:
         car_x = state.global_env["car_x"].as_int
         car_y = state.global_env["car_y"].as_int
-        car_pos = car_y * track.width + car_x
+        car_cell = model.Coordinate(car_x, car_y)
         dx = state.global_env["car_dx"].as_int
         dy = state.global_env["car_dy"].as_int
         fuel = state.global_env["fuel"].as_int
 
         print(f"\ndx: {dx}, dy: {dy}, fuel: {fuel}\n")
-        print(console.format_track(track, car_pos))
+        print(console.format_track(track, car_cell))
 
-        if car_pos in scenario.track.goal_cells:
+        if car_cell in scenario.track.goal_cells:
             print("\nGame won!")
             break
 
