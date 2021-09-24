@@ -282,7 +282,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">acceleration_model</span> <span class="o">=</span> <span class="n">acceleration_model</span></div>
 
 
-<div class="viewcode-block" id="Coordinate"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Coordinate">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Coordinate"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Coordinate">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Coordinate</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Represents a coordinate on the track.</span>
@@ -345,19 +345,12 @@
     <span class="n">width</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span>
 
-    <span class="n">blank_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="n">blocked_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="n">start_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="n">goal_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">blank_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">]</span>
+    <span class="n">blocked_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">]</span>
+    <span class="n">start_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">]</span>
+    <span class="n">goal_cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">]</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
-<span class="sd">        The total size, i.e., number of cells, of the track.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
-
-<div class="viewcode-block" id="Track.get_cell_type"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.get_cell_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_cell_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellType</span><span class="p">:</span>
+<div class="viewcode-block" id="Track.get_cell_type"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.get_cell_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_cell_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellType</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        Retrives the type of the given *cell*.</span>
 <span class="sd">        """</span>
@@ -371,35 +364,16 @@
             <span class="k">assert</span> <span class="n">cell</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_cells</span>
             <span class="k">return</span> <span class="n">CellType</span><span class="o">.</span><span class="n">GOAL</span></div>
 
-<div class="viewcode-block" id="Track.cell_to_coordinate"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.cell_to_coordinate">[docs]</a>    <span class="k">def</span> <span class="nf">cell_to_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Coordinate</span><span class="p">:</span>
-        <span class="sd">"""</span>
-<span class="sd">        Computes the *coordinate* of the given *cell*.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">Coordinate</span><span class="p">(</span><span class="n">cell</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">cell</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Track.coordinate_to_cell"><a class="viewcode-back" href="../../examples/racetrack/model.html#racetrack.model.Track.coordinate_to_cell">[docs]</a>    <span class="k">def</span> <span class="nf">coordinate_to_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">:</span> <span class="n">Coordinate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">"""</span>
-<span class="sd">        Computes the *cell* at the given *coordinate*.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">coordinate</span><span class="o">.</span><span class="n">x</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">cells</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">"""</span>
-<span class="sd">        An iterable of the *cells* of the track.</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">textual_description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">"""</span>
-<span class="sd">        Converts the track into is textual description.</span>
+<span class="sd">        Converts the track into its textual description.</span>
 <span class="sd">        """</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"dim: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">):</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">get_cell_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinate_to_cell</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span><span class="o">.</span><span class="n">value</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_cell_type</span><span class="p">(</span><span class="n">Coordinate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">value</span>
                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
@@ -411,20 +385,36 @@
 <span class="sd">        Converts a textual specification of a track into a :class:`Track`.</span>
 <span class="sd">        """</span>
         <span class="n">firstline</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">track</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">remainder</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
-
         <span class="n">dimension</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">"dim: (?P&lt;height&gt;\d+) (?P&lt;width&gt;\d+)"</span><span class="p">,</span> <span class="n">firstline</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">dimension</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"invalid format: dimension missing"</span>
-
         <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="s2">"width"</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dimension</span><span class="p">[</span><span class="s2">"height"</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">)</span> <span class="o">==</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span>
-        <span class="p">),</span> <span class="s2">"given track dimensions do not match actual track size"</span>
 
-        <span class="n">blank_cells</span> <span class="o">=</span> <span class="p">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\."</span><span class="p">,</span> <span class="n">track</span><span class="p">)}</span>
-        <span class="n">blocked_cells</span> <span class="o">=</span> <span class="p">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">track</span><span class="p">)}</span>
-        <span class="n">start_cells</span> <span class="o">=</span> <span class="p">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">"s"</span><span class="p">,</span> <span class="n">track</span><span class="p">)}</span>
-        <span class="n">goal_cells</span> <span class="o">=</span> <span class="p">{</span><span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">()</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">"g"</span><span class="p">,</span> <span class="n">track</span><span class="p">)}</span>
+        <span class="n">track</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">remainder</span><span class="o">.</span><span class="n">splitlines</span><span class="p">(</span><span class="n">keepends</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">track</span><span class="p">)</span> <span class="o">==</span> <span class="n">height</span>
+        <span class="p">),</span> <span class="s2">"given track height does not match actual track height"</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">==</span> <span class="n">width</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">track</span>
+        <span class="p">),</span> <span class="s2">"given track width does not match actual track width"</span>
+
+        <span class="k">def</span> <span class="nf">get_coordinates</span><span class="p">(</span><span class="n">expected_cell_char</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span>
+                <span class="n">Coordinate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">track</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">cell_char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">cell_char</span> <span class="o">==</span> <span class="n">expected_cell_char</span>
+            <span class="p">)</span>
+
+        <span class="n">blank_cells</span> <span class="o">=</span> <span class="n">get_coordinates</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+        <span class="n">blocked_cells</span> <span class="o">=</span> <span class="n">get_coordinates</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+        <span class="n">start_cells</span> <span class="o">=</span> <span class="n">get_coordinates</span><span class="p">(</span><span class="s2">"s"</span><span class="p">)</span>
+        <span class="n">goal_cells</span> <span class="o">=</span> <span class="n">get_coordinates</span><span class="p">(</span><span class="s2">"g"</span><span class="p">)</span>
+
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">start_cells</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"no start cell specified"</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">goal_cells</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"no goal cell specified"</span>
 
@@ -469,15 +459,15 @@
 
     <span class="n">track</span><span class="p">:</span> <span class="n">Track</span>
 
-    <span class="n">start_cell</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">start_cell</span><span class="p">:</span> <span class="n">Coordinate</span>
 
     <span class="n">tank_type</span><span class="p">:</span> <span class="n">TankType</span> <span class="o">=</span> <span class="n">TankType</span><span class="o">.</span><span class="n">LARGE</span>
     <span class="n">underground</span><span class="p">:</span> <span class="n">Underground</span> <span class="o">=</span> <span class="n">Underground</span><span class="o">.</span><span class="n">TARMAC</span>
 
-    <span class="n">max_speed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">max_speed</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">max_acceleration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="n">fuel_model</span><span class="p">:</span> <span class="n">FuelModel</span> <span class="o">=</span> <span class="n">fuel_model_regular</span>
+    <span class="n">fuel_model</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">FuelModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">fuel_model_regular</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="p">(</span>
@@ -497,6 +487,7 @@
     <span class="k">def</span> <span class="nf">compute_consumption</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">dy</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"no fuel model has been defined"</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span></div>
 
 
@@ -512,89 +503,116 @@
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_constant</span><span class="p">(</span><span class="s2">"WIDTH"</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_constant</span><span class="p">(</span><span class="s2">"HEIGHT"</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">track</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_constant</span><span class="p">(</span><span class="s2">"TRACK_SIZE"</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">track</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_constant</span><span class="p">(</span>
-        <span class="s2">"TANK_SIZE"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
-        <span class="n">value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">,</span>
+
+    <span class="n">speed_bound</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">max</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">track</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">+</span> <span class="n">scenario</span><span class="o">.</span><span class="n">max_acceleration</span>
     <span class="p">)</span>
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
         <span class="s2">"car_dx"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">),</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="n">speed_bound</span><span class="p">,</span> <span class="n">speed_bound</span><span class="p">),</span>
         <span class="n">initial_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
         <span class="s2">"car_dy"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">),</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="n">speed_bound</span><span class="p">,</span> <span class="n">speed_bound</span><span class="p">),</span>
         <span class="n">initial_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
         <span class="s2">"car_x"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span> <span class="o">%</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">),</span>
+        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
         <span class="s2">"car_y"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span> <span class="o">//</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">height</span><span class="p">),</span>
+        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
-        <span class="s2">"fuel"</span><span class="p">,</span>
-        <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">),</span>
-        <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">fuel_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">global_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
+            <span class="s2">"fuel"</span><span class="p">,</span>
+            <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">),</span>
+            <span class="n">initial_value</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">tank_size</span><span class="p">,</span>
+        <span class="p">)</span>
 
-    <span class="n">step</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
+    <span class="n">accelerate</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"accelerate"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
+    <span class="c1"># The environment is about to move the car.</span>
+    <span class="n">move_tick</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"move_tick"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
+    <span class="c1"># The environment is about to check the state of the car.</span>
+    <span class="n">check_tick</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"check_tick"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
+    <span class="c1"># The environment is about to delegate the decision back to the car.</span>
+    <span class="n">delegate</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_action_type</span><span class="p">(</span><span class="s2">"delegate"</span><span class="p">)</span><span class="o">.</span><span class="n">create_pattern</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">is_goal_at</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_at_cell</span><span class="p">(</span>
+        <span class="n">cells</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Coordinate</span><span class="p">],</span>
+        <span class="n">car_x</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_x"</span><span class="p">),</span>
+        <span class="n">car_y</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
+    <span class="p">):</span>
         <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
-            <span class="o">*</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"$pos == $cell"</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">)</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">goal_cells</span><span class="p">)</span>
-        <span class="p">)</span>
-
-    <span class="n">will_pass_goal</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">(</span>
-            <span class="n">is_goal_at</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">(</span>
                 <span class="n">expr</span><span class="p">(</span>
-                    <span class="s2">"floor(car_x + ($speed / $max_speed) * car_dx)"</span>
-                    <span class="s2">" + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)"</span><span class="p">,</span>
-                    <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
-                    <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
+                    <span class="s2">"$car_x == $cell_x and $car_y == $cell_y "</span><span class="p">,</span>
+                    <span class="n">car_x</span><span class="o">=</span><span class="n">car_x</span><span class="p">,</span>
+                    <span class="n">car_y</span><span class="o">=</span><span class="n">car_y</span><span class="p">,</span>
+                    <span class="n">cell_x</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                    <span class="n">cell_y</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
                 <span class="p">)</span>
+                <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">cells</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="p">)</span>
-    <span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">is_at_goal</span><span class="p">(</span>
+        <span class="n">car_x</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_x"</span><span class="p">),</span>
+        <span class="n">car_y</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">is_at_cell</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">goal_cells</span><span class="p">,</span> <span class="n">car_x</span><span class="p">,</span> <span class="n">car_y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_at_blocked</span><span class="p">(</span>
+        <span class="n">car_x</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_x"</span><span class="p">),</span>
+        <span class="n">car_y</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">is_at_cell</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">blocked_cells</span><span class="p">,</span> <span class="n">car_x</span><span class="p">,</span> <span class="n">car_y</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_off_track</span><span class="p">(</span>
+        <span class="n">car_x</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_x"</span><span class="p">),</span>
+        <span class="n">car_y</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">expr</span><span class="p">(</span>
+            <span class="s2">"$car_x &gt;= WIDTH or $car_x &lt; 0 or $car_y &gt;= HEIGHT or $car_y &lt; 0"</span><span class="p">,</span>
+            <span class="n">car_x</span><span class="o">=</span><span class="n">car_x</span><span class="p">,</span>
+            <span class="n">car_y</span><span class="o">=</span><span class="n">car_y</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="c1"># In case the fuel is empty before reaching the goal, the model goes</span>
+    <span class="c1"># into a dead state without transitions. Hence, this property also</span>
+    <span class="c1"># covers the consumption of fuel.</span>
     <span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
         <span class="s2">"goalProbability"</span><span class="p">,</span>
-        <span class="n">prop</span><span class="p">(</span>
-            <span class="s2">"min({ Pmax(F($will_pass_goal)) | initial })"</span><span class="p">,</span> <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">ctx</span><span class="o">.</span><span class="n">define_property</span><span class="p">(</span>
-        <span class="s2">"goalProbabilityFuel"</span><span class="p">,</span>
-        <span class="n">prop</span><span class="p">(</span>
-            <span class="s2">"min({ Pmax(F($will_pass_goal and fuel &gt; 0)) | initial })"</span><span class="p">,</span>
-            <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span><span class="p">,</span>
-        <span class="p">),</span>
+        <span class="n">prop</span><span class="p">(</span><span class="s2">"min({ Pmax(F($is_at_goal)) | initial })"</span><span class="p">,</span> <span class="n">is_at_goal</span><span class="o">=</span><span class="n">is_at_goal</span><span class="p">()),</span>
     <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">construct_car_automaton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
         <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"car"</span><span class="p">)</span>
         <span class="n">initial</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">update_speed</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">compute_speed</span><span class="p">(</span>
             <span class="n">current</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">acceleration</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">expr</span><span class="p">(</span>
-                <span class="s2">"max(min($current + $acceleration, $max_speed), -$max_speed)"</span><span class="p">,</span>
-                <span class="n">current</span><span class="o">=</span><span class="n">current</span><span class="p">,</span>
-                <span class="n">acceleration</span><span class="o">=</span><span class="n">acceleration</span><span class="p">,</span>
-                <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">expr</span><span class="p">(</span>
+                    <span class="s2">"$current + $acceleration"</span><span class="p">,</span>
+                    <span class="n">current</span><span class="o">=</span><span class="n">current</span><span class="p">,</span>
+                    <span class="n">acceleration</span><span class="o">=</span><span class="n">acceleration</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">expr</span><span class="p">(</span>
+                    <span class="s2">"max(min($current + $acceleration, $max_speed), -$max_speed)"</span><span class="p">,</span>
+                    <span class="n">current</span><span class="o">=</span><span class="n">current</span><span class="p">,</span>
+                    <span class="n">acceleration</span><span class="o">=</span><span class="n">acceleration</span><span class="p">,</span>
+                    <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">possible_accelerations</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
@@ -603,19 +621,19 @@
                     <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                         <span class="n">location</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
                         <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">"car_dx"</span><span class="p">:</span> <span class="n">update_speed</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">ax</span><span class="p">),</span>
-                            <span class="s2">"car_dy"</span><span class="p">:</span> <span class="n">update_speed</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">),</span> <span class="n">ay</span><span class="p">),</span>
+                            <span class="s2">"car_dx"</span><span class="p">:</span> <span class="n">compute_speed</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">ax</span><span class="p">),</span>
+                            <span class="s2">"car_dy"</span><span class="p">:</span> <span class="n">compute_speed</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">),</span> <span class="n">ay</span><span class="p">),</span>
                         <span class="p">},</span>
                         <span class="n">probability</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">underground</span><span class="o">.</span><span class="n">acceleration_probability</span><span class="p">,</span>
                     <span class="p">),</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                         <span class="n">location</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
                         <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
-                            <span class="s2">"car_dx"</span><span class="p">:</span> <span class="n">update_speed</span><span class="p">(</span>
+                            <span class="s2">"car_dx"</span><span class="p">:</span> <span class="n">compute_speed</span><span class="p">(</span>
                                 <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span>
                                 <span class="n">scenario</span><span class="o">.</span><span class="n">underground</span><span class="o">.</span><span class="n">acceleration_model</span><span class="p">(</span><span class="n">ax</span><span class="p">),</span>
                             <span class="p">),</span>
-                            <span class="s2">"car_dy"</span><span class="p">:</span> <span class="n">update_speed</span><span class="p">(</span>
+                            <span class="s2">"car_dy"</span><span class="p">:</span> <span class="n">compute_speed</span><span class="p">(</span>
                                 <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">),</span>
                                 <span class="n">scenario</span><span class="o">.</span><span class="n">underground</span><span class="o">.</span><span class="n">acceleration_model</span><span class="p">(</span><span class="n">ay</span><span class="p">),</span>
                             <span class="p">),</span>
@@ -626,7 +644,7 @@
                         <span class="p">),</span>
                     <span class="p">),</span>
                 <span class="p">},</span>
-                <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+                <span class="n">action_pattern</span><span class="o">=</span><span class="n">accelerate</span><span class="p">,</span>
                 <span class="n">annotation</span><span class="o">=</span><span class="p">{</span><span class="s2">"ax"</span><span class="p">:</span> <span class="n">ax</span><span class="p">,</span> <span class="s2">"ay"</span><span class="p">:</span> <span class="n">ay</span><span class="p">},</span>
             <span class="p">)</span>
 
@@ -636,8 +654,7 @@
         <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"tank"</span><span class="p">)</span>
         <span class="n">initial</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">car_dx</span><span class="p">,</span> <span class="n">car_dy</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">)</span>
-        <span class="n">fuel_model</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">compute_consumption</span>
+        <span class="n">consumption</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">compute_consumption</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">))</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
             <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
@@ -645,95 +662,115 @@
                     <span class="n">initial</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
                         <span class="s2">"fuel"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span>
-                            <span class="s2">"min(TANK_SIZE, max(0, fuel - floor($consumption)))"</span><span class="p">,</span>
-                            <span class="n">consumption</span><span class="o">=</span><span class="n">fuel_model</span><span class="p">(</span><span class="n">car_dx</span><span class="p">,</span> <span class="n">car_dy</span><span class="p">),</span>
+                            <span class="s2">"fuel - floor($consumption)"</span><span class="p">,</span> <span class="n">consumption</span><span class="o">=</span><span class="n">consumption</span>
                         <span class="p">)</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
             <span class="p">},</span>
-            <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">check_tick</span><span class="p">,</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span>
                 <span class="s2">"fuel &gt;= $consumption"</span><span class="p">,</span>
-                <span class="n">consumption</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">compute_consumption</span><span class="p">(</span>
-                    <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">)</span>
-                <span class="p">),</span>
+                <span class="n">consumption</span><span class="o">=</span><span class="n">consumption</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">automaton</span>
 
-    <span class="k">def</span> <span class="nf">construct_controller_automaton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
-        <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"controller"</span><span class="p">)</span>
-        <span class="n">cars_turn</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">env_turn</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">construct_environment_automaton</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Automaton</span><span class="p">:</span>
+        <span class="n">automaton</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">create_automaton</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"environment"</span><span class="p">)</span>
 
-        <span class="n">offtrack</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
-            <span class="s2">"$x &gt;= WIDTH or $x &lt; 0 or $y &gt;= HEIGHT or $y &lt; 0"</span><span class="p">,</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_x + car_dx"</span><span class="p">),</span>
-            <span class="n">y</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_y + car_dy"</span><span class="p">),</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
+            <span class="s2">"start_x"</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="n">initial_value</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
+            <span class="s2">"start_y"</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">height</span><span class="p">),</span> <span class="n">initial_value</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span>
+            <span class="s2">"counter"</span><span class="p">,</span>
+            <span class="n">typ</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">bound</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">track</span><span class="o">.</span><span class="n">height</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">initial_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">is_blocked_at</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
-                <span class="o">*</span><span class="p">(</span>
-                    <span class="n">expr</span><span class="p">(</span><span class="s2">"$pos == $cell"</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">blocked_cells</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
+        <span class="n">wait_for_car</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="s2">"wait_for_car"</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">move_car</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="s2">"move_car"</span><span class="p">)</span>
+        <span class="n">env_check</span> <span class="o">=</span> <span class="n">automaton</span><span class="o">.</span><span class="n">create_location</span><span class="p">(</span><span class="s2">"env_check"</span><span class="p">)</span>
 
-        <span class="n">will_crash</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">logic_any</span><span class="p">(</span>
-            <span class="o">*</span><span class="p">(</span>
-                <span class="n">is_blocked_at</span><span class="p">(</span>
-                    <span class="n">expr</span><span class="p">(</span>
-                        <span class="s2">"floor(car_x + ($speed / $max_speed) * car_dx)"</span>
-                        <span class="s2">" + WIDTH * floor(car_y + ($speed / $max_speed) * car_dy)"</span><span class="p">,</span>
-                        <span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">,</span>
-                        <span class="n">max_speed</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span><span class="p">,</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-                <span class="k">for</span> <span class="n">speed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">max_speed</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">move_ticks</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(abs(car_dx), abs(car_dy))"</span><span class="p">)</span>
 
-        <span class="n">not_terminated</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
-            <span class="s2">"not ($will_pass_goal and car_dx == 0 and car_dy == 0 and fuel == 0)"</span>
-            <span class="s2">" and not $offtrack"</span>
-            <span class="s2">" and not $will_crash"</span><span class="p">,</span>
-            <span class="n">will_pass_goal</span><span class="o">=</span><span class="n">will_pass_goal</span><span class="p">,</span>
-            <span class="n">offtrack</span><span class="o">=</span><span class="n">offtrack</span><span class="p">,</span>
-            <span class="n">will_crash</span><span class="o">=</span><span class="n">will_crash</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">next_car_x</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(min(car_x + car_dx, WIDTH - 1), 0)"</span><span class="p">)</span>
-        <span class="n">next_car_y</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"max(min(car_y + car_dy, HEIGHT - 1), 0))"</span><span class="p">)</span>
-
+        <span class="c1"># Wait for the decision of the car.</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
-            <span class="n">source</span><span class="o">=</span><span class="n">cars_turn</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">env_turn</span><span class="p">)},</span>
-            <span class="n">action_pattern</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
-            <span class="n">guard</span><span class="o">=</span><span class="n">not_terminated</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
-            <span class="n">source</span><span class="o">=</span><span class="n">env_turn</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">wait_for_car</span><span class="p">,</span>
             <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
-                    <span class="n">cars_turn</span><span class="p">,</span>
-                    <span class="n">assignments</span><span class="o">=</span><span class="p">{</span><span class="s2">"car_x"</span><span class="p">:</span> <span class="n">next_car_x</span><span class="p">,</span> <span class="s2">"car_y"</span><span class="p">:</span> <span class="n">next_car_y</span><span class="p">},</span>
+                    <span class="n">location</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
+                    <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">"counter"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"0"</span><span class="p">),</span>
+                        <span class="s2">"start_x"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_x"</span><span class="p">),</span>
+                        <span class="s2">"start_y"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
+                    <span class="p">},</span>
                 <span class="p">)</span>
             <span class="p">},</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">accelerate</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Move the car or delegate the decision back to the car.</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
+                    <span class="n">env_check</span><span class="p">,</span>
+                    <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">"counter"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"counter + 1"</span><span class="p">),</span>
+                        <span class="s2">"car_x"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span>
+                            <span class="s2">"start_x + floor((counter + 1) * (car_dx / $move_ticks) + 0.5)"</span><span class="p">,</span>
+                            <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="s2">"car_y"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span>
+                            <span class="s2">"start_y + floor((counter + 1) * (car_dy / $move_ticks) + 0.5)"</span><span class="p">,</span>
+                            <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+            <span class="p">},</span>
+            <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"counter &lt; $move_ticks"</span><span class="p">,</span> <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">),</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">move_tick</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait_for_car</span><span class="p">)},</span>
+            <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"counter &gt;= $move_ticks"</span><span class="p">,</span> <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">),</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">delegate</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Checker whether we should terminate or continue moving the car.</span>
+        <span class="n">should_terminate</span> <span class="o">=</span> <span class="n">expr</span><span class="p">(</span>
+            <span class="s2">"$is_off_track or $is_at_goal or $is_at_blocked"</span><span class="p">,</span>
+            <span class="n">is_off_track</span><span class="o">=</span><span class="n">is_off_track</span><span class="p">(),</span>
+            <span class="n">is_at_goal</span><span class="o">=</span><span class="n">is_at_goal</span><span class="p">(),</span>
+            <span class="n">is_at_blocked</span><span class="o">=</span><span class="n">is_at_blocked</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">env_check</span><span class="p">,</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">move_car</span><span class="p">)},</span>
+            <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"not $should_terminate"</span><span class="p">,</span> <span class="n">should_terminate</span><span class="o">=</span><span class="n">should_terminate</span><span class="p">),</span>
+            <span class="n">action_pattern</span><span class="o">=</span><span class="n">check_tick</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">automaton</span>
 
     <span class="n">car</span> <span class="o">=</span> <span class="n">construct_car_automaton</span><span class="p">()</span><span class="o">.</span><span class="n">create_instance</span><span class="p">()</span>
-    <span class="n">tank</span> <span class="o">=</span> <span class="n">construct_tank_automaton</span><span class="p">()</span><span class="o">.</span><span class="n">create_instance</span><span class="p">()</span>
-    <span class="n">controller</span> <span class="o">=</span> <span class="n">construct_controller_automaton</span><span class="p">()</span><span class="o">.</span><span class="n">create_instance</span><span class="p">()</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">construct_environment_automaton</span><span class="p">()</span><span class="o">.</span><span class="n">create_instance</span><span class="p">()</span>
 
-    <span class="n">network</span><span class="o">.</span><span class="n">create_link</span><span class="p">(</span>
-        <span class="p">{</span><span class="n">car</span><span class="p">:</span> <span class="n">step</span><span class="p">,</span> <span class="n">tank</span><span class="p">:</span> <span class="n">step</span><span class="p">,</span> <span class="n">controller</span><span class="p">:</span> <span class="n">step</span><span class="p">},</span>
-        <span class="n">result</span><span class="o">=</span><span class="n">step</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">check_tick_vector</span> <span class="o">=</span> <span class="p">{</span><span class="n">environment</span><span class="p">:</span> <span class="n">check_tick</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">fuel_model</span><span class="p">:</span>
+        <span class="n">tank</span> <span class="o">=</span> <span class="n">construct_tank_automaton</span><span class="p">()</span><span class="o">.</span><span class="n">create_instance</span><span class="p">()</span>
+        <span class="n">check_tick_vector</span><span class="p">[</span><span class="n">tank</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_tick</span>
+
+    <span class="n">network</span><span class="o">.</span><span class="n">create_link</span><span class="p">({</span><span class="n">car</span><span class="p">:</span> <span class="n">accelerate</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">accelerate</span><span class="p">},</span> <span class="n">result</span><span class="o">=</span><span class="n">accelerate</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">create_link</span><span class="p">({</span><span class="n">environment</span><span class="p">:</span> <span class="n">move_tick</span><span class="p">},</span> <span class="n">result</span><span class="o">=</span><span class="n">move_tick</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">create_link</span><span class="p">(</span><span class="n">check_tick_vector</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">check_tick</span><span class="p">)</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">create_link</span><span class="p">({</span><span class="n">environment</span><span class="p">:</span> <span class="n">delegate</span><span class="p">},</span> <span class="n">result</span><span class="o">=</span><span class="n">delegate</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">network</span>
 
