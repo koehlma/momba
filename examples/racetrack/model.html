@@ -298,22 +298,22 @@ The <em>cells</em> of a track are enumerated from top-left to bottom-right.</p>
 <dd><p>An enumeration of <em>cell types</em>.</p>
 <dl class="py attribute">
 <dt id="racetrack.model.CellType.BLANK">
-<code class="sig-name descname"><span class="pre">BLANK</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'.'</span></em><a class="headerlink" href="#racetrack.model.CellType.BLANK" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">BLANK</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('.',</span> <span class="pre">0)</span></em><a class="headerlink" href="#racetrack.model.CellType.BLANK" title="Permalink to this definition">¶</a></dt>
 <dd><p>A <em>blank cell</em> where one can drive.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt id="racetrack.model.CellType.BLOCKED">
-<code class="sig-name descname"><span class="pre">BLOCKED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'x'</span></em><a class="headerlink" href="#racetrack.model.CellType.BLOCKED" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">BLOCKED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('x',</span> <span class="pre">1)</span></em><a class="headerlink" href="#racetrack.model.CellType.BLOCKED" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cell <em>blocked</em> by an obstacle.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt id="racetrack.model.CellType.GOAL">
-<code class="sig-name descname"><span class="pre">GOAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'g'</span></em><a class="headerlink" href="#racetrack.model.CellType.GOAL" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">GOAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('g',</span> <span class="pre">3)</span></em><a class="headerlink" href="#racetrack.model.CellType.GOAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>A goal cell.</p>
 </dd></dl>
 <dl class="py attribute">
 <dt id="racetrack.model.CellType.START">
-<code class="sig-name descname"><span class="pre">START</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'s'</span></em><a class="headerlink" href="#racetrack.model.CellType.START" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">START</span></code><em class="property"> <span class="pre">=</span> <span class="pre">('s',</span> <span class="pre">2)</span></em><a class="headerlink" href="#racetrack.model.CellType.START" title="Permalink to this definition">¶</a></dt>
 <dd><p>A start cell.</p>
 </dd></dl>
 </dd></dl>
@@ -321,7 +321,7 @@ The <em>cells</em> of a track are enumerated from top-left to bottom-right.</p>
 <h3>Scenarios<a class="headerlink" href="#scenarios" title="Permalink to this headline">¶</a></h3>
 <dl class="py class">
 <dt id="racetrack.model.Scenario">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Scenario</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">track</span></em>, <em class="sig-param"><span class="pre">start_cell</span></em>, <em class="sig-param"><span class="pre">tank_type=&lt;TankType.LARGE:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">underground=&lt;Underground.TARMAC:</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/'</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">left=IntegerConstant(integer=9)</span></em>, <em class="sig-param"><span class="pre">right=IntegerConstant(integer=10))</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">max_speed=None</span></em>, <em class="sig-param"><span class="pre">max_acceleration=1</span></em>, <em class="sig-param"><span class="pre">fuel_model=&lt;function</span> <span class="pre">fuel_model_regular&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Scenario" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">racetrack.model.</span></code><code class="sig-name descname"><span class="pre">Scenario</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">track</span></em>, <em class="sig-param"><span class="pre">start_cell</span></em>, <em class="sig-param"><span class="pre">tank_type=&lt;TankType.LARGE:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">underground=&lt;Underground.TARMAC:</span> <span class="pre">(ArithmeticBinary(operator=&lt;ArithmeticBinaryOperator.REAL_DIV:</span> <span class="pre">('/'</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">ArithmeticBinaryOperator.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">left=IntegerConstant(integer=9)</span></em>, <em class="sig-param"><span class="pre">right=IntegerConstant(integer=10))</span></em>, <em class="sig-param"><span class="pre">&lt;function</span> <span class="pre">Underground.&lt;lambda&gt;&gt;)&gt;</span></em>, <em class="sig-param"><span class="pre">max_speed=None</span></em>, <em class="sig-param"><span class="pre">max_acceleration=1</span></em>, <em class="sig-param"><span class="pre">fuel_model=&lt;function</span> <span class="pre">fuel_model_regular&gt;</span></em>, <em class="sig-param"><span class="pre">compute_distances=False</span></em>, <em class="sig-param"><span class="pre">random_start=False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/racetrack/model.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#racetrack.model.Scenario" title="Permalink to this definition">¶</a></dt>
 <dd><p>A scenario description comprising a track, start cell, tank type, underground,
 maximal speed and acceleration values, and a fuel model.</p>
 </dd></dl>
