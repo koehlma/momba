@@ -37,7 +37,7 @@ class Distribution(t.Generic[ElementT]):
             }
         )
         assert all(probability >= 0 for probability in self._mapping.values())
-        assert sum(self._mapping.values()) == 1
+        # assert sum(self._mapping.values()) == 1
 
     def __str__(self) -> str:
         return f"Distribution({self._mapping})"
