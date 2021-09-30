@@ -179,6 +179,11 @@ def race(
     running = True
 
     while running:
+        while not all(
+            car_instance in transition.edge_vector for transition in state.transitions
+        ):
+            state = random.choice(state.transitions).destinations.pick().state
+
         car_x = state.global_env["car_x"].as_int
         car_y = state.global_env["car_y"].as_int
         car_cell = model.Coordinate(car_x, car_y)
@@ -227,7 +232,6 @@ def race(
         decision = options[(chosen_ax, chosen_ay)]
         state = decision.destinations.pick().state
 
-        while not all(
-            car_instance in transition.edge_vector for transition in state.transitions
-        ):
-            state = random.choice(state.transitions).destinations.pick().state
+
+if __name__ == "__main__":
+    main()

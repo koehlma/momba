@@ -116,25 +116,52 @@ class CellType(enum.Enum):
     An enumeration of *cell types*.
     """
 
-    BLANK = "."
+    BLANK = ".", 0
     """
     A *blank cell* where one can drive.
     """
 
-    BLOCKED = "x"
+    BLOCKED = "x", 1
     """
     A cell *blocked* by an obstacle.
     """
 
-    START = "s"
+    START = "s", 2
     """
     A start cell.
     """
 
-    GOAL = "g"
+    GOAL = "g", 3
     """
     A goal cell.
     """
+
+    symbol: str
+    number: int
+
+    def __init__(self, symbol: str, number: int) -> None:
+        self.symbol = symbol
+        self.number = number
+
+
+class Direction(enum.Enum):
+    NORTH = (0, -1)
+    NORTH_EAST = (1, -1)
+    EAST = (1, 0)
+    SOUTH_EAST = (1, 1)
+    SOUTH = (0, 1)
+    SOUTH_WEST = (-1, 1)
+    WEST = (-1, 0)
+    NORTH_WEST = (-1, -1)
+
+    delta: Coordinate
+
+    def __init__(self, delta_x: int, delta_y: int) -> None:
+        self.delta = Coordinate(delta_x, delta_y)
+
+    @property
+    def distance_variable(self) -> str:
+        return f"dist_{self.name.lower()}"
 
 
 @d.dataclass(frozen=True)
@@ -275,7 +302,7 @@ class Scenario:
 
     track: Track
 
-    start_cell: Coordinate
+    start_cell: t.Optional[Coordinate]
 
     tank_type: TankType = TankType.LARGE
     underground: Underground = Underground.TARMAC
@@ -285,10 +312,9 @@ class Scenario:
 
     fuel_model: t.Optional[FuelModel] = fuel_model_regular
 
-    def __post_init__(self) -> None:
-        assert (
-            self.start_cell in self.track.start_cells
-        ), f"invalid start cell {self.start_cell}"
+    compute_distances: bool = False
+
+    random_start: bool = False
 
     @property
     def tank_size(self) -> int:
@@ -338,13 +364,55 @@ def construct_model(scenario: Scenario) -> model.Network:
     ctx.global_scope.declare_variable(
         "car_x",
         types.INT.bound(-1, track.width),
-        initial_value=scenario.start_cell.x,
+        initial_value=scenario.start_cell.x if scenario.start_cell is not None else 0,
     )
     ctx.global_scope.declare_variable(
         "car_y",
         types.INT.bound(-1, track.height),
-        initial_value=scenario.start_cell.y,
+        initial_value=scenario.start_cell.y if scenario.start_cell is not None else 0,
     )
+
+    ctx.global_scope.declare_variable(
+        "map",
+        typ=types.array_of(types.array_of(types.INT.bound(0, 3))),
+        is_transient=True,
+        initial_value=model.expressions.ArrayValue(
+            tuple(
+                model.expressions.ArrayValue(
+                    tuple(
+                        model.ensure_expr(track.get_cell_type(Coordinate(x, y)).number)
+                        for x in range(track.width)
+                    )
+                )
+                for y in range(track.height)
+            )
+        ),
+    )
+
+    if scenario.compute_distances:
+        ctx.global_scope.declare_variable(
+            "goal_dist_x",
+            typ=types.INT.bound(-track.width - 1, track.width + 1),
+            initial_value=0,
+        )
+        ctx.global_scope.declare_variable(
+            "goal_dist_y",
+            typ=types.INT.bound(-track.height - 1, track.height + 1),
+            initial_value=0,
+        )
+        ctx.global_scope.declare_variable(
+            "goal_dist",
+            typ=types.INT.bound(0, track.width + track.height + 2),
+            initial_value=0,
+        )
+        for direction in Direction:
+            ctx.global_scope.declare_variable(
+                direction.distance_variable,
+                typ=types.INT.bound(
+                    0, math.floor(math.sqrt(track.width ** 2 + track.height ** 2)) + 1
+                ),
+                initial_value=0,
+            )
 
     if scenario.fuel_model is not None:
         ctx.global_scope.declare_variable(
@@ -361,36 +429,6 @@ def construct_model(scenario: Scenario) -> model.Network:
     # The environment is about to delegate the decision back to the car.
     delegate = ctx.create_action_type("delegate").create_pattern()
 
-    def is_at_cell(
-        cells: t.Iterable[Coordinate],
-        car_x: model.Expression = expr("car_x"),
-        car_y: model.Expression = expr("car_y"),
-    ):
-        return expressions.logic_any(
-            *(
-                expr(
-                    "$car_x == $cell_x and $car_y == $cell_y ",
-                    car_x=car_x,
-                    car_y=car_y,
-                    cell_x=cell.x,
-                    cell_y=cell.y,
-                )
-                for cell in cells
-            )
-        )
-
-    def is_at_goal(
-        car_x: model.Expression = expr("car_x"),
-        car_y: model.Expression = expr("car_y"),
-    ) -> model.Expression:
-        return is_at_cell(track.goal_cells, car_x, car_y)
-
-    def is_at_blocked(
-        car_x: model.Expression = expr("car_x"),
-        car_y: model.Expression = expr("car_y"),
-    ) -> model.Expression:
-        return is_at_cell(track.blocked_cells, car_x, car_y)
-
     def is_off_track(
         car_x: model.Expression = expr("car_x"),
         car_y: model.Expression = expr("car_y"),
@@ -400,6 +438,34 @@ def construct_model(scenario: Scenario) -> model.Network:
             car_x=car_x,
             car_y=car_y,
         )
+
+    def is_at_cell(
+        typ: CellType,
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ):
+        return model.expressions.ite(
+            is_off_track(car_x, car_y),
+            model.ensure_expr(typ is CellType.BLOCKED),
+            expr(
+                f"$cell_number == {typ.number}",
+                cell_number=model.expressions.ArrayAccess(
+                    model.expressions.ArrayAccess(expr("map"), car_y), car_x
+                ),
+            ),
+        )
+
+    def is_at_goal(
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ) -> model.Expression:
+        return is_at_cell(CellType.GOAL, car_x, car_y)
+
+    def is_at_blocked(
+        car_x: model.Expression = expr("car_x"),
+        car_y: model.Expression = expr("car_y"),
+    ) -> model.Expression:
+        return is_at_cell(CellType.BLOCKED, car_x, car_y)
 
     # In case the fuel is empty before reaching the goal, the model goes
     # into a dead state without transitions. Hence, this property also
@@ -507,11 +573,52 @@ def construct_model(scenario: Scenario) -> model.Network:
             initial_value=0,
         )
 
-        wait_for_car = automaton.create_location("wait_for_car", initial=True)
+        initial = automaton.create_location("initial", initial=True)
+        position_set = automaton.create_location("position_set")
+        wait_for_car = automaton.create_location("wait_for_car")
         move_car = automaton.create_location("move_car")
         env_check = automaton.create_location("env_check")
 
         move_ticks = expr("max(abs(car_dx), abs(car_dy))")
+
+        if scenario.start_cell is None:
+            options = set(track.start_cells)
+            if scenario.random_start:
+                options.update(track.goal_cells)
+                options.update(track.blank_cells)
+            automaton.create_edge(
+                initial,
+                destinations={
+                    model.create_destination(
+                        position_set,
+                        assignments={
+                            "car_x": model.ensure_expr(start_cell.x),
+                            "car_y": model.ensure_expr(start_cell.y),
+                        },
+                        probability=expr(f"1 / {len(options)}"),
+                    )
+                    for start_cell in options
+                },
+            )
+        else:
+            automaton.create_edge(
+                initial,
+                destinations={
+                    model.create_destination(
+                        position_set,
+                        assignments={
+                            "car_x": model.ensure_expr(scenario.start_cell.x),
+                            "car_y": model.ensure_expr(scenario.start_cell.x),
+                        },
+                    )
+                },
+            )
+
+        automaton.create_edge(
+            source=position_set,
+            destinations={model.create_destination(wait_for_car)},
+            action_pattern=delegate,
+        )
 
         # Wait for the decision of the car.
         automaton.create_edge(
@@ -574,19 +681,131 @@ def construct_model(scenario: Scenario) -> model.Network:
 
         return automaton
 
+    def construct_distance_automaton() -> model.Automaton:
+        automaton = ctx.create_automaton(name="Distance")
+
+        compute = automaton.create_location("compute")
+        done = automaton.create_location("done")
+        wait = automaton.create_location("wait", initial=True)
+
+        def get_goal_dist_x(goal: Coordinate) -> model.Expression:
+            return expr(f"{goal.x} - car_x")
+
+        def get_goal_dist_y(goal: Coordinate) -> model.Expression:
+            return expr(f"{goal.y} - car_y")
+
+        def get_goal_dist(goal: Coordinate) -> model.Expression:
+            return expr(
+                "abs($dist_x) + abs($dist_y)",
+                dist_x=get_goal_dist_x(goal),
+                dist_y=get_goal_dist_y(goal),
+            )
+
+        automaton.create_edge(
+            done,
+            destinations={model.create_destination(wait)},
+            action_pattern=accelerate,
+        )
+
+        assignments = {
+            direction.distance_variable: model.ensure_expr(0) for direction in Direction
+        }
+        assignments["goal_dist"] = model.ensure_expr(track.width + track.height + 2)
+        for goal in track.goal_cells:
+            assignments["goal_dist"] = model.expressions.minimum(
+                get_goal_dist(goal), assignments["goal_dist"]
+            )
+        automaton.create_edge(
+            wait,
+            destinations={
+                model.create_destination(
+                    compute,
+                    assignments=assignments,
+                )
+            },
+            action_pattern=delegate,
+        )
+
+        def get_current_x(direction: Direction):
+            return expr(
+                "car_x + $factor * $distance",
+                factor=direction.delta.x,
+                distance=expr(direction.distance_variable),
+            )
+
+        def get_current_y(direction: Direction):
+            return expr(
+                "car_y + $factor * $distance",
+                factor=direction.delta.y,
+                distance=expr(direction.distance_variable),
+            )
+
+        def is_done(direction: Direction):
+            return model.expressions.logic_or(
+                is_at_blocked(get_current_x(direction), get_current_y(direction)),
+                is_off_track(get_current_x(direction), get_current_y(direction)),
+            )
+
+        is_done_all = model.expressions.logic_all(
+            *(is_done(direction) for direction in Direction)
+        )
+
+        assignments = {"goal_dist_x": track.width + 1, "goal_dist_y": track.height + 1}
+        for goal in track.goal_cells:
+            do_apply = expr(
+                "goal_dist == $to_this_goal", to_this_goal=get_goal_dist(goal)
+            )
+            assignments["goal_dist_x"] = model.expressions.ite(
+                do_apply, get_goal_dist_x(goal), assignments["goal_dist_x"]
+            )
+            assignments["goal_dist_y"] = model.expressions.ite(
+                do_apply, get_goal_dist_y(goal), assignments["goal_dist_y"]
+            )
+        automaton.create_edge(
+            compute,
+            destinations={model.create_destination(done, assignments=assignments)},
+            guard=is_done_all,
+        )
+
+        automaton.create_edge(
+            compute,
+            destinations={
+                model.create_destination(
+                    compute,
+                    assignments={
+                        direction.distance_variable: expr(
+                            f"{direction.distance_variable} + $delta",
+                            delta=model.expressions.ite(is_done(direction), 0, 1),
+                        )
+                        for direction in Direction
+                    },
+                )
+            },
+            guard=expr("not $is_done", is_done=is_done_all),
+        )
+
+        return automaton
+
     car = construct_car_automaton().create_instance()
     environment = construct_environment_automaton().create_instance()
 
+    accelerate_vector = {car: accelerate, environment: accelerate}
     check_tick_vector = {environment: check_tick}
+    delegate_vector = {environment: delegate}
 
     if scenario.fuel_model:
         tank = construct_tank_automaton().create_instance()
         check_tick_vector[tank] = check_tick
 
-    network.create_link({car: accelerate, environment: accelerate}, result=accelerate)
+    if scenario.compute_distances:
+        instance = construct_distance_automaton().create_instance()
+        delegate_vector[instance] = delegate
+        accelerate_vector[instance] = accelerate
+
+    network.create_link(accelerate_vector, result=accelerate)
     network.create_link({environment: move_tick}, result=move_tick)
     network.create_link(check_tick_vector, result=check_tick)
-    network.create_link({environment: delegate}, result=delegate)
+    network.create_link(delegate_vector, result=delegate)
 
     return network
 
@@ -606,4 +825,5 @@ def generate_scenarios(
                             underground,
                             max_speed,
                             max_acceleration,
+                            compute_distances=True,
                         )
