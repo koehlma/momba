@@ -373,6 +373,13 @@ impl<const BANKS: usize> Scope<BANKS> {
                     _ => panic!("trigonometric function {:?} not implemented", function),
                 }
             }
+            Expression::Index(IndexExpression { vector, index }) => {
+                let vector = self.compile(vector);
+                let index = self.compile(index);
+                construct!(move |env, stack| {
+                    evaluate!(vector, env, stack).unwrap_vector()[evaluate!(index, env, stack).unwrap_int64() as usize].clone()
+                })
+            }
             _ => panic!("not implemented {:?}", expression),
         }
     }
