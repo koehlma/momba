@@ -123,6 +123,7 @@ impl Value {
     pub fn unwrap_float64(&self) -> NotNan<f64> {
         match self {
             Value::Float64(value) => *value,
+            Value::Int64(value) => NotNan::new(*value as f64).unwrap(),
             _ => panic!("Value {:?} is not a Float64.", self),
         }
     }
