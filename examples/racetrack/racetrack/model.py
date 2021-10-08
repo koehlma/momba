@@ -584,7 +584,6 @@ def construct_model(scenario: Scenario) -> model.Network:
         if scenario.start_cell is None:
             options = set(track.start_cells)
             if scenario.random_start:
-                options.update(track.goal_cells)
                 options.update(track.blank_cells)
             automaton.create_edge(
                 initial,
