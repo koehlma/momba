@@ -17,7 +17,7 @@ from .. import jani, model
 
 from ..tools import modest
 
-from .api import Oracle
+from .abstract import Oracle
 
 
 HEADER = struct.Struct("!II")  # (num_features, num_actions)
@@ -54,7 +54,8 @@ class OracleServer:
                     await reader.readexactly(state_decoder.size)
                 )
                 # print("Received state:", state)
-                decision = self.oracle(state)
+                # TODO: receive available actions vector
+                decision = self.oracle(state, [])
                 # print("Send decision:", decision)
                 writer.write(DECISION.pack(decision))
                 await writer.drain()

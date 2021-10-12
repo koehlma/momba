@@ -13,7 +13,7 @@ import numpy
 from gym import spaces
 from gym.error import UnsupportedMode
 
-from .api import Explorer, StateVector
+from .abstract import Explorer, StateVector
 
 
 class Renderer(t.Protocol):
@@ -21,11 +21,9 @@ class Renderer(t.Protocol):
         raise NotImplementedError()
 
 
-StateType = numpy.ndarray[t.Any, t.Any]
-AvailableActions = numpy.ndarray[t.Any, t.Any]
-
-
 class MombaEnv(gym.Env):  # type: ignore
+    """Implementation of an OpenAI Gym environment."""
+
     explorer: Explorer
 
     action_space: gym.Space  # type: ignore
@@ -45,22 +43,26 @@ class MombaEnv(gym.Env):  # type: ignore
         self.renderer = renderer
 
     @property
-    def available_actions(self) -> AvailableActions:
+    def available_actions(self) -> numpy.ndarray:  # type: ignore
         return numpy.array(self.explorer.available_actions)
 
     def fork(self) -> MombaEnv:
+        """Forks the environment."""
         return MombaEnv(self.explorer.fork(), renderer=self.renderer)
 
-    def step(self, action: int) -> t.Tuple[StateType, float, bool, t.Any]:
+    def step(self, action: int) -> t.Tuple[numpy.ndarray, float, bool, t.Any]:  # type: ignore
+        """Takes a decision in response to the last observation."""
         reward = self.explorer.step(action)
         state = numpy.array(self.explorer.state_vector)
         return state, reward, self.explorer.has_terminated, {}
 
-    def reset(self) -> StateType:
+    def reset(self) -> numpy.ndarray:  # type: ignore
+        """Resets the environment to an initial state and returns an initial observation."""
         self.explorer.reset()
         return numpy.array(self.explorer.state_vector)
 
     def render(self, mode: str = "human") -> None:
+        """Renders the environment assuming a :code:`render` has been supplied."""
         if self.renderer is None:
             raise UnsupportedMode("`MombaGym` does not support rendering")
         else:

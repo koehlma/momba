@@ -30,6 +30,7 @@ import racetrack  # noqa
 import momba  # noqa
 
 from momba import moml  # noqa
+from momba import gym  # noqa
 
 
 class MomlLexer(RegexLexer):  # type:ignore

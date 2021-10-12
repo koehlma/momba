@@ -60,6 +60,13 @@ incubator/index
 ```
 
 ```{toctree}
+:caption: Features
+:hidden:
+
+gym/index
+```
+
+```{toctree}
 :caption: Development
 :hidden:
 

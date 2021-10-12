@@ -11,11 +11,11 @@ import abc
 
 
 StateVector = t.Sequence[float]
-AvailableActions = t.Sequence[bool]
+AvailableVector = t.Sequence[bool]
 
 
 class Explorer(abc.ABC):
-    """State space explorer for learning."""
+    """State space explorer for training decision agents."""
 
     @property
     @abc.abstractmethod
@@ -43,7 +43,7 @@ class Explorer(abc.ABC):
 
     @property
     @abc.abstractmethod
-    def available_actions(self) -> AvailableActions:
+    def available_actions(self) -> AvailableVector:
         """A boolean vector indicating which actions are available."""
         raise NotImplementedError()
 
@@ -67,7 +67,8 @@ class Explorer(abc.ABC):
         raise NotImplementedError()
 
 
-# The type of a learned oracle mapping state vectors to actions.
 class Oracle(t.Protocol):
-    def __call__(self, state: StateVector) -> int:
+    """An *oracle* selects an action based on the state and the available actions."""
+
+    def __call__(self, state: StateVector, available: AvailableVector) -> int:
         pass
