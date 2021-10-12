@@ -162,6 +162,14 @@
 </ul>
 </li>
 </ul>
+<p class="caption"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="gym/index.html">Momba Gym</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="gym/abstract.html">Abstract Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym/generic.html">Generic Explorer</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing/index.html">Contributing</a></li>
@@ -230,6 +238,8 @@
         <li><a href="reference/model/actions.html#momba.model.ActionParameter">ActionParameter (class in momba.model)</a>
 </li>
         <li><a href="reference/model/actions.html#momba.model.ActionPattern">ActionPattern (class in momba.model)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Actions">Actions (class in momba.gym.generic)</a>
 </li>
         <li><a href="reference/model/actions.html#momba.model.ActionType">ActionType (class in momba.model)</a>
 </li>
@@ -346,6 +356,8 @@
         <li><a href="reference/model/automata.html#momba.model.Automaton">Automaton (class in momba.model)</a>
 </li>
         <li><a href="reference/model/automata.html#momba.model.Instance.automaton">automaton (momba.model.Instance attribute)</a>
+</li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.available_actions">available_actions() (momba.gym.abstract.Explorer property)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.operators.AggregationFunction.AVG">AVG (momba.model.operators.AggregationFunction attribute)</a>
 </li>
@@ -535,6 +547,8 @@
 </li>
         <li><a href="reference/model/automata.html#momba.model.Edge.create_edge_scope">create_edge_scope() (momba.model.Edge method)</a>
 </li>
+        <li><a href="gym/index.html#momba.gym.create_generic_env">create_generic_env (class in momba.gym)</a>
+</li>
         <li><a href="reference/model/automata.html#momba.model.Automaton.create_instance">create_instance() (momba.model.Automaton method)</a>
 </li>
         <li><a href="reference/model/networks.html#momba.model.Network.create_link">create_link() (momba.model.Network method)</a>
@@ -567,6 +581,10 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/jani.html#momba.jani.ModelFeature.DATATYPES">DATATYPES (momba.jani.ModelFeature attribute)</a>
 </li>
+        <li><a href="gym/generic.html#momba.gym.generic.Rewards.dead_end">dead_end (momba.gym.generic.Rewards attribute)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Objective.dead_predicate">dead_predicate (momba.gym.generic.Objective attribute)</a>
+</li>
         <li><a href="reference/model/properties.html#momba.model.properties.StatePredicate.DEADLOCK">DEADLOCK (momba.model.properties.StatePredicate attribute)</a>
 </li>
         <li><a href="reference/model/properties.html#momba.model.properties.DEADLOCK_STATES">DEADLOCK_STATES (momba.model.properties attribute)</a>
@@ -587,10 +605,10 @@
         </ul></li>
         <li><a href="reference/model/context.html#momba.model.Scope.define_function">define_function() (momba.model.Scope method)</a>
 </li>
-        <li><a href="reference/model/context.html#momba.model.Context.define_property">define_property() (momba.model.Context method)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="reference/model/context.html#momba.model.Context.define_property">define_property() (momba.model.Context method)</a>
+</li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.Derivative">Derivative (class in momba.model.expressions)</a>
 </li>
         <li><a href="reference/jani.html#momba.jani.ModelFeature.DERIVED_OPERATORS">DERIVED_OPERATORS (momba.jani.ModelFeature attribute)</a>
@@ -630,6 +648,10 @@
         <li><a href="reference/model/expressions.html#momba.model.expressions.NamedReal.E">E (momba.model.expressions.NamedReal attribute)</a>
 </li>
         <li><a href="reference/model/automata.html#momba.model.Edge">Edge (class in momba.model)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Actions.EDGE_BY_INDEX">EDGE_BY_INDEX (momba.gym.generic.Actions attribute)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Actions.EDGE_BY_LABEL">EDGE_BY_LABEL (momba.gym.generic.Actions attribute)</a>
 </li>
         <li><a href="reference/jani.html#momba.jani.ModelFeature.EDGE_PRIORITIES">EDGE_PRIORITIES (momba.jani.ModelFeature attribute)</a>
 </li>
@@ -678,7 +700,11 @@
         <li><a href="reference/model/properties.html#momba.model.properties.ExpectedReward">ExpectedReward (class in momba.model.properties)</a>
 </li>
         <li><a href="reference/engine.html#momba.engine.Explorer">Explorer (class in momba.engine)</a>
+
+        <ul>
+          <li><a href="gym/abstract.html#momba.gym.abstract.Explorer">(class in momba.gym.abstract)</a>
 </li>
+        </ul></li>
         <li><a href="reference/engine.html#momba.engine.Destination.explorer">explorer (momba.engine.Destination attribute)</a>
 
         <ul>
@@ -733,6 +759,12 @@
         </ul></li>
         <li><a href="reference/model/properties.html#momba.model.properties.forall_paths">forall_paths() (in module momba.model.properties)</a>
 </li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.fork">fork() (momba.gym.abstract.Explorer method)</a>
+
+        <ul>
+          <li><a href="gym/index.html#momba.gym.env.MombaEnv.fork">(momba.gym.env.MombaEnv method)</a>
+</li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/properties.html#momba.model.properties.PathQuantifier.formula">formula (momba.model.properties.PathQuantifier attribute)</a>
@@ -793,13 +825,15 @@
 </li>
         <li><a href="reference/model/context.html#momba.model.Context.get_property_definition_by_name">get_property_definition_by_name() (momba.model.Context method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/context.html#momba.model.Scope.get_scope">get_scope() (momba.model.Scope method)</a>
 </li>
         <li><a href="reference/model/context.html#momba.model.Scope.get_type">get_type() (momba.model.Scope method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/engine.html#momba.engine.State.global_env">global_env() (momba.engine.State property)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Observations.GLOBAL_ONLY">GLOBAL_ONLY (momba.gym.generic.Observations attribute)</a>
 </li>
         <li><a href="reference/model/context.html#momba.model.Context.global_scope">global_scope (momba.model.Context attribute)</a>
 </li>
@@ -810,6 +844,10 @@
         <li><a href="examples/racetrack/model.html#racetrack.model.CellType.GOAL">GOAL (racetrack.model.CellType attribute)</a>
 </li>
         <li><a href="examples/racetrack/model.html#racetrack.model.Track.goal_cells">goal_cells (racetrack.model.Track attribute)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Objective.goal_predicate">goal_predicate (momba.gym.generic.Objective attribute)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Rewards.goal_reached">goal_reached (momba.gym.generic.Rewards attribute)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.greater">greater() (in module momba.model.expressions)</a>
 </li>
@@ -832,6 +870,8 @@
         <li><a href="reference/model/context.html#momba.model.ModelType.HA">HA (momba.model.ModelType attribute)</a>
 </li>
         <li><a href="reference/model/actions.html#momba.model.ActionType.has_parameters">has_parameters() (momba.model.ActionType property)</a>
+</li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.has_terminated">has_terminated() (momba.gym.abstract.Explorer property)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
@@ -909,6 +949,8 @@
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="gym/generic.html#momba.gym.generic.Rewards.invalid_action">invalid_action (momba.gym.generic.Rewards attribute)</a>
+</li>
         <li><a href="reference/model/exceptions.html#momba.model.errors.InvalidDeclarationError">InvalidDeclarationError</a>
 </li>
         <li><a href="reference/jani.html#momba.jani.InvalidJANIError">InvalidJANIError (class in momba.jani)</a>
@@ -1009,6 +1051,8 @@
 </li>
         <li><a href="reference/jani.html#momba.jani.load_model">load_model() (in module momba.jani)</a>
 </li>
+        <li><a href="gym/generic.html#momba.gym.generic.Observations.LOCAL_AND_GLOBAL">LOCAL_AND_GLOBAL (momba.gym.generic.Observations attribute)</a>
+</li>
         <li><a href="reference/model/automata.html#momba.model.Location">Location (class in momba.model)</a>
 </li>
         <li><a href="reference/model/automata.html#momba.model.Destination.location">location (momba.model.Destination attribute)</a>
@@ -1101,10 +1145,10 @@
         </ul></li>
         <li><a href="reference/model/properties.html#momba.model.properties.min_expected_reward">min_expected_reward() (in module momba.model.properties)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/properties.html#momba.model.properties.min_prob">min_prob() (in module momba.model.properties)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/properties.html#momba.model.properties.min_steady_state">min_steady_state() (in module momba.model.properties)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.minimum">minimum() (in module momba.model.expressions)</a>
@@ -1137,6 +1181,8 @@
           <li><a href="reference/model/exceptions.html#module-momba.model.errors">module</a>
 </li>
         </ul></li>
+        <li><a href="gym/index.html#momba.gym.env.MombaEnv">MombaEnv (class in momba.gym.env)</a>
+</li>
         <li><a href="reference/model/expressions.html#momba.model.operators.ArithmeticBinaryOperator.MUL">MUL (momba.model.operators.ArithmeticBinaryOperator attribute)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.mul">mul() (in module momba.model.expressions)</a>
@@ -1175,10 +1221,10 @@
 </li>
         <li><a href="reference/model/expressions.html#momba.model.operators.EqualityOperator.NEQ">NEQ (momba.model.operators.EqualityOperator attribute)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/networks.html#momba.model.Network">Network (class in momba.model)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/engine.html#momba.engine.Explorer.network">network (momba.engine.Explorer attribute)</a>
 </li>
         <li><a href="reference/model/context.html#momba.model.Context.networks">networks() (momba.model.Context property)</a>
@@ -1199,6 +1245,10 @@
 </li>
         <li><a href="reference/model/expressions.html#momba.model.operators.NotOperator">NotOperator (class in momba.model.operators)</a>
 </li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.num_actions">num_actions() (momba.gym.abstract.Explorer property)</a>
+</li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.num_features">num_features() (momba.gym.abstract.Explorer property)</a>
+</li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.NumericConstant">NumericConstant (class in momba.model.expressions)</a>
 </li>
         <li><a href="reference/model/types.html#momba.model.types.NumericType">NumericType (class in momba.model.types)</a>
@@ -1211,6 +1261,12 @@
   <h2>O</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="gym/generic.html#momba.gym.generic.Objective">Objective (class in momba.gym.generic)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Observations">Observations (class in momba.gym.generic)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Observations.OMNISCIENT">OMNISCIENT (momba.gym.generic.Observations attribute)</a>
+</li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.UnaryExpression.operand">operand (momba.model.expressions.UnaryExpression attribute)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.operators.Operator">Operator (class in momba.model.operators)</a>
@@ -1248,6 +1304,8 @@
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/expressions.html#momba.model.operators.BooleanOperator.OR">OR (momba.model.operators.BooleanOperator attribute)</a>
+</li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Oracle">Oracle (class in momba.gym.abstract)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -1347,10 +1405,18 @@
 </li>
         <li><a href="reference/model/expressions.html#momba.model.operators.BinaryPathOperator.RELEASE">RELEASE (momba.model.operators.BinaryPathOperator attribute)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/model/properties.html#momba.model.properties.release">release() (in module momba.model.properties)</a>
 </li>
+        <li><a href="gym/index.html#momba.gym.env.MombaEnv.render">render() (momba.gym.env.MombaEnv method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.reset">reset() (momba.gym.abstract.Explorer method)</a>
+
+        <ul>
+          <li><a href="gym/index.html#momba.gym.env.MombaEnv.reset">(momba.gym.env.MombaEnv method)</a>
+</li>
+        </ul></li>
         <li><a href="reference/model/networks.html#momba.model.Link.result">result (momba.model.Link attribute)</a>
 </li>
         <li><a href="reference/model/functions.html#momba.model.FunctionDefinition.returns">returns (momba.model.FunctionDefinition attribute)</a>
@@ -1368,6 +1434,8 @@
         <li><a href="reference/model/properties.html#momba.model.properties.RewardBound">RewardBound (class in momba.model.properties)</a>
 </li>
         <li><a href="reference/model/properties.html#momba.model.properties.RewardInstant">RewardInstant (class in momba.model.properties)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Rewards">Rewards (class in momba.gym.generic)</a>
 </li>
         <li><a href="reference/model/expressions.html#momba.model.expressions.BinaryExpression.right">right (momba.model.expressions.BinaryExpression attribute)</a>
 
@@ -1417,15 +1485,17 @@
 </li>
         <li><a href="examples/racetrack/model.html#racetrack.model.CellType.START">START (racetrack.model.CellType attribute)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="examples/racetrack/model.html#racetrack.model.Track.start_cells">start_cells (racetrack.model.Track attribute)</a>
 </li>
         <li><a href="reference/engine.html#momba.engine.State">State (class in momba.engine)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="reference/engine.html#momba.engine.Destination.state">state() (momba.engine.Destination property)</a>
 </li>
         <li><a href="reference/jani.html#momba.jani.ModelFeature.STATE_EXIT_REWARDS">STATE_EXIT_REWARDS (momba.jani.ModelFeature attribute)</a>
+</li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.state_vector">state_vector() (momba.gym.abstract.Explorer property)</a>
 </li>
         <li><a href="reference/model/properties.html#momba.model.properties.StatePredicate">StatePredicate (class in momba.model.properties)</a>
 </li>
@@ -1433,6 +1503,12 @@
 </li>
         <li><a href="reference/model/properties.html#momba.model.properties.SteadyState">SteadyState (class in momba.model.properties)</a>
 </li>
+        <li><a href="gym/abstract.html#momba.gym.abstract.Explorer.step">step() (momba.gym.abstract.Explorer method)</a>
+
+        <ul>
+          <li><a href="gym/index.html#momba.gym.env.MombaEnv.step">(momba.gym.env.MombaEnv method)</a>
+</li>
+        </ul></li>
         <li><a href="reference/model/properties.html#momba.model.properties.BinaryPathFormula.step_bounds">step_bounds (momba.model.properties.BinaryPathFormula attribute)</a>
 
         <ul>
@@ -1440,6 +1516,8 @@
 </li>
         </ul></li>
         <li><a href="reference/model/properties.html#momba.model.properties.ExpectedReward.step_instant">step_instant (momba.model.properties.ExpectedReward attribute)</a>
+</li>
+        <li><a href="gym/generic.html#momba.gym.generic.Rewards.step_taken">step_taken (momba.gym.generic.Rewards attribute)</a>
 </li>
         <li><a href="reference/model/properties.html#momba.model.properties.AccumulationInstant.STEPS">STEPS (momba.model.properties.AccumulationInstant attribute)</a>
 </li>
