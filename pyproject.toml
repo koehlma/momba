@@ -20,9 +20,11 @@ python = "^3.8"
 click = { version = "^7.0", optional = true }
 mxu = "^0.0.6"
 immutables = "^0.14"
+docker = { version = "^4.4.4", optional = true }
+torch = { version = "^1.9.1", optional = true }
+gym = { version = "^0.21.0", optional = true, extras = ["all"] }
 # `release.py` replaces "*" with the precise version
 momba_engine = { version = "*", optional = true }
-docker = { version = "^4.4.4", optional = true }
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
@@ -53,7 +55,8 @@ momba-moml = "momba.moml.__main__:main"
 cli = ["click"]
 engine = ["momba_engine"]
 docker = ["docker"]
-all = ["click", "momba_engine", "docker"]
+gym = ["torch", "gym"]
+all = ["click", "momba_engine", "docker", "torch", "gym"]
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
