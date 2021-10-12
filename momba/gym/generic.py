@@ -171,10 +171,10 @@ class Objective:
     """
 
     goal_predicate: model.Expression
-    """A boolean expression for :math:`\psi`."""
+    r"""A boolean expression for :math:`\psi`."""
 
     dead_predicate: model.Expression
-    """A boolean expression for :math:`\phi`."""
+    r"""A boolean expression for :math:`\phi`."""
 
 
 def _extract_property(prop: model.Expression) -> Objective:
