@@ -23,7 +23,7 @@ class Renderer(t.Protocol):
         raise NotImplementedError()
 
 
-class MombaGym(gym.Env):
+class MombaEnv(gym.Env):
     explorer: Explorer
 
     action_space: gym.Space
@@ -46,8 +46,8 @@ class MombaGym(gym.Env):
     def available_actions(self) -> numpy.ndarray:
         return numpy.array(self.explorer.available_actions)
 
-    def fork(self) -> MombaGym:
-        return MombaGym(self.explorer.fork(), renderer=self.renderer)
+    def fork(self) -> MombaEnv:
+        return MombaEnv(self.explorer.fork(), renderer=self.renderer)
 
     def step(self, action: int) -> t.Tuple[numpy.ndarray, float, bool, dict]:
         reward = self.explorer.step(action)
