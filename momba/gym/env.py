@@ -2,8 +2,6 @@
 #
 # Copyright (C) 2019-2021, Saarland University
 # Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
-#
-# type: ignore
 
 from __future__ import annotations
 
@@ -23,11 +21,15 @@ class Renderer(t.Protocol):
         raise NotImplementedError()
 
 
-class MombaEnv(gym.Env):
+StateType = numpy.ndarray[t.Any, t.Any]
+AvailableActions = numpy.ndarray[t.Any, t.Any]
+
+
+class MombaEnv(gym.Env):  # type: ignore
     explorer: Explorer
 
-    action_space: gym.Space
-    observation_space: gym.Space
+    action_space: gym.Space  # type: ignore
+    observation_space: gym.Space  # type: ignore
 
     renderer: t.Optional[Renderer]
 
@@ -43,23 +45,23 @@ class MombaEnv(gym.Env):
         self.renderer = renderer
 
     @property
-    def available_actions(self) -> numpy.ndarray:
+    def available_actions(self) -> AvailableActions:
         return numpy.array(self.explorer.available_actions)
 
     def fork(self) -> MombaEnv:
         return MombaEnv(self.explorer.fork(), renderer=self.renderer)
 
-    def step(self, action: int) -> t.Tuple[numpy.ndarray, float, bool, dict]:
+    def step(self, action: int) -> t.Tuple[StateType, float, bool, t.Any]:
         reward = self.explorer.step(action)
         state = numpy.array(self.explorer.state_vector)
         return state, reward, self.explorer.has_terminated, {}
 
-    def reset(self) -> numpy.ndarray:
+    def reset(self) -> StateType:
         self.explorer.reset()
         return numpy.array(self.explorer.state_vector)
 
-    def render(self, mode: str = "human"):
+    def render(self, mode: str = "human") -> None:
         if self.renderer is None:
             raise UnsupportedMode("`MombaGym` does not support rendering")
         else:
-            self.renderer.render(self.explorer.state, mode)
+            self.renderer.render(self.explorer.state_vector, mode)

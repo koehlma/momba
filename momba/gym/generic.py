@@ -39,6 +39,9 @@ class RewardStructure:
     invalid_action: float = -100
 
 
+DEFAULT_REWARD_STRUCTURE = RewardStructure()
+
+
 @d.dataclass(frozen=True)
 class Property:
     goal_predicate: model.Expression
