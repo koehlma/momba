@@ -13,7 +13,7 @@ import json
 
 try:
     import torch
-except ImportError as error:
+except ImportError:
     raise ImportError(
         "Missing optional dependency `torch`.\n"
         "Using MombaGym's NN export function requires `torch`."
