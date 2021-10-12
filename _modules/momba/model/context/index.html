@@ -1,0 +1,883 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
+        <title>momba.model.context - Momba</title>
+      <link rel="stylesheet" href="../../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
+    <link rel="stylesheet" href="../../../../_static/pygments.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/jupyter.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-image-pos.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-source-link.css" />
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../../_static/pygments_dark.css">
+    <link rel="stylesheet" href="../../../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../"><div class="brand">Momba</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../../../../_static/images/logo_with_text.svg" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../../../../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search/">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/construction/">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/exploration/">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/analysis/">Model Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../examples/">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../examples/racetrack/">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/quickstart/">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/game/">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/model/">The Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../reference/">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../reference/model/">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/context/">Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/automata/">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/networks/">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/actions/">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/expressions/">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/properties/">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/types/">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/functions/">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/exceptions/">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/engine/">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/jani/">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/analysis/">Analysis Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../incubator/">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/jani/">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/value-passing/">Value Passing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/observations/">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/moml/">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/grammar/">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/macros/">Syntax-Aware Macros</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Features</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../gym/">Momba Gym</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../gym/abstract/">Abstract Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../gym/generic/">Generic Explorer</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing/">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <h1>Source code for momba.model.context</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2019-2021, Saarland University</span>
+<span class="c1"># Copyright (C) 2019-2021, Maximilian Köhl &lt;koehl@cs.uni-saarland.de&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">d</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">actions</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">expressions</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="kn">from</span> <span class="nn">.automata</span> <span class="kn">import</span> <span class="n">Automaton</span>
+<span class="kn">from</span> <span class="nn">.networks</span> <span class="kn">import</span> <span class="n">Network</span>
+
+
+<div class="viewcode-block" id="ModelType"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.ModelType">[docs]</a><span class="k">class</span> <span class="nc">ModelType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    An enum representing different *model types*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    full_name: str</span>
+<span class="sd">        The full human-readable name of the model type.</span>
+<span class="sd">    """</span>
+
+    <span class="n">LTS</span> <span class="o">=</span> <span class="s2">"Labeled Transition System"</span>
+    <span class="sd">""" Labeled Transition System """</span>
+
+    <span class="n">DTMC</span> <span class="o">=</span> <span class="s2">"Discrete-Time Markov Chain"</span>
+    <span class="sd">""" Discrete-Time Markov Chain """</span>
+
+    <span class="n">CTMC</span> <span class="o">=</span> <span class="s2">"Continuous-Time Markov Chain"</span>
+    <span class="sd">""" Continuous-Time Markov Chain """</span>
+
+    <span class="n">MDP</span> <span class="o">=</span> <span class="s2">"Markov Decision Process"</span>
+    <span class="sd">""" Markov Decision Process """</span>
+
+    <span class="n">CTMDP</span> <span class="o">=</span> <span class="s2">"Continuous-Time Markov Decision Process"</span>
+    <span class="sd">""" Continuous-Time Markov Decision Process """</span>
+
+    <span class="n">MA</span> <span class="o">=</span> <span class="s2">"Markov Automaton"</span>
+    <span class="sd">""" Markov Automaton """</span>
+
+    <span class="n">TA</span> <span class="o">=</span> <span class="s2">"Timed Automaton"</span>
+    <span class="sd">""" Timed Automaton """</span>
+
+    <span class="n">PTA</span> <span class="o">=</span> <span class="s2">"Probabilistic Timed Automaton"</span>
+    <span class="sd">""" Probabilistic Timed Automaton """</span>
+
+    <span class="n">STA</span> <span class="o">=</span> <span class="s2">"Stochastic Timed Automaton"</span>
+    <span class="sd">""" Stochastic Timed Automaton """</span>
+
+    <span class="n">HA</span> <span class="o">=</span> <span class="s2">"Hybrid Automaton"</span>
+    <span class="sd">""" Hybrid Automaton """</span>
+
+    <span class="n">PHA</span> <span class="o">=</span> <span class="s2">"Probabilistic Hybrid Automaton"</span>
+    <span class="sd">""" Probabilistic Hybrid Automaton """</span>
+
+    <span class="n">SHA</span> <span class="o">=</span> <span class="s2">"Stochastic Hybrid Automaton"</span>
+    <span class="sd">""" Stochastic Hybrid Automaton """</span>
+
+    <span class="n">full_name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span> <span class="o">=</span> <span class="n">full_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">uses_clocks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Returns :obj:`True` if and only if the respective models use real-value clocks.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">_CLOCK_TYPES</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_untimed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Returns :obj:`True` if and only if the model type is *not timed*.</span>
+
+<span class="sd">        Untimed model types are :code:`LTS`, :code:`DTMC`, and :code:`MDP`.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">_UNTIMED_TYPES</span></div>
+
+
+<span class="n">_CLOCK_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">TA</span><span class="p">,</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">PTA</span><span class="p">,</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">STA</span><span class="p">,</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">HA</span><span class="p">,</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">PHA</span><span class="p">,</span>
+    <span class="n">ModelType</span><span class="o">.</span><span class="n">SHA</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">_UNTIMED_TYPES</span> <span class="o">=</span> <span class="p">{</span><span class="n">ModelType</span><span class="o">.</span><span class="n">MDP</span><span class="p">,</span> <span class="n">ModelType</span><span class="o">.</span><span class="n">LTS</span><span class="p">,</span> <span class="n">ModelType</span><span class="o">.</span><span class="n">DTMC</span><span class="p">}</span>
+
+
+<span class="c1"># XXX: this class should be abstract, however, then it would not type-check</span>
+<span class="c1"># https://github.com/python/mypy/issues/5374</span>
+<div class="viewcode-block" id="IdentifierDeclaration"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.IdentifierDeclaration">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IdentifierDeclaration</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a declaration of an identifier.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    identifier:</span>
+<span class="sd">        The declared identifier.</span>
+<span class="sd">    typ:</span>
+<span class="sd">        The type of the identifier.</span>
+<span class="sd">    comment:</span>
+<span class="sd">        An additional optional comment for the declaration.</span>
+<span class="sd">    """</span>
+
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span>
+
+    <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># XXX: this method shall be implemented by all subclasses</span>
+<div class="viewcode-block" id="IdentifierDeclaration.validate"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.IdentifierDeclaration.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Validates that the declaration is valid in the given scope.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` if the declaration is invalid.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="VariableDeclaration"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.VariableDeclaration">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VariableDeclaration</span><span class="p">(</span><span class="n">IdentifierDeclaration</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a *variable declaration*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    is_transient:</span>
+<span class="sd">        Optional boolean flag indicating whether the variable is *transient*.</span>
+<span class="sd">    initial_value:</span>
+<span class="sd">        Optional :class:`~momba.model.Expression` providing an initial value for the variable.</span>
+<span class="sd">    """</span>
+
+    <span class="n">is_transient</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">initial_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># if self.is_transient and self.initial_value is None:</span>
+        <span class="c1">#     raise errors.ModelingError(</span>
+        <span class="c1">#         "transient variables must have an initial value", self</span>
+        <span class="c1">#     )</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="VariableDeclaration.validate"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.VariableDeclaration.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">typ</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">value_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"type of initial value </span><span class="si">{</span><span class="n">value_type</span><span class="si">}</span><span class="s2"> is not "</span>
+                    <span class="sa">f</span><span class="s2">"assignable to variable type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">typ</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ConstantDeclaration"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.ConstantDeclaration">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ConstantDeclaration</span><span class="p">(</span><span class="n">IdentifierDeclaration</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a *constant declaration*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value:</span>
+<span class="sd">        Optional :class:`~momba.model.Expression` specifying the value of the constant.</span>
+<span class="sd">    """</span>
+
+    <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Returns :obj:`True` if and only if the constant is a *parameter*.</span>
+
+<span class="sd">        Parameters are constants without a :attr:`value`.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ConstantDeclaration.validate"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.ConstantDeclaration.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">typ</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">value_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"type of constant value </span><span class="si">{</span><span class="n">value_type</span><span class="si">}</span><span class="s2"> is not "</span>
+                    <span class="sa">f</span><span class="s2">"assignable to constant type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">typ</span><span class="si">}</span><span class="s2">"</span>
+                <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PropertyDefinition"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.PropertyDefinition">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PropertyDefinition</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a *property definition*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name:</span>
+<span class="sd">        The name of the property.</span>
+<span class="sd">    expression:</span>
+<span class="sd">        An :class:`~momba.model.Expression` defining the property.</span>
+<span class="sd">    comment:</span>
+<span class="sd">        An optional comment describing the property.</span>
+<span class="sd">    """</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">expression</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span>
+
+    <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Scope"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope">[docs]</a><span class="k">class</span> <span class="nc">Scope</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a *scope*.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx:</span>
+<span class="sd">        The modeling context associated with the scope.</span>
+<span class="sd">    parent:</span>
+<span class="sd">        The parent scope if it exists (:obj:`None` if there is no parent).</span>
+<span class="sd">    """</span>
+
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span>
+    <span class="n">parent</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Scope</span><span class="p">]</span>
+
+    <span class="n">_declarations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IdentifierDeclaration</span><span class="p">]</span>
+    <span class="n">_functions</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">]</span>
+
+    <span class="n">_type_cache</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Scope</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_type_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Scope parent=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="si">}</span><span class="s2"> at 0x</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2">&gt;"</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">IdentifierDeclaration</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Variable and constant declarations of the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">variable_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">VariableDeclaration</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Variable declarations of the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">declaration</span>
+            <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">VariableDeclaration</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constant_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">ConstantDeclaration</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Constant declarations of the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">declaration</span>
+            <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">ConstantDeclaration</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">clock_declarations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">VariableDeclaration</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Variable declarations of clock variables of the scope.</span>
+<span class="sd">        """</span>
+        <span class="c1"># FIXME: this does not return declarations with a bounded CLOCK type</span>
+        <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span>
+            <span class="n">declaration</span>
+            <span class="k">for</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">VariableDeclaration</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">declaration</span><span class="o">.</span><span class="n">typ</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">CLOCK</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Scope.create_child_scope"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.create_child_scope">[docs]</a>    <span class="k">def</span> <span class="nf">create_child_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scope</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Creates a child scope.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">Scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ctx</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.get_type"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.get_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Returns the (inferred) type of the given expression in the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">expr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_cache</span><span class="p">:</span>
+            <span class="n">inferred_type</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">inferred_type</span><span class="o">.</span><span class="n">validate_in</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_type_cache</span><span class="p">[</span><span class="n">expr</span><span class="p">]</span> <span class="o">=</span> <span class="n">inferred_type</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_cache</span><span class="p">[</span><span class="n">expr</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Scope.get_function"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.get_function">[docs]</a>    <span class="k">def</span> <span class="nf">get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrieves a :class:`FunctionDefinition` by its name.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such definition exists.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"no function with name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> found"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.is_local"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.is_local">[docs]</a>    <span class="k">def</span> <span class="nf">is_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Checks whether the identifier is locally declared in the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span></div>
+
+<div class="viewcode-block" id="Scope.is_declared"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.is_declared">[docs]</a>    <span class="k">def</span> <span class="nf">is_declared</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Checks whether the identifier is declared in the scope.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">is_declared</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Scope.get_scope"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.get_scope">[docs]</a>    <span class="k">def</span> <span class="nf">get_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Scope</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrieves the scope in which the given identifier is declared.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such identifier is declared.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">identifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"identifier </span><span class="si">{</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2"> is unbound in scope </span><span class="si">{</span><span class="bp">self</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_scope</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.lookup"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IdentifierDeclaration</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrieves the declaration for the given identifier.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such identifier is declared.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="p">[</span><span class="n">identifier</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"identifier </span><span class="si">{</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2"> is unbound in scope </span><span class="si">{</span><span class="bp">self</span><span class="si">!r}</span><span class="s2">"</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.add_declaration"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.add_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">add_declaration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">declaration</span><span class="p">:</span> <span class="n">IdentifierDeclaration</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Adds an identifier declaration to the scope.</span>
+
+<span class="sd">        The flag `validate` specifies whether the declaration should</span>
+<span class="sd">        be validated within the scope before adding it. In case</span>
+<span class="sd">        validation fails, a :class:`~errors.ModelingError` is raised.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` in case the identifier</span>
+<span class="sd">        has already been declared.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">declaration</span><span class="o">.</span><span class="n">identifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidDeclarationError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"identifier </span><span class="si">{</span><span class="n">declaration</span><span class="o">.</span><span class="n">identifier</span><span class="si">!r}</span><span class="s2"> has already been declared"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">validate</span><span class="p">:</span>
+            <span class="n">declaration</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_declarations</span><span class="p">[</span><span class="n">declaration</span><span class="o">.</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="n">declaration</span></div>
+
+<div class="viewcode-block" id="Scope.declare_variable"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.declare_variable">[docs]</a>    <span class="k">def</span> <span class="nf">declare_variable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">is_transient</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Declares a variable within the scope.</span>
+
+<span class="sd">        The parameters are passed to :class:`VariableDeclaration` with</span>
+<span class="sd">        the exception of `initial_value`. When provided with a value</span>
+<span class="sd">        which is not an expressions, this function implicitly converts</span>
+<span class="sd">        the provided value into an expression using :func:`ensure_expr`.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` in case the identifier</span>
+<span class="sd">        has already been declared.</span>
+<span class="sd">        """</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">initial_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">initial_value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_declaration</span><span class="p">(</span>
+            <span class="n">VariableDeclaration</span><span class="p">(</span>
+                <span class="n">identifier</span><span class="p">,</span>
+                <span class="n">typ</span><span class="p">,</span>
+                <span class="n">is_transient</span><span class="o">=</span><span class="n">is_transient</span><span class="p">,</span>
+                <span class="n">initial_value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.declare_constant"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.declare_constant">[docs]</a>    <span class="k">def</span> <span class="nf">declare_constant</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">typ</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">comment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Declares a constant within the scope.</span>
+
+<span class="sd">        The parameters are passed to :class:`ConstantDeclaration` with</span>
+<span class="sd">        the exception of `value`. When provided with a value which is</span>
+<span class="sd">        not an expressions, this function implicitly converts the</span>
+<span class="sd">        provided value into an expression using :func:`ensure_expr`.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` in case the identifier</span>
+<span class="sd">        has already been declared.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_declaration</span><span class="p">(</span>
+                <span class="n">ConstantDeclaration</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_declaration</span><span class="p">(</span>
+                <span class="n">ConstantDeclaration</span><span class="p">(</span>
+                    <span class="n">identifier</span><span class="p">,</span>
+                    <span class="n">typ</span><span class="p">,</span>
+                    <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">value</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Scope.define_function"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Scope.define_function">[docs]</a>    <span class="k">def</span> <span class="nf">define_function</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">functions</span><span class="o">.</span><span class="n">FunctionParameter</span><span class="p">],</span>
+        <span class="n">returns</span><span class="p">:</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">,</span>
+        <span class="n">body</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Defines a function within the scope.</span>
+
+<span class="sd">        The parameters are passed to :class:`FunctionDefinition`.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` in case an identically</span>
+<span class="sd">        named function already exists.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"a function named </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> already exists"</span><span class="p">)</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="n">functions</span><span class="o">.</span><span class="n">FunctionDefinition</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parameters</span><span class="p">),</span> <span class="n">returns</span><span class="p">,</span> <span class="n">body</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">definition</span>
+        <span class="k">return</span> <span class="n">definition</span></div></div>
+
+
+<div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">:</span>
+    <span class="sd">"""</span>
+<span class="sd">    Represents a *modeling context*.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model_type:</span>
+<span class="sd">            The :class:`ModelType` of the modeling context.</span>
+<span class="sd">        global_scope:</span>
+<span class="sd">            The global :class:`Scope` of the modeling context.</span>
+<span class="sd">    """</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">ModelType</span>
+    <span class="n">global_scope</span><span class="p">:</span> <span class="n">Scope</span>
+
+    <span class="n">_automata</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">Automaton</span><span class="p">]</span>
+    <span class="n">_networks</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Set</span><span class="p">[</span><span class="n">Network</span><span class="p">]</span>
+
+    <span class="n">_action_types</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">]</span>
+    <span class="n">_named_properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PropertyDefinition</span><span class="p">]</span>
+
+    <span class="n">_metadata</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_type</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_scope</span> <span class="o">=</span> <span class="n">Scope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_automata</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_networks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_named_properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"&lt;Context model_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> at 0x</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">:</span><span class="s2">x</span><span class="si">}</span><span class="s2">&gt;"</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">automata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Automaton</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The set of automata defined on the modeling context.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_automata</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">networks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Network</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The set of networks defined on the modeling context.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_networks</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Additional metadata associated with the modeling</span>
+<span class="sd">        context (e.g., author information).</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">action_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The action types defined on the modeling context.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PropertyDefinition</span><span class="p">]:</span>
+        <span class="sd">"""</span>
+<span class="sd">        The properties defined on the modeling context.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_named_properties</span>
+
+<div class="viewcode-block" id="Context.update_metadata"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.update_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">update_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Updates the metadata with the provided mapping.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.get_automaton_by_name"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.get_automaton_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_automaton_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Automaton</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrieves an automaton by its name.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such automaton exists.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">automaton</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_automata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">automaton</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">automaton</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"there exists no automaton named </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.get_network_by_name"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.get_network_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_network_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Network</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrives a network by its name.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such network exists.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">network</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_networks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">network</span>
+        <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"there exists no network named </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.get_property_definition_by_name"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.get_property_definition_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_property_definition_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PropertyDefinition</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrieves a property definition by its name.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no</span>
+<span class="sd">        such property definition exists.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_named_properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"there exists no property definition named </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.get_action_type_by_name"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.get_action_type_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_type_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Retrives an action type by its name.</span>
+
+<span class="sd">        Raises :class:`~errors.NotFoundError` if no such action type exists.</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">NotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"there exists no action type named </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_add_action_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_type</span><span class="p">:</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Adds an action type to the modeling context.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` if an identically</span>
+<span class="sd">        named action type already exists.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">action_type</span><span class="o">.</span><span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"an action type with name </span><span class="si">{</span><span class="n">action_type</span><span class="o">.</span><span class="n">label</span><span class="si">!r}</span><span class="s2"> already exists"</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span><span class="p">[</span><span class="n">action_type</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">action_type</span>
+
+<div class="viewcode-block" id="Context.create_action_type"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.create_action_type">[docs]</a>    <span class="k">def</span> <span class="nf">create_action_type</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">actions</span><span class="o">.</span><span class="n">ActionParameter</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Creates a new action type with the given name and parameters.</span>
+
+<span class="sd">        Raises :class:`~errors.ModelingError` if an identically</span>
+<span class="sd">        named action type already exists.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action_types</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"action type with name </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> already exists"</span><span class="p">)</span>
+        <span class="n">action_type</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">ActionType</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parameters</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_action_type</span><span class="p">(</span><span class="n">action_type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action_type</span></div>
+
+<div class="viewcode-block" id="Context.create_automaton"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.create_automaton">[docs]</a>    <span class="k">def</span> <span class="nf">create_automaton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Automaton</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Creates an automaton with the given optional name and returns it.</span>
+<span class="sd">        """</span>
+        <span class="n">automaton</span> <span class="o">=</span> <span class="n">Automaton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_automata</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">automaton</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">automaton</span></div>
+
+<div class="viewcode-block" id="Context.create_network"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.create_network">[docs]</a>    <span class="k">def</span> <span class="nf">create_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Network</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Creates a network with the given optional name and returns it.</span>
+<span class="sd">        """</span>
+        <span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_networks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">network</span></div>
+
+<div class="viewcode-block" id="Context.define_property"><a class="viewcode-back" href="../../../../reference/model/context/#momba.model.Context.define_property">[docs]</a>    <span class="k">def</span> <span class="nf">define_property</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PropertyDefinition</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        Defines a property on the modeling context.</span>
+<span class="sd">        """</span>
+        <span class="n">definition</span> <span class="o">=</span> <span class="n">PropertyDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">expression</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_named_properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">definition</span>
+        <span class="k">return</span> <span class="n">definition</span></div></div>
+</pre></div>
+      </article>
+      <footer>
+        
+    
+        <div class="related-pages">
+          
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
+        </div>
+        
+    <p style="padding: 0 0.75rem; margin-top: 0;">
+        <a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
+        | Hosted by <a href="https://github.com">GitHub</a> – <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
+    </p>
+
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
