@@ -132,7 +132,7 @@ jobs:
         pip install --ignore-installed artifacts/*.whl
     - name: Build documentation
       run: |
-        sphinx-build docs build/docs
+        sphinx-build -b dirhtml docs build/docs
     - name: Create CNAME file
       run: |
         echo "momba.dev" > build/docs/CNAME
