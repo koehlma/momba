@@ -31,6 +31,10 @@ def _create_vector_decoder(num_features: int) -> struct.Struct:
     return struct.Struct(f"!{num_features}f")
 
 
+def _create_available_decoder(num_actions: int) -> struct.Struct:
+    return struct.Struct(f"!{num_actions}?")
+
+
 @d.dataclass()
 class OracleServer:
     oracle: Oracle
@@ -48,14 +52,18 @@ class OracleServer:
         num_features, num_actions = HEADER.unpack(await reader.readexactly(HEADER.size))
         print(f"Features: {num_features}, Actions: {num_actions}")
         state_decoder = _create_vector_decoder(num_features)
+        available_decoder = _create_available_decoder(num_actions)
         try:
             while True:
                 state = state_decoder.unpack(
                     await reader.readexactly(state_decoder.size)
                 )
+                available = available_decoder.unpack(
+                    await reader.readexactly(available_decoder.size)
+                )
                 # print("Received state:", state)
                 # TODO: receive available actions vector
-                decision = self.oracle(state, [])
+                decision = self.oracle(state, available)
                 # print("Send decision:", decision)
                 writer.write(DECISION.pack(decision))
                 await writer.drain()
