@@ -73,6 +73,11 @@ class Underground(enum.Enum):
     A very solid non-slippery underground introducing no noise.
     """
 
+    SLIPPERY_TARMAC = expr("9 / 10"), lambda a: expr("0")
+    """
+    A solid but somewhat slippery underground.
+    """
+
     SAND = (
         expr("5 / 10"),
         lambda a: expr("$a > 0 ? $a - 1 : ($a < 0 ? $a + 1 : 0)", a=a),
