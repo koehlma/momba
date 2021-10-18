@@ -288,7 +288,9 @@ class _Context:
 
         other_variables: t.Dict[model.Instance, t.Tuple[str, ...]] = {}
         if observations is Observations.OMNISCIENT:
-            for instance in network.instances:
+            for instance in sorted(
+                network.instances, key=lambda instance: str(instance.automaton.name)
+            ):
                 if instance is controlled_instance:
                     # do not include the local variables twice
                     continue
