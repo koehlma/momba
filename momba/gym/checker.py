@@ -33,19 +33,34 @@ HEADER = struct.Struct("!II")  # (num_features, num_actions)
 DECISION = struct.Struct("!I")  # (action,)
 
 
-_MODEST_EDGE_SELECTOR = {generic.Actions.EDGE_BY_LABEL: "--select-by-label"}
-
-
 @d.dataclass(frozen=True)
 class ModesOptions:
     max_run_length_as_end: bool = True
+    warn_non_det: bool = True
 
     def apply(self, command: t.List[str]) -> None:
         if self.max_run_length_as_end:
             command.append("--max-run-length-as-end")
+        if self.warn_non_det:
+            command.append("--warn-non-det")
 
 
 _DEFAULT_OPTIONS = ModesOptions()
+
+
+def _apply_actions_observations(
+    command: t.List[str], actions: generic.Actions, observations: generic.Observations
+) -> None:
+    if actions is generic.Actions.EDGE_BY_LABEL:
+        command.append("--select-by-label")
+    else:
+        assert actions is generic.Actions.EDGE_BY_INDEX
+    if observations is generic.Observations.LOCAL_AND_GLOBAL:
+        command.append("--observations-local-global")
+    elif observations is generic.Observations.OMNISCIENT:
+        command.append("--observations-omniscient")
+    else:
+        assert observations is generic.Observations.GLOBAL_ONLY
 
 
 def _create_vector_decoder(num_features: int) -> struct.Struct:
@@ -123,6 +138,8 @@ async def _check_oracle(
     parameters: t.Mapping[str, t.Any],
     toolset: modest.Toolset,
     options: ModesOptions,
+    actions: generic.Actions,
+    observations: generic.Observations,
 ) -> None:
     server = OracleServer(oracle)
     await server.start()
@@ -146,6 +163,7 @@ async def _check_oracle(
     options.apply(arguments)
     for param_name, param_value in parameters.items():
         arguments.extend(["-E", f"{param_name}={param_value}"])
+    _apply_actions_observations(arguments, actions, observations)
     process = await asyncio.subprocess.create_subprocess_exec(
         toolset.executable, *arguments
     )
@@ -160,6 +178,8 @@ def check_oracle(
     parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
     toolset: modest.Toolset = modest.toolset,
     options: ModesOptions = _DEFAULT_OPTIONS,
+    actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
+    observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
 ) -> t.Mapping[str, fractions.Fraction]:
     """Checks an arbitrary Python function implementing a decsion agent."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -178,6 +198,8 @@ def check_oracle(
                 parameters=parameters,
                 toolset=toolset,
                 options=options,
+                actions=actions,
+                observations=observations,
             )
         )
         return _load_result(output_file)
@@ -191,6 +213,8 @@ def check_nn(
     parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
     toolset: modest.Toolset = modest.toolset,
     options: ModesOptions = _DEFAULT_OPTIONS,
+    actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
+    observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
 ) -> t.Mapping[str, fractions.Fraction]:
     """Checks a PyTorch neural network."""
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -219,5 +243,6 @@ def check_nn(
         for param_name, param_value in parameters.items():
             command.extend(["-E", f"{param_name}={param_value}"])
         options.apply(command)
+        _apply_actions_observations(command, actions, observations)
         subprocess.check_call(command)
         return _load_result(output_file)
