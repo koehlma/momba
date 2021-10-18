@@ -289,6 +289,9 @@ class _Context:
         other_variables: t.Dict[model.Instance, t.Tuple[str, ...]] = {}
         if observations is Observations.OMNISCIENT:
             for instance in network.instances:
+                if instance is controlled_instance:
+                    # do not include the local variables twice
+                    continue
                 instance_variables: t.List[str] = []
                 for declaration in instance.automaton.scope.variable_declarations:
                     if declaration.is_transient:
