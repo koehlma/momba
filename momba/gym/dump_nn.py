@@ -2,8 +2,6 @@
 #
 # Copyright (C) 2021, Saarland University
 # Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
-#
-# type: ignore
 
 from __future__ import annotations
 
@@ -36,7 +34,7 @@ class _FakeTensor:
         self.parent = parent
         self.module = module
 
-    def __torch_function__(self, func, types, args=(), kwargs=None):
+    def __torch_function__(self, func, types, args=(), kwargs=None):  # type: ignore
         if func is torch.functional.F.linear:
             (_, weight) = args
             bias = kwargs.get("bias", None)
@@ -57,7 +55,7 @@ class _FakeTensor:
 
 
 def _dump_layer(name: str, layer: torch.nn.Module) -> t.Any:
-    result = {"name": name, "kind": layer.__class__.__name__}
+    result: t.Dict[str, t.Any] = {"name": name, "kind": layer.__class__.__name__}
     if isinstance(layer, torch.nn.Linear):
         result["inputSize"] = layer.in_features
         result["outputSize"] = layer.out_features

@@ -132,7 +132,7 @@ async def _check_oracle(
         "modes",
         str(model_path),
         "-O",
-        output_file,
+        str(output_file),
         "json",
         "-R",
         "oracle",
@@ -176,7 +176,7 @@ def check_oracle(
                 oracle,
                 output_file,
                 parameters=parameters,
-                tooslet=toolset,
+                toolset=toolset,
                 options=options,
             )
         )
@@ -201,7 +201,7 @@ def check_nn(
         nn_path.write_text(dump_nn(nn))
         output_file = temp_path / "output.json"
         command: t.List[str] = [
-            toolset.executable,
+            str(toolset.executable),
             "modes",
             str(model_path),
             "-O",
@@ -212,7 +212,7 @@ def check_nn(
             "-NN",
             str(nn_path),
             "-A",
-            instance.automaton.name,
+            str(instance.automaton.name),
             "--threads",
             "1",
         ]
