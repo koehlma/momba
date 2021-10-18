@@ -392,6 +392,13 @@ class GenericExplorer(abstract.Explorer):
         for variable in self._ctx.global_variables:
             value = self.state.global_env[variable]
             _extend_state_vector(vector, value)
+        local_env = self.state.get_local_env(self._ctx.controlled_instance)
+        for variable in self._ctx.local_variables:
+            _extend_state_vector(vector, local_env[variable])
+        for instance, variables in self._ctx.other_variables.items():
+            local_env = self.state.get_local_env(instance)
+            for variable in variables:
+                _extend_state_vector(vector, local_env[variable])
         return vector
 
     @property
