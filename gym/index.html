@@ -94,7 +94,7 @@
       <a href="../"><div class="brand">Momba</div></a>
     </div>
     <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
     </div>
@@ -186,15 +186,15 @@
   <main class="main">
     <div class="content">
       <article role="main">
-        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
           <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
         </label>
         <div class="section" id="momba-gym">
 <h1>Momba Gym<a class="headerlink" href="#momba-gym" title="Permalink to this headline">¶</a></h1>
 <p>Implements an OpenAI Gym compatible interface:</p>
-<dl class="py class">
+<dl class="py function">
 <dt id="momba.gym.create_generic_env">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.gym.</span></code><code class="sig-name descname"><span class="pre">create_generic_env</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network</span></em>, <em class="sig-param"><span class="pre">controlled_instance</span></em>, <em class="sig-param"><span class="pre">property_name</span></em>, <em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">parameters=None</span></em>, <em class="sig-param"><span class="pre">rewards=Rewards(goal_reached=100</span></em>, <em class="sig-param"><span class="pre">dead_end=-100</span></em>, <em class="sig-param"><span class="pre">step_taken=0</span></em>, <em class="sig-param"><span class="pre">invalid_action=-100)</span></em>, <em class="sig-param"><span class="pre">actions=&lt;Actions.EDGE_BY_INDEX:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">observations=&lt;Observations.GLOBAL_ONLY:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/momba/gym/#create_generic_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.create_generic_env" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">momba.gym.</span></code><code class="sig-name descname"><span class="pre">create_generic_env</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">network</span></em>, <em class="sig-param"><span class="pre">controlled_instance</span></em>, <em class="sig-param"><span class="pre">property_name</span></em>, <em class="sig-param"><span class="pre">*</span></em>, <em class="sig-param"><span class="pre">parameters=None</span></em>, <em class="sig-param"><span class="pre">rewards=Rewards(goal_reached=100</span></em>, <em class="sig-param"><span class="pre">dead_end=-100</span></em>, <em class="sig-param"><span class="pre">step_taken=0</span></em>, <em class="sig-param"><span class="pre">invalid_action=-100)</span></em>, <em class="sig-param"><span class="pre">actions=&lt;Actions.EDGE_BY_INDEX:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">observations=&lt;Observations.GLOBAL_ONLY:</span> <span class="pre">1&gt;</span></em>, <em class="sig-param"><span class="pre">renderer=None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/momba/gym/#create_generic_env"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.create_generic_env" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience function for constructing a generic environment from a model.</p>
 </dd></dl>
 <dl class="py class">
@@ -222,7 +222,20 @@
 <dd><p>Takes a decision in response to the last observation.</p>
 </dd></dl>
 </dd></dl>
+<div class="section" id="deep-statistical-model-checking">
+<h2>Deep Statistical Model Checking<a class="headerlink" href="#deep-statistical-model-checking" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="momba.gym.checker.check_oracle">
+<code class="sig-prename descclassname"><span class="pre">momba.gym.checker.</span></code><code class="sig-name descname"><span class="pre">check_oracle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oracle</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Toolset(executable='modest',</span> <span class="pre">environment=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ModesOptions(max_run_length_as_end=True)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/momba/gym/checker/#check_oracle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.checker.check_oracle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks an arbitrary Python function implementing a decsion agent.</p>
+</dd></dl>
+<dl class="py function">
+<dt id="momba.gym.checker.check_nn">
+<code class="sig-prename descclassname"><span class="pre">momba.gym.checker.</span></code><code class="sig-name descname"><span class="pre">check_nn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toolset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Toolset(executable='modest',</span> <span class="pre">environment=None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ModesOptions(max_run_length_as_end=True)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/momba/gym/checker/#check_nn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.checker.check_nn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks a PyTorch neural network.</p>
+</dd></dl>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
@@ -269,8 +282,27 @@
 
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Momba Gym</a><ul>
+<li><a class="reference internal" href="#deep-statistical-model-checking">Deep Statistical Model Checking</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

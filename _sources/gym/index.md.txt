@@ -3,11 +3,19 @@
 Implements an OpenAI Gym compatible interface:
 
 ```{eval-rst}
-.. autoclass:: momba.gym.create_generic_env
-    :members:
+.. autofunction:: momba.gym.create_generic_env
 
 .. autoclass:: momba.gym.env.MombaEnv
     :members:
+```
+
+
+## Deep Statistical Model Checking
+
+```{eval-rst}
+.. autofunction:: momba.gym.checker.check_oracle
+
+.. autofunction:: momba.gym.checker.check_nn
 ```
 
 
