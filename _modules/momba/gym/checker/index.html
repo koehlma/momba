@@ -225,19 +225,34 @@
 <span class="n">DECISION</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s2">"!I"</span><span class="p">)</span>  <span class="c1"># (action,)</span>
 
 
-<span class="n">_MODEST_EDGE_SELECTOR</span> <span class="o">=</span> <span class="p">{</span><span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_LABEL</span><span class="p">:</span> <span class="s2">"--select-by-label"</span><span class="p">}</span>
-
-
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ModesOptions</span><span class="p">:</span>
     <span class="n">max_run_length_as_end</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">warn_non_det</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_run_length_as_end</span><span class="p">:</span>
             <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--max-run-length-as-end"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warn_non_det</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--warn-non-det"</span><span class="p">)</span>
 
 
 <span class="n">_DEFAULT_OPTIONS</span> <span class="o">=</span> <span class="n">ModesOptions</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">_apply_actions_observations</span><span class="p">(</span>
+    <span class="n">command</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="p">,</span> <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">actions</span> <span class="ow">is</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_LABEL</span><span class="p">:</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--select-by-label"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">actions</span> <span class="ow">is</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span>
+    <span class="k">if</span> <span class="n">observations</span> <span class="ow">is</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">LOCAL_AND_GLOBAL</span><span class="p">:</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--observations-local-global"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">observations</span> <span class="ow">is</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">OMNISCIENT</span><span class="p">:</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"--observations-omniscient"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">observations</span> <span class="ow">is</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span>
 
 
 <span class="k">def</span> <span class="nf">_create_vector_decoder</span><span class="p">(</span><span class="n">num_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">:</span>
@@ -315,6 +330,8 @@
     <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">toolset</span><span class="p">:</span> <span class="n">modest</span><span class="o">.</span><span class="n">Toolset</span><span class="p">,</span>
     <span class="n">options</span><span class="p">:</span> <span class="n">ModesOptions</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="p">,</span>
+    <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">server</span> <span class="o">=</span> <span class="n">OracleServer</span><span class="p">(</span><span class="n">oracle</span><span class="p">)</span>
     <span class="k">await</span> <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
@@ -338,6 +355,7 @@
     <span class="n">options</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_value</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">arguments</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"-E"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">param_value</span><span class="si">}</span><span class="s2">"</span><span class="p">])</span>
+    <span class="n">_apply_actions_observations</span><span class="p">(</span><span class="n">arguments</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">observations</span><span class="p">)</span>
     <span class="n">process</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">subprocess</span><span class="o">.</span><span class="n">create_subprocess_exec</span><span class="p">(</span>
         <span class="n">toolset</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="o">*</span><span class="n">arguments</span>
     <span class="p">)</span>
@@ -352,6 +370,8 @@
     <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">_NO_PARAMETERS</span><span class="p">,</span>
     <span class="n">toolset</span><span class="p">:</span> <span class="n">modest</span><span class="o">.</span><span class="n">Toolset</span> <span class="o">=</span> <span class="n">modest</span><span class="o">.</span><span class="n">toolset</span><span class="p">,</span>
     <span class="n">options</span><span class="p">:</span> <span class="n">ModesOptions</span> <span class="o">=</span> <span class="n">_DEFAULT_OPTIONS</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span><span class="p">,</span>
+    <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]:</span>
     <span class="sd">"""Checks an arbitrary Python function implementing a decsion agent."""</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
@@ -370,6 +390,8 @@
                 <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
                 <span class="n">toolset</span><span class="o">=</span><span class="n">toolset</span><span class="p">,</span>
                 <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+                <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">_load_result</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span></div>
@@ -383,6 +405,8 @@
     <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">_NO_PARAMETERS</span><span class="p">,</span>
     <span class="n">toolset</span><span class="p">:</span> <span class="n">modest</span><span class="o">.</span><span class="n">Toolset</span> <span class="o">=</span> <span class="n">modest</span><span class="o">.</span><span class="n">toolset</span><span class="p">,</span>
     <span class="n">options</span><span class="p">:</span> <span class="n">ModesOptions</span> <span class="o">=</span> <span class="n">_DEFAULT_OPTIONS</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span><span class="p">,</span>
+    <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]:</span>
     <span class="sd">"""Checks a PyTorch neural network."""</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
@@ -411,6 +435,7 @@
         <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_value</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">command</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">"-E"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">param_value</span><span class="si">}</span><span class="s2">"</span><span class="p">])</span>
         <span class="n">options</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="n">_apply_actions_observations</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">observations</span><span class="p">)</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_load_result</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span></div>
 </pre></div>
