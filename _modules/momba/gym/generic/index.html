@@ -480,7 +480,9 @@
 
         <span class="n">other_variables</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">observations</span> <span class="ow">is</span> <span class="n">Observations</span><span class="o">.</span><span class="n">OMNISCIENT</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">instances</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">network</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">):</span>
                 <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="n">controlled_instance</span><span class="p">:</span>
                     <span class="c1"># do not include the local variables twice</span>
                     <span class="k">continue</span>
