@@ -11,6 +11,7 @@ import typing as t
 import abc
 import enum
 import random
+import warnings
 
 from .. import engine, model
 from ..engine import explore
@@ -363,6 +364,10 @@ class GenericExplorer(abstract.Explorer):
             )
             and not self.has_terminated
         ):
+            if len(self.state.transitions) > 1:
+                warnings.warn(
+                    "Uncontrolled nondeterminism has been resolved uniformly."
+                )
             self.state = random.choice(self.state.transitions).destinations.pick().state
 
     @property
@@ -412,6 +417,10 @@ class GenericExplorer(abstract.Explorer):
         if not selected_transitions:
             return self._ctx.rewards.invalid_action
         else:
+            if len(selected_transitions) > 1:
+                warnings.warn(
+                    "Uncontrolled nondeterminism has been resolved uniformly."
+                )
             self.state = random.choice(selected_transitions).destinations.pick().state
             self._explore_until_choice()
         if self.has_reached_goal:
