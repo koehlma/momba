@@ -203,6 +203,7 @@
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">engine</span><span class="p">,</span> <span class="n">model</span>
 <span class="kn">from</span> <span class="nn">..engine</span> <span class="kn">import</span> <span class="n">explore</span>
@@ -555,6 +556,10 @@
             <span class="p">)</span>
             <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_terminated</span>
         <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">transitions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">"Uncontrolled nondeterminism has been resolved uniformly."</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">transitions</span><span class="p">)</span><span class="o">.</span><span class="n">destinations</span><span class="o">.</span><span class="n">pick</span><span class="p">()</span><span class="o">.</span><span class="n">state</span>
 
     <span class="nd">@property</span>
@@ -604,6 +609,10 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">selected_transitions</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctx</span><span class="o">.</span><span class="n">rewards</span><span class="o">.</span><span class="n">invalid_action</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_transitions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">"Uncontrolled nondeterminism has been resolved uniformly."</span>
+                <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">selected_transitions</span><span class="p">)</span><span class="o">.</span><span class="n">destinations</span><span class="o">.</span><span class="n">pick</span><span class="p">()</span><span class="o">.</span><span class="n">state</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_explore_until_choice</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_reached_goal</span><span class="p">:</span>
