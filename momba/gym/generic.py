@@ -163,9 +163,9 @@ DEFAULT_REWARD_STRUCTURE = Rewards()
 
 @d.dataclass(frozen=True)
 class Objective:
-    r"""A reachability objective.
+    r"""A reach-avoid objective.
 
-    Represents a reachability objective of the form
+    Represents a reach-avoid objective of the form
     :math:`\lnot\phi\mathbin{\mathbf{U}}\psi`, i.e., :math:`\lnot\phi` has to
     be true until the goal :math:`\psi` is reached. Used in
     conjunction with :class:`Rewards` to provide rewards.

@@ -6,25 +6,46 @@
 from __future__ import annotations
 
 import dataclasses as d
-import pathlib
 import typing as t
 
 import asyncio
+import json
+import fractions
+import pathlib
 import struct
+import subprocess
 import tempfile
 
 from .. import jani, model
 
 from ..tools import modest
 
+from . import generic
 from .abstract import Oracle
+from .dump_nn import dump_nn
+
+
+if t.TYPE_CHECKING:
+    import torch
 
 
 HEADER = struct.Struct("!II")  # (num_features, num_actions)
 DECISION = struct.Struct("!I")  # (action,)
 
 
-MODEST = modest.toolset.executable
+_MODEST_EDGE_SELECTOR = {generic.Actions.EDGE_BY_LABEL: "--select-by-label"}
+
+
+@d.dataclass(frozen=True)
+class ModesOptions:
+    max_run_length_as_end: bool = True
+
+    def apply(self, command: t.List[str]) -> None:
+        if self.max_run_length_as_end:
+            command.append("--max-run-length-as-end")
+
+
+_DEFAULT_OPTIONS = ModesOptions()
 
 
 def _create_vector_decoder(num_features: int) -> struct.Struct:
@@ -61,10 +82,7 @@ class OracleServer:
                 available = available_decoder.unpack(
                     await reader.readexactly(available_decoder.size)
                 )
-                # print("Received state:", state)
-                # TODO: receive available actions vector
                 decision = self.oracle(state, available)
-                # print("Send decision:", decision)
                 writer.write(DECISION.pack(decision))
                 await writer.drain()
         except asyncio.IncompleteReadError:
@@ -87,12 +105,24 @@ class OracleServer:
 _NO_PARAMETERS: t.Dict[str, t.Any] = {}
 
 
-async def _check(
+def _load_result(output_file: pathlib.Path) -> t.Mapping[str, fractions.Fraction]:
+    result = json.loads(output_file.read_text(encoding="utf-8-sig"))
+    return {
+        dataset["property"]: fractions.Fraction(dataset["value"])
+        for dataset in result["data"]
+        if "property" in dataset
+    }
+
+
+async def _check_oracle(
     model_path: pathlib.Path,
     automaton_name: str,
     oracle: Oracle,
+    output_file: pathlib.Path,
     *,
-    parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
+    parameters: t.Mapping[str, t.Any],
+    toolset: modest.Toolset,
+    options: ModesOptions,
 ) -> None:
     server = OracleServer(oracle)
     await server.start()
@@ -101,6 +131,9 @@ async def _check(
     arguments: t.List[str] = [
         "modes",
         str(model_path),
+        "-O",
+        output_file,
+        "json",
         "-R",
         "oracle",
         "--socket",
@@ -110,25 +143,81 @@ async def _check(
         "--threads",
         "1",
     ]
+    options.apply(arguments)
     for param_name, param_value in parameters.items():
         arguments.extend(["-E", f"{param_name}={param_value}"])
-    process = await asyncio.subprocess.create_subprocess_exec(MODEST, *arguments)
+    process = await asyncio.subprocess.create_subprocess_exec(
+        toolset.executable, *arguments
+    )
     await process.wait()
 
 
-def check(
+def check_oracle(
     network: model.Network,
     instance: model.Instance,
     oracle: Oracle,
     *,
     parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
-) -> None:
+    toolset: modest.Toolset = modest.toolset,
+    options: ModesOptions = _DEFAULT_OPTIONS,
+) -> t.Mapping[str, fractions.Fraction]:
+    """Checks an arbitrary Python function implementing a decsion agent."""
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = pathlib.Path(temp_dir)
         model_path = temp_path / "model.jani"
         model_path.write_text(jani.dump_model(network), encoding="utf-8")
+        output_file = temp_path / "output.json"
         loop = asyncio.get_event_loop()
         assert instance.automaton.name is not None
         loop.run_until_complete(
-            _check(model_path, instance.automaton.name, oracle, parameters=parameters)
+            _check_oracle(
+                model_path,
+                instance.automaton.name,
+                oracle,
+                output_file,
+                parameters=parameters,
+                tooslet=toolset,
+                options=options,
+            )
         )
+        return _load_result(output_file)
+
+
+def check_nn(
+    network: model.Network,
+    instance: model.Instance,
+    nn: torch.nn.Module,
+    *,
+    parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
+    toolset: modest.Toolset = modest.toolset,
+    options: ModesOptions = _DEFAULT_OPTIONS,
+) -> t.Mapping[str, fractions.Fraction]:
+    """Checks a PyTorch neural network."""
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_path = pathlib.Path(temp_dir)
+        model_path = temp_path / "model.jani"
+        model_path.write_text(jani.dump_model(network), encoding="utf-8")
+        nn_path = temp_path / "nn.json"
+        nn_path.write_text(dump_nn(nn))
+        output_file = temp_path / "output.json"
+        command: t.List[str] = [
+            toolset.executable,
+            "modes",
+            str(model_path),
+            "-O",
+            str(output_file),
+            "json",
+            "-R",
+            "NN",
+            "-NN",
+            str(nn_path),
+            "-A",
+            instance.automaton.name,
+            "--threads",
+            "1",
+        ]
+        for param_name, param_value in parameters.items():
+            command.extend(["-E", f"{param_name}={param_value}"])
+        options.apply(command)
+        subprocess.check_call(command)
+        return _load_result(output_file)
