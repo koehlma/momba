@@ -95,7 +95,8 @@ class _EdgeByLabelResolver(_ActionResolver):
         action_mapping: t.Dict[int, model.ActionType] = {}
         # `ctx.action_types` should be ordered as in the JANI file
         for action_type in ctx.action_types.values():
-            action_mapping[len(action_mapping)] = action_type
+            if action_type in action_types:
+                action_mapping[len(action_mapping)] = action_type
         return cls(instance, num_actions, action_mapping)
 
     def resolve(
