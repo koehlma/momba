@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import dataclasses as d
 import typing as t
 
 import abc
@@ -12,6 +13,19 @@ import abc
 
 StateVector = t.Sequence[float]
 AvailableVector = t.Sequence[bool]
+
+
+@d.dataclass(frozen=True)
+class Destination:
+    state: StateVector
+    reward: float
+    probability: float
+
+
+@d.dataclass(frozen=True)
+class Transition:
+    action: int
+    destinations: t.Sequence[Destination]
 
 
 class Explorer(abc.ABC):
@@ -45,6 +59,12 @@ class Explorer(abc.ABC):
     @abc.abstractmethod
     def available_actions(self) -> AvailableVector:
         """A boolean vector indicating which actions are available."""
+        raise NotImplementedError()
+
+    @property
+    @abc.abstractmethod
+    def available_transitions(self) -> t.Sequence[Transition]:
+        """A sequence of available transitions."""
         raise NotImplementedError()
 
     @abc.abstractmethod

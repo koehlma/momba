@@ -13,18 +13,18 @@ import numpy
 from gym import spaces
 from gym.error import UnsupportedMode
 
-from .abstract import Explorer, StateVector
+from . import abstract
 
 
 class Renderer(t.Protocol):
-    def render(self, state: StateVector, mode: str) -> None:
+    def render(self, state: abstract.StateVector, mode: str) -> None:
         raise NotImplementedError()
 
 
 class MombaEnv(gym.Env):  # type: ignore
     """Implementation of an OpenAI Gym environment."""
 
-    explorer: Explorer
+    explorer: abstract.Explorer
 
     action_space: gym.Space  # type: ignore
     observation_space: gym.Space  # type: ignore
@@ -32,7 +32,7 @@ class MombaEnv(gym.Env):  # type: ignore
     renderer: t.Optional[Renderer]
 
     def __init__(
-        self, explorer: Explorer, *, renderer: t.Optional[Renderer] = None
+        self, explorer: abstract.Explorer, *, renderer: t.Optional[Renderer] = None
     ) -> None:
         super().__init__()
         self.explorer = explorer
@@ -45,6 +45,10 @@ class MombaEnv(gym.Env):  # type: ignore
     @property
     def available_actions(self) -> numpy.ndarray:  # type: ignore
         return numpy.array(self.explorer.available_actions)
+
+    @property
+    def available_transitions(self) -> t.Sequence[abstract.Transition]:
+        return self.explorer.available_transitions
 
     def fork(self) -> MombaEnv:
         """Forks the environment."""

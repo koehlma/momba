@@ -42,13 +42,12 @@ class Observations(enum.Enum):
     """All (non-transient) variables are observable."""
 
 
-class _ActionResolver(abc.ABC):
-    @property
-    @abc.abstractmethod
-    def num_actions(self) -> int:
+class _ActionResolver:
+    num_actions: int
+
+    def available(self, state: engine.State[engine.DiscreteTime]) -> t.Sequence[bool]:
         raise NotImplementedError()
 
-    @abc.abstractmethod
     def resolve(
         self,
         transitions: t.Sequence[engine.Transition[engine.DiscreteTime]],
@@ -65,6 +64,13 @@ class _EdgeByIndexResolver(_ActionResolver):
     @classmethod
     def create(cls, instance: model.Instance) -> _EdgeByIndexResolver:
         return cls(instance, len(instance.automaton.edges))
+
+    def available(self, state: engine.State[engine.DiscreteTime]) -> t.Sequence[bool]:
+        available_actions: t.Set[int] = set()
+        for transition in state.transitions:
+            available_actions.add(transition.index_vector.get(self.instance, -1))
+        available_actions.discard(-1)
+        return [action in available_actions for action in range(self.num_actions)]
 
     def resolve(
         self,
@@ -83,6 +89,9 @@ class _EdgeByLabelResolver(_ActionResolver):
     instance: model.Instance
     num_actions: int
     action_mapping: t.Mapping[int, model.ActionType] = d.field(default_factory=dict)
+    reverse_action_mapping: t.Mapping[model.ActionType, int] = d.field(
+        default_factory=dict
+    )
 
     @classmethod
     def create(
@@ -98,7 +107,26 @@ class _EdgeByLabelResolver(_ActionResolver):
         for action_type in ctx.action_types.values():
             if action_type in action_types:
                 action_mapping[len(action_mapping)] = action_type
-        return cls(instance, num_actions, action_mapping)
+        return cls(
+            instance,
+            num_actions,
+            action_mapping,
+            reverse_action_mapping={
+                typ: number for number, typ in action_mapping.items()
+            },
+        )
+
+    def available(self, state: engine.State[engine.DiscreteTime]) -> t.Sequence[bool]:
+        available_actions: t.Set[int] = set()
+        for transition in state.transitions:
+            instance_action = transition.action_vector.get(self.instance, None)
+            if instance_action is not None:
+                available_actions.add(
+                    self.reverse_action_mapping[instance_action.action_type]
+                )
+            available_actions.add(transition.index_vector.get(self.instance, -1))
+        available_actions.discard(-1)
+        return [action in available_actions for action in range(self.num_actions)]
 
     def resolve(
         self,
@@ -361,19 +389,52 @@ class GenericExplorer(abstract.Explorer):
         )
         return cls(_ctx=ctx, _state=ctx.initial_state)
 
+    def _has_choice(self, state: engine.State[engine.DiscreteTime]) -> bool:
+        return any(
+            self._ctx.controlled_instance in transition.index_vector
+            for transition in state.transitions
+        )
+
+    def _is_final(self, state: engine.State[engine.DiscreteTime]) -> bool:
+        return self._has_choice(state) or self._has_terminated(state)
+
     def _explore_until_choice(self) -> None:
-        while (
-            not any(
-                self._ctx.controlled_instance in transition.index_vector
-                for transition in self.state.transitions
-            )
-            and not self.has_terminated
-        ):
+        while not self._is_final(self.state):
             if len(self.state.transitions) > 1:
                 warnings.warn(
                     "Uncontrolled nondeterminism has been resolved uniformly."
                 )
             self.state = random.choice(self.state.transitions).destinations.pick().state
+
+    def _explore_successors(
+        self, state: engine.State[engine.DiscreteTime]
+    ) -> t.Dict[engine.State[engine.DiscreteTime], float]:
+        pending = [(1.0, state)]
+        result: t.Dict[engine.State[engine.DiscreteTime], float] = {}
+        while pending:
+            probability, state = pending.pop()
+            if self._is_final(state):
+                if state not in result:
+                    result[state] = 0.0
+                result[state] += probability
+            else:
+                if len(state.transitions) > 1:
+                    warnings.warn(
+                        "Uncontrolled nondeterminism has been resolved uniformly."
+                    )
+                transition_probability = probability / len(state.transitions)
+                for transition in state.transitions:
+                    for destination in transition.destinations.support:
+                        pending.append(
+                            (
+                                transition_probability
+                                * float(
+                                    transition.destinations.get_probability(destination)
+                                ),
+                                destination.state,
+                            )
+                        )
+        return result
 
     @property
     def num_actions(self) -> int:
@@ -383,39 +444,93 @@ class GenericExplorer(abstract.Explorer):
     def num_features(self) -> int:
         return self._ctx.num_features
 
-    @property
-    def has_terminated(self) -> bool:
-        is_dead = self._ctx.dead_predicate.evaluate(self.state).as_bool
-        return not self.state.transitions or is_dead or self.has_reached_goal
-
-    @property
-    def state_vector(self) -> t.Sequence[float]:
+    def _state_vector(
+        self, state: engine.State[engine.DiscreteTime]
+    ) -> t.Sequence[float]:
         vector: t.List[float] = []
         for variable in self._ctx.global_variables:
-            value = self.state.global_env[variable]
+            value = state.global_env[variable]
             _extend_state_vector(vector, value)
-        local_env = self.state.get_local_env(self._ctx.controlled_instance)
+        local_env = state.get_local_env(self._ctx.controlled_instance)
         for variable in self._ctx.local_variables:
             _extend_state_vector(vector, local_env[variable])
         for instance, variables in self._ctx.other_variables.items():
-            local_env = self.state.get_local_env(instance)
+            local_env = state.get_local_env(instance)
             for variable in variables:
                 _extend_state_vector(vector, local_env[variable])
-        return vector
+        return tuple(vector)
+
+    @property
+    def state_vector(self) -> t.Sequence[float]:
+        return self._state_vector(self.state)
+
+    def _has_terminated(self, state: engine.State[engine.DiscreteTime]) -> bool:
+        is_dead = self._ctx.dead_predicate.evaluate(state).as_bool
+        return not state.transitions or is_dead or self._has_reached_goal(state)
+
+    def _has_reached_goal(self, state: engine.State[engine.DiscreteTime]) -> bool:
+        return self._ctx.goal_predicate.evaluate(state).as_bool
+
+    def _get_reward(self, state: engine.State[engine.DiscreteTime]) -> float:
+        if self._has_reached_goal(state):
+            return self._ctx.rewards.goal_reached
+        elif self._has_terminated(state):
+            return self._ctx.rewards.dead_end
+        else:
+            return self._ctx.rewards.step_taken
+
+    @property
+    def has_terminated(self) -> bool:
+        return self._has_terminated(self.state)
 
     @property
     def has_reached_goal(self) -> bool:
-        return self._ctx.goal_predicate.evaluate(self.state).as_bool
+        return self._has_reached_goal(self.state)
 
     @property
     def available_actions(self) -> t.Sequence[bool]:
-        available_actions: t.Set[int] = set()
-        for transition in self.state.transitions:
-            available_actions.add(
-                transition.index_vector.get(self._ctx.controlled_instance, -1)
+        return tuple(self._ctx.action_resolver.available(self.state))
+
+    @property
+    def available_transitions(self) -> t.Sequence[abstract.Transition]:
+        if self.has_terminated:
+            return []
+        result = []
+        for action, available in enumerate(self.available_actions):
+            if not available:
+                continue
+            transitions = self._ctx.action_resolver.resolve(
+                self.state.transitions, action
             )
-        available_actions.discard(-1)
-        return [action in available_actions for action in range(self.num_actions)]
+            if len(transitions) > 1:
+                warnings.warn(
+                    "Uncontrolled nondeterminism has been resolved uniformly."
+                )
+            transition_probability = 1.0 / len(transitions)
+            destinations: t.Dict[t.Sequence[float], abstract.Destination] = {}
+            for transition in transitions:
+                for destination in transition.destinations.support:
+                    for (
+                        final_successor,
+                        probability,
+                    ) in self._explore_successors(destination.state).items():
+                        final_successor_vector = self._state_vector(final_successor)
+                        reward = self._get_reward(final_successor)
+                        probability *= transition_probability
+                        probability *= transition.destinations.get_probability(
+                            destination
+                        )
+                        if final_successor_vector in destinations:
+                            probability += destinations[
+                                final_successor_vector
+                            ].probability
+                        destinations[final_successor_vector] = abstract.Destination(
+                            final_successor_vector, reward, probability
+                        )
+            result.append(
+                abstract.Transition(action, destinations=tuple(destinations.values()))
+            )
+        return result
 
     def step(self, action: int) -> float:
         if self.has_terminated:
@@ -435,12 +550,7 @@ class GenericExplorer(abstract.Explorer):
                 )
             self.state = random.choice(selected_transitions).destinations.pick().state
             self._explore_until_choice()
-        if self.has_reached_goal:
-            return self._ctx.rewards.goal_reached
-        elif self.has_terminated:
-            return self._ctx.rewards.dead_end
-        else:
-            return self._ctx.rewards.step_taken
+        return self._get_reward(self.state)
 
     def reset(self, *, explore_until_choice: bool = True) -> None:
         self.state = self._ctx.initial_state
