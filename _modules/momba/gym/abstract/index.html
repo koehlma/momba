@@ -197,6 +197,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span> <span class="nn">dataclasses</span> <span class="k">as</span> <span class="nn">d</span>
 <span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 
 <span class="kn">import</span> <span class="nn">abc</span>
@@ -204,6 +205,19 @@
 
 <span class="n">StateVector</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 <span class="n">AvailableVector</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Destination</span><span class="p">:</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">StateVector</span>
+    <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Transition</span><span class="p">:</span>
+    <span class="n">action</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">destinations</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Destination</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Explorer"><a class="viewcode-back" href="../../../../gym/abstract/#momba.gym.abstract.Explorer">[docs]</a><span class="k">class</span> <span class="nc">Explorer</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
@@ -237,6 +251,12 @@
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">available_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AvailableVector</span><span class="p">:</span>
         <span class="sd">"""A boolean vector indicating which actions are available."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">available_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Transition</span><span class="p">]:</span>
+        <span class="sd">"""A sequence of available transitions."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Explorer.step"><a class="viewcode-back" href="../../../../gym/abstract/#momba.gym.abstract.Explorer.step">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
