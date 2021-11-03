@@ -596,7 +596,7 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
             )
     rate = _expression(jani_edge["rate"]["exp"]) if "rate" in jani_edge else None
     guard = _expression(jani_edge["guard"]["exp"]) if "guard" in jani_edge else None
-    destinations = frozenset(
+    destinations = [
         automata.Destination(
             location=locations[jani_destination["location"]],
             probability=(
@@ -614,10 +614,10 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
             ),
         )
         for jani_destination in jani_edge["destinations"]
-    )
+    ]
     return automata.Edge(
         location=location,
-        destinations=destinations,
+        destinations=tuple(destinations),
         action_pattern=action_pattern,
         guard=guard,
         rate=rate,

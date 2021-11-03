@@ -504,7 +504,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         for ax, ay in itertools.product(scenario.possible_accelerations, repeat=2):
             automaton.create_edge(
                 source=initial,
-                destinations={
+                destinations=[
                     model.create_destination(
                         location=initial,
                         assignments={
@@ -530,7 +530,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                             p=scenario.underground.acceleration_probability,
                         ),
                     ),
-                },
+                ],
                 action_pattern=accelerate,
                 annotation={"ax": ax, "ay": ay},
             )
@@ -544,7 +544,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         consumption = scenario.compute_consumption(expr("car_dx"), expr("car_dy"))
         automaton.create_edge(
             source=initial,
-            destinations={
+            destinations=[
                 model.create_destination(
                     initial,
                     assignments={
@@ -553,7 +553,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                         )
                     },
                 )
-            },
+            ],
             action_pattern=check_tick,
             guard=expr(
                 "fuel >= $consumption",
@@ -592,7 +592,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                 options.update(track.blank_cells)
             automaton.create_edge(
                 initial,
-                destinations={
+                destinations=[
                     model.create_destination(
                         position_set,
                         assignments={
@@ -602,12 +602,12 @@ def construct_model(scenario: Scenario) -> model.Network:
                         probability=expr(f"1 / {len(options)}"),
                     )
                     for start_cell in options
-                },
+                ],
             )
         else:
             automaton.create_edge(
                 initial,
-                destinations={
+                destinations=[
                     model.create_destination(
                         position_set,
                         assignments={
@@ -615,19 +615,19 @@ def construct_model(scenario: Scenario) -> model.Network:
                             "car_y": model.ensure_expr(scenario.start_cell.x),
                         },
                     )
-                },
+                ],
             )
 
         automaton.create_edge(
             source=position_set,
-            destinations={model.create_destination(wait_for_car)},
+            destinations=[model.create_destination(wait_for_car)],
             action_pattern=delegate,
         )
 
         # Wait for the decision of the car.
         automaton.create_edge(
             source=wait_for_car,
-            destinations={
+            destinations=[
                 model.create_destination(
                     location=move_car,
                     assignments={
@@ -636,14 +636,14 @@ def construct_model(scenario: Scenario) -> model.Network:
                         "start_y": expr("car_y"),
                     },
                 )
-            },
+            ],
             action_pattern=accelerate,
         )
 
         # Move the car or delegate the decision back to the car.
         automaton.create_edge(
             source=move_car,
-            destinations={
+            destinations=[
                 model.create_destination(
                     env_check,
                     assignments={
@@ -658,13 +658,13 @@ def construct_model(scenario: Scenario) -> model.Network:
                         ),
                     },
                 )
-            },
+            ],
             guard=expr("counter < $move_ticks", move_ticks=move_ticks),
             action_pattern=move_tick,
         )
         automaton.create_edge(
             source=move_car,
-            destinations={model.create_destination(wait_for_car)},
+            destinations=[model.create_destination(wait_for_car)],
             guard=expr("counter >= $move_ticks", move_ticks=move_ticks),
             action_pattern=delegate,
         )
@@ -678,7 +678,7 @@ def construct_model(scenario: Scenario) -> model.Network:
         )
         automaton.create_edge(
             source=env_check,
-            destinations={model.create_destination(move_car)},
+            destinations=[model.create_destination(move_car)],
             guard=expr("not $should_terminate", should_terminate=should_terminate),
             action_pattern=check_tick,
         )
@@ -707,7 +707,7 @@ def construct_model(scenario: Scenario) -> model.Network:
 
         automaton.create_edge(
             done,
-            destinations={model.create_destination(wait)},
+            destinations=[model.create_destination(wait)],
             action_pattern=accelerate,
         )
 
@@ -721,12 +721,12 @@ def construct_model(scenario: Scenario) -> model.Network:
             )
         automaton.create_edge(
             wait,
-            destinations={
+            destinations=[
                 model.create_destination(
                     compute,
                     assignments=assignments,
                 )
-            },
+            ],
             action_pattern=delegate,
         )
 
@@ -767,13 +767,13 @@ def construct_model(scenario: Scenario) -> model.Network:
             )
         automaton.create_edge(
             compute,
-            destinations={model.create_destination(done, assignments=assignments)},
+            destinations=[model.create_destination(done, assignments=assignments)],
             guard=is_done_all,
         )
 
         automaton.create_edge(
             compute,
-            destinations={
+            destinations=[
                 model.create_destination(
                     compute,
                     assignments={
@@ -784,7 +784,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                         for direction in Direction
                     },
                 )
-            },
+            ],
             guard=expr("not $is_done", is_done=is_done_all),
         )
 

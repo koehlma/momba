@@ -59,25 +59,25 @@ class Network:
 
     _initial_restriction: t.Optional[Expression]
 
-    _instances: t.Set[Instance]
-    _links: t.Set[Link]
+    _instances: t.List[Instance]
+    _links: t.List[Link]
 
     def __init__(self, ctx: context.Context, *, name: t.Optional[str] = None) -> None:
         self.ctx = ctx
         self.name = name
         self._initial_restriction = None
-        self._instances = set()
-        self._links = set()
+        self._instances = []
+        self._links = []
 
     @property
-    def links(self) -> t.AbstractSet[Link]:
+    def links(self) -> t.List[Link]:
         """
         The set of links of the network.
         """
         return self._links
 
     @property
-    def instances(self) -> t.AbstractSet[Instance]:
+    def instances(self) -> t.List[Instance]:
         """
         The set of instances of the network.
         """
@@ -116,7 +116,7 @@ class Network:
         modeling context.
         """
         assert instance.automaton.ctx is self.ctx
-        self._instances.add(instance)
+        self._instances.append(instance)
 
     def create_link(
         self,
@@ -138,5 +138,5 @@ class Network:
         link = Link(vector, result=result, condition=condition)
         for instance in vector.keys():
             self.add_instance(instance)
-        self._links.add(link)
+        self._links.append(link)
         return link

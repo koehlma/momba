@@ -215,7 +215,7 @@ class Edge:
     """
 
     location: Location
-    destinations: t.AbstractSet[Destination]
+    destinations: t.Tuple[Destination, ...]
     action_pattern: t.Optional[actions.ActionPattern] = None
     guard: t.Optional[expressions.Expression] = None
     rate: t.Optional[expressions.Expression] = None
@@ -418,7 +418,7 @@ class Automaton:
     def create_edge(
         self,
         source: Location,
-        destinations: t.AbstractSet[Destination],
+        destinations: t.Iterable[Destination],
         *,
         action_pattern: t.Optional[actions.ActionPattern] = None,
         guard: t.Optional[expressions.Expression] = None,
@@ -435,7 +435,7 @@ class Automaton:
         """
         edge = Edge(
             source,
-            frozenset(destinations),
+            tuple(destinations),
             action_pattern,
             guard,
             rate,

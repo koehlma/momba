@@ -78,10 +78,10 @@ class Declarations:
     locals_table: LocalsTable = d.field(default_factory=dict)
 
     @property
-    def all_declarations(self) -> t.AbstractSet[VariableDeclaration]:
-        all_declarations = set(self.globals_table.values())
+    def all_declarations(self) -> t.List[VariableDeclaration]:
+        all_declarations = list(self.globals_table.values())
         for local_declarations in self.locals_table.values():
-            all_declarations |= set(local_declarations.values())
+            all_declarations.extend(local_declarations.values())
         return all_declarations
 
 
@@ -671,7 +671,7 @@ def _translate_instance(
 def _translate_link(
     link: model.Link, instance_names: t.Mapping[model.Instance, str]
 ) -> _JSONObject:
-    slots: t.Set[str] = set()
+    slots: t.List[str] = []
 
     def _translate_arguments(
         arguments: t.Iterable[model.ActionArgument],
@@ -679,7 +679,8 @@ def _translate_link(
         slot_vector: t.List[str] = []
         for argument in arguments:
             assert isinstance(argument, actions.GuardArgument)
-            slots.add(argument.identifier)
+            if argument.identifier not in slots:
+                slots.append(argument.identifier)
             slot_vector.append(argument.identifier)
         return slot_vector
 
@@ -700,7 +701,7 @@ def _translate_link(
             "arguments": _translate_arguments(pattern.arguments),
         }
 
-    return {"slots": list(slots), "vector": vector, "result": result}
+    return {"slots": slots, "vector": vector, "result": result}
 
 
 def _extract_constant_value(expr: expressions.Expression) -> t.Any:
