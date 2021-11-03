@@ -366,7 +366,7 @@
 
     <span class="n">location</span><span class="p">:</span> <span class="n">Location</span>
     <span class="n">probability</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">assignments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">FrozenSet</span><span class="p">[</span><span class="n">Assignment</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
+    <span class="n">assignments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Assignment</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">automaton</span><span class="p">:</span> <span class="n">Automaton</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">automaton</span><span class="p">)</span>
@@ -701,7 +701,7 @@
 
 
 <span class="n">Assignments</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
-    <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="s2">"Assignment"</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"expressions.Expression"</span><span class="p">]</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="s2">"Assignment"</span><span class="p">],</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"expressions.Expression"</span><span class="p">]</span>
 <span class="p">]</span>
 
 
@@ -709,7 +709,7 @@
     <span class="n">location</span><span class="p">:</span> <span class="n">Location</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">probability</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">expressions</span><span class="o">.</span><span class="n">Expression</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">assignments</span><span class="p">:</span> <span class="n">Assignments</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(),</span>
+    <span class="n">assignments</span><span class="p">:</span> <span class="n">Assignments</span> <span class="o">=</span> <span class="p">(),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Destination</span><span class="p">:</span>
     <span class="sd">"""</span>
 <span class="sd">    Creates a destination with the given target location.</span>
@@ -722,13 +722,13 @@
         <span class="k">return</span> <span class="n">Destination</span><span class="p">(</span>
             <span class="n">location</span><span class="p">,</span>
             <span class="n">probability</span><span class="p">,</span>
-            <span class="n">assignments</span><span class="o">=</span><span class="nb">frozenset</span><span class="p">(</span>
+            <span class="n">assignments</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span>
                 <span class="n">Assignment</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">assignments</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Destination</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">probability</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">assignments</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">Destination</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">probability</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">assignments</span><span class="p">))</span></div>
 </pre></div>
       </article>
       <footer>
