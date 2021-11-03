@@ -116,7 +116,8 @@ class Network:
         modeling context.
         """
         assert instance.automaton.ctx is self.ctx
-        self._instances.append(instance)
+        if instance not in self._instances:
+            self._instances.append(instance)
 
     def create_link(
         self,
