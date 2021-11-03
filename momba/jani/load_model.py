@@ -604,7 +604,7 @@ def _edge(ctx: model.Context, locations: _Locations, jani_edge: t.Any) -> automa
                 if "probability" in jani_destination
                 else None
             ),
-            assignments=frozenset(
+            assignments=tuple(
                 automata.Assignment(
                     target=_target(jani_assignment["ref"]),
                     value=_expression(jani_assignment["value"]),

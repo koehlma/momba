@@ -43,8 +43,8 @@ class Distribution(t.Generic[ElementT]):
         return f"Distribution({self._mapping})"
 
     @property
-    def support(self) -> t.AbstractSet[ElementT]:
-        return frozenset(
+    def support(self) -> t.List[ElementT]:
+        return list(
             element for element, probability in self._mapping.items() if probability > 0
         )
 

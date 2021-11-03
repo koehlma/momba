@@ -18,4 +18,8 @@ transition = next(iter(state.transitions))
 
 print(transition.instances)
 
-print(next(iter(transition.destinations._mapping)).state.global_env)
+import random
+
+random.seed(0)
+
+print(transition.destinations.pick().state.global_env)

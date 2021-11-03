@@ -174,7 +174,7 @@ class Destination:
 
     location: Location
     probability: t.Optional[expressions.Expression] = None
-    assignments: t.FrozenSet[Assignment] = frozenset()
+    assignments: t.Tuple[Assignment, ...] = ()
 
     def _validate(self, automaton: Automaton, scope: context.Scope) -> None:
         self.location.validate(automaton)
@@ -509,7 +509,7 @@ class Automaton:
 
 
 Assignments = t.Union[
-    t.AbstractSet["Assignment"], t.Mapping[str, "expressions.Expression"]
+    t.Iterable["Assignment"], t.Mapping[str, "expressions.Expression"]
 ]
 
 
@@ -517,7 +517,7 @@ def create_destination(
     location: Location,
     *,
     probability: t.Optional[expressions.Expression] = None,
-    assignments: Assignments = frozenset(),
+    assignments: Assignments = (),
 ) -> Destination:
     """
     Creates a destination with the given target location.
@@ -530,10 +530,10 @@ def create_destination(
         return Destination(
             location,
             probability,
-            assignments=frozenset(
+            assignments=tuple(
                 Assignment(expressions.Name(name), value)
                 for name, value in assignments.items()
             ),
         )
     else:
-        return Destination(location, probability, frozenset(assignments))
+        return Destination(location, probability, tuple(assignments))

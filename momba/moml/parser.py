@@ -612,7 +612,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                         model.Destination(
                             location=location_map[target_name],
                             probability=probability,
-                            assignments=frozenset(assignments),
+                            assignments=tuple(assignments),
                         )
                     )
                 else:
@@ -620,7 +620,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
             assert destinations, "missign destinations"
             automaton.create_edge(
                 location_map[location_name],
-                frozenset(destinations),
+                tuple(destinations),
                 action_pattern=action_pattern,
                 guard=guard,
                 rate=rate,

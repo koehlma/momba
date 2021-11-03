@@ -63,6 +63,15 @@ class DiscreteTime(TimeType):
         network: model.Network, *, parameters: Parameters = None
     ) -> CompiledNetwork:
         translation = translate_network(network, parameters=parameters)
+        import hashlib
+
+        digest = hashlib.sha1(translation.json_network.encode("utf-8")).hexdigest()
+        print(digest)
+
+        import pathlib
+
+        pathlib.Path(f"momba-ir-{digest[:6]}.json").write_text(translation.json_network)
+
         if not network.ctx.model_type.is_untimed:
             raise InvalidModelType(
                 f"{network.ctx.model_type} is not a discrete time model type"
