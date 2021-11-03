@@ -169,7 +169,7 @@ async def _check_oracle(
     await process.wait()
 
 
-def check_oracle(
+async def check_oracle_async(
     network: model.Network,
     instance: model.Instance,
     oracle: Oracle,
@@ -186,22 +186,45 @@ def check_oracle(
         model_path = temp_path / "model.jani"
         model_path.write_text(jani.dump_model(network), encoding="utf-8")
         output_file = temp_path / "output.json"
-        loop = asyncio.get_event_loop()
         assert instance.automaton.name is not None
-        loop.run_until_complete(
-            _check_oracle(
-                model_path,
-                instance.automaton.name,
-                oracle,
-                output_file,
-                parameters=parameters,
-                toolset=toolset,
-                options=options,
-                actions=actions,
-                observations=observations,
-            )
+        await _check_oracle(
+            model_path,
+            instance.automaton.name,
+            oracle,
+            output_file,
+            parameters=parameters,
+            toolset=toolset,
+            options=options,
+            actions=actions,
+            observations=observations,
         )
         return _load_result(output_file)
+
+
+def check_oracle(
+    network: model.Network,
+    instance: model.Instance,
+    oracle: Oracle,
+    *,
+    parameters: t.Mapping[str, t.Any] = _NO_PARAMETERS,
+    toolset: modest.Toolset = modest.toolset,
+    options: ModesOptions = _DEFAULT_OPTIONS,
+    actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
+    observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
+) -> t.Mapping[str, fractions.Fraction]:
+    loop = asyncio.get_event_loop()
+    return loop.run_until_complete(
+        check_oracle_async(
+            network,
+            instance,
+            oracle,
+            parameters=parameters,
+            toolset=toolset,
+            options=options,
+            actions=actions,
+            observations=observations,
+        )
+    )
 
 
 def check_nn(
