@@ -696,7 +696,7 @@
         <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">possible_accelerations</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
                 <span class="n">source</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
-                <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                         <span class="n">location</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
                         <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -722,7 +722,7 @@
                             <span class="n">p</span><span class="o">=</span><span class="n">scenario</span><span class="o">.</span><span class="n">underground</span><span class="o">.</span><span class="n">acceleration_probability</span><span class="p">,</span>
                         <span class="p">),</span>
                     <span class="p">),</span>
-                <span class="p">},</span>
+                <span class="p">],</span>
                 <span class="n">action_pattern</span><span class="o">=</span><span class="n">accelerate</span><span class="p">,</span>
                 <span class="n">annotation</span><span class="o">=</span><span class="p">{</span><span class="s2">"ax"</span><span class="p">:</span> <span class="n">ax</span><span class="p">,</span> <span class="s2">"ay"</span><span class="p">:</span> <span class="n">ay</span><span class="p">},</span>
             <span class="p">)</span>
@@ -736,7 +736,7 @@
         <span class="n">consumption</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">compute_consumption</span><span class="p">(</span><span class="n">expr</span><span class="p">(</span><span class="s2">"car_dx"</span><span class="p">),</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_dy"</span><span class="p">))</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">initial</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -745,7 +745,7 @@
                         <span class="p">)</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
-            <span class="p">},</span>
+            <span class="p">],</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">check_tick</span><span class="p">,</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span>
                 <span class="s2">"fuel &gt;= $consumption"</span><span class="p">,</span>
@@ -784,7 +784,7 @@
                 <span class="n">options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">track</span><span class="o">.</span><span class="n">blank_cells</span><span class="p">)</span>
             <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
                 <span class="n">initial</span><span class="p">,</span>
-                <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                         <span class="n">position_set</span><span class="p">,</span>
                         <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -794,12 +794,12 @@
                         <span class="n">probability</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="sa">f</span><span class="s2">"1 / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">),</span>
                     <span class="p">)</span>
                     <span class="k">for</span> <span class="n">start_cell</span> <span class="ow">in</span> <span class="n">options</span>
-                <span class="p">},</span>
+                <span class="p">],</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
                 <span class="n">initial</span><span class="p">,</span>
-                <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+                <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                     <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                         <span class="n">position_set</span><span class="p">,</span>
                         <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -807,19 +807,19 @@
                             <span class="s2">"car_y"</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">start_cell</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
                         <span class="p">},</span>
                     <span class="p">)</span>
-                <span class="p">},</span>
+                <span class="p">],</span>
             <span class="p">)</span>
 
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">position_set</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait_for_car</span><span class="p">)},</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait_for_car</span><span class="p">)],</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">delegate</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Wait for the decision of the car.</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">wait_for_car</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">location</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -828,14 +828,14 @@
                         <span class="s2">"start_y"</span><span class="p">:</span> <span class="n">expr</span><span class="p">(</span><span class="s2">"car_y"</span><span class="p">),</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
-            <span class="p">},</span>
+            <span class="p">],</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">accelerate</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Move the car or delegate the decision back to the car.</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">env_check</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -850,13 +850,13 @@
                         <span class="p">),</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
-            <span class="p">},</span>
+            <span class="p">],</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"counter &lt; $move_ticks"</span><span class="p">,</span> <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">),</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">move_tick</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">move_car</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait_for_car</span><span class="p">)},</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait_for_car</span><span class="p">)],</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"counter &gt;= $move_ticks"</span><span class="p">,</span> <span class="n">move_ticks</span><span class="o">=</span><span class="n">move_ticks</span><span class="p">),</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">delegate</span><span class="p">,</span>
         <span class="p">)</span>
@@ -870,7 +870,7 @@
         <span class="p">)</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">env_check</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">move_car</span><span class="p">)},</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">move_car</span><span class="p">)],</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"not $should_terminate"</span><span class="p">,</span> <span class="n">should_terminate</span><span class="o">=</span><span class="n">should_terminate</span><span class="p">),</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">check_tick</span><span class="p">,</span>
         <span class="p">)</span>
@@ -899,7 +899,7 @@
 
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">done</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait</span><span class="p">)},</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">wait</span><span class="p">)],</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">accelerate</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -913,12 +913,12 @@
             <span class="p">)</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">wait</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">compute</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">},</span>
+            <span class="p">],</span>
             <span class="n">action_pattern</span><span class="o">=</span><span class="n">delegate</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -959,13 +959,13 @@
             <span class="p">)</span>
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">compute</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">)},</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span><span class="n">done</span><span class="p">,</span> <span class="n">assignments</span><span class="o">=</span><span class="n">assignments</span><span class="p">)],</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">is_done_all</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">automaton</span><span class="o">.</span><span class="n">create_edge</span><span class="p">(</span>
             <span class="n">compute</span><span class="p">,</span>
-            <span class="n">destinations</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">destinations</span><span class="o">=</span><span class="p">[</span>
                 <span class="n">model</span><span class="o">.</span><span class="n">create_destination</span><span class="p">(</span>
                     <span class="n">compute</span><span class="p">,</span>
                     <span class="n">assignments</span><span class="o">=</span><span class="p">{</span>
@@ -976,7 +976,7 @@
                         <span class="k">for</span> <span class="n">direction</span> <span class="ow">in</span> <span class="n">Direction</span>
                     <span class="p">},</span>
                 <span class="p">)</span>
-            <span class="p">},</span>
+            <span class="p">],</span>
             <span class="n">guard</span><span class="o">=</span><span class="n">expr</span><span class="p">(</span><span class="s2">"not $is_done"</span><span class="p">,</span> <span class="n">is_done</span><span class="o">=</span><span class="n">is_done_all</span><span class="p">),</span>
         <span class="p">)</span>
 

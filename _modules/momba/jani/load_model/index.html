@@ -788,7 +788,7 @@
             <span class="p">)</span>
     <span class="n">rate</span> <span class="o">=</span> <span class="n">_expression</span><span class="p">(</span><span class="n">jani_edge</span><span class="p">[</span><span class="s2">"rate"</span><span class="p">][</span><span class="s2">"exp"</span><span class="p">])</span> <span class="k">if</span> <span class="s2">"rate"</span> <span class="ow">in</span> <span class="n">jani_edge</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">guard</span> <span class="o">=</span> <span class="n">_expression</span><span class="p">(</span><span class="n">jani_edge</span><span class="p">[</span><span class="s2">"guard"</span><span class="p">][</span><span class="s2">"exp"</span><span class="p">])</span> <span class="k">if</span> <span class="s2">"guard"</span> <span class="ow">in</span> <span class="n">jani_edge</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">destinations</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+    <span class="n">destinations</span> <span class="o">=</span> <span class="p">[</span>
         <span class="n">automata</span><span class="o">.</span><span class="n">Destination</span><span class="p">(</span>
             <span class="n">location</span><span class="o">=</span><span class="n">locations</span><span class="p">[</span><span class="n">jani_destination</span><span class="p">[</span><span class="s2">"location"</span><span class="p">]],</span>
             <span class="n">probability</span><span class="o">=</span><span class="p">(</span>
@@ -806,10 +806,10 @@
             <span class="p">),</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">jani_destination</span> <span class="ow">in</span> <span class="n">jani_edge</span><span class="p">[</span><span class="s2">"destinations"</span><span class="p">]</span>
-    <span class="p">)</span>
+    <span class="p">]</span>
     <span class="k">return</span> <span class="n">automata</span><span class="o">.</span><span class="n">Edge</span><span class="p">(</span>
         <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
-        <span class="n">destinations</span><span class="o">=</span><span class="n">destinations</span><span class="p">,</span>
+        <span class="n">destinations</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">destinations</span><span class="p">),</span>
         <span class="n">action_pattern</span><span class="o">=</span><span class="n">action_pattern</span><span class="p">,</span>
         <span class="n">guard</span><span class="o">=</span><span class="n">guard</span><span class="p">,</span>
         <span class="n">rate</span><span class="o">=</span><span class="n">rate</span><span class="p">,</span>
