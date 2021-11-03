@@ -255,15 +255,6 @@
         <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="n">Parameters</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompiledNetwork</span><span class="p">:</span>
         <span class="n">translation</span> <span class="o">=</span> <span class="n">translate_network</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">hashlib</span>
-
-        <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">translation</span><span class="o">.</span><span class="n">json_network</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span>
-
-        <span class="kn">import</span> <span class="nn">pathlib</span>
-
-        <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"momba-ir-</span><span class="si">{</span><span class="n">digest</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">translation</span><span class="o">.</span><span class="n">json_network</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">is_untimed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidModelType</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">network</span><span class="o">.</span><span class="n">ctx</span><span class="o">.</span><span class="n">model_type</span><span class="si">}</span><span class="s2"> is not a discrete time model type"</span>
