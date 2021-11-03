@@ -36,13 +36,10 @@ DECISION = struct.Struct("!I")  # (action,)
 @d.dataclass(frozen=True)
 class ModesOptions:
     max_run_length_as_end: bool = True
-    warn_non_det: bool = True
 
     def apply(self, command: t.List[str]) -> None:
         if self.max_run_length_as_end:
             command.append("--max-run-length-as-end")
-        if self.warn_non_det:
-            command.append("--warn-non-det")
 
 
 _DEFAULT_OPTIONS = ModesOptions()
