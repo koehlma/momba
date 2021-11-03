@@ -122,6 +122,8 @@ def _load_result(output_file: pathlib.Path) -> t.Mapping[str, fractions.Fraction
     return {
         dataset["property"]: fractions.Fraction(dataset["value"])
         for dataset in result["data"]
+        if "data" in dataset
+        for dataset in dataset["data"]
         if "property" in dataset
     }
 
