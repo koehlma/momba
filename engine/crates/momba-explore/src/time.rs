@@ -1,7 +1,6 @@
 //! Algorithms and data structures for representing time.
 
 use std::{
-    collections::HashSet,
     convert::{TryFrom, TryInto},
     env::var,
     fmt::Debug,
@@ -47,7 +46,7 @@ pub trait Time: Sized + Sync + Send + Debug {
     ) -> Self::CompiledDifference;
 
     /// Takes a set of clocks and returns a compiled set of clocks.
-    fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks;
+    fn compile_clocks(&self, clocks: &IndexSet<model::Clock>) -> Self::CompiledClocks;
 
     /// Checks the provided set of valuations is empty.
     fn is_empty(&self, valuations: &Self::Valuations) -> bool;
@@ -105,7 +104,7 @@ impl Time for NoClocks {
         panic!("time type `NoClocks` does not allow any clocks")
     }
 
-    fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks {
+    fn compile_clocks(&self, clocks: &IndexSet<model::Clock>) -> Self::CompiledClocks {
         if clocks.len() > 0 {
             panic!("time type `NoClocks` does not allow any clocks")
         }
@@ -218,7 +217,7 @@ impl Time for Float64Zone {
         )
     }
 
-    fn compile_clocks(&self, clocks: &HashSet<model::Clock>) -> Self::CompiledClocks {
+    fn compile_clocks(&self, clocks: &IndexSet<model::Clock>) -> Self::CompiledClocks {
         clocks
             .iter()
             .map(|clock| self.model_to_zone_clock(clock))

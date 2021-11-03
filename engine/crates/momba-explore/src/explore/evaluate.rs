@@ -1,8 +1,7 @@
 use std::cmp::max;
-use std::collections::HashMap;
 use std::convert::TryInto;
 
-use indexmap::IndexSet;
+use indexmap::{IndexSet, IndexMap};
 
 use super::model::*;
 
@@ -150,7 +149,7 @@ impl CompileContext {
 }
 
 pub struct Scope<const BANKS: usize> {
-    banks: [HashMap<String, usize>; BANKS],
+    banks: [IndexMap<String, usize>; BANKS],
 }
 
 impl<const BANKS: usize> Scope<BANKS> {
@@ -472,7 +471,7 @@ impl Edge {
                 global_scope.banks[0].clone(),
                 global_scope.banks[1].clone(),
                 match &edge.pattern {
-                    ActionPattern::Silent => HashMap::new(),
+                    ActionPattern::Silent => IndexMap::new(),
                     ActionPattern::Labeled(labeled) => labeled
                         .arguments
                         .iter()
