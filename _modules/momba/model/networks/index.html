@@ -308,7 +308,8 @@
 <span class="sd">        modeling context.</span>
 <span class="sd">        """</span>
         <span class="k">assert</span> <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">ctx</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Network.create_link"><a class="viewcode-back" href="../../../../reference/model/networks/#momba.model.Network.create_link">[docs]</a>    <span class="k">def</span> <span class="nf">create_link</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

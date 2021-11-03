@@ -361,7 +361,7 @@
     <span class="k">await</span> <span class="n">process</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="check_oracle"><a class="viewcode-back" href="../../../../gym/#momba.gym.checker.check_oracle">[docs]</a><span class="k">def</span> <span class="nf">check_oracle</span><span class="p">(</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">check_oracle_async</span><span class="p">(</span>
     <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
     <span class="n">instance</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span>
     <span class="n">oracle</span><span class="p">:</span> <span class="n">Oracle</span><span class="p">,</span>
@@ -378,22 +378,45 @@
         <span class="n">model_path</span> <span class="o">=</span> <span class="n">temp_path</span> <span class="o">/</span> <span class="s2">"model.jani"</span>
         <span class="n">model_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">jani</span><span class="o">.</span><span class="n">dump_model</span><span class="p">(</span><span class="n">network</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
         <span class="n">output_file</span> <span class="o">=</span> <span class="n">temp_path</span> <span class="o">/</span> <span class="s2">"output.json"</span>
-        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
         <span class="k">assert</span> <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
-            <span class="n">_check_oracle</span><span class="p">(</span>
-                <span class="n">model_path</span><span class="p">,</span>
-                <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">oracle</span><span class="p">,</span>
-                <span class="n">output_file</span><span class="p">,</span>
-                <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
-                <span class="n">toolset</span><span class="o">=</span><span class="n">toolset</span><span class="p">,</span>
-                <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
-                <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="k">await</span> <span class="n">_check_oracle</span><span class="p">(</span>
+            <span class="n">model_path</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">automaton</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">oracle</span><span class="p">,</span>
+            <span class="n">output_file</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+            <span class="n">toolset</span><span class="o">=</span><span class="n">toolset</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">_load_result</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">_load_result</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="check_oracle"><a class="viewcode-back" href="../../../../gym/#momba.gym.checker.check_oracle">[docs]</a><span class="k">def</span> <span class="nf">check_oracle</span><span class="p">(</span>
+    <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
+    <span class="n">instance</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Instance</span><span class="p">,</span>
+    <span class="n">oracle</span><span class="p">:</span> <span class="n">Oracle</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">parameters</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">_NO_PARAMETERS</span><span class="p">,</span>
+    <span class="n">toolset</span><span class="p">:</span> <span class="n">modest</span><span class="o">.</span><span class="n">Toolset</span> <span class="o">=</span> <span class="n">modest</span><span class="o">.</span><span class="n">toolset</span><span class="p">,</span>
+    <span class="n">options</span><span class="p">:</span> <span class="n">ModesOptions</span> <span class="o">=</span> <span class="n">_DEFAULT_OPTIONS</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span><span class="p">,</span>
+    <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]:</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+        <span class="n">check_oracle_async</span><span class="p">(</span>
+            <span class="n">network</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">,</span>
+            <span class="n">oracle</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+            <span class="n">toolset</span><span class="o">=</span><span class="n">toolset</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+            <span class="n">observations</span><span class="o">=</span><span class="n">observations</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="check_nn"><a class="viewcode-back" href="../../../../gym/#momba.gym.checker.check_nn">[docs]</a><span class="k">def</span> <span class="nf">check_nn</span><span class="p">(</span>
