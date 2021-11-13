@@ -210,11 +210,13 @@
 
 
 <div class="viewcode-block" id="Checker"><a class="viewcode-back" href="../../../../reference/analysis/#momba.analysis.Checker">[docs]</a><span class="k">class</span> <span class="nc">Checker</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">"""An abstract class for model checkers."""</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Checker.check"><a class="viewcode-back" href="../../../../reference/analysis/#momba.analysis.Checker.check">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
@@ -222,7 +224,8 @@
         <span class="n">properties</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Properties</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">property_names</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        <span class="sd">"""Model checks the given properties on the network."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 
 
 <span class="k">class</span> <span class="nc">CrossCheckError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
