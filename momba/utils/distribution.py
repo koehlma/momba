@@ -16,6 +16,8 @@ ElementT = t.TypeVar("ElementT", bound=t.Hashable)
 
 
 class Distribution(t.Generic[ElementT]):
+    """A probability distribution."""
+
     _mapping: FrozenMap[ElementT, fractions.Fraction]
 
     @classmethod
@@ -56,6 +58,7 @@ class Distribution(t.Generic[ElementT]):
         return self._mapping.get(element, fractions.Fraction(0))
 
     def pick(self) -> ElementT:
+        """Picks an element at random according to the distribution."""
         max_denominator = max(
             probability.denominator for probability in self._mapping.values()
         )

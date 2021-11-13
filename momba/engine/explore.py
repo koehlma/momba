@@ -114,7 +114,7 @@ class Transition(t.Generic[TimeTypeT]):
 
         Is a mapping from instances to edges.
     destinations:
-        The destinations of the transition.
+        The probability distribution over destinations.
     """
 
     explorer: Explorer[TimeTypeT]
