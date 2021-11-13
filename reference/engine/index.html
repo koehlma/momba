@@ -221,7 +221,7 @@ Here, we document the public API exposed as part of Momba.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f33b4c3b7f0&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;momba.engine.explore.Explorer at 0x7f450c7934f0&gt;
 </pre></div>
 </div>
 </div>
@@ -333,11 +333,11 @@ To this end, we query the outgoing transitions of the initial state and their re
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f33b45067c0&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f33b4506820&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f450c081ca0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f450c081d00&gt;.
 Action: snd_idle21
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f33b4506c40&gt;.
-  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f33b4506ca0&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f450c081730&gt;.
+  With p=0.5 to &lt;momba.engine.explore.Destination object at 0x7f450c0814f0&gt;.
 </pre></div>
 </div>
 </div>
@@ -357,19 +357,19 @@ Action: snd_idle21
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle12
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>Action: snd_idle21
 </pre></div>
 </div>
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'w12': Value(5),
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>{'w12': Value(0),
  'y1': Value(0),
  'y2': Value(0),
  'x1': Value(0),
- 's1': Value(2),
- 'w21': Value(0),
+ 's1': Value(0),
+ 'w21': Value(5),
  'z1': Value(0),
  'z2': Value(0),
  'x2': Value(0),
- 's2': Value(0),
+ 's2': Value(3),
  't': Value(0)}
 </pre></div>
 </div>
@@ -520,7 +520,7 @@ unspecified behavior.</p>
 <dl class="py attribute">
 <dt id="momba.engine.Transition.destinations">
 <code class="sig-name descname"><span class="pre">destinations</span></code><a class="headerlink" href="#momba.engine.Transition.destinations" title="Permalink to this definition">¶</a></dt>
-<dd><p>The destinations of the transition.</p>
+<dd><p>The probability distribution over destinations.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
@@ -559,6 +559,16 @@ stabilized yet.</p>
 <dt id="momba.engine.Destination.state">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">state</span></code><a class="headerlink" href="#momba.engine.Destination.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>The target <a class="reference internal" href="#momba.engine.State" title="momba.engine.State"><code class="xref py py-class docutils literal notranslate"><span class="pre">State</span></code></a> associated with the destination.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt id="momba.utils.distribution.Distribution">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.utils.distribution.</span></code><code class="sig-name descname"><span class="pre">Distribution</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/utils/distribution/#Distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.utils.distribution.Distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A probability distribution.</p>
+<dl class="py method">
+<dt id="momba.utils.distribution.Distribution.pick">
+<code class="sig-name descname"><span class="pre">pick</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/utils/distribution/#Distribution.pick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.utils.distribution.Distribution.pick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Picks an element at random according to the distribution.</p>
 </dd></dl>
 </dd></dl>
 <div class="section" id="time-representations">

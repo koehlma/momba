@@ -113,6 +113,9 @@ successor.global_env
 
 .. autoclass:: momba.engine.Destination
     :members:
+
+.. autoclass:: momba.utils.distribution.Distribution
+    :members:
 ```
 
 
