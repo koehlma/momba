@@ -197,6 +197,8 @@ checker = ModestChecker(toolset)
 
 
 def get_checker(*, accept_license: bool) -> checkers.Checker:
+    """Returns an instance of :class:`~momba.analysis.Checker`."""
+    assert accept_license, "you need to accept the liecense of the Modest Toolset"
     _setup_locally()
     toolset = Toolset(_MODEST_EXE)
     return ModestChecker(toolset)

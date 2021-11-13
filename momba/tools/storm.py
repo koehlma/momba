@@ -127,6 +127,7 @@ checker = checker_sparse
 
 
 def get_checker(*, accept_license: bool) -> checkers.Checker:
+    """Returns an instance of :class:`~momba.analysis.Checker`."""
     try:
         from . import storm_docker
 

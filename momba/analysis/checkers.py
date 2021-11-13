@@ -18,6 +18,8 @@ Result = t.Mapping[str, fractions.Fraction]
 
 
 class Checker(abc.ABC):
+    """An abstract class for model checkers."""
+
     @property
     def description(self) -> str:
         return self.__class__.__name__
@@ -30,6 +32,7 @@ class Checker(abc.ABC):
         properties: t.Optional[Properties] = None,
         property_names: t.Optional[t.Iterable[str]] = None,
     ) -> Result:
+        """Model checks the given properties on the network."""
         raise NotImplementedError()
 
 
