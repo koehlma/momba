@@ -26,6 +26,7 @@ def parse(source: str, *, ctx: t.Optional[model.Context] = None) -> model.Contex
 
 
 def expr(source: str, **macros: expressions.ValueOrExpression) -> model.Expression:
+    """Parses an expression in MOML syntax with macros."""
     return parser.parse_expression(
         parser.TokenStream(source.strip()),
         environment=parser.Environment(
@@ -35,6 +36,7 @@ def expr(source: str, **macros: expressions.ValueOrExpression) -> model.Expressi
 
 
 def prop(source: str, **macros: expressions.ValueOrExpression) -> model.Expression:
+    """Parses a property in MOML syntax with macros."""
     return parser.parse_property(
         parser.TokenStream(source.strip()),
         environment=parser.Environment(

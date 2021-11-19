@@ -40,6 +40,8 @@ _result_regex = re.compile(
 
 
 class Toolset:
+    """Interface to Storm running in a Docker container."""
+
     client: t.Any
     tag: str
 
@@ -51,6 +53,7 @@ class Toolset:
         self.client.images.pull(DOCKER_IMAGE, tag=self.tag)
 
     def run(self, arguments: t.Sequence[str], mounts: t.Sequence[t.Any] = ()) -> str:
+        """Runs storm with the provided arguments and mounts."""
         command = ["sh", "-c", "'", "./storm"]
         command.extend(arguments)
         command.extend((";", "exit 0", "'"))
@@ -65,9 +68,13 @@ class Toolset:
 
 @d.dataclass(frozen=True, eq=False)
 class StormChecker(checkers.Checker):
+    """Checker implementation for Storm running in Docker."""
+
     toolset: Toolset
+    """The toolset to use."""
 
     engine: str = "dd"
+    """The engine to use."""
 
     @property
     def description(self) -> str:

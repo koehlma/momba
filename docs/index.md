@@ -60,6 +60,14 @@ incubator/index
 ```
 
 ```{toctree}
+:caption: Tools
+:hidden:
+
+tools/modest
+tools/storm
+```
+
+```{toctree}
 :caption: Features
 :hidden:
 

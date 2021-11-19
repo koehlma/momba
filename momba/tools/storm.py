@@ -39,9 +39,13 @@ class Output:
 
 @d.dataclass(eq=False)
 class Toolset:
+    """Interface to Storm."""
+
     executable: t.Union[str, pathlib.Path]
+    """Path to the executable."""
 
     environment: t.Optional[t.Mapping[str, str]] = None
+    """Environment variables for execution."""
 
     def invoke(
         self,
@@ -49,6 +53,7 @@ class Toolset:
         *,
         timeout: Timeout = None,
     ) -> Output:
+        """Runs storm with the provided arguments."""
         command: Command = (
             self.executable,
             *map(str, arguments),

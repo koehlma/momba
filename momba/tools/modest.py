@@ -93,9 +93,13 @@ def _setup_locally() -> None:
 
 @d.dataclass(eq=False)
 class Toolset:
+    """Interface to the Modest Toolset."""
+
     executable: t.Union[str, pathlib.Path]
+    """Path to the executable of the Modest Toolset."""
 
     environment: t.Optional[t.Mapping[str, str]] = None
+    """Environment variables for the execution."""
 
     def check(
         self,
