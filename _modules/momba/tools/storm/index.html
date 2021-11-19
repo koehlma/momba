@@ -163,6 +163,11 @@
 </ul>
 </li>
 </ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/modest/">Modest Toolset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/storm/">Storm</a></li>
+</ul>
 <p class="caption"><span class="caption-text">Features</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../gym/">Momba Gym</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -229,18 +234,23 @@
     <span class="n">stderr</span><span class="p">:</span> <span class="nb">str</span>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="viewcode-block" id="Toolset"><a class="viewcode-back" href="../../../../tools/storm/#momba.tools.storm.Toolset">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Toolset</span><span class="p">:</span>
+    <span class="sd">"""Interface to Storm."""</span>
+
     <span class="n">executable</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">]</span>
+    <span class="sd">"""Path to the executable."""</span>
 
     <span class="n">environment</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">"""Environment variables for execution."""</span>
 
-    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span>
+<div class="viewcode-block" id="Toolset.invoke"><a class="viewcode-back" href="../../../../tools/storm/#momba.tools.storm.Toolset.invoke">[docs]</a>    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">]],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">timeout</span><span class="p">:</span> <span class="n">Timeout</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span>
+        <span class="sd">"""Runs storm with the provided arguments."""</span>
         <span class="n">command</span><span class="p">:</span> <span class="n">Command</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
             <span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">arguments</span><span class="p">),</span>
@@ -267,16 +277,16 @@
                 <span class="n">stderr</span><span class="o">=</span><span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
                 <span class="n">returncode</span><span class="o">=</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">Output</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">),</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Output</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">),</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span></div></div>
 
 
-<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="viewcode-block" id="StormChecker"><a class="viewcode-back" href="../../../../tools/storm/#momba.tools.storm.StormChecker">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">eq</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">StormChecker</span><span class="p">(</span><span class="n">checkers</span><span class="o">.</span><span class="n">Checker</span><span class="p">):</span>
     <span class="n">toolset</span><span class="p">:</span> <span class="n">Toolset</span>
 
     <span class="n">engine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"dd"</span>
 
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span>
+<div class="viewcode-block" id="StormChecker.check"><a class="viewcode-back" href="../../../../tools/storm/#momba.tools.storm.StormChecker.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">network</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">Network</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -307,7 +317,7 @@
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"prop_name"</span><span class="p">):</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"prop_value"</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">_result_regex</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
-        <span class="p">}</span>
+        <span class="p">}</span></div></div>
 
 
 <span class="n">toolset</span> <span class="o">=</span> <span class="n">Toolset</span><span class="p">(</span><span class="s2">"storm"</span><span class="p">)</span>

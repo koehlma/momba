@@ -163,6 +163,11 @@
 </ul>
 </li>
 </ul>
+<p class="caption"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/modest/">Modest Toolset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/storm/">Storm</a></li>
+</ul>
 <p class="caption"><span class="caption-text">Features</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../gym/">Momba Gym</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -218,6 +223,7 @@
 
 
 <div class="viewcode-block" id="expr"><a class="viewcode-back" href="../../../incubator/moml/macros/#momba.moml.expr">[docs]</a><span class="k">def</span> <span class="nf">expr</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">macros</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="sd">"""Parses an expression in MOML syntax with macros."""</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_expression</span><span class="p">(</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
         <span class="n">environment</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
@@ -227,6 +233,7 @@
 
 
 <div class="viewcode-block" id="prop"><a class="viewcode-back" href="../../../incubator/moml/macros/#momba.moml.prop">[docs]</a><span class="k">def</span> <span class="nf">prop</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">macros</span><span class="p">:</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">Expression</span><span class="p">:</span>
+    <span class="sd">"""Parses a property in MOML syntax with macros."""</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_property</span><span class="p">(</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">TokenStream</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span>
         <span class="n">environment</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
