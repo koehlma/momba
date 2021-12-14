@@ -11,8 +11,6 @@
   <a href="https://doi.org/10.5281/zenodo.4519376"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.4519376.svg"></a>
 </p>
 
-ℹ️ **News:** We are delighted to announce an [upcoming Momba tutorial](https://fm21.momba.dev) at [FM’21]( http://lcs.ios.ac.cn/fm2021/). We'll keep you posted!
-
 *Momba* is a Python framework for dealing with quantitative models centered around the [JANI-model](http://www.jani-spec.org/) interchange format.
 Momba strives to deliver an integrated and intuitive experience to aid the process of model construction, validation, and analysis.
 It provides convenience functions for the modular construction of models effectively turning Python into a syntax-aware macro language for quantitative models.
