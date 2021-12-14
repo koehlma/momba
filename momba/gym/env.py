@@ -50,6 +50,14 @@ class MombaEnv(gym.Env):  # type: ignore
     def available_transitions(self) -> t.Sequence[abstract.Transition]:
         return self.explorer.available_transitions
 
+    @property
+    def is_done(self) -> bool:
+        return self.explorer.has_terminated
+
+    @property
+    def state_vector(self) -> numpy.ndarray:  # type: ignore
+        return numpy.array(self.explorer.state_vector)
+
     def fork(self) -> MombaEnv:
         """Forks the environment."""
         return MombaEnv(self.explorer.fork(), renderer=self.renderer)
