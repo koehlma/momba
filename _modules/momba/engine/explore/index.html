@@ -220,6 +220,13 @@
 
 <span class="n">Parameters</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">]]</span>
 
+<span class="n">_cache_explored_states</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">disable_exploration_cache</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">_cache_explored_states</span>
+    <span class="n">_cache_explored_states</span> <span class="o">=</span> <span class="kc">False</span>
+
 
 <div class="viewcode-block" id="Action"><a class="viewcode-back" href="../../../../reference/engine/#momba.engine.Action">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
@@ -266,15 +273,20 @@
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_destination</span><span class="o">.</span><span class="n">probability</span><span class="p">()</span>
 
-    <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">]:</span>
         <span class="sd">"""</span>
 <span class="sd">        The target :class:`State` associated with the destination.</span>
 <span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">State</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_destination</span><span class="o">.</span><span class="n">successor</span><span class="p">(),</span>
-        <span class="p">)</span></div>
+        <span class="n">cached_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"_cached_state"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cached_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cached_state</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">explorer</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_destination</span><span class="o">.</span><span class="n">successor</span><span class="p">(),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">_cache_explored_states</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">"_cached_state"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cached_state</span>
+        <span class="k">return</span> <span class="n">cached_state</span></div>
 
 
 <span class="k">def</span> <span class="nf">_action</span><span class="p">(</span><span class="n">action</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="n">explorer</span><span class="p">:</span> <span class="n">Explorer</span><span class="p">[</span><span class="n">TimeTypeT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Action</span><span class="p">]:</span>
