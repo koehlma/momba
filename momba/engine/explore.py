@@ -23,6 +23,13 @@ TimeTypeT = t.TypeVar("TimeTypeT", bound=TimeType)
 
 Parameters = t.Optional[t.Mapping[str, expressions.ValueOrExpression]]
 
+_cache_explored_states = True
+
+
+def disable_exploration_cache() -> None:
+    global _cache_explored_states
+    _cache_explored_states = False
+
 
 @d.dataclass(frozen=True)
 class Action:
@@ -69,15 +76,20 @@ class Destination(t.Generic[TimeTypeT]):
         """
         return self._destination.probability()
 
-    @functools.cached_property
+    @property
     def state(self) -> State[TimeTypeT]:
         """
         The target :class:`State` associated with the destination.
         """
-        return State(
-            self.explorer,
-            self._destination.successor(),
-        )
+        cached_state = self.__dict__.get("_cached_state", None)
+        if cached_state is None:
+            cached_state = State(
+                self.explorer,
+                self._destination.successor(),
+            )
+            if _cache_explored_states:
+                self.__dict__["_cached_state"] = cached_state
+        return cached_state
 
 
 def _action(action: t.Any, explorer: Explorer[TimeTypeT]) -> t.Optional[Action]:
