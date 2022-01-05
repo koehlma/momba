@@ -28,7 +28,7 @@ Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Py
 * **syntax-aware macros** for the modular construction of models with Python code
 * **built-in exploration engine** for PTAs, MDPs and other model types
 * interfaces to state-of-the-art model checkers, e.g., [The Modest Toolset](http://www.modestchecker.net/) and [Storm](https://www.stormchecker.org/)
-* pythonic and **statically typed** APIs to thinker with formal models
+* pythonic and **statically typed** APIs to tinker with formal models
 * hassle-free out-of-the-box support for **Windows, Linux, and MacOS**
 
 
