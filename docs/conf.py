@@ -81,8 +81,8 @@ class BNFLexer(RegexLexer):  # type:ignore
 
 
 project = "Momba"
-copyright = "2020-2021, Dependable Systems and Software Group, Saarland University"
-author = "Maximilian Köhl"
+copyright = "2020-2022, Dependable Systems and Software Group, Saarland University"
+# author = "Maximilian Köhl"
 
 try:
     release = (
@@ -110,17 +110,29 @@ html_show_sphinx = False
 
 templates_path = ["_templates"]
 
-html_theme = "furo"
+html_theme = "sphinx_book_theme"
 
 html_title = "Momba"
+html_logo = "_static/images/logo_with_text.svg"
 
 html_static_path = ["_static"]
-html_css_files = ["css/jupyter.css", "css/fix-image-pos.css", "css/fix-source-link.css"]
+html_css_files = ["css/fix-jupyter-cells.css"]
+
+EXTRA_FOOTER = """
+<a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
+| Hosted by <a href="https://github.com">GitHub</a>
+– <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
+"""
 
 html_theme_options: t.Dict[str, t.Any] = {
-    "light_logo": "images/logo_with_text.svg",
-    "dark_logo": "images/logo_with_text_white.svg",
-    "sidebar_hide_name": True,
+    "repository_url": "https://github.com/koehlma/momba",
+    "repository_branch": "main",
+    "path_to_docs": "docs/",
+    "logo_only": True,
+    "extra_footer": EXTRA_FOOTER,
+    "extra_navbar" : "",
+    "use_repository_button": True,
+    "use_issues_button": True,
 }
 
 
