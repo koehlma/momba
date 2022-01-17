@@ -1,200 +1,434 @@
-<!doctype html>
-<html class="no-js">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex/" /><link rel="search" title="Search" href="../../../../search/" />
 
-    <meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
-        <title>momba.model.expressions - Momba</title>
-      <link rel="stylesheet" href="../../../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
-    <link rel="stylesheet" href="../../../../_static/pygments.css">
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>momba.model.expressions &#8212; Momba</title>
     
+  <link href="../../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-<style>
-  :root {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-    }
-  }
+    
+      
 
-  /* For allowing end-user-specific overrides */
-  .override-light {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
-  
-  }
-  .override-dark {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-</style><link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/jupyter.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-image-pos.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-source-link.css" />
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../../_static/pygments_dark.css">
-    <link rel="stylesheet" href="../../../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
-  <body dir="">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-jupyter-cells.css" />
     
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="svg-toc" viewBox="0 0 24 24">
-    <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z"/>
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
-    </svg>
-  </symbol>
-  <symbol id="svg-menu" viewBox="0 0 24 24">
-    <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-      class="feather feather-menu">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-    <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-      class="feather feather-chevron-right">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-  </symbol>
-</svg>
+  <link rel="preload" as="script" href="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation"></label>
-<label class="overlay toc-overlay" for="__toc"></label>
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/thebelab-helper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../../../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex/" />
+    <link rel="search" title="Search" href="../../../../search/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
 
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
 
+    
 
-<div class="page">
-  <header class="mobile-header">
-    <div class="header-left">
-      <label class="nav-overlay-icon" for="__navigation">
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
-      </label>
-    </div>
-    <div class="header-center">
-      <a href="../../../../"><div class="brand">Momba</div></a>
-    </div>
-    <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-      </label>
-    </div>
-  </header>
-  <aside class="sidebar-drawer">
-    <div class="sidebar-container">
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../../../">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../">
-  
-  <div class="sidebar-logo-container">
-    <img class="sidebar-logo only-light" src="../../../../_static/images/logo_with_text.svg" alt="Light Logo"/>
-    <img class="sidebar-logo only-dark" src="../../../../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
-  </div>
-  
-  
-</a><form class="sidebar-search-container" method="get" action="../../../../search/">
-  <input class="sidebar-search" placeholder=Search name="q">
-  <input type="hidden" name="check_keywords" value="yes">
-  <input type="hidden" name="area" value="default">
-</form><div class="sidebar-scroll"><div class="sidebar-tree">
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../../../_static/logo_with_text.svg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../../../search/" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../guide/">
+   User Guide
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
   <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../guide/construction/">Model Construction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../guide/exploration/">Model Exploration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../guide/analysis/">Model Analysis</a></li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../guide/construction/">
+     Model Construction
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../guide/exploration/">
+     Model Exploration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../guide/analysis/">
+     Model Analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../examples/">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../examples/racetrack/">
+     Racetrack
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../examples/racetrack/quickstart/">
+       Quickstart
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../examples/racetrack/game/">
+       Interactive Game
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../examples/racetrack/model/">
+       The Model
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../reference/">
+   API Documentation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../reference/model/">
+     Momba Models
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/context/">
+       Context
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/automata/">
+       Automata
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/networks/">
+       Networks
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/actions/">
+       Actions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/expressions/">
+       Expressions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/properties/">
+       Properties
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/types/">
+       Types
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/functions/">
+       Functions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../reference/model/exceptions/">
+       Exceptions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../reference/engine/">
+     Exploration Engine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../reference/jani/">
+     JANI Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../reference/analysis/">
+     Analysis Interfaces
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../incubator/">
+   Feature Incubator
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../incubator/jani/">
+     JANI Extensions
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../incubator/jani/value-passing/">
+       Value Passing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../incubator/jani/observations/">
+       Observations
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../../../incubator/moml/">
+     MOML
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+    <label for="toctree-checkbox-8">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../incubator/moml/grammar/">
+       MOML Grammar
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../../../incubator/moml/macros/">
+       Syntax-Aware Macros
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../examples/">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../examples/racetrack/">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/quickstart/">Quickstart</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/game/">Interactive Game</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/model/">The Model</a></li>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Tools
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../tools/modest/">
+   Modest Toolset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../tools/storm/">
+   Storm
+  </a>
+ </li>
 </ul>
-</li>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Features
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../../../gym/">
+   Momba Gym
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../gym/abstract/">
+     Abstract Interface
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../../gym/generic/">
+     Generic Explorer
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../reference/">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../reference/model/">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/context/">Context</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/automata/">Automata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/networks/">Networks</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/actions/">Actions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/expressions/">Expressions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/properties/">Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/types/">Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/functions/">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/exceptions/">Exceptions</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../reference/engine/">Exploration Engine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../reference/jani/">JANI Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../reference/analysis/">Analysis Interfaces</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../incubator/">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/jani/">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/value-passing/">Value Passing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/observations/">Observations</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/moml/">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/grammar/">MOML Grammar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/macros/">Syntax-Aware Macros</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Tools</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../tools/modest/">Modest Toolset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../tools/storm/">Storm</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Features</span></p>
-<ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../gym/">Momba Gym</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../gym/abstract/">Abstract Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../gym/generic/">Generic Explorer</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Development</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../contributing/">Contributing</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Development
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../../../contributing/">
+   Contributing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference external" href="https://github.com/koehlma/momba">
+   GitHub Repository
+  </a>
+ </li>
 </ul>
 
-</div>
-</div>
-      </div>
-      
     </div>
-  </aside>
-  <main class="main">
-    <div class="content">
-      <article role="main">
-        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
-          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-        </label>
-        <h1>Source code for momba.model.expressions</h1><div class="highlight"><pre>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/koehlma/momba"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2F_modules/momba/model/expressions.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1></h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <h1>Source code for momba.model.expressions</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding:utf-8 -*-</span>
 <span class="c1">#</span>
 <span class="c1"># Copyright (C) 2019-2021, Saarland University</span>
@@ -219,9 +453,9 @@
 
 
 <div class="viewcode-block" id="Expression"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Expression">[docs]</a><span class="k">class</span> <span class="nc">Expression</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
@@ -229,44 +463,44 @@
 
     <span class="k">def</span> <span class="nf">infer_target_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">"expression </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not a valid assignment target"</span>
+            <span class="sa">f</span><span class="s2">&quot;expression </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is not a valid assignment target&quot;</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The direct children of the expression.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Expression.traverse"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Expression.traverse">[docs]</a>    <span class="k">def</span> <span class="nf">traverse</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an iterator over the subexpressions.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">yield</span> <span class="bp">self</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
             <span class="k">yield from</span> <span class="n">child</span><span class="o">.</span><span class="n">traverse</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">subexpressions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A set of subexpressions.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_sampling_free</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns whether the expression is *sampling-free*.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">Sample</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">used_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">AbstractSet</span><span class="p">[</span><span class="n">Name</span><span class="p">]:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a set of *name expressions* occuring in the expression.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">child</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traverse</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">Name</span><span class="p">))</span></div>
 
 
@@ -282,14 +516,14 @@
 
 <div class="viewcode-block" id="BooleanConstant"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.BooleanConstant">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BooleanConstant</span><span class="p">(</span><span class="n">Constant</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A boolean constant.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    boolean:</span>
 <span class="sd">        The value of the boolean constant.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">boolean</span><span class="p">:</span> <span class="nb">bool</span>
 
@@ -298,28 +532,28 @@
 
 
 <div class="viewcode-block" id="NumericConstant"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.NumericConstant">[docs]</a><span class="k">class</span> <span class="nc">NumericConstant</span><span class="p">(</span><span class="n">Constant</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for numeric constants.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The numeric constant as a floating-point number.</span>
 
 <span class="sd">        Note that this may result in a loss of precision.</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">as_fraction</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">:</span>
-        <span class="sd">"""</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The numeric constant as a fraction.</span>
 
 <span class="sd">        Note that this may result in a loss of precision</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 
@@ -329,14 +563,14 @@
 
 <div class="viewcode-block" id="IntegerConstant"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.IntegerConstant">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">IntegerConstant</span><span class="p">(</span><span class="n">NumericConstant</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An integer constant.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    integer:</span>
 <span class="sd">        The value of the integer constant.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">integer</span><span class="p">:</span> <span class="nb">int</span>
 
@@ -346,7 +580,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">"converting an integer constant to a float may result in a loss of precision"</span>
+            <span class="s2">&quot;converting an integer constant to a float may result in a loss of precision&quot;</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
 
@@ -359,7 +593,7 @@
 
 
 <div class="viewcode-block" id="NamedReal"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.NamedReal">[docs]</a><span class="k">class</span> <span class="nc">NamedReal</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An enum of named reals.</span>
 
 <span class="sd">    Attributes</span>
@@ -368,13 +602,13 @@
 <span class="sd">        The mathematical symbol of the real.</span>
 <span class="sd">    float_value:</span>
 <span class="sd">        A floating-point approximation of the real.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">PI</span> <span class="o">=</span> <span class="s2">"π"</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
-    <span class="sd">""" The number π. """</span>
+    <span class="n">PI</span> <span class="o">=</span> <span class="s2">&quot;π&quot;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+    <span class="sd">&quot;&quot;&quot; The number π. &quot;&quot;&quot;</span>
 
-    <span class="n">E</span> <span class="o">=</span> <span class="s2">"e"</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">e</span>
-    <span class="sd">""" The number e. """</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">e</span>
+    <span class="sd">&quot;&quot;&quot; The number e. &quot;&quot;&quot;</span>
 
     <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">float_value</span><span class="p">:</span> <span class="nb">float</span>
@@ -390,14 +624,14 @@
 
 <div class="viewcode-block" id="RealConstant"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.RealConstant">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RealConstant</span><span class="p">(</span><span class="n">NumericConstant</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A real constant.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    real:</span>
 <span class="sd">        The real (either :class:`NamedReal` or a fraction).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">real</span><span class="p">:</span> <span class="n">Real</span>
 
@@ -407,7 +641,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">as_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">"converting a real constant to a float may result in a loss of precision"</span>
+            <span class="s2">&quot;converting a real constant to a float may result in a loss of precision&quot;</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">NamedReal</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">float_value</span>
@@ -419,21 +653,21 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">"converting a named real constant do a fraction does result in a loss of precision"</span>
+                <span class="s2">&quot;converting a named real constant do a fraction does result in a loss of precision&quot;</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">float_value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Name"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Name">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Name</span><span class="p">(</span><span class="n">_Leaf</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A name expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    identifier:</span>
 <span class="sd">        The identifier.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
 
@@ -448,7 +682,7 @@
 <span class="c1"># https://github.com/python/mypy/issues/5374</span>
 <div class="viewcode-block" id="BinaryExpression"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.BinaryExpression">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BinaryExpression</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for binary expressions.</span>
 
 <span class="sd">    Attributes</span>
@@ -459,7 +693,7 @@
 <span class="sd">        The left operand.</span>
 <span class="sd">    right:</span>
 <span class="sd">        The right operand.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">BinaryOperator</span>
     <span class="n">left</span><span class="p">:</span> <span class="n">Expression</span>
@@ -475,24 +709,24 @@
 
 
 <div class="viewcode-block" id="Boolean"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Boolean">[docs]</a><span class="k">class</span> <span class="nc">Boolean</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A boolean binary expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The boolean operator (:class:`~momba.model.operators.BooleanOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span>
 
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
         <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">left_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected types.BOOL but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected types.BOOL but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">right_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected types.BOOL but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected types.BOOL but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span></div>
 
 
@@ -504,14 +738,14 @@
 
 
 <div class="viewcode-block" id="ArithmeticBinary"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ArithmeticBinary">[docs]</a><span class="k">class</span> <span class="nc">ArithmeticBinary</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An arithmetic binary expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The arithmetic operator (:class:`~momba.model.operators.ArithmeticBinaryOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span>
 
@@ -520,7 +754,7 @@
         <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_numeric</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="s2">"operands of arithmetic expressions must have a numeric type"</span>
+                <span class="s2">&quot;operands of arithmetic expressions must have a numeric type&quot;</span>
             <span class="p">)</span>
         <span class="n">is_int</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">left_type</span><span class="p">)</span>
@@ -534,14 +768,14 @@
 
 
 <div class="viewcode-block" id="Equality"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Equality">[docs]</a><span class="k">class</span> <span class="nc">Equality</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An equality binary expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The equality operator (:class:`~momba.model.operators.EqualityOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span>
 
@@ -553,7 +787,7 @@
         <span class="k">elif</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">left_type</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">right_type</span>
         <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
-            <span class="s2">"type-inference should ensure that some of the above is true"</span>
+            <span class="s2">&quot;type-inference should ensure that some of the above is true&quot;</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
@@ -566,35 +800,35 @@
         <span class="c1"># XXX: JANI specifies that “left and right must be assignable to some common type”</span>
         <span class="c1"># not sure whether this implementation reflects this specification</span>
         <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-            <span class="s2">"invalid combination of type for equality comparison"</span>
+            <span class="s2">&quot;invalid combination of type for equality comparison&quot;</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Comparison"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Comparison">[docs]</a><span class="k">class</span> <span class="nc">Comparison</span><span class="p">(</span><span class="n">BinaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A comparison expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The comparison operator (:class:`~momba.model.operators.ComparisonOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span>
 
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
         <span class="n">left_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">left_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected numeric type but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected numeric type but got </span><span class="si">{</span><span class="n">left_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">right_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">right_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"expected numeric type but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected numeric type but got </span><span class="si">{</span><span class="n">right_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span></div>
 
 
 <div class="viewcode-block" id="Conditional"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Conditional">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Conditional</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A ternary conditional expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -605,7 +839,7 @@
 <span class="sd">        The consequence to be evaluated if the condition is true.</span>
 <span class="sd">    alternative:</span>
 <span class="sd">        The alternative to be evaluated if the condition is false.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">condition</span><span class="p">:</span> <span class="n">Expression</span>
     <span class="n">consequence</span><span class="p">:</span> <span class="n">Expression</span>
@@ -619,7 +853,7 @@
         <span class="n">condition_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">condition_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"expected `types.BOOL` but got `</span><span class="si">{</span><span class="n">condition_type</span><span class="si">}</span><span class="s2">`"</span>
+                <span class="sa">f</span><span class="s2">&quot;expected `types.BOOL` but got `</span><span class="si">{</span><span class="n">condition_type</span><span class="si">}</span><span class="s2">`&quot;</span>
             <span class="p">)</span>
         <span class="n">consequence_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">consequence</span><span class="p">)</span>
         <span class="n">alternative_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alternative</span><span class="p">)</span>
@@ -629,7 +863,7 @@
             <span class="k">return</span> <span class="n">alternative_type</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="s2">"invalid combination of consequence and alternative types"</span>
+                <span class="s2">&quot;invalid combination of consequence and alternative types&quot;</span>
             <span class="p">)</span></div>
 
 
@@ -637,7 +871,7 @@
 <span class="c1"># https://github.com/python/mypy/issues/5374</span>
 <div class="viewcode-block" id="UnaryExpression"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.UnaryExpression">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">UnaryExpression</span><span class="p">(</span><span class="n">Expression</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class of all unary expressions.</span>
 
 <span class="sd">    Attributes</span>
@@ -646,7 +880,7 @@
 <span class="sd">        The unary operator (:class:`~momba.model.operators.UnaryOperator`).</span>
 <span class="sd">    operand:</span>
 <span class="sd">        The operand.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">UnaryOperator</span>
     <span class="n">operand</span><span class="p">:</span> <span class="n">Expression</span>
@@ -661,14 +895,14 @@
 
 
 <div class="viewcode-block" id="ArithmeticUnary"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ArithmeticUnary">[docs]</a><span class="k">class</span> <span class="nc">ArithmeticUnary</span><span class="p">(</span><span class="n">UnaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An arithmetic unary expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The arithmetic operator (:class:`~momba.model.operators.ArithmeticUnaryOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span>
 
@@ -676,20 +910,20 @@
         <span class="n">operand_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">operand_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"expected a numeric type but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">&quot;expected a numeric type but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">infer_result_type</span><span class="p">(</span><span class="n">operand_type</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Not"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Not">[docs]</a><span class="k">class</span> <span class="nc">Not</span><span class="p">(</span><span class="n">UnaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Logical negation.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    operator:</span>
 <span class="sd">        The logical negation operator (:class:`~momba.model.operators.NotOperator`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">NotOperator</span>
 
@@ -697,14 +931,14 @@
         <span class="n">operand_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">operand_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"expected `types.BOOL` but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">&quot;expected `types.BOOL` but got </span><span class="si">{</span><span class="n">operand_type</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span></div>
 
 
 <div class="viewcode-block" id="Sample"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Sample">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Sample</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A sample expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -714,7 +948,7 @@
 <span class="sd">        (:class:`~momba.model.distributions.DistributionType`).</span>
 <span class="sd">    arguments:</span>
 <span class="sd">        The arguments to the distribution.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">distribution</span><span class="p">:</span> <span class="n">distributions</span><span class="o">.</span><span class="n">DistributionType</span>
     <span class="n">arguments</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]</span>
@@ -722,8 +956,8 @@
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">arity</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"distribution </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="si">}</span><span class="s2"> requires </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">arity</span><span class="si">}</span><span class="s2"> "</span>
-                <span class="sa">f</span><span class="s2">"arguments but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span><span class="si">}</span><span class="s2"> were given"</span>
+                <span class="sa">f</span><span class="s2">&quot;distribution </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="si">}</span><span class="s2"> requires </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">arity</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;arguments but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span><span class="si">}</span><span class="s2"> were given&quot;</span>
             <span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -738,8 +972,8 @@
             <span class="n">argument_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">parameter_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">argument_type</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"parameter type `</span><span class="si">{</span><span class="n">parameter_type</span><span class="si">}</span><span class="s2">` is not assignable "</span>
-                    <span class="sa">f</span><span class="s2">"from argument type `</span><span class="si">{</span><span class="n">argument_type</span><span class="si">}</span><span class="s2">`"</span>
+                    <span class="sa">f</span><span class="s2">&quot;parameter type `</span><span class="si">{</span><span class="n">parameter_type</span><span class="si">}</span><span class="s2">` is not assignable &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;from argument type `</span><span class="si">{</span><span class="n">argument_type</span><span class="si">}</span><span class="s2">`&quot;</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span><span class="o">.</span><span class="n">result_type</span></div>
 
@@ -747,7 +981,7 @@
 <span class="c1"># requires JANI extension `nondet-selection`</span>
 <div class="viewcode-block" id="Selection"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Selection">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Selection</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A non-deterministic selection expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -756,7 +990,7 @@
 <span class="sd">        The identifier to select over.</span>
 <span class="sd">    condition:</span>
 <span class="sd">        The condition that should be satisfied.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">condition</span><span class="p">:</span> <span class="n">Expression</span>
@@ -766,7 +1000,7 @@
         <span class="n">condition_scope</span><span class="o">.</span><span class="n">declare_variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">REAL</span><span class="p">)</span>
         <span class="n">condition_type</span> <span class="o">=</span> <span class="n">condition_scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">condition_type</span> <span class="o">!=</span> <span class="n">types</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">"condition must have type `types.BOOL`"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;condition must have type `types.BOOL`&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span>
 
     <span class="nd">@property</span>
@@ -776,14 +1010,14 @@
 
 <div class="viewcode-block" id="Derivative"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Derivative">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Derivative</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Derivative of a continuous variable.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ==========</span>
 <span class="sd">    identifier:</span>
 <span class="sd">        The continuous variable.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
 
@@ -797,7 +1031,7 @@
 
 <div class="viewcode-block" id="ArrayAccess"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ArrayAccess">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ArrayAccess</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An array access expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -806,7 +1040,7 @@
 <span class="sd">        The array to access.</span>
 <span class="sd">    index:</span>
 <span class="sd">        The index where to access the array.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">array</span><span class="p">:</span> <span class="n">Expression</span>
     <span class="n">index</span><span class="p">:</span> <span class="n">Expression</span>
@@ -821,7 +1055,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array_type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ArrayType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">array_type</span><span class="o">.</span><span class="n">element</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">"array of array access must have array type"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span><span class="s2">&quot;array of array access must have array type&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">infer_target_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">infer_type</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span></div>
@@ -829,20 +1063,20 @@
 
 <div class="viewcode-block" id="ArrayValue"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ArrayValue">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ArrayValue</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An array value expression.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    elements:</span>
 <span class="sd">        The elements of the array to construct.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">elements</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Expression</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span><span class="s2">"array value expression needs to have elements"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">ModelingError</span><span class="p">(</span><span class="s2">&quot;array value expression needs to have elements&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Expression</span><span class="p">]:</span>
@@ -858,7 +1092,7 @@
                 <span class="n">common_type</span> <span class="o">=</span> <span class="n">element_type</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">common_type</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">element_type</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                    <span class="s2">"element types are not assignable to a common type"</span>
+                    <span class="s2">&quot;element types are not assignable to a common type&quot;</span>
                 <span class="p">)</span>
         <span class="k">assert</span> <span class="n">common_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">array_of</span><span class="p">(</span><span class="n">common_type</span><span class="p">)</span></div>
@@ -866,7 +1100,7 @@
 
 <div class="viewcode-block" id="ArrayConstructor"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ArrayConstructor">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ArrayConstructor</span><span class="p">(</span><span class="n">Expression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An array constructor expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -877,7 +1111,7 @@
 <span class="sd">        The length of the array.</span>
 <span class="sd">    expression:</span>
 <span class="sd">        The expression to compute the elements of the array.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">variable</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">length</span><span class="p">:</span> <span class="n">Expression</span>
@@ -895,13 +1129,13 @@
     <span class="k">def</span> <span class="nf">infer_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">types</span><span class="o">.</span><span class="n">Type</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">types</span><span class="o">.</span><span class="n">INT</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="s2">"length of array constructor has to be an integer"</span>
+                <span class="s2">&quot;length of array constructor has to be an integer&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">array_of</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_scope</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expression</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Trigonometric"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.Trigonometric">[docs]</a><span class="k">class</span> <span class="nc">Trigonometric</span><span class="p">(</span><span class="n">UnaryExpression</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A trigonometric expression.</span>
 
 <span class="sd">    Attributes</span>
@@ -909,7 +1143,7 @@
 <span class="sd">    operator:</span>
 <span class="sd">        The trigonometric function to apply</span>
 <span class="sd">        (:class:`~momba.model.operators.TrigonometricFunction`).</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">operator</span><span class="p">:</span> <span class="n">operators</span><span class="o">.</span><span class="n">TrigonometricFunction</span>
 
@@ -917,12 +1151,12 @@
         <span class="n">operand_type</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operand</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">operand_type</span><span class="o">.</span><span class="n">is_numeric</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">errors</span><span class="o">.</span><span class="n">InvalidTypeError</span><span class="p">(</span>
-                <span class="s2">"expected numeric type for operand of trigonometric function"</span>
+                <span class="s2">&quot;expected numeric type for operand of trigonometric function&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">types</span><span class="o">.</span><span class="n">REAL</span></div>
 
 
-<span class="n">RealValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s2">"π"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">]</span>
+<span class="n">RealValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;π&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">,</span> <span class="n">decimal</span><span class="o">.</span><span class="n">Decimal</span><span class="p">]</span>
 <span class="n">NumericValue</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">RealValue</span><span class="p">]</span>
 <span class="n">Value</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">NumericValue</span><span class="p">]</span>
 
@@ -930,19 +1164,19 @@
 
 
 <div class="viewcode-block" id="ConversionError"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ConversionError">[docs]</a><span class="k">class</span> <span class="nc">ConversionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unable to convert the provided value.</span>
-<span class="sd">    """</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ensure_expr"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ensure_expr">[docs]</a><span class="k">def</span> <span class="nf">ensure_expr</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a Python value or expression and returns an expression.</span>
 
 <span class="sd">    Implicitly converts floats, integers, and booleans to constant expressions.</span>
 
 <span class="sd">    Raises :class:`~momba.model.expressions.ConversionError` if the conversion fails.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="n">Expression</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">value_or_expression</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_or_expression</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -957,7 +1191,7 @@
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">pass</span>
     <span class="k">raise</span> <span class="n">ConversionError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"unable to convert Python value </span><span class="si">{</span><span class="n">value_or_expression</span><span class="si">!r}</span><span class="s2"> to expression"</span>
+        <span class="sa">f</span><span class="s2">&quot;unable to convert Python value </span><span class="si">{</span><span class="n">value_or_expression</span><span class="si">!r}</span><span class="s2"> to expression&quot;</span>
     <span class="p">)</span></div>
 
 
@@ -966,9 +1200,9 @@
     <span class="n">consequence</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span>
     <span class="n">alternative</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a conditional expression implicitly converting the arguments.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Conditional</span><span class="p">(</span>
         <span class="n">ensure_expr</span><span class="p">(</span><span class="n">condition</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">consequence</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">alternative</span><span class="p">)</span>
     <span class="p">)</span></div>
@@ -993,167 +1227,167 @@
 
 
 <div class="viewcode-block" id="logic_not"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_not">[docs]</a><span class="k">def</span> <span class="nf">logic_not</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a logical negation expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Not</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">NotOperator</span><span class="o">.</span><span class="n">NOT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="logic_any"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_any">[docs]</a><span class="k">def</span> <span class="nf">logic_any</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a disjunction over the provided expressions.</span>
 
 <span class="sd">    Returns :attr:`~momba.model.expressions.FALSE` if there are no expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expressions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">BooleanConstant</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">logic_or</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_or"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_or">[docs]</a><span class="k">def</span> <span class="nf">logic_or</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a disjunction over the provided expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">OR</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_all"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_all">[docs]</a><span class="k">def</span> <span class="nf">logic_all</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a conjunction over the provided expressions.</span>
 
 <span class="sd">    Returns :attr:`~momba.model.expressions.TRUE` if there are no expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expressions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">BooleanConstant</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">logic_and</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_and"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_and">[docs]</a><span class="k">def</span> <span class="nf">logic_and</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a conjunction over the provided expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">AND</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_xor"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_xor">[docs]</a><span class="k">def</span> <span class="nf">logic_xor</span><span class="p">(</span><span class="o">*</span><span class="n">expressions</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an exclusive disjunction over the provided expressions.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_boolean_binary_expression</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">XOR</span><span class="p">,</span> <span class="n">expressions</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_implies"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_implies">[docs]</a><span class="k">def</span> <span class="nf">logic_implies</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a logical implication.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Boolean</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">IMPLY</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="logic_equiv"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.logic_equiv">[docs]</a><span class="k">def</span> <span class="nf">logic_equiv</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a logical equivalence.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Boolean</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">BooleanOperator</span><span class="o">.</span><span class="n">EQUIV</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="equals"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.equals">[docs]</a><span class="k">def</span> <span class="nf">equals</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an *equality* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Equality</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span><span class="o">.</span><span class="n">EQ</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="not_equals"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.not_equals">[docs]</a><span class="k">def</span> <span class="nf">not_equals</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an *inequality* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Equality</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">EqualityOperator</span><span class="o">.</span><span class="n">NEQ</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="less"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.less">[docs]</a><span class="k">def</span> <span class="nf">less</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a *less than* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">LT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="less_or_equal"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.less_or_equal">[docs]</a><span class="k">def</span> <span class="nf">less_or_equal</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a *less than or equal to* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">LE</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="greater"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.greater">[docs]</a><span class="k">def</span> <span class="nf">greater</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a *greater than* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GT</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="greater_or_equal"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.greater_or_equal">[docs]</a><span class="k">def</span> <span class="nf">greater_or_equal</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a *greater than or equal to* expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Comparison</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ComparisonOperator</span><span class="o">.</span><span class="n">GE</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="add"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.add">[docs]</a><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an arithmetic addition expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">ADD</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sub"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.sub">[docs]</a><span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an arithmetic substraction expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">SUB</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="mul"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.mul">[docs]</a><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an arithmetic multiplication expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MUL</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="mod"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.mod">[docs]</a><span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an euclidean remainder expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MOD</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="real_div"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.real_div">[docs]</a><span class="k">def</span> <span class="nf">real_div</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a real-division expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">REAL_DIV</span><span class="p">,</span>
         <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
@@ -1162,45 +1396,45 @@
 
 
 <div class="viewcode-block" id="log"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.log">[docs]</a><span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a logarithm expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">LOG</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="power"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.power">[docs]</a><span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a power expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">POW</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="minimum"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.minimum">[docs]</a><span class="k">def</span> <span class="nf">minimum</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a minimum expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MIN</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="maximum"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.maximum">[docs]</a><span class="k">def</span> <span class="nf">maximum</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a maximum expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">MAX</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="floor_div"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.floor_div">[docs]</a><span class="k">def</span> <span class="nf">floor_div</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryExpression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an euclidean division expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticBinary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticBinaryOperator</span><span class="o">.</span><span class="n">FLOOR_DIV</span><span class="p">,</span>
         <span class="n">ensure_expr</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
@@ -1212,81 +1446,78 @@
 
 
 <div class="viewcode-block" id="floor"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.floor">[docs]</a><span class="k">def</span> <span class="nf">floor</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a floor expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span>
         <span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">FLOOR</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ceil"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.ceil">[docs]</a><span class="k">def</span> <span class="nf">ceil</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a ceil expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">CEIL</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="absolute"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.absolute">[docs]</a><span class="k">def</span> <span class="nf">absolute</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an absolute value expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">ABS</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="sgn"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.sgn">[docs]</a><span class="k">def</span> <span class="nf">sgn</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a sign expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">SGN</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="trunc"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.trunc">[docs]</a><span class="k">def</span> <span class="nf">trunc</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="n">ValueOrExpression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Expression</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a truncate expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArithmeticUnary</span><span class="p">(</span><span class="n">operators</span><span class="o">.</span><span class="n">ArithmeticUnaryOperator</span><span class="o">.</span><span class="n">TRC</span><span class="p">,</span> <span class="n">ensure_expr</span><span class="p">(</span><span class="n">operand</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="name"><a class="viewcode-back" href="../../../../reference/model/expressions/#momba.model.name">[docs]</a><span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Name</span><span class="p">:</span>
-    <span class="sd">"""</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a name expression.</span>
-<span class="sd">    """</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">Name</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span></div>
 </pre></div>
-      </article>
-      <footer>
-        
-    
-        <div class="related-pages">
-          
-          
-        </div>
 
-        <div class="related-information">
-              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
-        </div>
-        
-    <p style="padding: 0 0.75rem; margin-top: 0;">
-        <a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
-        | Hosted by <a href="https://github.com">GitHub</a> – <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
-    </p>
-
-      </footer>
-    </div>
-    <aside class="toc-drawer no-toc">
-      
-      
-      
-    </aside>
-  </main>
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
 </div>
-    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/thebelab-helper.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
-    <script src="../../../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+        &copy; Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.<br/>
+      <div class="extra_footer">
+        
+<a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
+| Hosted by <a href="https://github.com">GitHub</a>
+– <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
+
+      </div>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
 </html>

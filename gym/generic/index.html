@@ -1,341 +1,597 @@
-<!doctype html>
-<html class="no-js">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Contributing" href="../../contributing/" /><link rel="prev" title="Abstract Interface" href="../abstract/" />
 
-    <meta name="generator" content="sphinx-3.5.4, furo 2021.06.18.beta36"/>
-        <title>Generic Explorer - Momba</title>
-      <link rel="stylesheet" href="../../_static/styles/furo.css?digest=9b17055c4366e8b2949c66d6a9d8b0efe4dbaa60">
-    <link rel="stylesheet" href="../../_static/pygments.css">
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generic Explorer &#8212; Momba</title>
     
+  <link href="../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
 
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
 
-<style>
-  :root {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-    }
-  }
+    
+      
 
-  /* For allowing end-user-specific overrides */
-  .override-light {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
-  
-  }
-  .override-dark {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-</style><link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/jupyter.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-image-pos.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-source-link.css" />
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../_static/pygments_dark.css">
-    <link rel="stylesheet" href="../../_static/styles/furo-extensions.css?digest=ee12cdd73c4bbac24afec78d92c4afd7c2d8ea7f"></head>
-  <body dir="">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/fix-jupyter-cells.css" />
     
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="svg-toc" viewBox="0 0 24 24">
-    <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z"/>
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
-    </svg>
-  </symbol>
-  <symbol id="svg-menu" viewBox="0 0 24 24">
-    <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-      class="feather feather-menu">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-    <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-      class="feather feather-chevron-right">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-  </symbol>
-</svg>
+  <link rel="preload" as="script" href="../../_static/js/index.be7d3bbb2ef33a8344ce.js">
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation"></label>
-<label class="overlay toc-overlay" for="__toc"></label>
-
-
-
-<div class="page">
-  <header class="mobile-header">
-    <div class="header-left">
-      <label class="nav-overlay-icon" for="__navigation">
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
-      </label>
-    </div>
-    <div class="header-center">
-      <a href="../../"><div class="brand">Momba</div></a>
-    </div>
-    <div class="header-right">
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-      </label>
-    </div>
-  </header>
-  <aside class="sidebar-drawer">
-    <div class="sidebar-container">
-      
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../">
-  
-  <div class="sidebar-logo-container">
-    <img class="sidebar-logo only-light" src="../../_static/images/logo_with_text.svg" alt="Light Logo"/>
-    <img class="sidebar-logo only-dark" src="../../_static/images/logo_with_text_white.svg" alt="Dark Logo"/>
-  </div>
-  
-  
-</a><form class="sidebar-search-container" method="get" action="../../search/">
-  <input class="sidebar-search" placeholder=Search name="q">
-  <input type="hidden" name="check_keywords" value="yes">
-  <input type="hidden" name="area" value="default">
-</form><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../guide/">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../guide/construction/">Model Construction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../guide/exploration/">Model Exploration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../guide/analysis/">Model Analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../examples/">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../examples/racetrack/">Racetrack</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/quickstart/">Quickstart</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/game/">Interactive Game</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../examples/racetrack/model/">The Model</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../reference/">API Documentation</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label for="toctree-checkbox-4"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/model/">Momba Models</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label for="toctree-checkbox-5"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/context/">Context</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/automata/">Automata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/networks/">Networks</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/actions/">Actions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/expressions/">Expressions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/properties/">Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/types/">Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/functions/">Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../reference/model/exceptions/">Exceptions</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../../reference/engine/">Exploration Engine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../reference/jani/">JANI Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../reference/analysis/">Analysis Interfaces</a></li>
-</ul>
-</li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../incubator/">Feature Incubator</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label for="toctree-checkbox-6"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../incubator/jani/">JANI Extensions</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/><label for="toctree-checkbox-7"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../incubator/jani/value-passing/">Value Passing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../incubator/jani/observations/">Observations</a></li>
-</ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../incubator/moml/">MOML</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label for="toctree-checkbox-8"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/grammar/">MOML Grammar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../incubator/moml/macros/">Syntax-Aware Macros</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Tools</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tools/modest/">Modest Toolset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tools/storm/">Storm</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Features</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../">Momba Gym</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/><label for="toctree-checkbox-9"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../abstract/">Abstract Interface</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Generic Explorer</a></li>
-</ul>
-</li>
-</ul>
-<p class="caption"><span class="caption-text">Development</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../contributing/">Contributing</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
-</ul>
-
-</div>
-</div>
-      </div>
-      
-    </div>
-  </aside>
-  <main class="main">
-    <div class="content">
-      <article role="main">
-        <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
-          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-        </label>
-        <div class="section" id="generic-explorer">
-<h1>Generic Explorer<a class="headerlink" href="#generic-explorer" title="Permalink to this headline">¶</a></h1>
-<p>Versatile implementation of <a class="reference internal" href="../abstract/#momba.gym.abstract.Explorer" title="momba.gym.abstract.Explorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Explorer</span></code></a>.</p>
-<dl class="py class">
-<dt id="momba.gym.generic.Actions">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></code><code class="sig-name descname"><span class="pre">Actions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Actions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies how edges of the controlled automaton are chosen.</p>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Actions.EDGE_BY_INDEX">
-<code class="sig-name descname"><span class="pre">EDGE_BY_INDEX</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#momba.gym.generic.Actions.EDGE_BY_INDEX" title="Permalink to this definition">¶</a></dt>
-<dd><p>The edge is chosen based on its index.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Actions.EDGE_BY_LABEL">
-<code class="sig-name descname"><span class="pre">EDGE_BY_LABEL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#momba.gym.generic.Actions.EDGE_BY_LABEL" title="Permalink to this definition">¶</a></dt>
-<dd><p>The edge is chosen based on its label.</p>
-</dd></dl>
-</dd></dl>
-<dl class="py class">
-<dt id="momba.gym.generic.Observations">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></code><code class="sig-name descname"><span class="pre">Observations</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Observations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies what is observable by the agent.</p>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Observations.GLOBAL_ONLY">
-<code class="sig-name descname"><span class="pre">GLOBAL_ONLY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#momba.gym.generic.Observations.GLOBAL_ONLY" title="Permalink to this definition">¶</a></dt>
-<dd><p>Only global variables are observable.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Observations.LOCAL_AND_GLOBAL">
-<code class="sig-name descname"><span class="pre">LOCAL_AND_GLOBAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#momba.gym.generic.Observations.LOCAL_AND_GLOBAL" title="Permalink to this definition">¶</a></dt>
-<dd><p>Local and global variables are observable.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Observations.OMNISCIENT">
-<code class="sig-name descname"><span class="pre">OMNISCIENT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#momba.gym.generic.Observations.OMNISCIENT" title="Permalink to this definition">¶</a></dt>
-<dd><p>All (non-transient) variables are observable.</p>
-</dd></dl>
-</dd></dl>
-<dl class="py class">
-<dt id="momba.gym.generic.Rewards">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></code><code class="sig-name descname"><span class="pre">Rewards</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_reached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dead_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_taken</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Rewards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Rewards" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the rewards for a reachability objective.</p>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Rewards.dead_end">
-<code class="sig-name descname"><span class="pre">dead_end</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">-100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.dead_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>The reward when a dead end or bad state is reached.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Rewards.goal_reached">
-<code class="sig-name descname"><span class="pre">goal_reached</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.goal_reached" title="Permalink to this definition">¶</a></dt>
-<dd><p>The reward when a goal state is reached.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Rewards.invalid_action">
-<code class="sig-name descname"><span class="pre">invalid_action</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">-100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.invalid_action" title="Permalink to this definition">¶</a></dt>
-<dd><p>The reward when an invalid decision has been taken.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Rewards.step_taken">
-<code class="sig-name descname"><span class="pre">step_taken</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.step_taken" title="Permalink to this definition">¶</a></dt>
-<dd><p>The reward when a valid decision has been taken.</p>
-</dd></dl>
-</dd></dl>
-<dl class="py class">
-<dt id="momba.gym.generic.Objective">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></code><code class="sig-name descname"><span class="pre">Objective</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dead_predicate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>A reach-avoid objective.</p>
-<p>Represents a reach-avoid objective of the form
-<span class="math notranslate nohighlight">\(\lnot\phi\mathbin{\mathbf{U}}\psi\)</span>, i.e., <span class="math notranslate nohighlight">\(\lnot\phi\)</span> has to
-be true until the goal <span class="math notranslate nohighlight">\(\psi\)</span> is reached. Used in
-conjunction with <a class="reference internal" href="#momba.gym.generic.Rewards" title="momba.gym.generic.Rewards"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rewards</span></code></a> to provide rewards.</p>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Objective.dead_predicate">
-<code class="sig-name descname"><span class="pre">dead_predicate</span></code><em class="property"><span class="pre">:</span> <span class="pre">momba.model.expressions.Expression</span></em><a class="headerlink" href="#momba.gym.generic.Objective.dead_predicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>A boolean expression for <span class="math notranslate nohighlight">\(\phi\)</span>.</p>
-</dd></dl>
-<dl class="py attribute">
-<dt id="momba.gym.generic.Objective.goal_predicate">
-<code class="sig-name descname"><span class="pre">goal_predicate</span></code><em class="property"><span class="pre">:</span> <span class="pre">momba.model.expressions.Expression</span></em><a class="headerlink" href="#momba.gym.generic.Objective.goal_predicate" title="Permalink to this definition">¶</a></dt>
-<dd><p>A boolean expression for <span class="math notranslate nohighlight">\(\psi\)</span>.</p>
-</dd></dl>
-</dd></dl>
-</div>
-
-      </article>
-      <footer>
-        
-    
-        <div class="related-pages">
-          <a class="next-page" href="../../contributing/">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Contributing</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="../abstract/">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Abstract Interface</div>
-                
-              </div>
-            </a>
-        </div>
-
-        <div class="related-information">
-              Copyright &#169; 2020-2021, Dependable Systems and Software Group, Saarland University
-            |
-            <a class="muted-link" href="../../_sources/gym/generic.md.txt"
-               rel="nofollow">
-              Show Source
-            </a>
-        </div>
-        
-    <p style="padding: 0 0.75rem; margin-top: 0;">
-        <a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
-        | Hosted by <a href="https://github.com">GitHub</a> – <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
-    </p>
-
-      </footer>
-    </div>
-    <aside class="toc-drawer no-toc">
-      
-      
-      
-    </aside>
-  </main>
-</div>
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/thebelab-helper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
-    <script src="../../_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+    <script src="../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex/" />
+    <link rel="search" title="Search" href="../../search/" />
+    <link rel="next" title="Contributing" href="../../contributing/" />
+    <link rel="prev" title="Abstract Interface" href="../abstract/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/logo_with_text.svg" class="logo" alt="logo">
+      
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search/" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../guide/">
+   User Guide
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../guide/construction/">
+     Model Construction
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../guide/exploration/">
+     Model Exploration
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../guide/analysis/">
+     Model Analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../examples/">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../examples/racetrack/">
+     Racetrack
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../examples/racetrack/quickstart/">
+       Quickstart
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../examples/racetrack/game/">
+       Interactive Game
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../examples/racetrack/model/">
+       The Model
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../reference/">
+   API Documentation
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../reference/model/">
+     Momba Models
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/context/">
+       Context
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/automata/">
+       Automata
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/networks/">
+       Networks
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/actions/">
+       Actions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/expressions/">
+       Expressions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/properties/">
+       Properties
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/types/">
+       Types
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/functions/">
+       Functions
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../reference/model/exceptions/">
+       Exceptions
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../reference/engine/">
+     Exploration Engine
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../reference/jani/">
+     JANI Models
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../reference/analysis/">
+     Analysis Interfaces
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../incubator/">
+   Feature Incubator
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+  <label for="toctree-checkbox-6">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../incubator/jani/">
+     JANI Extensions
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../incubator/jani/value-passing/">
+       Value Passing
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../incubator/jani/observations/">
+       Observations
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="../../incubator/moml/">
+     MOML
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
+    <label for="toctree-checkbox-8">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../incubator/moml/grammar/">
+       MOML Grammar
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="../../incubator/moml/macros/">
+       Syntax-Aware Macros
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Tools
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tools/modest/">
+   Modest Toolset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../tools/storm/">
+   Storm
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Features
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../">
+   Momba Gym
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
+  <label for="toctree-checkbox-9">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../abstract/">
+     Abstract Interface
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Generic Explorer
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Development
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../contributing/">
+   Contributing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference external" href="https://github.com/koehlma/momba">
+   GitHub Repository
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+</div>
+
+
+          
+
+
+          
+<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
+<div class="sbt-scroll-pixel-helper"></div>
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            <div class="topbar-left">
+                
+                <label class="nav-toggle-button" for="__navigation">
+                    <div class="visually-hidden">Toggle navigation</div>
+                    <i class="fas fa-bars"></i>
+                </label>
+                
+            </div>
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../../_sources/gym/generic.md.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/koehlma/momba"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2Fgym/generic.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Generic Explorer</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="tex2jax_ignore mathjax_ignore section" id="generic-explorer">
+<h1>Generic Explorer<a class="headerlink" href="#generic-explorer" title="Permalink to this headline">¶</a></h1>
+<p>Versatile implementation of <a class="reference internal" href="../abstract/#momba.gym.abstract.Explorer" title="momba.gym.abstract.Explorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Explorer</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="momba.gym.generic.Actions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></span><span class="sig-name descname"><span class="pre">Actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies how edges of the controlled automaton are chosen.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Actions.EDGE_BY_INDEX">
+<span class="sig-name descname"><span class="pre">EDGE_BY_INDEX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#momba.gym.generic.Actions.EDGE_BY_INDEX" title="Permalink to this definition">¶</a></dt>
+<dd><p>The edge is chosen based on its index.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Actions.EDGE_BY_LABEL">
+<span class="sig-name descname"><span class="pre">EDGE_BY_LABEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#momba.gym.generic.Actions.EDGE_BY_LABEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>The edge is chosen based on its label.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="momba.gym.generic.Observations">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></span><span class="sig-name descname"><span class="pre">Observations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Observations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Observations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies what is observable by the agent.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Observations.GLOBAL_ONLY">
+<span class="sig-name descname"><span class="pre">GLOBAL_ONLY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#momba.gym.generic.Observations.GLOBAL_ONLY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only global variables are observable.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Observations.LOCAL_AND_GLOBAL">
+<span class="sig-name descname"><span class="pre">LOCAL_AND_GLOBAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#momba.gym.generic.Observations.LOCAL_AND_GLOBAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Local and global variables are observable.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Observations.OMNISCIENT">
+<span class="sig-name descname"><span class="pre">OMNISCIENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#momba.gym.generic.Observations.OMNISCIENT" title="Permalink to this definition">¶</a></dt>
+<dd><p>All (non-transient) variables are observable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="momba.gym.generic.Rewards">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></span><span class="sig-name descname"><span class="pre">Rewards</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_reached</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dead_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_taken</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">invalid_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Rewards"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Rewards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies the rewards for a reachability objective.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Rewards.dead_end">
+<span class="sig-name descname"><span class="pre">dead_end</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.dead_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reward when a dead end or bad state is reached.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Rewards.goal_reached">
+<span class="sig-name descname"><span class="pre">goal_reached</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.goal_reached" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reward when a goal state is reached.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Rewards.invalid_action">
+<span class="sig-name descname"><span class="pre">invalid_action</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-100</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.invalid_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reward when an invalid decision has been taken.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Rewards.step_taken">
+<span class="sig-name descname"><span class="pre">step_taken</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#momba.gym.generic.Rewards.step_taken" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reward when a valid decision has been taken.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="momba.gym.generic.Objective">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.gym.generic.</span></span><span class="sig-name descname"><span class="pre">Objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">goal_predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dead_predicate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/momba/gym/generic/#Objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.gym.generic.Objective" title="Permalink to this definition">¶</a></dt>
+<dd><p>A reach-avoid objective.</p>
+<p>Represents a reach-avoid objective of the form
+<span class="math notranslate nohighlight">\(\lnot\phi\mathbin{\mathbf{U}}\psi\)</span>, i.e., <span class="math notranslate nohighlight">\(\lnot\phi\)</span> has to
+be true until the goal <span class="math notranslate nohighlight">\(\psi\)</span> is reached. Used in
+conjunction with <a class="reference internal" href="#momba.gym.generic.Rewards" title="momba.gym.generic.Rewards"><code class="xref py py-class docutils literal notranslate"><span class="pre">Rewards</span></code></a> to provide rewards.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Objective.dead_predicate">
+<span class="sig-name descname"><span class="pre">dead_predicate</span></span><a class="headerlink" href="#momba.gym.generic.Objective.dead_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean expression for <span class="math notranslate nohighlight">\(\phi\)</span>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="momba.gym.generic.Objective.goal_predicate">
+<span class="sig-name descname"><span class="pre">goal_predicate</span></span><a class="headerlink" href="#momba.gym.generic.Objective.goal_predicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean expression for <span class="math notranslate nohighlight">\(\psi\)</span>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../abstract/" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Abstract Interface</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../../contributing/" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Contributing</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+        &copy; Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.<br/>
+      <div class="extra_footer">
+        
+<a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
+| Hosted by <a href="https://github.com">GitHub</a>
+– <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
+
+      </div>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
 </html>
