@@ -337,8 +337,8 @@ def _dump_array_constructor(
     return {
         "op": "av",
         "var": expr.variable,
-        "length": _dump_prop(expr.length),
-        "exp": _dump_prop(expr.expression),
+        "length": _dump_prop(expr.length, ctx),
+        "exp": _dump_prop(expr.expression, ctx),
     }
 
 
@@ -378,7 +378,7 @@ def _dump_prop_interval(pi: properties.Interval, ctx: JANIContext) -> JSON:
         prop_interval["lower-exclusive"] = _dump_prop(pi.lower_exclusive, ctx)
     if pi.upper is not None:
         prop_interval["upper"] = _dump_prop(pi.upper, ctx)
-    if pi.lower_exclusive is not None:
+    if pi.upper_exclusive is not None:
         prop_interval["upper-exclusive"] = _dump_prop(pi.upper_exclusive, ctx)
     return prop_interval
 
