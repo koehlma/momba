@@ -4,6 +4,7 @@ on:
   create:
     tags:
       - v*
+  workflow_dispatch:
 
 jobs:
   build_momba:
@@ -64,6 +65,7 @@ jobs:
           python -m cibuildwheel --output-dir ../wheelhouse
         env:
           CIBW_ARCHS: auto64
+          CIBW_ARCHS_MACOS: "x86_64 universal2 arm64"
           CIBW_BUILD: cp38-* cp39-* cp310-*
           CIBW_SKIP: "*-musllinux_*"
           CIBW_BEFORE_BUILD_LINUX: curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
@@ -77,6 +79,7 @@ jobs:
     name: Publish to PyPI
     runs-on: ubuntu-20.04
     environment: pypi
+    if: github.event_name == 'create' && startsWith(github.ref, 'refs/tags/v')
     needs: [build_momba, build_engine_sdist, build_engine_wheels]
     steps:
     - name: Download artifacts
