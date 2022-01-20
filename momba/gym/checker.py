@@ -36,10 +36,12 @@ DECISION = struct.Struct("!I")  # (action,)
 @d.dataclass(frozen=True)
 class ModesOptions:
     max_run_length_as_end: bool = True
+    additional_options: t.Sequence[str] = ()
 
     def apply(self, command: t.List[str]) -> None:
         if self.max_run_length_as_end:
             command.append("--max-run-length-as-end")
+        command.extend(self.additional_options)
 
 
 _DEFAULT_OPTIONS = ModesOptions()
