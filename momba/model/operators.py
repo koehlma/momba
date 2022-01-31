@@ -24,10 +24,17 @@ class Operator:
         Symbol associated with the operator.
     """
 
+    name: str
     symbol: str
 
     def __init__(self, symbol: str):
         self.symbol = symbol
+
+
+# XXX: This is needed to make operators pickable. Instead of pickling by value, we pickle
+# enums by their name in the enclosing global scope. I am not sure why this is not the
+# default behavior as enums are singletons.
+Operator.__reduce_ex__ = lambda self, protocol: f"{self.__class__.__name__}.{self.name}"  # type: ignore
 
 
 class BinaryOperator(Operator):
