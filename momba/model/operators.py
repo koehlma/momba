@@ -31,7 +31,7 @@ class Operator:
         self.symbol = symbol
 
 
-# XXX: This is needed to make operators pickable. Instead of pickling by value, we pickle
+# XXX: This is needed to make operators pickleable. Instead of pickling by value, we pickle
 # enums by their name in the enclosing global scope. I am not sure why this is not the
 # default behavior as enums are singletons.
 #
