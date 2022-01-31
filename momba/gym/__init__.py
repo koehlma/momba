@@ -25,7 +25,7 @@ def create_generic_env(
     rewards: generic.Rewards = generic.DEFAULT_REWARD_STRUCTURE,
     actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
     observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
-    renderer: t.Optional[env.Renderer] = None
+    renderer: t.Optional[env.Renderer] = None,
 ) -> env.MombaEnv:
     """Convenience function for constructing a generic environment from a model."""
     return env.MombaEnv(

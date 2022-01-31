@@ -414,7 +414,7 @@ def construct_model(scenario: Scenario) -> model.Network:
             ctx.global_scope.declare_variable(
                 direction.distance_variable,
                 typ=types.INT.bound(
-                    0, math.floor(math.sqrt(track.width ** 2 + track.height ** 2)) + 1
+                    0, math.floor(math.sqrt(track.width**2 + track.height**2)) + 1
                 ),
                 initial_value=0,
             )

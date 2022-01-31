@@ -124,7 +124,7 @@ class Network:
         vector: t.Mapping[Instance, ActionPattern],
         *,
         result: t.Optional[ActionPattern] = None,
-        condition: t.Optional[Expression] = None
+        condition: t.Optional[Expression] = None,
     ) -> Link:
         """
         Creates a synchronization link between automata instances.
