@@ -14,3 +14,7 @@ BARTO_BIG = Track.from_source(resources.read_text(__package__, "barto-big.track"
 BARTO_SMALL = Track.from_source(resources.read_text(__package__, "barto-small.track"))
 RING = Track.from_source(resources.read_text(__package__, "ring.track"))
 TINY = Track.from_source(resources.read_text(__package__, "tiny.track"))
+MAZE = Track.from_source(resources.read_text(__package__, "maze.track"))
+RIVER_DEADEND_NARROW = Track.from_source(
+    resources.read_text(__package__, "river-deadend-narrow.track")
+)
