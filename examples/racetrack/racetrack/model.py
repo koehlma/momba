@@ -366,15 +366,21 @@ def construct_model(scenario: Scenario) -> model.Network:
         initial_value=0,
     )
 
+    first_start_cell = next(iter(scenario.track.start_cells))
+
     ctx.global_scope.declare_variable(
         "car_x",
         types.INT.bound(-1, track.width),
-        initial_value=scenario.start_cell.x if scenario.start_cell is not None else 0,
+        initial_value=scenario.start_cell.x
+        if scenario.start_cell is not None
+        else first_start_cell.x,
     )
     ctx.global_scope.declare_variable(
         "car_y",
         types.INT.bound(-1, track.height),
-        initial_value=scenario.start_cell.y if scenario.start_cell is not None else 0,
+        initial_value=scenario.start_cell.y
+        if scenario.start_cell is not None
+        else first_start_cell.y,
     )
 
     ctx.global_scope.declare_variable(
