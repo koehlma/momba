@@ -303,6 +303,12 @@ impl Value {
         match (self, other) {
             (Int64(left), Int64(right)) => Int64(cmp::min(left, right)),
             (Float64(left), Float64(right)) => Float64(cmp::min(left, right)),
+            (Float64(left), Int64(right)) => {
+                Float64(cmp::min(left, NotNan::new(right as f64).unwrap()))
+            }
+            (Int64(left), Float64(right)) => {
+                Float64(cmp::min(NotNan::new(left as f64).unwrap(), right))
+            }
             (left, right) => panic!(
                 "Invalid operands in expression ({:?} min {:?}).",
                 left, right
@@ -315,6 +321,12 @@ impl Value {
         match (self, other) {
             (Int64(left), Int64(right)) => Int64(cmp::max(left, right)),
             (Float64(left), Float64(right)) => Float64(cmp::max(left, right)),
+            (Float64(left), Int64(right)) => {
+                Float64(cmp::max(left, NotNan::new(right as f64).unwrap()))
+            }
+            (Int64(left), Float64(right)) => {
+                Float64(cmp::max(NotNan::new(left as f64).unwrap(), right))
+            }
             (left, right) => panic!(
                 "Invalid operands in expression ({:?} max {:?}).",
                 left, right
