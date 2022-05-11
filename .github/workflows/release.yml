@@ -48,8 +48,7 @@ jobs:
   build_engine_wheels_linux:
     name: Build Windows Engine Wheel (${{ matrix.target }})
     runs-on: ubuntu-latest
-    steps:
-      strategy:
+    strategy:
       matrix:
         target: ["x86_64", "aarch64", "armv7"]
     steps:
@@ -68,8 +67,7 @@ jobs:
   build_engine_wheels_windows:
     name: Build Windows Engine Wheel (${{ matrix.target }})
     runs-on: windows-latest
-    steps:
-      strategy:
+    strategy:
       matrix:
         target: ["x86_64"]
     steps:
