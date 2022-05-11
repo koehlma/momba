@@ -22,17 +22,17 @@ Please cite Momba as follows:
 Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Python*. In: J. F. Groote and K. G. Larsen (eds.) 27th International Conference on Tools and Algorithms for the Construction and Analysis of Systems, TACAS 2021. DOI: https://doi.org/10.1007/978-3-030-72013-1_23.
 
 
-## Features
+## ✨ Features
 
 * first-class **import and export** of **JANI models**
 * **syntax-aware macros** for the modular construction of models with Python code
 * **built-in exploration engine** for PTAs, MDPs and other model types
-* interfaces to state-of-the-art model checkers, e.g., [The Modest Toolset](http://www.modestchecker.net/) and [Storm](https://www.stormchecker.org/)
+* interfaces to state-of-the-art model checkers, e.g., the [Modest Toolset](http://www.modestchecker.net/) and [Storm](https://www.stormchecker.org/)
 * pythonic and **statically typed** APIs to tinker with formal models
 * hassle-free out-of-the-box support for **Windows, Linux, and MacOS**
 
 
-## Getting Started
+## 🚀 Getting Started
 
 Momba is available from the [Python Package Index](https://pypi.org/):
 ```sh
@@ -45,7 +45,16 @@ If you aim at a fully reproducible modeling environment, we recommend using [Pip
 We also provide a [GitHub Template](https://github.com/koehlma/momba-pipenv-template) for Pipenv.
 
 
-## Rust Crates
+## 🏗 Contributing
+
+We welcome all kinds of contributions!
+
+For minor changes and bug fixes feel free to simply open a pull request. For major changes impacting the overall design of Momba, please first [start a discussion](https://github.com/koehlma/momba/discussions/new?category=ideas) outlining your idea.
+
+By submitting a PR, you agree to license your contributions under MIT.
+
+
+## 🦀 Rust Crates
 
 The exploration engine of Momba is written in [Rust](https://rust-lang.org) levering [PyO3](https://pyo3.rs/) for Python bindings.
 In case you are a Rust developer you might find some of the crates in [engine/crates](engine/crates) useful.
@@ -53,7 +62,7 @@ In particular, the crate [momba-explore](https://crates.io/crates/momba-explore)
 The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sidekick) directly exposes some of this functionality.
 
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 This project is partially supported by the ERC Advanced Investigators Grant 695614 ([POWVER](https://powver.org)), by the German Research Foundation (DFG) under grant No. 389792660, as part of [TRR 248](https://perspicuous-computing.science), and by the Key-Area Research and Development Program Grant 2018B010107004 of Guangdong Province.
 
