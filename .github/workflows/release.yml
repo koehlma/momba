@@ -45,12 +45,9 @@ jobs:
           name: packages
           path: ./engine/dist/*.tar.gz
 
-  build_engine_wheels:
-    name: Build Engine Wheels (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  build_engine_wheels_linux:
+    name: Build Linux Engine Wheels
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
@@ -69,6 +66,35 @@ jobs:
           CIBW_SKIP: "*-musllinux_*"
           CIBW_BEFORE_BUILD_LINUX: curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
           CIBW_ENVIRONMENT_LINUX: PATH=$HOME/.cargo/bin:$PATH
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: ./wheelhouse/*.whl
+  
+  build_engine_wheels_windows:
+    name: Build Windows Engine Wheels (Python ${{ matrix.python }})
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python: ["3.8", "3.9", "3.10"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          architecture: x64
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          default: true
+      - name: Build Wheels (x86_64)
+        uses: messense/maturin-action@v1
+        with:
+          target: x86_64
+          args: --release --out wheelhouse -m engine/Cargo.toml --no-sdist
       - uses: actions/upload-artifact@v2
         with:
           name: packages
@@ -98,11 +124,11 @@ jobs:
         with:
           target: x86_64
           args: --release --out wheelhouse -m engine/Cargo.toml --no-sdist
-      # - name: Build Wheels (aarch64)
-      #   uses: messense/maturin-action@v1
-      #   with:
-      #     target: aarch64
-      #     args: --release --out wheelhouse -m engine/Cargo.toml
+      - name: Build Wheels (aarch64)
+        uses: messense/maturin-action@v1
+        with:
+          target: aarch64
+          args: --release --out wheelhouse -m engine/Cargo.toml --no-sdist
       - name: Build Wheels (universal2)
         uses: messense/maturin-action@v1
         with:
