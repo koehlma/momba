@@ -86,6 +86,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
+          architecture: x64
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -96,7 +97,7 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           target: x86_64
-          args: --release --out wheelhouse -m engine/Cargo.toml
+          args: --release --out wheelhouse -m engine/Cargo.toml --no-sdist
       # - name: Build Wheels (aarch64)
       #   uses: messense/maturin-action@v1
       #   with:
@@ -105,7 +106,7 @@ jobs:
       - name: Build Wheels (universal2)
         uses: messense/maturin-action@v1
         with:
-          args: --release --universal2 --out wheelhouse -m engine/Cargo.toml
+          args: --release --universal2 --out wheelhouse -m engine/Cargo.toml --no-sdist
       - uses: actions/upload-artifact@v2
         with:
           name: packages
