@@ -54,6 +54,12 @@ We welcome all kinds of contributions!
 
 For minor changes and bug fixes feel free to simply open a pull request. For major changes impacting the overall design of Momba, please first [start a discussion](https://github.com/koehlma/momba/discussions/new?category=ideas) outlining your idea.
 
+To get you started, we provide a [development container for VS Code](https://code.visualstudio.com/docs/remote/containers) containing everything you need for development. The easiest way to get started is by clicking on the following badge:
+
+[![VS Code: Open in Container](https://img.shields.io/static/v1?label=VS%20Code&message=Open%20in%20Container&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/koehlma/momba.git)
+
+Opening the link in VS Code will clone this repository into its own Docker volume and start the development container inside VS Code so you are ready to start coding.
+
 By submitting a PR, you agree to license your contributions under MIT.
 
 
