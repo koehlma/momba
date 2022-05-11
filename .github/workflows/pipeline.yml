@@ -43,10 +43,10 @@ jobs:
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: "3.8"
     - name: Install Poetry and Maturin
       run: |
-        pip install poetry maturin==0.9.4
+        pip install poetry maturin
     - name: Build Momba
       run: |
         mkdir artifacts
@@ -58,7 +58,6 @@ jobs:
     - name: Build Engine
       run: |
         cd engine
-        rustup update stable
         maturin build --manylinux=off --no-sdist --out ../artifacts -i $(which python)
     - uses: actions/upload-artifact@v2
       with:
@@ -74,7 +73,7 @@ jobs:
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: "3.8"
     - name: Download artifacts
       uses: actions/download-artifact@v2
       with:
