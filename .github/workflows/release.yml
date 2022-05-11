@@ -46,7 +46,7 @@ jobs:
           path: ./engine/dist/*.tar.gz
 
   build_engine_wheels_linux:
-    name: Build Windows Engine Wheel (${{ matrix.target }})
+    name: Build Linux Engine Wheel (${{ matrix.target }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -57,7 +57,7 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          manylinx: auto
+          manylinux: auto
           args: --release --out dist -m engine/Cargo.toml --no-sdist
       - uses: actions/upload-artifact@v2
         with:
