@@ -21,7 +21,7 @@ For academic publications, please cite Momba as follows:
 
 Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Python*. In: J. F. Groote and K. G. Larsen (eds.) 27th International Conference on Tools and Algorithms for the Construction and Analysis of Systems, TACAS 2021. DOI: https://doi.org/10.1007/978-3-030-72013-1_23.
 
-In case you made anything with Momba or plan to do so, we would highly appreciate if you would let us know by [opening a discussion](https://github.com/koehlma/momba/discussions/new?category=show-and-tell) or dropping us a message. 🙌
+In case you made anything with Momba or plan to do so, we would highly appreciate if you let us know about your exciting project by [opening a discussion](https://github.com/koehlma/momba/discussions/new?category=show-and-tell) or dropping us a message. 🙌
 
 
 ## ✨ Features
