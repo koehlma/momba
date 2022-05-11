@@ -9,7 +9,7 @@ A tool paper describing MoGym is currently under submission for CAV22.
 The Momba Gym API has two parts:
 
 1. It exposes an OpenAI Gym compatible training environment.
-2. It exposes convenience function for deep statistical model checking.
+2. It exposes convenience functions for deep statistical model checking.
 
 
 ## Training Environment
