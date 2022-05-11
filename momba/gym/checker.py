@@ -214,6 +214,20 @@ def check_oracle(
     actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
     observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
 ) -> t.Mapping[str, fractions.Fraction]:
+    """
+    Checks an arbitrary Python function.
+    
+    Arguments:
+        network: A JANI automaton network.
+        instance: An instance of an automaton in the provided network. The decision-making
+            agent trained on the resulting environment is assumed to act by resolving the
+            non-determinism in this automaton.
+        orcace: The Python function to check.
+        parameters: Allows defining values for parameters of the JANI model.
+        toolset: Specifies the location of the Modest Toolset.
+        actions: Specifies the action space for the environment.
+        observations: Specifies the observation space for the environment.
+    """
     loop = asyncio.get_event_loop()
     return loop.run_until_complete(
         check_oracle_async(
@@ -240,7 +254,20 @@ def check_nn(
     actions: generic.Actions = generic.Actions.EDGE_BY_INDEX,
     observations: generic.Observations = generic.Observations.GLOBAL_ONLY,
 ) -> t.Mapping[str, fractions.Fraction]:
-    """Checks a PyTorch neural network."""
+    """
+    Checks a PyTorch neural network.
+    
+    Arguments:
+        network: A JANI automaton network.
+        instance: An instance of an automaton in the provided network. The decision-making
+            agent trained on the resulting environment is assumed to act by resolving the
+            non-determinism in this automaton.
+        nn: The PyTorch neural network.
+        parameters: Allows defining values for parameters of the JANI model.
+        toolset: Specifies the location of the Modest Toolset.
+        actions: Specifies the action space for the environment.
+        observations: Specifies the observation space for the environment.
+    """
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = pathlib.Path(temp_dir)
         model_path = temp_path / "model.jani"

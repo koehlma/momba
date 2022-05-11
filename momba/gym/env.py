@@ -22,7 +22,13 @@ class Renderer(t.Protocol):
 
 
 class MombaEnv(gym.Env):  # type: ignore
-    """Implementation of an OpenAI Gym environment."""
+    """
+    Implementation of an OpenAI Gym environment.
+    
+    Arguments:
+        explorer: The :class:`abstract.Explorer` to use.
+        renderer: An optional renderer for the OpenAI Gym API.
+    """
 
     explorer: abstract.Explorer
 
