@@ -216,7 +216,7 @@ def check_oracle(
 ) -> t.Mapping[str, fractions.Fraction]:
     """
     Checks an arbitrary Python function.
-    
+
     Arguments:
         network: A JANI automaton network.
         instance: An instance of an automaton in the provided network. The decision-making
@@ -256,7 +256,7 @@ def check_nn(
 ) -> t.Mapping[str, fractions.Fraction]:
     """
     Checks a PyTorch neural network.
-    
+
     Arguments:
         network: A JANI automaton network.
         instance: An instance of an automaton in the provided network. The decision-making

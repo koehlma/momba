@@ -29,7 +29,7 @@ def create_generic_env(
 ) -> env.MombaEnv:
     """
     Constructs a generic training environment from a JANI model based on the provided options.
-    
+
     Arguments:
         network: A JANI automaton network.
         controlled_instance: An instance of an automaton in the provided network. The
