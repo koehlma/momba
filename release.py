@@ -32,7 +32,7 @@ shutil.copy(pyproject_file, PACKAGE_DIR / "pyproject.toml.orig")
 # update project metadata to depend on precise version of `momba_engine`
 project_metadata["tool"]["poetry"]["dependencies"]["momba_engine"][
     "version"
-] = engine_version
+] = f"=={engine_version}"
 pyproject_file.write_text(tomlkit.dumps(project_metadata))
 
 # call poetry to build the package
