@@ -618,7 +618,7 @@ def construct_model(scenario: Scenario) -> model.Network:
                         position_set,
                         assignments={
                             "car_x": model.ensure_expr(scenario.start_cell.x),
-                            "car_y": model.ensure_expr(scenario.start_cell.x),
+                            "car_y": model.ensure_expr(scenario.start_cell.y),
                         },
                     )
                 ],
