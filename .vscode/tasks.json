@@ -35,6 +35,18 @@
                 "${workspaceRoot}/build/docs"
             ],
             "problemMatcher": []
+        },
+        {
+            "label": "Build and Serve Docs",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "-m",
+                "sphinx_autobuild",
+                "${workspaceRoot}/docs",
+                "${workspaceRoot}/build/docs"
+            ],
+            "problemMatcher": []
         }
     ]
 }
