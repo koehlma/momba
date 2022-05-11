@@ -17,9 +17,11 @@ It provides convenience functions for the modular construction of models effecti
 Momba's built-in exploration engine allows gaining confidence in a model, for instance, by rapidly prototyping a tool for interactive model exploration and visualization, or by connecting it to a testing framework.
 Finally, thanks to the JANI-model interchange format, several state-of-the-art model checkers and other tools are readily available for model analysis.
 
-Please cite Momba as follows:
+For academic publications, please cite Momba as follows:
 
 Maximilian A. Köhl, Michaela Klauck, and Holger Hermanns: *Momba: JANI Meets Python*. In: J. F. Groote and K. G. Larsen (eds.) 27th International Conference on Tools and Algorithms for the Construction and Analysis of Systems, TACAS 2021. DOI: https://doi.org/10.1007/978-3-030-72013-1_23.
+
+In case you made anything with Momba or plan to do so, we would highly appreciate if you would let us know by [opening a discussion](https://github.com/koehlma/momba/discussions/new?category=show-and-tell) or dropping us a message. 🙌
 
 
 ## ✨ Features
