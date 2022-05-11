@@ -30,10 +30,10 @@ A generic {class}`~momba.gym.env.MombaEnv` working with a large class of JANI mo
 
 ## Deep Statistical Model Checking
 
-The DSMC functionality of Momba Gym is based on the statistical model checker `modes` of the [Modest Toolset](https://www.modestchecker.net) which has been extended by two new resolution strategies for non-determinism.
+The DSMC functionality of Momba Gym is based on the statistical model checker `modes` of the [Modest Toolset](https://www.modestchecker.net) which has been extended by two new resolution strategies for nondeterminism.
 Unfortunately, the Modest Toolset is not open-source and the extensions have not been integrated into the official version yet.
 Binary versions of the extended version are [available here](https://github.com/udsdepend/cav22-mogym-artifact/tree/main/vendor/Modest).
-Please make sure that you have the extended version in your `PATH`, otherwise the following to functions will not work.
+Please make sure that you have the extended version in your `PATH`, otherwise the following two functions will not work.
 
 The Momba Gym API provides two functions for (a) checking an arbitrary Python function, {func}`~momba.gym.checker.check_oracle`, and (b) for checking a [PyTorch](https://pytorch.org) neural network,{func}`~momba.gym.checker.check_nn`:
 
