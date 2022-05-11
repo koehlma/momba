@@ -645,6 +645,20 @@
     <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span><span class="p">,</span>
     <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks an arbitrary Python function.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        network: A JANI automaton network.</span>
+<span class="sd">        instance: An instance of an automaton in the provided network. The decision-making</span>
+<span class="sd">            agent trained on the resulting environment is assumed to act by resolving the</span>
+<span class="sd">            non-determinism in this automaton.</span>
+<span class="sd">        orcace: The Python function to check.</span>
+<span class="sd">        parameters: Allows defining values for parameters of the JANI model.</span>
+<span class="sd">        toolset: Specifies the location of the Modest Toolset.</span>
+<span class="sd">        actions: Specifies the action space for the environment.</span>
+<span class="sd">        observations: Specifies the observation space for the environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
         <span class="n">check_oracle_async</span><span class="p">(</span>
@@ -671,7 +685,20 @@
     <span class="n">actions</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">EDGE_BY_INDEX</span><span class="p">,</span>
     <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">fractions</span><span class="o">.</span><span class="n">Fraction</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Checks a PyTorch neural network.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks a PyTorch neural network.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        network: A JANI automaton network.</span>
+<span class="sd">        instance: An instance of an automaton in the provided network. The decision-making</span>
+<span class="sd">            agent trained on the resulting environment is assumed to act by resolving the</span>
+<span class="sd">            non-determinism in this automaton.</span>
+<span class="sd">        nn: The PyTorch neural network.</span>
+<span class="sd">        parameters: Allows defining values for parameters of the JANI model.</span>
+<span class="sd">        toolset: Specifies the location of the Modest Toolset.</span>
+<span class="sd">        actions: Specifies the action space for the environment.</span>
+<span class="sd">        observations: Specifies the observation space for the environment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
         <span class="n">temp_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
         <span class="n">model_path</span> <span class="o">=</span> <span class="n">temp_path</span> <span class="o">/</span> <span class="s2">&quot;model.jani&quot;</span>

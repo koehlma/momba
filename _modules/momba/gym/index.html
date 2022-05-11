@@ -458,7 +458,22 @@
     <span class="n">observations</span><span class="p">:</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span> <span class="o">=</span> <span class="n">generic</span><span class="o">.</span><span class="n">Observations</span><span class="o">.</span><span class="n">GLOBAL_ONLY</span><span class="p">,</span>
     <span class="n">renderer</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">env</span><span class="o">.</span><span class="n">Renderer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">env</span><span class="o">.</span><span class="n">MombaEnv</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Convenience function for constructing a generic environment from a model.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a generic training environment from a JANI model based on the provided options.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        network: A JANI automaton network.</span>
+<span class="sd">        controlled_instance: An instance of an automaton in the provided network. The</span>
+<span class="sd">            decision-making agent trained on the resulting environment is assumed to act</span>
+<span class="sd">            by resolving the non-determinism in this automaton.</span>
+<span class="sd">        property_name: The name of a reach-avoid JANI property (specified as part of the</span>
+<span class="sd">            JANI model the network originates from) for which the agent should be trained.</span>
+<span class="sd">        parameters: Allows defining values for parameters of the JANI model.</span>
+<span class="sd">        rewards: Specifies the reward structure used for training.</span>
+<span class="sd">        actions: Specifies the action space for the environment.</span>
+<span class="sd">        observations: Specifies the observation space for the environment.</span>
+<span class="sd">        renderer: Is an optional renderer for the OpenAI Gym API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">MombaEnv</span><span class="p">(</span>
         <span class="n">generic</span><span class="o">.</span><span class="n">GenericExplorer</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">engine</span><span class="o">.</span><span class="n">Explorer</span><span class="o">.</span><span class="n">new_discrete_time</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">),</span>
