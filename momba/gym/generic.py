@@ -212,6 +212,8 @@ def _extract_property(prop: model.Expression) -> Objective:
             model.operators.AggregationFunction.MIN,
             model.operators.AggregationFunction.MAX,
             model.operators.AggregationFunction.VALUES,
+            model.operators.AggregationFunction.EXISTS,
+            model.operators.AggregationFunction.FORALL,
         }, f"Unsupported aggregation function {prop.function}"
         assert isinstance(
             prop.predicate, model.properties.StateSelector
