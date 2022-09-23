@@ -281,21 +281,20 @@ _BUILTIN_FUNCTIONS: t.Dict[str, _BuiltinExpressionConstructor] = {
 
 
 def _update_builtin_functions() -> None:
+    def _make_constructor(
+        function: operators.TrigonometricFunction,
+    ) -> _BuiltinExpressionConstructor:
+        def construct(arguments: t.List[model.Expression]) -> model.Expression:
+            if len(arguments) != 1:
+                symbol = function.symbol
+                raise Exception(
+                    f"{symbol} takes exactly 1 argument but {len(arguments)} are given"
+                )
+            return expressions.Trigonometric(function, arguments[0])
+
+        return construct
+
     for trigonometric_function in operators.TrigonometricFunction:
-
-        def _make_constructor(
-            function: operators.TrigonometricFunction,
-        ) -> _BuiltinExpressionConstructor:
-            def construct(arguments: t.List[model.Expression]) -> model.Expression:
-                if len(arguments) != 1:
-                    symbol = function.symbol
-                    raise Exception(
-                        f"{symbol} takes exactly 1 argument but {len(arguments)} are given"
-                    )
-                return expressions.Trigonometric(function, arguments[0])
-
-            return construct
-
         construct = _make_constructor(trigonometric_function)
         _BUILTIN_FUNCTIONS[trigonometric_function.symbol] = construct
 
