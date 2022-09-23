@@ -58,7 +58,7 @@ jobs:
         with:
           target: ${{ matrix.target }}
           manylinux: auto
-          args: --release --out dist -m engine/Cargo.toml --no-sdist
+          args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v2
         with:
           name: packages
@@ -76,7 +76,7 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist -m engine/Cargo.toml --no-sdist
+          args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v2
         with:
           name: packages
@@ -94,7 +94,7 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist -m engine/Cargo.toml --no-sdist
+          args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v2
         with:
           name: packages

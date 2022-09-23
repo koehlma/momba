@@ -58,7 +58,7 @@ jobs:
     - name: Build Engine
       run: |
         cd engine
-        maturin build --manylinux=off --no-sdist --out ../artifacts -i $(which python)
+        maturin build --manylinux=off --out ../artifacts -i $(which python)
     - uses: actions/upload-artifact@v2
       with:
         name: artifacts
