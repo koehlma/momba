@@ -6,9 +6,10 @@
 import dataclasses as d
 import typing as t
 
-import multiprocessing
 import pathlib
 import subprocess
+import resource
+import multiprocessing
 
 import click
 
@@ -76,11 +77,21 @@ def diagnose(
     observations: pathlib.Path,
     output: pathlib.Path,
     history_bound: int = -1,
+    memory_limit: t.Optional[int] = None,
 ) -> None:
     command = [binary, "diagnose", model, parameters, observations, output]
     if history_bound >= 0:
         command.extend(["--history-bound", history_bound])
-    subprocess.check_output(tuple(map(str, command)))
+
+    preexec_fn = None
+    if memory_limit is not None:
+
+        def _set_memory_limit():
+            resource.setrlimit(resource.RLIMIT_DATA, memory_limit)
+
+        preexec_fn = _set_memory_limit
+
+    subprocess.check_output(tuple(map(str, command)), preexec_fn=preexec_fn)
 
 
 @d.dataclass(frozen=True)
@@ -90,6 +101,7 @@ class DiagnoseJob:
     observations: pathlib.Path
     output: pathlib.Path
     history_bound: int
+    memory_limit: t.Optional[int] = 4 * 1024 * 1024 * 1024  # Default is 4GB.
 
 
 def run_diagnose_job(job: DiagnoseJob) -> None:

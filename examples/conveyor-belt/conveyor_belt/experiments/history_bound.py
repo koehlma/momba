@@ -118,6 +118,7 @@ def run(
                 traces_dir / f"{trace}_observations.json",
                 out_dir / f"{trace}_result.json",
                 bound,
+                memory_limit=None,
             )
             for trace in range(traces)
         )

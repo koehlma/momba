@@ -4,24 +4,24 @@
       "global_position": {
         "type": "INT64"
       },
-      "local_0_Sensor_sporadic": {
-        "type": "BOOL"
-      },
-      "local_0_Sensor_active": {
+      "local_1_Sensor_active": {
         "type": "BOOL"
       },
       "local_1_Sensor_sporadic": {
         "type": "BOOL"
       },
-      "local_1_Sensor_active": {
+      "local_2_Sensor_active": {
+        "type": "BOOL"
+      },
+      "local_2_Sensor_sporadic": {
         "type": "BOOL"
       }
     },
     "transient_variables": {},
     "clock_variables": [
-      "local_2_Conveyor_t",
-      "local_0_Sensor_t",
-      "local_1_Sensor_t"
+      "local_0_Conveyor_t",
+      "local_1_Sensor_t",
+      "local_2_Sensor_t"
     ],
     "action_labels": {
       "trigger": [
@@ -38,14 +38,14 @@
     }
   },
   "automata": {
-    "0_Sensor": {
+    "0_Conveyor": {
       "locations": {
-        "0_sensing": {
+        "0_running": {
           "invariant": [
             {
               "left": {
                 "kind": "VARIABLE",
-                "identifier": "local_0_Sensor_t"
+                "identifier": "local_0_Conveyor_t"
               },
               "right": {
                 "kind": "ZERO"
@@ -53,103 +53,78 @@
               "is_strict": false,
               "bound": {
                 "kind": "CONSTANT",
-                "value": 100
+                "value": 550
               }
             }
           ],
           "edges": [
             {
+              "number": 0,
               "pattern": {
-                "kind": "LABELED",
-                "label": "trigger",
-                "arguments": [
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": [
                   {
-                    "direction": "WRITE",
-                    "value": {
-                      "kind": "CONSTANT",
-                      "value": 3
+                    "left": {
+                      "kind": "ZERO"
+                    },
+                    "right": {
+                      "kind": "VARIABLE",
+                      "identifier": "local_0_Conveyor_t"
+                    },
+                    "is_strict": false,
+                    "bound": {
+                      "kind": "BINARY",
+                      "operator": "SUB",
+                      "left": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 500
+                      }
                     }
                   }
                 ]
               },
-              "guard": {
-                "boolean_condition": {
-                  "kind": "BOOLEAN",
-                  "operator": "OR",
-                  "operands": [
+              "destinations": [
+                {
+                  "location": "0_running",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
                     {
-                      "kind": "BOOLEAN",
-                      "operator": "AND",
-                      "operands": [
-                        {
-                          "kind": "COMPARISON",
-                          "operator": "EQ",
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "global_position"
+                      },
+                      "value": {
+                        "kind": "BINARY",
+                        "operator": "MOD",
+                        "left": {
+                          "kind": "BINARY",
+                          "operator": "ADD",
                           "left": {
                             "kind": "NAME",
                             "identifier": "global_position"
                           },
                           "right": {
                             "kind": "CONSTANT",
-                            "value": 3
+                            "value": 1
                           }
                         },
-                        {
-                          "kind": "UNARY",
-                          "operator": "NOT",
-                          "operand": {
-                            "kind": "NAME",
-                            "identifier": "local_0_Sensor_active"
-                          }
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 5
                         }
-                      ]
-                    },
-                    {
-                      "kind": "NAME",
-                      "identifier": "local_0_Sensor_sporadic"
-                    }
-                  ]
-                },
-                "clock_constraints": [
-                  {
-                    "left": {
-                      "kind": "ZERO"
-                    },
-                    "right": {
-                      "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
-                    },
-                    "is_strict": false,
-                    "bound": {
-                      "kind": "BINARY",
-                      "operator": "SUB",
-                      "left": {
-                        "kind": "CONSTANT",
-                        "value": 0
-                      },
-                      "right": {
-                        "kind": "CONSTANT",
-                        "value": 100
-                      }
-                    }
-                  }
-                ]
-              },
-              "destinations": [
-                {
-                  "location": "0_sensing",
-                  "probability": {
-                    "kind": "CONSTANT",
-                    "value": 1.0
-                  },
-                  "assignments": [
-                    {
-                      "target": {
-                        "kind": "NAME",
-                        "identifier": "local_0_Sensor_active"
-                      },
-                      "value": {
-                        "kind": "CONSTANT",
-                        "value": true
                       },
                       "index": 0
                     }
@@ -157,7 +132,7 @@
                   "reset": [
                     {
                       "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
+                      "identifier": "local_0_Conveyor_t"
                     }
                   ]
                 }
@@ -165,175 +140,90 @@
               "observations": []
             },
             {
-              "pattern": {
-                "kind": "SILENT"
-              },
-              "guard": {
-                "boolean_condition": {
-                  "kind": "BOOLEAN",
-                  "operator": "AND",
-                  "operands": [
-                    {
-                      "kind": "NAME",
-                      "identifier": "local_0_Sensor_active"
-                    },
-                    {
-                      "kind": "COMPARISON",
-                      "operator": "EQ",
-                      "left": {
-                        "kind": "NAME",
-                        "identifier": "global_position"
-                      },
-                      "right": {
-                        "kind": "CONSTANT",
-                        "value": 3
-                      }
-                    }
-                  ]
-                },
-                "clock_constraints": [
-                  {
-                    "left": {
-                      "kind": "ZERO"
-                    },
-                    "right": {
-                      "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
-                    },
-                    "is_strict": false,
-                    "bound": {
-                      "kind": "BINARY",
-                      "operator": "SUB",
-                      "left": {
-                        "kind": "CONSTANT",
-                        "value": 0
-                      },
-                      "right": {
-                        "kind": "CONSTANT",
-                        "value": 100
-                      }
-                    }
-                  }
-                ]
-              },
-              "destinations": [
-                {
-                  "location": "0_sensing",
-                  "probability": {
-                    "kind": "CONSTANT",
-                    "value": 1.0
-                  },
-                  "assignments": [],
-                  "reset": [
-                    {
-                      "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
-                    }
-                  ]
-                }
-              ],
-              "observations": []
-            },
-            {
-              "pattern": {
-                "kind": "SILENT"
-              },
-              "guard": {
-                "boolean_condition": {
-                  "kind": "COMPARISON",
-                  "operator": "NE",
-                  "left": {
-                    "kind": "NAME",
-                    "identifier": "global_position"
-                  },
-                  "right": {
-                    "kind": "CONSTANT",
-                    "value": 3
-                  }
-                },
-                "clock_constraints": [
-                  {
-                    "left": {
-                      "kind": "ZERO"
-                    },
-                    "right": {
-                      "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
-                    },
-                    "is_strict": false,
-                    "bound": {
-                      "kind": "BINARY",
-                      "operator": "SUB",
-                      "left": {
-                        "kind": "CONSTANT",
-                        "value": 0
-                      },
-                      "right": {
-                        "kind": "CONSTANT",
-                        "value": 100
-                      }
-                    }
-                  }
-                ]
-              },
-              "destinations": [
-                {
-                  "location": "0_sensing",
-                  "probability": {
-                    "kind": "CONSTANT",
-                    "value": 1.0
-                  },
-                  "assignments": [
-                    {
-                      "target": {
-                        "kind": "NAME",
-                        "identifier": "local_0_Sensor_active"
-                      },
-                      "value": {
-                        "kind": "CONSTANT",
-                        "value": false
-                      },
-                      "index": 0
-                    }
-                  ],
-                  "reset": [
-                    {
-                      "kind": "VARIABLE",
-                      "identifier": "local_0_Sensor_t"
-                    }
-                  ]
-                }
-              ],
-              "observations": []
-            },
-            {
+              "number": 1,
               "pattern": {
                 "kind": "LABELED",
-                "label": "fault_sporadic",
-                "arguments": [
-                  {
-                    "direction": "WRITE",
-                    "value": {
-                      "kind": "CONSTANT",
-                      "value": 3
-                    }
-                  }
-                ]
+                "label": "fault_friction",
+                "arguments": []
               },
               "guard": {
                 "boolean_condition": {
-                  "kind": "UNARY",
-                  "operator": "NOT",
-                  "operand": {
-                    "kind": "NAME",
-                    "identifier": "local_0_Sensor_sporadic"
-                  }
+                  "kind": "CONSTANT",
+                  "value": true
                 },
                 "clock_constraints": []
               },
               "destinations": [
                 {
-                  "location": "0_sensing",
+                  "location": "1_fault",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "1_fault": {
+          "invariant": [
+            {
+              "left": {
+                "kind": "VARIABLE",
+                "identifier": "local_0_Conveyor_t"
+              },
+              "right": {
+                "kind": "ZERO"
+              },
+              "is_strict": false,
+              "bound": {
+                "kind": "CONSTANT",
+                "value": 750
+              }
+            }
+          ],
+          "edges": [
+            {
+              "number": 2,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": [
+                  {
+                    "left": {
+                      "kind": "ZERO"
+                    },
+                    "right": {
+                      "kind": "VARIABLE",
+                      "identifier": "local_0_Conveyor_t"
+                    },
+                    "is_strict": false,
+                    "bound": {
+                      "kind": "BINARY",
+                      "operator": "SUB",
+                      "left": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 600
+                      }
+                    }
+                  }
+                ]
+              },
+              "destinations": [
+                {
+                  "location": "1_fault",
                   "probability": {
                     "kind": "CONSTANT",
                     "value": 1.0
@@ -342,16 +232,37 @@
                     {
                       "target": {
                         "kind": "NAME",
-                        "identifier": "local_0_Sensor_sporadic"
+                        "identifier": "global_position"
                       },
                       "value": {
-                        "kind": "CONSTANT",
-                        "value": true
+                        "kind": "BINARY",
+                        "operator": "MOD",
+                        "left": {
+                          "kind": "BINARY",
+                          "operator": "ADD",
+                          "left": {
+                            "kind": "NAME",
+                            "identifier": "global_position"
+                          },
+                          "right": {
+                            "kind": "CONSTANT",
+                            "value": 1
+                          }
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 5
+                        }
                       },
                       "index": 0
                     }
                   ],
-                  "reset": []
+                  "reset": [
+                    {
+                      "kind": "VARIABLE",
+                      "identifier": "local_0_Conveyor_t"
+                    }
+                  ]
                 }
               ],
               "observations": []
@@ -381,6 +292,7 @@
           ],
           "edges": [
             {
+              "number": 0,
               "pattern": {
                 "kind": "LABELED",
                 "label": "trigger",
@@ -487,6 +399,7 @@
               "observations": []
             },
             {
+              "number": 1,
               "pattern": {
                 "kind": "SILENT"
               },
@@ -557,6 +470,7 @@
               "observations": []
             },
             {
+              "number": 2,
               "pattern": {
                 "kind": "SILENT"
               },
@@ -629,6 +543,7 @@
               "observations": []
             },
             {
+              "number": 3,
               "pattern": {
                 "kind": "LABELED",
                 "label": "fault_sporadic",
@@ -682,14 +597,14 @@
         }
       }
     },
-    "2_Conveyor": {
+    "2_Sensor": {
       "locations": {
-        "0_running": {
+        "0_sensing": {
           "invariant": [
             {
               "left": {
                 "kind": "VARIABLE",
-                "identifier": "local_2_Conveyor_t"
+                "identifier": "local_2_Sensor_t"
               },
               "right": {
                 "kind": "ZERO"
@@ -697,19 +612,62 @@
               "is_strict": false,
               "bound": {
                 "kind": "CONSTANT",
-                "value": 550
+                "value": 100
               }
             }
           ],
           "edges": [
             {
+              "number": 0,
               "pattern": {
-                "kind": "SILENT"
+                "kind": "LABELED",
+                "label": "trigger",
+                "arguments": [
+                  {
+                    "direction": "WRITE",
+                    "value": {
+                      "kind": "CONSTANT",
+                      "value": 3
+                    }
+                  }
+                ]
               },
               "guard": {
                 "boolean_condition": {
-                  "kind": "CONSTANT",
-                  "value": true
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "BOOLEAN",
+                      "operator": "AND",
+                      "operands": [
+                        {
+                          "kind": "COMPARISON",
+                          "operator": "EQ",
+                          "left": {
+                            "kind": "NAME",
+                            "identifier": "global_position"
+                          },
+                          "right": {
+                            "kind": "CONSTANT",
+                            "value": 3
+                          }
+                        },
+                        {
+                          "kind": "UNARY",
+                          "operator": "NOT",
+                          "operand": {
+                            "kind": "NAME",
+                            "identifier": "local_2_Sensor_active"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "NAME",
+                      "identifier": "local_2_Sensor_sporadic"
+                    }
+                  ]
                 },
                 "clock_constraints": [
                   {
@@ -718,7 +676,7 @@
                     },
                     "right": {
                       "kind": "VARIABLE",
-                      "identifier": "local_2_Conveyor_t"
+                      "identifier": "local_2_Sensor_t"
                     },
                     "is_strict": false,
                     "bound": {
@@ -730,7 +688,7 @@
                       },
                       "right": {
                         "kind": "CONSTANT",
-                        "value": 500
+                        "value": 100
                       }
                     }
                   }
@@ -738,7 +696,7 @@
               },
               "destinations": [
                 {
-                  "location": "0_running",
+                  "location": "0_sensing",
                   "probability": {
                     "kind": "CONSTANT",
                     "value": 1.0
@@ -747,27 +705,11 @@
                     {
                       "target": {
                         "kind": "NAME",
-                        "identifier": "global_position"
+                        "identifier": "local_2_Sensor_active"
                       },
                       "value": {
-                        "kind": "BINARY",
-                        "operator": "MOD",
-                        "left": {
-                          "kind": "BINARY",
-                          "operator": "ADD",
-                          "left": {
-                            "kind": "NAME",
-                            "identifier": "global_position"
-                          },
-                          "right": {
-                            "kind": "CONSTANT",
-                            "value": 1
-                          }
-                        },
-                        "right": {
-                          "kind": "CONSTANT",
-                          "value": 5
-                        }
+                        "kind": "CONSTANT",
+                        "value": true
                       },
                       "index": 0
                     }
@@ -775,7 +717,7 @@
                   "reset": [
                     {
                       "kind": "VARIABLE",
-                      "identifier": "local_2_Conveyor_t"
+                      "identifier": "local_2_Sensor_t"
                     }
                   ]
                 }
@@ -783,59 +725,32 @@
               "observations": []
             },
             {
-              "pattern": {
-                "kind": "LABELED",
-                "label": "fault_friction",
-                "arguments": []
-              },
-              "guard": {
-                "boolean_condition": {
-                  "kind": "CONSTANT",
-                  "value": true
-                },
-                "clock_constraints": []
-              },
-              "destinations": [
-                {
-                  "location": "1_fault",
-                  "probability": {
-                    "kind": "CONSTANT",
-                    "value": 1.0
-                  },
-                  "assignments": [],
-                  "reset": []
-                }
-              ],
-              "observations": []
-            }
-          ]
-        },
-        "1_fault": {
-          "invariant": [
-            {
-              "left": {
-                "kind": "VARIABLE",
-                "identifier": "local_2_Conveyor_t"
-              },
-              "right": {
-                "kind": "ZERO"
-              },
-              "is_strict": false,
-              "bound": {
-                "kind": "CONSTANT",
-                "value": 750
-              }
-            }
-          ],
-          "edges": [
-            {
+              "number": 1,
               "pattern": {
                 "kind": "SILENT"
               },
               "guard": {
                 "boolean_condition": {
-                  "kind": "CONSTANT",
-                  "value": true
+                  "kind": "BOOLEAN",
+                  "operator": "AND",
+                  "operands": [
+                    {
+                      "kind": "NAME",
+                      "identifier": "local_2_Sensor_active"
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "global_position"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 3
+                      }
+                    }
+                  ]
                 },
                 "clock_constraints": [
                   {
@@ -844,7 +759,7 @@
                     },
                     "right": {
                       "kind": "VARIABLE",
-                      "identifier": "local_2_Conveyor_t"
+                      "identifier": "local_2_Sensor_t"
                     },
                     "is_strict": false,
                     "bound": {
@@ -856,7 +771,7 @@
                       },
                       "right": {
                         "kind": "CONSTANT",
-                        "value": 600
+                        "value": 100
                       }
                     }
                   }
@@ -864,7 +779,68 @@
               },
               "destinations": [
                 {
-                  "location": "1_fault",
+                  "location": "0_sensing",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": [
+                    {
+                      "kind": "VARIABLE",
+                      "identifier": "local_2_Sensor_t"
+                    }
+                  ]
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 2,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "COMPARISON",
+                  "operator": "NE",
+                  "left": {
+                    "kind": "NAME",
+                    "identifier": "global_position"
+                  },
+                  "right": {
+                    "kind": "CONSTANT",
+                    "value": 3
+                  }
+                },
+                "clock_constraints": [
+                  {
+                    "left": {
+                      "kind": "ZERO"
+                    },
+                    "right": {
+                      "kind": "VARIABLE",
+                      "identifier": "local_2_Sensor_t"
+                    },
+                    "is_strict": false,
+                    "bound": {
+                      "kind": "BINARY",
+                      "operator": "SUB",
+                      "left": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 100
+                      }
+                    }
+                  }
+                ]
+              },
+              "destinations": [
+                {
+                  "location": "0_sensing",
                   "probability": {
                     "kind": "CONSTANT",
                     "value": 1.0
@@ -873,27 +849,11 @@
                     {
                       "target": {
                         "kind": "NAME",
-                        "identifier": "global_position"
+                        "identifier": "local_2_Sensor_active"
                       },
                       "value": {
-                        "kind": "BINARY",
-                        "operator": "MOD",
-                        "left": {
-                          "kind": "BINARY",
-                          "operator": "ADD",
-                          "left": {
-                            "kind": "NAME",
-                            "identifier": "global_position"
-                          },
-                          "right": {
-                            "kind": "CONSTANT",
-                            "value": 1
-                          }
-                        },
-                        "right": {
-                          "kind": "CONSTANT",
-                          "value": 5
-                        }
+                        "kind": "CONSTANT",
+                        "value": false
                       },
                       "index": 0
                     }
@@ -901,9 +861,60 @@
                   "reset": [
                     {
                       "kind": "VARIABLE",
-                      "identifier": "local_2_Conveyor_t"
+                      "identifier": "local_2_Sensor_t"
                     }
                   ]
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 3,
+              "pattern": {
+                "kind": "LABELED",
+                "label": "fault_sporadic",
+                "arguments": [
+                  {
+                    "direction": "WRITE",
+                    "value": {
+                      "kind": "CONSTANT",
+                      "value": 3
+                    }
+                  }
+                ]
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "NAME",
+                    "identifier": "local_2_Sensor_sporadic"
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "0_sensing",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_2_Sensor_sporadic"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
                 }
               ],
               "observations": []
@@ -915,29 +926,9 @@
   },
   "links": [
     {
-      "slots": [
-        "x"
-      ],
-      "vector": {
-        "0_Sensor": {
-          "action_type": "trigger",
-          "arguments": [
-            "x"
-          ]
-        }
-      },
-      "result": {
-        "kind": "LABELED",
-        "action_type": "trigger",
-        "arguments": [
-          "x"
-        ]
-      }
-    },
-    {
       "slots": [],
       "vector": {
-        "2_Conveyor": {
+        "0_Conveyor": {
           "action_type": "fault_friction",
           "arguments": []
         }
@@ -967,27 +958,47 @@
           "x"
         ]
       }
+    },
+    {
+      "slots": [
+        "x"
+      ],
+      "vector": {
+        "2_Sensor": {
+          "action_type": "trigger",
+          "arguments": [
+            "x"
+          ]
+        }
+      },
+      "result": {
+        "kind": "LABELED",
+        "action_type": "trigger",
+        "arguments": [
+          "x"
+        ]
+      }
     }
   ],
   "initial_states": [
     {
       "locations": {
-        "0_Sensor": "0_sensing",
+        "0_Conveyor": "0_running",
         "1_Sensor": "0_sensing",
-        "2_Conveyor": "0_running"
+        "2_Sensor": "0_sensing"
       },
       "values": {
         "global_position": 0,
-        "local_0_Sensor_sporadic": false,
-        "local_0_Sensor_active": false,
+        "local_1_Sensor_active": false,
         "local_1_Sensor_sporadic": false,
-        "local_1_Sensor_active": false
+        "local_2_Sensor_active": false,
+        "local_2_Sensor_sporadic": false
       },
       "zone": [
         {
           "left": {
             "kind": "VARIABLE",
-            "identifier": "local_0_Sensor_t"
+            "identifier": "local_0_Conveyor_t"
           },
           "right": {
             "kind": "ZERO"
@@ -1004,7 +1015,7 @@
           },
           "right": {
             "kind": "VARIABLE",
-            "identifier": "local_0_Sensor_t"
+            "identifier": "local_0_Conveyor_t"
           },
           "is_strict": false,
           "bound": {
@@ -1043,7 +1054,7 @@
         {
           "left": {
             "kind": "VARIABLE",
-            "identifier": "local_2_Conveyor_t"
+            "identifier": "local_2_Sensor_t"
           },
           "right": {
             "kind": "ZERO"
@@ -1060,7 +1071,7 @@
           },
           "right": {
             "kind": "VARIABLE",
-            "identifier": "local_2_Conveyor_t"
+            "identifier": "local_2_Sensor_t"
           },
           "is_strict": false,
           "bound": {
