@@ -40,8 +40,6 @@ pub mod robust;
 
 pub mod external;
 
-use clock_zones::Zone;
-
 use rand_distr::Distribution;
 
 use std::convert::TryInto;

@@ -197,7 +197,7 @@ impl Generator {
         }
     }
 
-    pub fn generate2(&self, observations: usize, oracle: &mut Oracle) -> Vec<Observation> {
+    pub fn generate2(&self, observations: usize, oracle: &mut dyn Oracle) -> Vec<Observation> {
         let mut rng = rand::thread_rng();
         let mut state = GeneratorState {
             system_state: self

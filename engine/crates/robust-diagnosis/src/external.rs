@@ -29,7 +29,9 @@ pub struct TimedEvent {
 /// A latency interval captured by a *base latency* and *jitter bound*.
 #[derive(Deserialize, Serialize, Hash, Eq, PartialEq, Clone, Debug)]
 pub struct LatencyInterval {
+    /// The base latency.
     pub base_latency: Time,
+    /// The jitter bound.
     pub jitter_bound: Time,
 }
 

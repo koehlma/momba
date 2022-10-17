@@ -1,4 +1,4 @@
-//! Implementation of the [Observer] responsible for managing *observations*.
+//! Implementation of the [`Observer`] responsible for managing *observations*.
 
 use indexmap::IndexSet;
 use ordered_float::NotNan;
