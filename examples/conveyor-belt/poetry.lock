@@ -1,0 +1,135 @@
+[[package]]
+name = "click"
+version = "7.1.2"
+description = "Composable command line interface toolkit"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "colorama"
+version = "0.4.5"
+description = "Cross-platform colored terminal text."
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "immutables"
+version = "0.16"
+description = "Immutable Collections"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+test = ["flake8 (>=3.8.4,<3.9.0)", "mypy (>=0.910)", "pycodestyle (>=2.6.0,<2.7.0)", "pytest (>=6.2.4,<6.3.0)"]
+
+[[package]]
+name = "momba"
+version = "0.6.6"
+description = "A Python library for quantitative models."
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+immutables = ">=0.16,<0.17"
+momba_engine = {version = "0.6.6", optional = true, markers = "extra == \"engine\" or extra == \"all\""}
+mxu = ">=0.0.6,<0.0.7"
+
+[package.extras]
+all = ["click (>=8.0,<9.0)", "docker (>=5.0.2,<6.0.0)", "gym (>=0.21.0,<0.22.0)", "momba_engine (==0.6.6)", "torch (>=1.8.0,<2.0.0)"]
+cli = ["click (>=8.0,<9.0)"]
+docker = ["docker (>=5.0.2,<6.0.0)"]
+engine = ["momba_engine (==0.6.6)"]
+gym = ["gym (>=0.21.0,<0.22.0)", "torch (>=1.8.0,<2.0.0)"]
+
+[[package]]
+name = "momba-engine"
+version = "0.6.6"
+description = "A Python package supercharging Momba with computing capabilities."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "mxu"
+version = "0.0.6"
+description = "A collection of utilities and helpers for writing Python programs."
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[[package]]
+name = "tomlkit"
+version = "0.7.2"
+description = "Style preserving TOML library"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "58a820612d455e3c81d3e5d735f3a446b39ac5d89367060978777ec5e158e152"
+
+[metadata.files]
+click = [
+    {file = "click-7.1.2-py2.py3-none-any.whl", hash = "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"},
+    {file = "click-7.1.2.tar.gz", hash = "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a"},
+]
+colorama = [
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
+]
+immutables = [
+    {file = "immutables-0.16-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:acbfa79d44228d96296279068441f980dc63dbed52522d9227ff9f4d96c6627e"},
+    {file = "immutables-0.16-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:29c9ed003eacb92e630ef200e31f47236c2139b39476894f7963b32bd39bafa3"},
+    {file = "immutables-0.16-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:0a396314b9024fa55bf83a27813fd76cf9f27dce51f53b0f19b51de035146251"},
+    {file = "immutables-0.16-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:4a2a71678348fb95b13ca108d447f559a754c41b47bd1e7e4fb23974e735682d"},
+    {file = "immutables-0.16-cp36-cp36m-win32.whl", hash = "sha256:064001638ab5d36f6aa05b6101446f4a5793fb71e522bc81b8fc65a1894266ff"},
+    {file = "immutables-0.16-cp36-cp36m-win_amd64.whl", hash = "sha256:1de393f1b188740ca7b38f946f2bbc7edf3910d2048f03bbb8d01f17a038d67c"},
+    {file = "immutables-0.16-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:fcf678a3074613119385a02a07c469ec5130559f5ea843c85a0840c80b5b71c6"},
+    {file = "immutables-0.16-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a307eb0984eb43e815dcacea3ac50c11d00a936ecf694c46991cd5a23bcb0ec0"},
+    {file = "immutables-0.16-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:7a58825ff2254e2612c5a932174398a4ea8fbddd8a64a02c880cc32ee28b8820"},
+    {file = "immutables-0.16-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:798b095381eb42cf40db6876339e7bed84093e5868018a9e73d8e1f7ab4bb21e"},
+    {file = "immutables-0.16-cp37-cp37m-win32.whl", hash = "sha256:19bdede174847c2ef1292df0f23868ab3918b560febb09fcac6eec621bd4812b"},
+    {file = "immutables-0.16-cp37-cp37m-win_amd64.whl", hash = "sha256:9ccf4c0e3e2e3237012b516c74c49de8872ccdf9129739f7a0b9d7444a8c4862"},
+    {file = "immutables-0.16-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:d59beef203a3765db72b1d0943547425c8318ecf7d64c451fd1e130b653c2fbb"},
+    {file = "immutables-0.16-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:0020aaa4010b136056c20a46ce53204e1407a9e4464246cb2cf95b90808d9161"},
+    {file = "immutables-0.16-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:edd9f67671555af1eb99ad3c7550238487dd7ac0ac5205b40204ed61c9a922ac"},
+    {file = "immutables-0.16-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:298a301f85f307b4c056a0825eb30f060e64d73605e783289f3df37dd762bab8"},
+    {file = "immutables-0.16-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:b779617f5b94486bfd0f22162cd72eb5f2beb0214a14b75fdafb7b2c908ed0cb"},
+    {file = "immutables-0.16-cp38-cp38-win32.whl", hash = "sha256:511c93d8b1bbbf103ff3f1f120c5a68a9866ce03dea6ac406537f93ca9b19139"},
+    {file = "immutables-0.16-cp38-cp38-win_amd64.whl", hash = "sha256:b651b61c1af6cda2ee201450f2ffe048a5959bc88e43e6c312f4c93e69c9e929"},
+    {file = "immutables-0.16-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:aa7bf572ae1e006104c584be70dc634849cf0dc62f42f4ee194774f97e7fd17d"},
+    {file = "immutables-0.16-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:50793a44ba0d228ed8cad4d0925e00dfd62ea32f44ddee8854f8066447272d05"},
+    {file = "immutables-0.16-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:799621dcdcdcbb2516546a40123b87bf88de75fe7459f7bd8144f079ace6ec3e"},
+    {file = "immutables-0.16-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:7bcf52aeb983bd803b7c6106eae1b2d9a0c7ab1241bc6b45e2174ba2b7283031"},
+    {file = "immutables-0.16-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.whl", hash = "sha256:734c269e82e5f307fb6e17945953b67659d1731e65309787b8f7ba267d1468f2"},
+    {file = "immutables-0.16-cp39-cp39-win32.whl", hash = "sha256:a454d5d3fee4b7cc627345791eb2ca4b27fa3bbb062ccf362ecaaa51679a07ed"},
+    {file = "immutables-0.16-cp39-cp39-win_amd64.whl", hash = "sha256:2505d93395d3f8ae4223e21465994c3bc6952015a38dc4f03cb3e07a2b8d8325"},
+    {file = "immutables-0.16.tar.gz", hash = "sha256:d67e86859598eed0d926562da33325dac7767b7b1eff84e232c22abea19f4360"},
+]
+momba = [
+    {file = "momba-0.6.6-py3-none-any.whl", hash = "sha256:f94e938643ec70fee3a0e358fde53b4603a4e77ecce4c921065ed76d73d790ed"},
+    {file = "momba-0.6.6.tar.gz", hash = "sha256:4b951d3fcfc6c1ce9192bd693f362d59c1136864489d98cb8de7e840a5ded837"},
+]
+momba-engine = [
+    {file = "momba_engine-0.6.6-cp38-abi3-macosx_10_7_x86_64.whl", hash = "sha256:d4a7d20c6bb357e237e1927d871c6a64c85ba692b0aea3d9e490b4b928b2531e"},
+    {file = "momba_engine-0.6.6-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:4c844cc2db4ab96a50d809cea336b0246be097e778306f698a82f878b9ff462d"},
+    {file = "momba_engine-0.6.6-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:81e17f68c8ccf36947ff42945739747885f7468fd5574ec4a33c5bc49d39564c"},
+    {file = "momba_engine-0.6.6-cp38-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:c29015f7847aa1758947667ff4c74ab8ccb6380f4c4ea1a60aad448508e02218"},
+    {file = "momba_engine-0.6.6-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:24836d20d78bd9c38dcab1e2a5d9a29c0f57f49317801e383367ac723f4bd5fd"},
+    {file = "momba_engine-0.6.6-cp38-abi3-win_amd64.whl", hash = "sha256:1fbe4c2934d1eaad1c6b1fa6556361eec53e9410ec417db7a21682149866b024"},
+    {file = "momba_engine-0.6.6.tar.gz", hash = "sha256:067ddafd49ad6ff3e7a98714eea4d69416b9a3d9a9f77b1dfc5877c34a9b40bc"},
+]
+mxu = [
+    {file = "mxu-0.0.6-py3-none-any.whl", hash = "sha256:0173753206894c1cf896baa0615e0cb15ecaf0f2217e523d9afa0057f44eda7b"},
+    {file = "mxu-0.0.6.tar.gz", hash = "sha256:a06916a1a112d89cb7c428619f0e2548ee8dedbb3386cf869ebde6f3528faaed"},
+]
+tomlkit = [
+    {file = "tomlkit-0.7.2-py2.py3-none-any.whl", hash = "sha256:173ad840fa5d2aac140528ca1933c29791b79a374a0861a80347f42ec9328117"},
+    {file = "tomlkit-0.7.2.tar.gz", hash = "sha256:d7a454f319a7e9bd2e249f239168729327e4dd2d27b17dc68be264ad1ce36754"},
+]

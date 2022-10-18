@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2021, Saarland University
-# Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
+# Copyright (C) 2022, Saarland University
+# Copyright (C) 2022, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
 import dataclasses as d
 import typing as t
