@@ -11,9 +11,9 @@ This directory contains the conveyor belt model and experiments conducted for ou
 
 There are three experiments corresponding to the three sections in the empirical evaluation section of the paper:
 
-- [`scalability`]: Investigate the scalability of the approach.
-- [`history_bound`]: Investigate the impact of the history bound.
-- [`latency_jitter`]: Investigate the impact of latency guarantees.
+- `scalability`: Investigate the scalability of the approach.
+- `history_bound`: Investigate the impact of the history bound.
+- `latency_jitter`: Investigate the impact of latency guarantees.
 
 To run all experiments, this directory contains a script `run-all-experiments.sh`. Note that for this script to run, you first have setup everything:
 
