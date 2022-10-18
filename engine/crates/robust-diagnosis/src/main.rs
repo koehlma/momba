@@ -239,8 +239,8 @@ fn main() {
                         consistent: result.consistent,
                         states: result.states,
                         prefixes: result.prefixes,
-                        fault_necessary: result.failure_necessary,
-                        fault_possible: result.failure_possible,
+                        fault_necessary: result.fault_necessary,
+                        fault_possible: result.fault_possible,
                         duration: start.elapsed().as_secs_f64(),
                     }
                 });
@@ -257,28 +257,6 @@ fn main() {
             for prefix in active_prefixes {
                 println!("{:?}", prefix);
             }
-
-            // let state = diagnoser
-            //     .prefixes
-            //     .iter()
-            //     .next()
-            //     .unwrap()
-            //     .1
-            //     .states
-            //     .iter()
-            //     .next()
-            //     .unwrap();
-
-            // for left in clock_zones::clocks(state.state.valuations()) {
-            //     for right in clock_zones::clocks(state.state.valuations()) {
-            //         println!(
-            //             "{:?} - {:?} {:?}",
-            //             left,
-            //             right,
-            //             state.state.valuations().get_bound(left, right)
-            //         );
-            //     }
-            // }
 
             serde_json::to_writer(
                 BufWriter::new(

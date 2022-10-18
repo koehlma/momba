@@ -32,9 +32,13 @@ pub struct HistoryItem {
 /// A *diagnosis state* used by a [Diagnoser].
 #[derive(Eq, PartialEq, Hash, Clone, Debug)]
 pub struct DiagnosisState {
+    /// The abstract system state.
     pub state: Rc<State<time::Float64Zone>>,
-    pub expected: Option<ObservationIndex>,
+    /// The set of occurred faults.
     pub faults: im::HashSet<LabeledAction>,
+    /// An observation that is expected next (necessary for depth-first search).
+    pub expected: Option<ObservationIndex>,
+    /// The history (necessary for implementing the history bound.)
     pub history: im::Vector<HistoryItem>,
 }
 
@@ -42,8 +46,8 @@ impl DiagnosisState {
     fn with_expected(&self, expected: Option<ObservationIndex>) -> Self {
         Self {
             state: self.state.clone(),
-            expected,
             faults: self.faults.clone(),
+            expected,
             history: self.history.clone(),
         }
     }
@@ -83,14 +87,22 @@ pub struct Diagnoser {
     history_bound: Option<usize>,
 }
 
+/// The output produced by the diagnoser.
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub struct DiagnosisResult {
+    /// Indicates whether the observations are consistent with some run of the model.
     pub consistent: bool,
-    pub failure_possible: bool,
-    pub failure_necessary: bool,
-    pub possible_failures: HashSet<LabeledAction>,
-    pub necessary_failures: HashSet<LabeledAction>,
+    /// Indicates whether a fault possibly occurred.
+    pub fault_possible: bool,
+    /// Indicates whether a fault necessarily occurred.
+    pub fault_necessary: bool,
+    /// The set of possible faults.
+    pub possible_faults: HashSet<LabeledAction>,
+    /// The set of necessary faults.
+    pub necessary_faults: HashSet<LabeledAction>,
+    /// The number of diagnosis states (for experiments).
     pub states: usize,
+    /// The number of active prefixes (for experiments).
     pub prefixes: usize,
 }
 
@@ -116,14 +128,13 @@ impl Diagnoser {
             observable_indices,
             fault_indices,
 
-            //marked: HashMap::new(),
             pending: im::HashSet::new(),
 
             history_bound,
         };
 
-        //let mut cache = HashMap::new();
-
+        // Create an initially empty prefix and invokes the exploration procedure
+        // to establish the invariants (as described in the paper).
         diagnoser.prefixes.insert(
             im::HashSet::new(),
             StateSet {
@@ -153,38 +164,43 @@ impl Diagnoser {
         diagnoser
     }
 
+    /// Extracts a [`DiagnosisResult`] from the diagnoser's state.
     pub fn result(&self) -> DiagnosisResult {
-        let mut possible_failures = HashSet::new();
-        let mut necessary_failures = None;
+        let mut possible_faults = HashSet::new();
+        let mut necessary_faults = None;
 
-        let mut failure_necessary = true;
+        let mut fault_necessary = true;
 
         let mut state_counter = 0;
 
-        let green_observations: im::HashSet<_> = self
+        let settled_observations: im::HashSet<_> = self
             .pending
             .iter()
             .filter(|observation| self.is_settled(self.observer.get(**observation)))
             .cloned()
             .collect();
 
+        // This iterates over all prefixes in order to decide which faults may and must have occurred.
         for (prefix, state_set) in self.prefixes.iter() {
             state_counter += state_set.marked.len();
 
-            if !green_observations.is_subset(prefix) {
+            // We only take the active prefixes into account.
+            if !settled_observations.is_subset(prefix) {
                 continue;
             }
 
             for state in state_set.marked.keys() {
-                // println!("{:?}", state.failures);
-                possible_failures.extend(state.faults.iter().cloned());
+                // Extend the set of possible faults with the occurred faults from the diagnosis state.
+                possible_faults.extend(state.faults.iter().cloned());
+                // If the set is empty, then there are runs without faults. Hence, no fault is necessary.
                 if state.faults.is_empty() {
-                    failure_necessary = false;
+                    fault_necessary = false;
                 }
-                match necessary_failures {
-                    None => necessary_failures = Some(state.faults.clone()),
+                // Intersect the set of necessary faults with the set of occurred faults from this state.
+                match necessary_faults {
+                    None => necessary_faults = Some(state.faults.clone()),
                     Some(failures) => {
-                        necessary_failures = Some(failures.intersection(state.faults.clone()))
+                        necessary_faults = Some(failures.intersection(state.faults.clone()))
                     }
                 }
             }
@@ -192,23 +208,27 @@ impl Diagnoser {
 
         DiagnosisResult {
             consistent: !self.prefixes.is_empty(),
-            failure_possible: !possible_failures.is_empty(),
-            failure_necessary: failure_necessary,
-            possible_failures: possible_failures,
-            necessary_failures: necessary_failures
+            fault_possible: !possible_faults.is_empty(),
+            fault_necessary,
+            possible_faults,
+            necessary_faults: necessary_faults
                 .map_or_else(|| HashSet::new(), |failures| failures.into_iter().collect()),
             states: state_counter,
             prefixes: self.prefixes.len(),
         }
     }
 
+    /// A depth-first search variant of the exploration procedure.
     fn explore_states(&self, states: &[Rc<DiagnosisState>]) -> HashSet<Rc<DiagnosisState>> {
+        // Stack and visited states for depth first search.
         let mut stack: Vec<_> = states.iter().cloned().collect();
         let mut visited: HashSet<_> = stack.iter().cloned().collect();
 
+        // The set of successors `S` to be returned by the procedure.
         let mut successors = HashSet::new();
 
         while let Some(state) = stack.pop() {
+            // Gets the transitions of the system model in the abstract system state.
             let transitions = self.explorer.transitions(&state.state);
 
             let mut is_interaction_state = false;
@@ -272,8 +292,7 @@ impl Diagnoser {
                     };
 
                     valuations.reset(tracking_clock, NotNan::new(0.0).unwrap());
-                    // println!("reset tracking clock, {}", history.len());
-                    // println!("{:?}", valuations);
+
                     let observation = state.expected.unwrap();
 
                     valuations.add_constraints(
@@ -354,6 +373,7 @@ impl Diagnoser {
         bound.into_inner() < 0.0
     }
 
+    /// Computes the frontier as described in the paper.
     fn frontier(&self, prefix: &Prefix) -> HashSet<ObservationIndex> {
         let mut frontier = HashSet::new();
         for observation in self
@@ -378,6 +398,7 @@ impl Diagnoser {
         frontier
     }
 
+    /// Checks whether the given set of observations is a prefix.
     fn is_prefix(&self, set: &im::HashSet<ObservationIndex>) -> bool {
         self.pending.iter().all(|observation| {
             set.iter().all(|other_observation| {
@@ -389,9 +410,13 @@ impl Diagnoser {
         })
     }
 
+    /// Advances the time of the diagnoser to the provided time.
+    ///
+    /// Applies the exploration procedure and maintains the invariants as described in the paper.
     fn advance_time(&mut self, time: NotNan<f64>) {
         self.time = time;
 
+        // First, reduce the prefixes to re-establish invariant (A).
         let mut work_set: IndexSet<Prefix> = self
             .prefixes
             .keys()
@@ -399,10 +424,8 @@ impl Diagnoser {
             .cloned()
             .collect();
 
-        // println!("initial: {:?}", work_set);
-
-        //let mut cache = HashMap::new();
-
+        // We need to extend all states for which the prefix does contain not yet marked observations
+        // in its frontier. This is what the `work_set` is for and what we do here.
         while let Some(prefix) = work_set.pop() {
             let frontier = self.frontier(&prefix);
             if !frontier.is_empty() {
@@ -433,6 +456,8 @@ impl Diagnoser {
                                 },
                             );
                         }
+
+                        // Explore the successor states.
                         for successor_state in self.explore_states(&states) {
                             let state_set = self.prefixes.get_mut(&successor).unwrap();
                             state_set
@@ -444,6 +469,7 @@ impl Diagnoser {
                     }
                 }
 
+                // This removes a prefix if all its observations are settled.
                 let is_stable = frontier
                     .iter()
                     .all(|observation| self.is_settled(self.observer.get(*observation)));
@@ -473,6 +499,7 @@ impl Diagnoser {
         mem::swap(&mut self.prefixes, &mut fresh_states);
     }
 
+    /// Returns the active prefixes.
     pub fn active_prefixes(&self) -> hashbrown::hash_map::Keys<Prefix, StateSet> {
         self.prefixes.keys()
     }
