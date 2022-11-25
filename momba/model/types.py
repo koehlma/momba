@@ -47,7 +47,7 @@ class Type(abc.ABC):
         """
         raise NotImplementedError()
 
-    def validate_in(self, scope: context.Scope) -> None:
+    def validate_in(self, scope: context.Scope) -> None:  # noqa: B027
         pass
 
 

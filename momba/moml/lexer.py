@@ -74,7 +74,7 @@ class TokenType(enum.Enum):
     COMP_LE = r"≤|<="
     COMP_GE = r"≥|>="
     COMP_LT = r"<"
-    COMP_GT = r">"    
+    COMP_GT = r">"
 
     COMP_EQ = r"==|="
     COMP_NEQ = r"≠|!="
