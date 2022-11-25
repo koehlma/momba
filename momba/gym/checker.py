@@ -26,7 +26,7 @@ from .dump_nn import dump_nn
 
 
 if t.TYPE_CHECKING:
-    import torch
+    import torch  # type: ignore
 
 
 HEADER = struct.Struct("!II")  # (num_features, num_actions)

@@ -10,7 +10,7 @@ import typing as t
 import json
 
 try:
-    import torch
+    import torch  # type: ignore
 except ImportError:
     raise ImportError(
         "Missing optional dependency `torch`.\n"

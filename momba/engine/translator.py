@@ -126,7 +126,7 @@ def _translate_identifier(identifier: str, ctx: _TranslationContext) -> _JSONObj
             "kind": "NAME",
             "identifier": ctx.declarations.globals_table[identifier].identifier,
         }
-    except KeyError or model.errors.UnboundIdentifierError:
+    except KeyError or model.errors.UnboundIdentifierError:  # type: ignore
         # We may run in this case due to *anonymous scopes* occuring, for
         # instance, as part of array constructors.
         return {"kind": "NAME", "identifier": identifier}

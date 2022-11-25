@@ -32,8 +32,8 @@ class MombaEnv(gym.Env):  # type: ignore
 
     explorer: abstract.Explorer
 
-    action_space: gym.Space  # type: ignore
-    observation_space: gym.Space  # type: ignore
+    action_space: gym.Space
+    observation_space: gym.Space
 
     renderer: t.Optional[Renderer]
 

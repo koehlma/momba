@@ -29,13 +29,11 @@ def check_singledispatch(
     recursive: bool = True,
     ignore: t.AbstractSet[type] = frozenset(),
 ) -> None:
-    if not hasattr(function, "registry") or not hasattr(
-        function.registry, "keys"  # type:ignore
-    ):
+    if not hasattr(function, "registry") or not hasattr(function.registry, "keys"):
         raise ValueError(f"{function} is not a singledispatch function")
     subclasses = set(get_subclasses(superclass, recursive=recursive))
     subclasses -= ignore
-    for cls in function.registry.keys():  # type: ignore
+    for cls in function.registry.keys():
         if not issubclass(cls, superclass):
             continue
         subclasses.discard(cls)

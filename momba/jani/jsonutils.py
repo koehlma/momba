@@ -9,10 +9,7 @@ import typing as t
 import dataclasses
 
 
-# XXX: ignore this type definition, mypy does not support recursive types
-JSON = t.Union[None, int, float, str, t.Sequence["JSON"], t.Mapping[str, "JSON"]]  # type: ignore
-
-_JANIMap = t.Dict[str, JSON]  # type: ignore
+JSON = t.Union[None, int, float, str, t.Sequence["JSON"], t.Mapping[str, "JSON"]]
 
 
 @dataclasses.dataclass(frozen=True)
