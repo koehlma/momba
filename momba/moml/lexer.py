@@ -64,17 +64,17 @@ class TokenType(enum.Enum):
 
     ARROW = r"→|->"
 
-    COMP_LE = r"≤|<="
-    COMP_GE = r"≥|>="
-    COMP_LT = r"<"
-    COMP_GT = r">"
-
     LOGIC_AND = r"∧|and"
     LOGIC_OR = r"∨|or"
     LOGIC_XOR = r"⊕|xor"
-    LOGIC_IMPLIES = r"⇒|==>"
+    LOGIC_IMPLIES = r"⇒|==>|=>"
     LOGIC_EQUIV = r"⇔|<=>"
     LOGIC_NOT = r"¬|not"
+
+    COMP_LE = r"≤|<="
+    COMP_GE = r"≥|>="
+    COMP_LT = r"<"
+    COMP_GT = r">"    
 
     COMP_EQ = r"==|="
     COMP_NEQ = r"≠|!="
