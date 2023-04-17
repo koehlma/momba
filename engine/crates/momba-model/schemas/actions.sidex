@@ -1,0 +1,38 @@
+//! Data structures for _actions_.
+
+import expressions::{Expression, Identifier}
+import types::Type
+
+/// An _action label_.
+wrapper ActionLabel: string
+
+/// An _action pattern_.
+variant ActionPattern {
+    /// The silent action pattern.
+    Silent,
+    /// A labeled action pattern.
+    Labeled: LabeledPattern,
+}
+
+record LabeledPattern {
+    label: ActionLabel,
+    arguments: [PatternArgument],
+}
+
+variant PatternArgument {
+    Read: PatternReadArgument,
+    Write: PatternWriteArgument,
+}
+
+record PatternReadArgument {
+    identifier: Identifier,
+}
+
+record PatternWriteArgument {
+    expression: Expression,
+}
+
+record ActionDeclaration {
+    label: ActionLabel,
+    arguments: [Type],
+}

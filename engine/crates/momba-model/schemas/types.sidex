@@ -1,0 +1,26 @@
+//! Data structures for _types_.
+
+import expressions::Expression
+
+variant Type {
+    Int: IntType,
+    Real: RealType,
+    Bool,
+    Clock,
+    Array: ArrayType,
+}
+
+record IntType {
+    lower_bound?: Expression,
+    upper_bound?: Expression,
+}
+
+record RealType {
+    lower_bound?: Expression,
+    upper_bound?: Expression,
+}
+
+record ArrayType {
+    #[rust(box)]
+    element_type: Type,
+}

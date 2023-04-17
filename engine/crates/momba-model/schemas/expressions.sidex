@@ -1,0 +1,122 @@
+//! Data structures for _expressions_.
+
+import values::Value
+
+wrapper Identifier: string
+
+variant Expression {
+    Constant: ConstantExpression,
+    Identifier: IdentifierExpression,
+    Conditional: ConditionalExpression,
+    Unary: UnaryExpression,
+    Binary: BinaryExpression,
+    Index: IndexExpression,
+    Array: ArrayExpression,
+    Comprehension: ComprehensionExpression,
+    Call: CallExpression,
+}
+
+record ConstantExpression {
+    value: Value
+}
+
+record IdentifierExpression {
+    identifier: Identifier,
+}
+
+record ConditionalExpression {
+    #[rust(box)]
+    condition: Expression,
+    #[rust(box)]
+    consequence: Expression,
+    #[rust(box)]
+    alternative: Expression,
+}
+
+record UnaryExpression {
+    operator: UnaryOperator,
+    #[rust(box)]
+    operand: Expression,
+}
+
+variant UnaryOperator {
+    // Boolean operators.
+    Not,
+    // Arithmetic operators.
+    Minus,
+    Floor,
+    Ceil,
+    Abs,
+    Sgn,
+    Trc,
+    // Trigonometric functions.
+    Sin,
+    Cos,
+    Tan,
+    Cot,
+    Sec,
+    Csc,
+    ArcSin,
+    ArcCos,
+    ArcTan,
+    ArcCot,
+    ArcSec,
+    ArcCsc,
+}
+
+record BinaryExpression {
+    operator: BinaryOperator,
+    #[rust(box)]
+    left: Expression,
+    #[rust(box)]
+    right: Expression,
+}
+
+variant BinaryOperator {
+    // Arithmetic operators.
+    Add,
+    Sub,
+    Mul,
+    FloorDiv,
+    RealDiv,
+    Mod,
+    Pow,
+    Log,
+    Min,
+    Max,
+    // Boolean operators.
+    And,
+    Or,
+    Xor,
+    // Comparison operators.
+    Le,
+    Lt,
+    Ge,
+    Gt,
+    Eq,
+    Ne,
+}
+
+record IndexExpression {
+    #[rust(box)]
+    slice: Expression,
+    #[rust(box)]
+    index: Expression,
+}
+
+record ArrayExpression {
+    elements: [Expression],
+}
+
+record ComprehensionExpression {
+    variable: Identifier,
+    #[rust(box)]
+    length: Expression,
+    #[rust(box)]
+    value: Expression,
+}
+
+record CallExpression {
+    function: Identifier,
+    arguments: [Expression],
+}

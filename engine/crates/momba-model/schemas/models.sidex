@@ -1,0 +1,43 @@
+//! Data structures for _models_.
+
+import actions::{ActionDeclaration, ActionLabel}
+import automata::{Automaton, AutomatonName}
+import constants::ConstantDeclaration
+import expressions::Identifier
+import variables::VariableDeclaration
+
+variant ModelType {
+    Lts,
+    Ctmc,
+    Dtmc,
+    Mdp,
+    Ma,
+    Ta,
+    Pta,
+}
+
+record Model {
+    typ: ModelType,
+    constants: [ConstantDeclaration],
+    globals: [VariableDeclaration],
+    actions: [ActionDeclaration],
+    automata: [Automaton]
+}
+
+wrapper LinkSlotName: string
+
+record Link {
+    slots: [LinkSlotName],
+    vector: [AutomatonName: LinkPattern],
+    result: LinkResult,
+}
+
+record LinkPattern {
+    label: ActionLabel,
+    arguments: [LinkSlotName],
+}
+
+variant LinkResult {
+    Silent,
+    Labeled: LinkPattern,
+}

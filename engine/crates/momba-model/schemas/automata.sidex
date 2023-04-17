@@ -1,0 +1,41 @@
+//! Data structures for _automata_.
+
+import expressions::{Expression, Identifier}
+import variables::{Assignment, VariableDeclaration}
+
+#[rust(derive(PartialEq, Eq, Hash))]
+wrapper AutomatonName: string
+
+wrapper LocationName: string
+
+record Automaton {
+    name: AutomatonName,
+    #[default]
+    locals: [VariableDeclaration],
+    #[default]
+    locations: [Location],
+    #[default]
+    edges: [Edge],
+}
+
+record Location {
+    name: LocationName,
+    initial: bool,
+    invariant?: Expression,
+    #[default]
+    assignments?: [Assignment],
+}
+
+record Edge {
+    location: LocationName,
+    rate?: Expression,
+    guard?: Expression,
+    #[default]
+    destinations: [Destination],
+}
+
+record Destination {
+    probability?: Expression,
+    #[default]
+    assignments: [Assignment],
+}

@@ -1,0 +1,17 @@
+//! Data structures for _variables_.
+
+import expressions::{Expression, Identifier}
+import types::Type
+
+record VariableDeclaration {
+    name: Identifier,
+    typ: Type,
+    transient?: bool,
+    initial?: Expression,
+}
+
+record Assignment {
+    name: Identifier,
+    value: Expression,
+    index?: idx,
+}
