@@ -1,5 +1,6 @@
 //! Data structures for _automata_.
 
+import actions::ActionPattern
 import expressions::{Expression, Identifier}
 import variables::{Assignment, VariableDeclaration}
 
@@ -12,6 +13,7 @@ record Automaton {
     name: AutomatonName,
     #[default]
     locals: [VariableDeclaration],
+    initial?: Expression,
     #[default]
     locations: [Location],
     #[default]
@@ -22,12 +24,12 @@ record Location {
     name: LocationName,
     initial: bool,
     invariant?: Expression,
-    #[default]
     assignments?: [Assignment],
 }
 
 record Edge {
-    location: LocationName,
+    source: LocationName,
+    action: ActionPattern,
     rate?: Expression,
     guard?: Expression,
     #[default]
@@ -35,7 +37,12 @@ record Edge {
 }
 
 record Destination {
+    target: LocationName,
     probability?: Expression,
     #[default]
     assignments: [Assignment],
+}
+
+record Instance {
+    automaton: AutomatonName
 }

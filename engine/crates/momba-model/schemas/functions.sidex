@@ -1,0 +1,16 @@
+import expressions::{Expression, Identifier}
+import types::Type
+
+wrapper FunctionName: string
+
+record FunctionDeclaration {
+    name: FunctionName,
+    parameters: [Parameter],
+    output: Type,
+    body: Expression,
+}
+
+record Parameter {
+    name: Identifier,
+    typ: Type,
+}

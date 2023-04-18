@@ -7,6 +7,7 @@ import types::Type
 wrapper ActionLabel: string
 
 /// An _action pattern_.
+#[json(tag = "kind")]
 variant ActionPattern {
     /// The silent action pattern.
     Silent,
@@ -19,6 +20,7 @@ record LabeledPattern {
     arguments: [PatternArgument],
 }
 
+#[json(tag = "kind")]
 variant PatternArgument {
     Read: PatternReadArgument,
     Write: PatternWriteArgument,
@@ -29,7 +31,7 @@ record PatternReadArgument {
 }
 
 record PatternWriteArgument {
-    expression: Expression,
+    value: Expression,
 }
 
 record ActionDeclaration {

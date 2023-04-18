@@ -1,11 +1,13 @@
 //! Data structures for _models_.
 
 import actions::{ActionDeclaration, ActionLabel}
-import automata::{Automaton, AutomatonName}
+import automata::{Automaton, AutomatonName, Instance}
 import constants::ConstantDeclaration
-import expressions::Identifier
+import expressions::{Expression, Identifier}
+import functions::FunctionDeclaration
 import variables::VariableDeclaration
 
+#[json(tagged = externally)]
 variant ModelType {
     Lts,
     Ctmc,
@@ -20,15 +22,22 @@ record Model {
     typ: ModelType,
     constants: [ConstantDeclaration],
     globals: [VariableDeclaration],
+    initial?: Expression,
+    functions: [FunctionDeclaration],
     actions: [ActionDeclaration],
-    automata: [Automaton]
+    automata: [Automaton],
+    instances: [Instance],
+    links: [Link],
 }
+
+#[rust(derive(PartialEq, Eq, Hash))]
+wrapper InstanceIdx: idx
 
 wrapper LinkSlotName: string
 
 record Link {
     slots: [LinkSlotName],
-    vector: [AutomatonName: LinkPattern],
+    vector: [InstanceIdx: LinkPattern],
     result: LinkResult,
 }
 
@@ -37,6 +46,7 @@ record LinkPattern {
     arguments: [LinkSlotName],
 }
 
+#[json(tag = "kind")]
 variant LinkResult {
     Silent,
     Labeled: LinkPattern,

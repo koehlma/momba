@@ -1,9 +1,11 @@
 //! Data structures for _expressions_.
 
+import functions::FunctionName
 import values::Value
 
 wrapper Identifier: string
 
+#[json(tag = "kind")]
 variant Expression {
     Constant: ConstantExpression,
     Identifier: IdentifierExpression,
@@ -39,6 +41,7 @@ record UnaryExpression {
     operand: Expression,
 }
 
+#[json(tagged = externally)]
 variant UnaryOperator {
     // Boolean operators.
     Not,
@@ -72,6 +75,7 @@ record BinaryExpression {
     right: Expression,
 }
 
+#[json(tagged = externally)]
 variant BinaryOperator {
     // Arithmetic operators.
     Add,
@@ -88,6 +92,8 @@ variant BinaryOperator {
     And,
     Or,
     Xor,
+    Equiv,
+    Imply,
     // Comparison operators.
     Le,
     Lt,
@@ -117,6 +123,6 @@ record ComprehensionExpression {
 }
 
 record CallExpression {
-    function: Identifier,
+    function: FunctionName,
     arguments: [Expression],
 }
