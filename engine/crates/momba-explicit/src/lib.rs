@@ -157,10 +157,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut state_stack = vec![compiled.variables.initial_state.clone()];
 
-    let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
+    //let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
 
-    let mut visited =
-        HashSet::<Vec<u8>, core::hash::BuildHasherDefault<fxhash::FxHasher>>::with_hasher(s);
+    let mut visited = HashSet::<Vec<u8>>::new();
     for state in &state_stack {
         visited.insert(state.clone());
     }
