@@ -6,7 +6,7 @@ use compiler::compiled::{
     ActionIdx, CompiledLinkPattern, CompiledModel, DestinationIdx, EdgeIdx, InstanceIdx,
 };
 use datatypes::idxvec::new_idx_type;
-use hashbrown::HashSet;
+use hashbrown::{hash_map::DefaultHashBuilder, HashSet};
 use momba_model::models::Model;
 use params::Params;
 
@@ -26,6 +26,7 @@ pub(crate) mod datatypes;
 //pub mod engine;
 pub mod params;
 //pub mod simulator;
+pub mod state_allocator;
 pub mod values;
 pub mod vm;
 
@@ -156,7 +157,10 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut state_stack = vec![compiled.variables.initial_state.clone()];
 
-    let mut visited = HashSet::new();
+    let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
+
+    let mut visited =
+        HashSet::<Vec<u8>, core::hash::BuildHasherDefault<fxhash::FxHasher>>::with_hasher(s);
     for state in &state_stack {
         visited.insert(state.clone());
     }
@@ -166,6 +170,10 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut enabled_sync_edges = Vec::new();
     let mut instance_sync_edges = IdxVec::<InstanceIdx, _>::new();
+
+    // let states = state_allocator::StateStore::<u8>::new();
+
+    // let page =
 
     while let Some(state) = state_stack.pop() {
         if visited.len() % (1 << 16) == 0 {
