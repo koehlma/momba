@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-use std::{error::Error, ops::Range};
+use std::{error::Error, marker::PhantomData, ops::Range};
 
 use bumpalo::Bump;
 use compiler::compiled::{
@@ -184,10 +184,16 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     // let page =
 
+    let mut queue_pressure = 0;
+
+    let mut dest_product = CartesianProductReusable::new();
+
     while let Some(state) = state_stack.pop() {
-        if visited.len() % (1 << 16) == 0 {
-            println!("Visited: {}", visited.len());
-        }
+        // if visited.len() % (1 << 18) == 0 {
+        //     println!("Visited: {}", visited.len());
+        // }
+
+        queue_pressure = queue_pressure.max(state_stack.len());
 
         // println!("State: {:?}", state);
 
@@ -343,89 +349,98 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
         for transition in &transitions {
             let items = &transition_items[transition.items.clone()];
-            let product = CartesianProduct::new(
+            // let product = CartesianProduct::new(
+            //     items,
+            //     |item| {
+            //         let instance = &compiled.instances[item.instance_idx];
+            //         let edge = &instance.edges[item.edge_idx];
+            //         instance.destinations(edge)
+            //     },
+            //     |_, destination| Some(destination),
+            // );
+            let mut destinations_counter = 0;
+            dest_product.produce(
                 items,
                 |item| {
                     let instance = &compiled.instances[item.instance_idx];
                     let edge = &instance.edges[item.edge_idx];
                     instance.destinations(edge)
                 },
-                |_, destination| Some(destination),
-            );
-            let mut destinations_counter = 0;
-            product.produce(|product| {
-                //let mut probability = 1.0;
-                unsafe { (&mut *next_state_bump).copy_from_slice(state) }
-                let dst_state_mut =
-                    BitSlice::<StateLayout>::from_slice_mut(unsafe { (&mut *next_state_bump) });
-                // println!("Destination:");
+                |_, destination| Some(destination.idx),
+                |product| {
+                    //let mut probability = 1.0;
+                    unsafe { (&mut *next_state_bump).copy_from_slice(state) }
+                    let dst_state_mut =
+                        BitSlice::<StateLayout>::from_slice_mut(unsafe { (&mut *next_state_bump) });
+                    // println!("Destination:");
 
-                // println!("  Source: {}", compiled.fmt_state(&env.state));
-                // println!(
-                //     "  Locations: {}",
-                //     compiled
-                //         .instances
-                //         .indexed_iter()
-                //         .map(|(idx, instance)| {
-                //             let loc = instance.load_location(&env.state);
-
-                //             format!(
-                //                 "{} = {:?} ({})",
-                //                 idx.as_usize(),
-                //                 instance.locations[loc].name,
-                //                 loc.as_usize()
-                //             )
-                //         })
-                //         .collect::<Vec<_>>()
-                //         .join("; ")
-                // );
-                for (item, destination) in product.items() {
-                    let instance = &compiled.instances[item.instance_idx];
-                    let edge = &instance.edges[item.edge_idx];
-                    let destination = &instance.destinations[destination.idx];
-                    //  probability *= destination.probability.evaluate(&mut env);
-                    for assignment in &instance.assignments[destination.assignments.clone()] {
-                        assignment.execute(dst_state_mut, &mut env);
-                    }
+                    // println!("  Source: {}", compiled.fmt_state(&env.state));
                     // println!(
-                    //     "  Destination: {}:{}({}):{}",
-                    //     item.instance_idx.as_usize(),
-                    //     item.edge_idx.as_usize(),
-                    //     edge.original_idx,
-                    //     destination.idx.as_usize()
+                    //     "  Locations: {}",
+                    //     compiled
+                    //         .instances
+                    //         .indexed_iter()
+                    //         .map(|(idx, instance)| {
+                    //             let loc = instance.load_location(&env.state);
+
+                    //             format!(
+                    //                 "{} = {:?} ({})",
+                    //                 idx.as_usize(),
+                    //                 instance.locations[loc].name,
+                    //                 loc.as_usize()
+                    //             )
+                    //         })
+                    //         .collect::<Vec<_>>()
+                    //         .join("; ")
                     // );
-                    instance.store_location(dst_state_mut, destination.target);
-                }
+                    for (item, destination_idx) in product.items() {
+                        let instance = &compiled.instances[item.instance_idx];
+                        let edge = &instance.edges[item.edge_idx];
+                        let destination = &instance.destinations[*destination_idx];
+                        //  probability *= destination.probability.evaluate(&mut env);
+                        for assignment in &instance.assignments[destination.assignments.clone()] {
+                            assignment.execute(dst_state_mut, &mut env);
+                        }
+                        // println!(
+                        //     "  Destination: {}:{}({}):{}",
+                        //     item.instance_idx.as_usize(),
+                        //     item.edge_idx.as_usize(),
+                        //     edge.original_idx,
+                        //     destination.idx.as_usize()
+                        // );
+                        instance.store_location(dst_state_mut, destination.target);
+                    }
 
-                // println!("  Target: {}", compiled.fmt_state(dst_state_mut));
-                // println!(
-                //     "  Locations: {}",
-                //     compiled
-                //         .instances
-                //         .indexed_iter()
-                //         .map(|(idx, instance)| {
-                //             let loc = instance.load_location(dst_state_mut);
+                    // println!("  Target: {}", compiled.fmt_state(dst_state_mut));
+                    // println!(
+                    //     "  Locations: {}",
+                    //     compiled
+                    //         .instances
+                    //         .indexed_iter()
+                    //         .map(|(idx, instance)| {
+                    //             let loc = instance.load_location(dst_state_mut);
 
-                //             format!(
-                //                 "{} = {:?} ({})",
-                //                 idx.as_usize(),
-                //                 instance.locations[loc].name,
-                //                 loc.as_usize()
-                //             )
-                //         })
-                //         .collect::<Vec<_>>()
-                //         .join("; ")
-                // );
+                    //             format!(
+                    //                 "{} = {:?} ({})",
+                    //                 idx.as_usize(),
+                    //                 instance.locations[loc].name,
+                    //                 loc.as_usize()
+                    //             )
+                    //         })
+                    //         .collect::<Vec<_>>()
+                    //         .join("; ")
+                    // );
 
-                drop(dst_state_mut);
+                    drop(dst_state_mut);
 
-                if visited.insert(unsafe { &*next_state_bump }) {
-                    state_stack.push(unsafe { &*next_state_bump });
-                    next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
-                    // println!("Pushed!");
-                }
-                destinations_counter += 1;
-            });
+                    if visited.insert(unsafe { &*next_state_bump }) {
+                        state_stack.push(unsafe { &*next_state_bump });
+                        next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
+                        // println!("Pushed!");
+                    }
+                    destinations_counter += 1;
+                },
+            );
             //println!("Destinations: {}", destinations_counter);
         }
     }
@@ -433,6 +448,7 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
     // println!("{:?}", enabled_sync_edges);
     // println!("{:?}", instance_sync_edges);
 
+    println!("Queue Pressure: {}", queue_pressure);
     println!("States: {}", visited.len());
 
     std::process::exit(0);
@@ -502,6 +518,88 @@ impl<'p, K, I, T: 'p, R: Fn(&'p K) -> &'p [T], S: Fn(&'p K, &'p T) -> Option<I>>
                     {
                         while let [handle, remaining_handles @ ..] = handles {
                             if let Some(item) = (self.select)(key, handle) {
+                                self.stack
+                                    .push((remaining_handles, key, item, remaining_keys));
+                                break 'outer;
+                            }
+                            handles = remaining_handles;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+pub struct CartesianProductReusable<K, I, T> {
+    stack: Vec<(*const [T], *const K, I, *const [K])>,
+}
+
+pub struct Items<'prod, 'p, K, I, T> {
+    product: &'prod CartesianProductReusable<K, I, T>,
+    _phantom_data: PhantomData<&'p K>,
+}
+
+impl<'prod, 'p, K, I, T> Items<'prod, 'p, K, I, T> {
+    pub fn items(&self) -> impl Iterator<Item = (&'p K, &I)> {
+        self.product
+            .stack
+            .iter()
+            .map(|(_, key, item, _)| (unsafe { &**key }, item))
+    }
+}
+
+impl<K, I, T> CartesianProductReusable<K, I, T> {
+    pub fn new() -> Self {
+        Self { stack: Vec::new() }
+    }
+
+    pub fn produce<'p, R: Fn(&'p K) -> &'p [T], S: Fn(&'p K, &'p T) -> Option<I>>(
+        &mut self,
+        keys: &'p [K],
+        resolve: R,
+        select: S,
+        mut emit: impl FnMut(Items<'_, 'p, K, I, T>),
+    ) where
+        T: 'p,
+    {
+        self.stack.clear();
+        let [first_key, remaining_keys @ ..]  = keys else {
+            return;
+        };
+        let mut handles = resolve(first_key);
+        while let [first_handle, remaining_handles @ ..] = handles {
+            if let Some(item) = select(first_key, first_handle) {
+                self.stack
+                    .push((remaining_handles, first_key, item, remaining_keys));
+            }
+            handles = remaining_handles;
+        }
+        'produce: while let Some((_, _, _, remaining_keys)) = self.stack.last() {
+            let remaining_keys = unsafe { &**remaining_keys };
+            match remaining_keys {
+                [next_key, remaining_keys @ ..] => {
+                    let mut handles = (resolve)(next_key);
+                    while let [handle, remaining_handles @ ..] = handles {
+                        if let Some(item) = (select)(next_key, handle) {
+                            self.stack
+                                .push((remaining_handles, next_key, item, remaining_keys));
+                            continue 'produce;
+                        }
+                        handles = remaining_handles;
+                    }
+                    return;
+                }
+                [] => {
+                    emit(Items {
+                        product: self,
+                        _phantom_data: PhantomData,
+                    });
+                    'outer: while let Some((handles, key, _, remaining_keys)) = self.stack.pop() {
+                        let mut handles = unsafe { &*handles };
+                        let key = unsafe { &*key };
+                        while let [handle, remaining_handles @ ..] = handles {
+                            if let Some(item) = (select)(key, handle) {
                                 self.stack
                                     .push((remaining_handles, key, item, remaining_keys));
                                 break 'outer;
