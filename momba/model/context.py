@@ -290,6 +290,10 @@ class Scope:
             )
         )
 
+    @property
+    def functions(self) -> t.Iterable[functions.FunctionDefinition]:
+        return self._functions.values()
+
     def create_child_scope(self) -> Scope:
         """
         Creates a child scope.

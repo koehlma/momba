@@ -5,4 +5,24 @@ sidex::include_bundle! {
     momba_model as generated
 }
 
+use std::fmt;
+
 pub use generated::*;
+
+impl From<String> for expressions::Identifier {
+    fn from(value: String) -> Self {
+        expressions::Identifier(value)
+    }
+}
+
+impl fmt::Display for expressions::Identifier {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl models::InstanceIdx {
+    pub fn as_usize(&self) -> usize {
+        self.0
+    }
+}

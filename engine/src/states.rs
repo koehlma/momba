@@ -1,3 +1,4 @@
+use std::hash::Hash;
 use std::sync::{Arc, RwLock};
 
 use pyo3::{PyObject, Python};
