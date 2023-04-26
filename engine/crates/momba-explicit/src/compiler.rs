@@ -7,10 +7,7 @@ use crate::{
     datatypes::idxvec::{new_idx_type, Idx, IdxVec},
     params::Params,
     values::{
-        layout::{
-            Addr, AlignedBitLayout, DenseBitLayout, Field, FieldIdx, FieldOffsets, StructLayout,
-            ValueLayout,
-        },
+        layout::{Addr, DenseBitLayout, Field, FieldIdx, FieldOffsets, StructLayout, ValueLayout},
         memory::{bits::BitSlice, Store},
         types::{HasType, IntTy, TypeCtx, TypeError, ValueTy, ValueTyKind, WordTy},
         FromWord, IntoWord, Word,
@@ -188,7 +185,7 @@ pub(crate) struct CompiledConstants {
     values: IdxVec<ConstantIdx, Cached<CompileResult<Constant>>>,
 }
 
-pub type StateLayout = AlignedBitLayout;
+pub type StateLayout = DenseBitLayout;
 
 pub struct CompiledVariables {
     pub(crate) global_scope: Scope,

@@ -2,6 +2,7 @@
 
 use std::{error::Error, ops::Range};
 
+use bumpalo::Bump;
 use compiler::compiled::{
     ActionIdx, CompiledLinkPattern, CompiledModel, DestinationIdx, EdgeIdx, InstanceIdx,
 };
@@ -155,13 +156,22 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
         )
     );
 
-    let mut state_stack = vec![compiled.variables.initial_state.clone()];
+    let bump = Bump::new();
+
+    let state_size = compiled.variables.initial_state.len();
+
+    let initial_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
+    initial_state_bump.copy_from_slice(&compiled.variables.initial_state);
+
+    let mut next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8) as *mut [u8];
+
+    let mut state_stack = vec![&*initial_state_bump];
 
     //let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
 
-    let mut visited = HashSet::<Vec<u8>>::new();
+    let mut visited = HashSet::<&[u8]>::new();
     for state in &state_stack {
-        visited.insert(state.clone());
+        visited.insert(*state);
     }
 
     let mut transition_items = IdxVec::new();
@@ -169,6 +179,8 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut enabled_sync_edges = Vec::new();
     let mut instance_sync_edges = IdxVec::<InstanceIdx, _>::new();
+
+    let mut dummy_state = bump.alloc_slice_fill_copy(state_size, 0u8);
 
     // let states = state_allocator::StateStore::<u8>::new();
 
@@ -345,8 +357,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             let mut destinations_counter = 0;
             product.produce(|product| {
                 //let mut probability = 1.0;
-                let mut dst_state = state.clone();
-                let dst_state_mut = BitSlice::<StateLayout>::from_slice_mut(&mut dst_state);
+                unsafe { &mut *next_state_bump }.clone_from_slice(state);
+                let dst_state_mut =
+                    BitSlice::<StateLayout>::from_slice_mut(unsafe { &mut *next_state_bump });
                 // println!("Destination:");
 
                 // println!("  Source: {}", compiled.fmt_state(&env.state));
@@ -406,9 +419,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
                 //         .join("; ")
                 // );
 
-                if visited.insert(dst_state.clone()) {
+                if visited.insert(unsafe { &*next_state_bump }) {
                     // println!("Pushed!");
-                    state_stack.push(dst_state);
+                    next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
                 }
                 destinations_counter += 1;
             });
