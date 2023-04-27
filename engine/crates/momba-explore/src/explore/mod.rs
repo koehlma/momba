@@ -1,14 +1,14 @@
 //! Algorithms and data structures for state space exploration.
 
-use std::marker::PhantomData;
 
 use serde::{Deserialize, Serialize};
 
 use itertools::Itertools;
 
+//use std::marker::PhantomData;
 use crate::{
+    //time::Time,
     model::{EdgeReference, LabelIndex, Value},
-    time::Time,
 };
 
 use super::model;
@@ -182,7 +182,7 @@ pub struct DetachedTransition<T: time::Time> {
 
 impl<T: time::Time> DetachedTransition<T> {
     /// Attaches the transition to the lifetime of the explorer.
-    pub fn attach(self, explorer: &Explorer<T>) -> Transition<T> {
+    pub fn attach(self, _explorer: &Explorer<T>) -> Transition<T> {
         todo!()
     }
 
@@ -436,8 +436,8 @@ impl<T: time::Time> Explorer<T> {
                                     observations: edge
                                         .observations
                                         .iter()
-                                        .map(|observation| {
-                                            let edge_env = state.edge_env(&[]);
+                                        .map(|_observation| {
+                                            let _edge_env = state.edge_env(&[]);
                                             todo!("observations on silent edges are not supported yet");
                                         })
                                         .collect(),

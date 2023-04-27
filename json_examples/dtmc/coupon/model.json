@@ -1,0 +1,1343 @@
+{
+  "declarations": {
+    "global_variables": {
+      "local_0_main_draw1": {
+        "type": "INT64"
+      },
+      "local_0_main_coup4": {
+        "type": "BOOL"
+      },
+      "local_0_main_draw0": {
+        "type": "INT64"
+      },
+      "local_0_main_coup3": {
+        "type": "BOOL"
+      },
+      "local_0_main_coup2": {
+        "type": "BOOL"
+      },
+      "local_0_main_coup1": {
+        "type": "BOOL"
+      },
+      "local_0_main_coup0": {
+        "type": "BOOL"
+      }
+    },
+    "transient_variables": {
+      "global_numberDraws": {
+        "kind": "CONSTANT",
+        "value": 0
+      },
+      "global__ret0_": {
+        "kind": "CONSTANT",
+        "value": false
+      }
+    },
+    "clock_variables": [],
+    "action_labels": {}
+  },
+  "automata": {
+    "0_main": {
+      "locations": {
+        "0_l5": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 13,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      }
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      }
+                    }
+                  ]
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "6_l7",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 14,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "OR",
+                    "operands": [
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw0"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 0
+                        }
+                      },
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw1"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 0
+                        }
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "10_l6",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "1_l13": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 1,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "4_l12",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup3"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "2_l14": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 0,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "13_l0",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup4"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "3_l1": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 18,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "3_l1",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "4_l12": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 2,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 4
+                      }
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 4
+                      }
+                    }
+                  ]
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "2_l14",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 3,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "OR",
+                    "operands": [
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw0"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 4
+                        }
+                      },
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw1"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 4
+                        }
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "13_l0",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "5_l11": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 4,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "14_l10",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup2"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "6_l7": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 10,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "10_l6",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "7_l2": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 17,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "9_l3",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "9_l3",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 1
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "9_l3",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 2
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "9_l3",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 3
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "9_l3",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 4
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "8_l8": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 8,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 2
+                      }
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 2
+                      }
+                    }
+                  ]
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "5_l11",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 9,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "OR",
+                    "operands": [
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw0"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 2
+                        }
+                      },
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw1"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 2
+                        }
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "14_l10",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "9_l3": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 16,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "12_l4",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 0
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "12_l4",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 1
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "12_l4",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 2
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "12_l4",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 3
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                },
+                {
+                  "location": "12_l4",
+                  "probability": {
+                    "kind": "BINARY",
+                    "operator": "REAL_DIV",
+                    "left": {
+                      "kind": "CONSTANT",
+                      "value": 1
+                    },
+                    "right": {
+                      "kind": "CONSTANT",
+                      "value": 5
+                    }
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 4
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "10_l6": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 11,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 1
+                      }
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 1
+                      }
+                    }
+                  ]
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "11_l9",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 12,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "OR",
+                    "operands": [
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw0"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 1
+                        }
+                      },
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw1"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 1
+                        }
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "8_l8",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "11_l9": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 7,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "8_l8",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup1"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": true
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "12_l4": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 15,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "CONSTANT",
+                  "value": true
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "0_l5",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [
+                    {
+                      "target": {
+                        "kind": "NAME",
+                        "identifier": "global_numberDraws"
+                      },
+                      "value": {
+                        "kind": "CONSTANT",
+                        "value": 1
+                      },
+                      "index": 0
+                    }
+                  ],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "13_l0": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 19,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "AND",
+                    "operands": [
+                      {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup4"
+                      },
+                      {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup1"
+                      },
+                      {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup2"
+                      },
+                      {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup3"
+                      },
+                      {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_coup0"
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "7_l2",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 20,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "UNARY",
+                    "operator": "NOT",
+                    "operand": {
+                      "kind": "BOOLEAN",
+                      "operator": "AND",
+                      "operands": [
+                        {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_coup4"
+                        },
+                        {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_coup1"
+                        },
+                        {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_coup2"
+                        },
+                        {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_coup3"
+                        },
+                        {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_coup0"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "3_l1",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        },
+        "14_l10": {
+          "invariant": [],
+          "edges": [
+            {
+              "number": 5,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "BOOLEAN",
+                  "operator": "OR",
+                  "operands": [
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw0"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 3
+                      }
+                    },
+                    {
+                      "kind": "COMPARISON",
+                      "operator": "EQ",
+                      "left": {
+                        "kind": "NAME",
+                        "identifier": "local_0_main_draw1"
+                      },
+                      "right": {
+                        "kind": "CONSTANT",
+                        "value": 3
+                      }
+                    }
+                  ]
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "1_l13",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            },
+            {
+              "number": 6,
+              "pattern": {
+                "kind": "SILENT"
+              },
+              "guard": {
+                "boolean_condition": {
+                  "kind": "UNARY",
+                  "operator": "NOT",
+                  "operand": {
+                    "kind": "BOOLEAN",
+                    "operator": "OR",
+                    "operands": [
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw0"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 3
+                        }
+                      },
+                      {
+                        "kind": "COMPARISON",
+                        "operator": "EQ",
+                        "left": {
+                          "kind": "NAME",
+                          "identifier": "local_0_main_draw1"
+                        },
+                        "right": {
+                          "kind": "CONSTANT",
+                          "value": 3
+                        }
+                      }
+                    ]
+                  }
+                },
+                "clock_constraints": []
+              },
+              "destinations": [
+                {
+                  "location": "4_l12",
+                  "probability": {
+                    "kind": "CONSTANT",
+                    "value": 1.0
+                  },
+                  "assignments": [],
+                  "reset": []
+                }
+              ],
+              "observations": []
+            }
+          ]
+        }
+      }
+    }
+  },
+  "links": [],
+  "initial_states": [
+    {
+      "locations": {
+        "0_main": "13_l0"
+      },
+      "values": {
+        "local_0_main_draw1": 0,
+        "local_0_main_coup4": false,
+        "local_0_main_draw0": 0,
+        "local_0_main_coup3": false,
+        "local_0_main_coup2": false,
+        "local_0_main_coup1": false,
+        "local_0_main_coup0": false
+      },
+      "zone": []
+    }
+  ]
+}

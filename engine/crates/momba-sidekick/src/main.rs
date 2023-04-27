@@ -1,14 +1,17 @@
 use hashbrown::HashSet;
-use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
 use std::time::Instant;
+use std::{env, fs::File};
 
 use clap::Clap;
 
-use clock_zones::Zone;
+use momba_explore::{model::Expression, time::Float64Zone, *};
 
-use momba_explore::*;
+mod nn_oracle;
+mod simulate;
+use crate::nn_oracle::*;
+use crate::simulate::{StatisticalSimulator, SimulationOutput};
 
 #[derive(Clap)]
 #[clap(
@@ -27,6 +30,12 @@ enum Command {
     Count(Count),
     #[clap(about = "Simulates a random run of the model")]
     Simulate(Simulate),
+    #[clap(about = "Runs SMC with an uniformn scheduler")]
+    SMC(SMC),
+    #[clap(about = "Runs SPRT with an uniformn scheduler")]
+    SPRT(SPRT),
+    #[clap(about = "Runs SPRT with an uniformn scheduler")]
+    NN(NN),
 }
 
 #[derive(Clap)]
@@ -39,6 +48,29 @@ struct Count {
 struct Simulate {
     #[clap(about = "A MombaCR model")]
     model: String,
+    property: String,
+}
+
+#[derive(Clap)]
+struct SMC {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+    property: String,
+}
+
+#[derive(Clap)]
+struct SPRT {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+    property: String,
+}
+
+#[derive(Clap)]
+struct NN {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+    property: String,
+    nn: String,
 }
 
 fn count_states(count: Count) {
@@ -55,15 +87,6 @@ fn count_states(count: Count) {
 
     let mut visited: HashSet<State<_>> = HashSet::new();
     let mut pending: Vec<_> = explorer.initial_states();
-
-    // for state in pending.iter() {
-    //     println!("{:?}", state);
-    //     // let mut valuations = state.valuations().clone();
-    //     // println!("{:?}", valuations);
-    //     // valuations.future();
-    //     // println!("{:?}", valuations);
-    //     visited.insert(state.clone());
-    // }
 
     let mut count_transitions = 0;
 
@@ -117,17 +140,136 @@ fn random_walk(walk: Simulate) {
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
+    let _prop_path = Path::new(&walk.property);
+    let _prop_file = File::open(_prop_path).expect("Unable to open model file!");
+    let expr: Expression = serde_json::from_reader(BufReader::new(_prop_file)).unwrap();
+    let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    // let simulator = simulate::Simulator::new(simulate::UniformOracle::new());
+    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
-    // simulator.simulate(&explorer, 100);
+    let stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal)
+        .max_steps(99)
+        .with_eps(0.01);
+    let start = Instant::now();
+    let score = stat_checker.run_parallel_smc();
+    let duration = start.elapsed();
+    println!("Time elapsed is: {:?}. Score:{:?}", duration, score);
+}
+
+fn smc(walks: SMC) {
+    let model_path = Path::new(&walks.model);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
+    let prop_path = Path::new(&walks.property);
+    let prop_file = File::open(prop_path).expect("Unable to open model file!");
+
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+
+    let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
+    stat_checker = stat_checker. max_steps(99).with_delta(0.05).with_eps(0.05);
+    let score = stat_checker.run_smc();
+
+    println!("Score: {}", score);
+}
+
+fn sprt(walks: SPRT) {
+    let model_path = Path::new(&walks.model);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
+    let prop_path = Path::new(&walks.property);
+    let prop_file = File::open(prop_path).expect("Unable to open model file!");
+
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+
+    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+
+    // build the new structure smc
+    // and call the method check.
+    // better_smc(&mut state_iterator, closure_is_goal, None, None);
+
+    let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
+    stat_checker = stat_checker
+        .with_x(0.20)
+        .max_steps(999)
+        .with_ind_reg(0.05)
+        .with_alpha(0.1)
+        .with_beta(0.1);
+    let testt = stat_checker.run_sprt();
+    println!("Score: {:?}", testt);
+}
+
+fn _print_type_of<T>(_: &T) {
+    println!("TYPE OF: {}", std::any::type_name::<T>())
+}
+
+fn check_nn(nn_command: NN) {
+    let model_path = Path::new(&nn_command.model);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
+    let prop_path = Path::new(&nn_command.property);
+    let prop_file = File::open(prop_path).expect("Unable to open model file!");
+
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let comp_expr_v2 = explorer.compiled_network.compile_global_expression(&expr);
+    let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+
+    let nn_path = Path::new(&nn_command.nn);
+    let nn_file = File::open(nn_path).expect("Unable to open model file!");
+    let readed_nn: nn_oracle::NeuralNetwork =
+        serde_json::from_reader(BufReader::new(nn_file)).expect("Error while reading model file!");
+    let (model, input_size) = build_nn(readed_nn);
+
+    let goal_v2 = move |s: &&State<Float64Zone>| s.evaluate(&comp_expr_v2).unwrap_bool();
+    let goal = move |s: &State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+
+    let mut simulator = NnSimulator::new(model, &explorer, goal, input_size);
+    //let stat_checker = StatisticalSimulator::new(&mut simulator, goal_v2);
+    
+    let start = Instant::now();
+    let n_runs = 100;
+    let max_steps = 99;
+    println!("Runs: {:?}. Max Steps; {:?}", n_runs as i64, max_steps);
+    let mut score: i64 = 0;
+    for _ in 0..n_runs as i64 {
+        let v = simulator.simulate();
+        match v {
+            SimulationOutput::GoalReached => score += 1,
+            SimulationOutput::MaxSteps => {},
+            SimulationOutput::NoStatesAvailable => {
+                println!("No States Available, something went wrong...");
+            }
+        }
+    }
+    let duration = start.elapsed();
+    println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
 }
 
 fn main() {
+    env::set_var("RUST_BACKTRACE", "1");
     let arguments = Arguments::parse();
-
+    /*The explorer should be in the main, then, pass a reference of the explorer in each case. */
     match arguments.command {
         Command::Count(count) => count_states(count),
         Command::Simulate(walk) => random_walk(walk),
+        Command::SMC(walks) => smc(walks),
+        Command::SPRT(walks) => sprt(walks),
+        Command::NN(nn_command) => check_nn(nn_command),
     }
 }

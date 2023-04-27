@@ -4,7 +4,11 @@ use hashbrown::HashSet;
 
 use momba_explore::State;
 
-use crate::{states, time, CompiledExpression};
+use crate::{
+    states,
+    time::{self},
+    CompiledExpression,
+};
 
 #[derive(Clone)]
 pub struct Explorer<T: time::Time> {
@@ -67,12 +71,12 @@ where
 
         let mut count_transitions = 0;
 
-        let start = Instant::now();
+        let _start = Instant::now();
 
-        let mut processed = 0;
+        let mut _processed = 0;
 
         while let Some(state) = pending.pop() {
-            processed += 1;
+            _processed += 1;
 
             // if processed % 20000 == 0 {
             //     let duration = start.elapsed();
