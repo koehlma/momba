@@ -95,7 +95,7 @@ where
                 };
             }
         }
-        let transitions:Vec<&Transition<T>> = transitions
+        let transitions: Vec<&Transition<T>> = transitions
             .iter()
             .enumerate()
             .filter(|(i, _)| remove_trans_idxs.contains(i))
@@ -416,35 +416,7 @@ where
             .successor(&self.state, &transition, &destination);
         return StepOutput::StepTaken;
     }
-
-    // pub fn action_to_transition(&self, action: i64) -> Option<&Transition<T>> {
-    //     let mut rng = rand::thread_rng();
-    //     if self.has_terminated() {
-    //         if self.has_reached_goal() {
-    //             println!("Goal reached");
-    //             return None;
-    //         } else {
-    //             println!("Goal not reached");
-    //             return None;
-    //         }
-    //     }
-    //     let all_transitions = self.context.explorer.transitions(&self.state);
-    //     let selected_transitions = self
-    //         .context
-    //         .action_resolver
-    //         .resolve(&all_transitions, action);
-    //     if selected_transitions.is_empty() {
-    //         println!("invalid action");
-    //         return None;
-    //     } else {
-    //         if selected_transitions.len() > 1 {
-    //             println!("Uncontrolled nondeterminism has been resolved uniformly.")
-    //         }
-    //         let transition = selected_transitions.into_iter().choose(&mut rng).unwrap();
-    //         Some(transition)
-    //     }
-    // }
-
+    
     /*
     Transform the state into a vectorial representation using the local and
     global variables of the model. Then, cast the vector into a tch Tensor.

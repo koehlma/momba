@@ -342,8 +342,6 @@ where
         result.unwrap()
     }
 
-    //For parallel sprt, its more complicated, because sprt only tries to simulate a
-    //minimum quantity of times.
 }
 
 fn parallel_simulation<S, G>(mut sim: S, goal: G, max_steps: i64) -> SimulationOutput
