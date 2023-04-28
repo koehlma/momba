@@ -39,6 +39,25 @@ impl<L> BitSlice<L> {
     }
 }
 
+impl<L> BitSlice<L>
+where
+    L: ValueLayout<MemUnit = NumBits>,
+{
+    #[inline(always)]
+    pub fn load_signed_int_bits<const BITS: usize>(&self, addr: Addr<L>, offset: i64) -> Word {
+        let start = usize::from(addr);
+        let end = start + BITS;
+        (self.slice[start..end].load::<i64>() + offset).into_word()
+    }
+
+    #[inline(always)]
+    pub fn load_unsigned_int_bits<const BITS: usize>(&self, addr: Addr<L>, offset: i64) -> Word {
+        let start = usize::from(addr);
+        let end = start + BITS;
+        ((self.slice[start..end].load::<u64>() as i64) + offset).into_word()
+    }
+}
+
 impl<L> Region for BitSlice<L>
 where
     L: ValueLayout<MemUnit = NumBits>,

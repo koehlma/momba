@@ -254,6 +254,7 @@ impl<'cx> ExprCtx<'cx> {
         let Some(item) = self.scope.lookup(&expr.identifier) else {
             return_error!("Unable to resolve identifier `{}`.", expr.identifier);
         };
+
         Ok(match item {
             ScopeItem::Constant(idx) => {
                 let constant = self.ctx.query_constant_value(idx)?;
@@ -268,17 +269,57 @@ impl<'cx> ExprCtx<'cx> {
                 let field = &variables.state_layout[field_idx];
                 let addr = variables.state_offsets[field_idx];
                 let expr_ty = self.ctx.tcx.loaded_value_ty(field.ty())?;
+
                 CompiledExpression::from_parts(
                     match field.ty().kind() {
                         ValueTyKind::Bool => {
                             evaluate::Closure::new(move |env| env.state.load_bool(addr)).evaluator()
                         }
                         ValueTyKind::SignedInt(ty) => {
+                            // let offset = ty.offset;
+                            // macro_rules! load_signed_int {
+                            //     ([$($bits:literal,)*]) => {
+                            //         match usize::from(ty.bits) {
+                            //             $(
+                            //                 $bits => {
+                            //                     evaluate::Closure::new(move |env| env.state.load_signed_int_bits::<$bits>(addr, offset)).evaluator()
+                            //                 },
+                            //             )*
+                            //             _ => panic!()
+                            //         }
+                            //     };
+                            // }
+                            // load_signed_int!([
+                            //     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                            //     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+                            //     36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+                            //     53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64,
+                            // ])
                             let ty = ty.clone();
+
                             evaluate::Closure::new(move |env| env.state.load_signed_int(addr, &ty))
                                 .evaluator()
                         }
                         ValueTyKind::UnsignedInt(ty) => {
+                            // let offset = ty.offset;
+                            // macro_rules! load_unsigned_int {
+                            //     ([$($bits:literal,)*]) => {
+                            //         match usize::from(ty.bits) {
+                            //             $(
+                            //                 $bits => {
+                            //                     evaluate::Closure::new(move |env| env.state.load_unsigned_int_bits::<$bits>(addr, offset)).evaluator()
+                            //                 },
+                            //             )*
+                            //             _ => panic!()
+                            //         }
+                            //     };
+                            // }
+                            // load_unsigned_int!([
+                            //     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                            //     19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+                            //     36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+                            //     53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+                            // ])
                             let ty = ty.clone();
                             evaluate::Closure::new(move |env| {
                                 env.state.load_unsigned_int(addr, &ty)
