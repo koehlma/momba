@@ -118,14 +118,14 @@ impl CompiledExpression {
         self,
         tcx: &TypeCtx,
     ) -> CompileResult<CompiledExpression<U>> {
-        if U::word_ty(tcx) == self.ty {
-            Ok(CompiledExpression {
-                evaluator: self.evaluator.map(U::from_word).evaluator(),
-                ty: self.ty,
-            })
-        } else {
-            return_error!("Unable to cast expression.");
-        }
+        Ok(CompiledExpression {
+            evaluator: self
+                .coerce_to(tcx, &U::word_ty(tcx))?
+                .evaluator
+                .map(U::from_word)
+                .evaluator(),
+            ty: U::word_ty(tcx),
+        })
     }
 
     /// Creates a compiled expression applying a closure to the value.

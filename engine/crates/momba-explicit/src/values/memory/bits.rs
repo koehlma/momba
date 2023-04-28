@@ -78,14 +78,22 @@ where
     fn load_signed_int(&self, addr: Addr<Self::ValueLayout>, ty: &IntTy) -> Word {
         let start = usize::from(addr);
         let end = start + usize::from(ty.bits);
-        (self.slice[start..end].load::<i64>() + ty.offset).into_word()
+        if start == end {
+            Word::from_raw((0 + ty.offset) as u64)
+        } else {
+            (self.slice[start..end].load::<i64>() + ty.offset).into_word()
+        }
     }
 
     #[inline(always)]
     fn load_unsigned_int(&self, addr: Addr<Self::ValueLayout>, ty: &IntTy) -> Word {
         let start = usize::from(addr);
         let end = start + usize::from(ty.bits);
-        ((self.slice[start..end].load::<u64>() as i64) + ty.offset).into_word()
+        if start == end {
+            Word::from_raw((0 + ty.offset) as u64)
+        } else {
+            ((self.slice[start..end].load::<u64>() as i64) + ty.offset).into_word()
+        }
     }
 
     #[inline(always)]
@@ -116,14 +124,18 @@ where
     fn store_signed_int(&mut self, addr: Addr<Self::ValueLayout>, ty: &IntTy, value: Word) {
         let start = usize::from(addr);
         let end = start + usize::from(ty.bits);
-        self.slice[start..end].store(value.to_raw());
+        if start != end {
+            self.slice[start..end].store(value.to_raw());
+        }
     }
 
     #[inline(always)]
     fn store_unsigned_int(&mut self, addr: Addr<Self::ValueLayout>, ty: &IntTy, value: Word) {
         let start = usize::from(addr);
         let end = start + usize::from(ty.bits);
-        self.slice[start..end].store(value.to_raw());
+        if start != end {
+            self.slice[start..end].store(value.to_raw());
+        }
     }
 
     #[inline(always)]
