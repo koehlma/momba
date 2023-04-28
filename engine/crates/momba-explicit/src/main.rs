@@ -1,4 +1,4 @@
-use std::{error::Error, path::PathBuf, sync::Arc};
+use std::{error::Error, path::PathBuf, sync::Arc, time::Instant};
 
 use clap::Parser;
 use momba_explicit::{
@@ -48,5 +48,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let model: Model = serde_json::from_str(&std::fs::read_to_string(&args.model_path)?)?;
     let params = parse_params(args.params.as_ref().map(String::as_str).unwrap_or(""));
 
-    count_states(&model, &params)
+    count_states(&model, &params)?;
+
+    Ok(())
 }

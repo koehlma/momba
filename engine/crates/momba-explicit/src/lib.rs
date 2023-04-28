@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 
-use std::{error::Error, marker::PhantomData, ops::Range};
+use std::{error::Error, marker::PhantomData, ops::Range, time::Instant};
 
 use bumpalo::Bump;
 use compiler::compiled::{
@@ -139,6 +139,8 @@ fn filter_edges(
 }
 
 pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>> {
+    let start = Instant::now();
+
     println!("Compiling...");
     let compiled = compile_model(&model, &params, &Options::new())?;
 
@@ -458,6 +460,10 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     println!("Queue Pressure: {}", queue_pressure);
     println!("States: {}", visited.len());
+
+    let end = Instant::now();
+
+    println!("Time: {:.02}", (end - start).as_secs_f64());
 
     std::process::exit(0);
 }
