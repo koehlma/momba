@@ -1,8 +1,12 @@
 #![allow(dead_code, unused_variables, unused_assignments)]
 use crate::nn_oracle::DOUBLE_CPU;
 use hashbrown::{HashMap, HashSet};
-use momba_explore::{model::Automaton, *};
+use momba_explore::{
+    model::{Automaton, Network, Value},
+    *,
+};
 use rand::seq::IteratorRandom;
+use rayon::vec;
 //use std::{collections::HashMap};
 use tch::Tensor;
 
@@ -13,6 +17,7 @@ pub enum Actions {
     //The edge is chosen based on its label.
 }
 
+#[derive(PartialEq, Debug)]
 pub enum Observations {
     //Specifies what is observable by the agent
     GlobalOnly,
@@ -236,8 +241,12 @@ where
     explorer: &'a Explorer<T>,
     _rewards: Rewards,
     _actions: Actions,
+    observations: Observations,
     //action_resolver: &'a A,
     action_resolver: EdgeByIndexResolver<'a, T>,
+    global_variables: Vec<String>,
+    local_variables: Vec<String>,
+    other_variables: HashMap<String, Vec<String>>,
 }
 
 impl<'a, T> Context<'a, T>
@@ -246,16 +255,42 @@ where
     T: time::Time,
     //A: ActionResolver<T>,
 {
-    pub fn new(explorer: &'a Explorer<T>, actions: Actions) -> Self {
+    pub fn new(explorer: &'a Explorer<T>, actions: Actions, observations: Observations) -> Self {
         let action_resolver = match actions {
             Actions::EdgeByIndex => EdgeByIndexResolver::new(explorer),
             Actions::EdgeByLabel => panic!("Not yet implemented the edge by label resolver"),
         };
+
+        let mut global_variables = vec![];
+        for (s, _) in &explorer.network.declarations.global_variables {
+            global_variables.push(s.into());
+        }
+
+        let mut local_variables = vec![];
+        if vec![Observations::GlobalOnly, Observations::Omniscient].contains(&observations) {
+            for (s, _) in &explorer.network.declarations.transient_variables {
+                local_variables.push(s.into());
+            }
+        }
+        let other_variables: HashMap<String, Vec<String>> = HashMap::new();
+        if observations == Observations::Omniscient {
+            // TODO: Check this, i can know the controlled instance via a new argument on cmd.
+            // But the issue is when trying to get the string from the automaton.
+            //for (idx, aut) in &explorer.network.automata{
+            //    let mut ins_variables: Vec<String> = vec![];
+            //    for d in explorer.network.
+            //}
+        }
+
         Context {
             explorer,
             _rewards: Rewards::new(),
             _actions: actions,
+            observations,
             action_resolver,
+            global_variables,
+            local_variables,
+            other_variables,
         }
     }
 }
@@ -416,7 +451,7 @@ where
             .successor(&self.state, &transition, &destination);
         return StepOutput::StepTaken;
     }
-    
+
     /*
     Transform the state into a vectorial representation using the local and
     global variables of the model. Then, cast the vector into a tch Tensor.
@@ -424,10 +459,10 @@ where
     pub fn state_to_tensor(&self, state: &State<T>, size: usize) -> Tensor {
         let input_size = size;
         let mut tensor = Tensor::empty(&[input_size as i64], DOUBLE_CPU);
-        for id in &self.context.explorer.network.declarations.global_variables {
-            let g_value = state
-                .get_global_value(&self.context.explorer, &id.0)
-                .unwrap();
+
+        //for id in &self.context.explorer.network.declarations.global_variables {
+        for id in &self.context.global_variables {
+            let g_value = state.get_global_value(&self.context.explorer, &id).unwrap();
             tensor = match g_value.get_type() {
                 model::Type::Bool => panic!("Tensor type not valid"),
                 //tensor.f_add_scalar(g_value.unwrap_bool()).unwrap(),
@@ -440,17 +475,13 @@ where
                 model::Type::Unknown => panic!("Tensor type not valid"),
             };
         }
-        for id in &self
-            .context
-            .explorer
-            .network
-            .declarations
-            .transient_variables
-        {
+
+        //for id in &self.context.explorer.network.declarations.transient_variables {
+        for id in &self.context.local_variables {
             let l_value = state
-                .get_transient_value(&self.context.explorer.network, id.0)
+                .get_transient_value(&self.context.explorer.network, id)
                 .unwrap_int64();
-            tensor = tensor.f_add_scalar(l_value).unwrap();
+                tensor = tensor.f_add_scalar(l_value).unwrap();
         }
         if size != tensor.size()[0] as usize {
             panic!("Vector size and NN input size does not match")

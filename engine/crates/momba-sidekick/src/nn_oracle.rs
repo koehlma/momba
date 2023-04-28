@@ -9,7 +9,7 @@ use tch::{
 
 use crate::{
     nn_oracle::generic::{Context, GenericExplorer},
-    simulate::{Simulator, SimulationOutput},
+    simulate::{SimulationOutput, Simulator},
 };
 
 mod generic;
@@ -55,9 +55,8 @@ where
     //A: ActionResolver<T>,
 {
     pub fn new(model: Sequential, exp: &'a Explorer<T>, goal: G, size: usize) -> Self {
-        //pub fn new(exp: &'a Explorer<T>, actions:Actions) -> Self {
         //let _test = generic::EdgeByLabelResolver::new(exp);
-        let ctx = Context::new(exp, generic::Actions::EdgeByIndex);
+        let ctx = Context::new(exp, generic::Actions::EdgeByIndex, generic::Observations::GlobalOnly);
         NnSimulator {
             model,
             gen_exp: GenericExplorer::new(ctx, goal),
@@ -69,9 +68,9 @@ where
     }
     //IDEA: Should change the state of the explorator (by calling step).
     //          Can a reference to the new state so it satisfies the
-    //          next funciton of the simulation trait
-    //       Or only get the tensor and use the action resolve to get
-    //       the transition vector and then uniform choose one?
+    //          next function of the simulation trait
+    //      Or only get the tensor and use the action resolve to get
+    //      the transition vector and then uniform choose one?
     pub fn fn2(&mut self, tensor: Tensor) {
         //-> Transition<'static, T>{
         let action = self.gen_exp.tensor_to_action(tensor);
@@ -79,7 +78,8 @@ where
         //println!("Action: {:?}. Output: {:?}", action, _output);
     }
 
-    pub fn simulate(&mut self)-> SimulationOutput{
+    // Esto no deberia.
+    pub fn simulate(&mut self) -> SimulationOutput {
         self.reset();
         let mut c = 0;
         while let Some(_state) = self.next() {
@@ -93,7 +93,6 @@ where
         }
         return SimulationOutput::NoStatesAvailable;
     }
-
 }
 
 impl<T, G> Simulator for NnSimulator<'_, T, G>

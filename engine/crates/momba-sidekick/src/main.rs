@@ -197,10 +197,6 @@ fn sprt(walks: SPRT) {
     let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
-    // build the new structure smc
-    // and call the method check.
-    // better_smc(&mut state_iterator, closure_is_goal, None, None);
-
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
         .with_x(0.20)
@@ -236,30 +232,32 @@ fn check_nn(nn_command: NN) {
         serde_json::from_reader(BufReader::new(nn_file)).expect("Error while reading model file!");
     let (model, input_size) = build_nn(readed_nn);
 
-    let goal_v2 = move |s: &&State<Float64Zone>| s.evaluate(&comp_expr_v2).unwrap_bool();
+    let _goal_v2 = move |s: &&State<Float64Zone>| s.evaluate(&comp_expr_v2).unwrap_bool();
     let goal = move |s: &State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut simulator = NnSimulator::new(model, &explorer, goal, input_size);
     //let mut simulator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    let stat_checker = StatisticalSimulator::new(&mut simulator, goal_v2);
+    //let stat_checker = StatisticalSimulator::new(&mut simulator, goal_v2);
     
-    // let start = Instant::now();
-    // let n_runs = 100;
-    // let max_steps = 99;
-    // println!("Runs: {:?}. Max Steps: {:?}", n_runs, max_steps);
-    // let mut score: i64 = 0;
-    // for _ in 0..n_runs as i64 {
-    //     let v = simulator.simulate();
-    //     match v {
-    //         SimulationOutput::GoalReached => score += 1,
-    //         SimulationOutput::MaxSteps => {},
-    //         SimulationOutput::NoStatesAvailable => {
-    //             println!("No States Available, something went wrong...");
-    //         }
-    //     }
-    // }
-    // let duration = start.elapsed();
-    // println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
+    let start = Instant::now();
+    let n_runs = 999;
+    let max_steps = 300;
+    let mut count_more_steps = 0;
+    println!("Runs: {:?}. Max Steps: {:?}", n_runs, max_steps);
+    let mut score: i64 = 0;
+    for _ in 0..n_runs as i64 {
+        let v = simulator.simulate();
+        match v {
+            SimulationOutput::GoalReached => score += 1,
+            SimulationOutput::MaxSteps => {count_more_steps += 1},
+            SimulationOutput::NoStatesAvailable => {
+                println!("No States Available, something went wrong...");
+            }
+        }
+    }
+    let duration = start.elapsed();
+    println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
+    println!("COunt more steps: {}", count_more_steps);
 }
 
 fn main() {
