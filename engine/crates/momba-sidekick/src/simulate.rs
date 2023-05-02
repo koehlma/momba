@@ -2,7 +2,7 @@
 use std::sync::Arc;
 
 use momba_explore::*;
-use rand::seq::IteratorRandom;
+use rand::seq::{IteratorRandom, SliceRandom};
 use rand::Rng;
 use rayon::{current_num_threads, prelude::*};
 
@@ -73,7 +73,7 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
 
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
     //pub fn new(explorer: Explorer<T>, oracle: O) -> Self {
-    pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {    
+    pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {
         let mut rng = rand::thread_rng();
         StateIter {
             state: explorer
@@ -100,18 +100,15 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         }
         let transition = self.oracle.choose(&self.state, &transitions);
         let destinations = self.explorer.destinations(&self.state, &transition);
-        let fixed_value: f64 = rng.gen();
-        let mut accum: f64 = 0.0;
-        for destination in destinations {
-            accum += destination.probability();
-            if accum >= fixed_value {
-                self.state = self
-                    .explorer
-                    .successor(&self.state, &transition, &destination);
-                return Some(&self.state);
-            }
+        if destinations.len() == 0 {
+            return None;
         }
-        None
+        self.state = self.explorer.successor(
+            &self.state,
+            &transition,
+            destinations.choose(&mut rng).unwrap(),
+        );
+        Some(&self.state)
     }
 
     fn reset(&mut self) -> Self::State<'_> {
@@ -163,7 +160,7 @@ where
             n_threads: 4,
         }
     }
-    
+
     pub fn max_steps(mut self, max_steps: i64) -> Self {
         self.max_steps = max_steps;
         self
@@ -214,19 +211,24 @@ where
         while let Some(state) = self.sim.next() {
             let next_state = state.into();
             if (self.goal)(&next_state) {
+                //println!("Steps done: {:?}", c);
                 return SimulationOutput::GoalReached;
             } else if c >= self.max_steps {
+                //println!("Steps done: {:?}", c);
                 return SimulationOutput::MaxSteps;
             }
             c += 1;
         }
+        // Here it should be really cool if we can have the dead predicate.
+        // because is likely that the simulation entered some deadlock and cant get out.
+        //println!("Steps done: {:?}", c);
         return SimulationOutput::NoStatesAvailable;
     }
 
     pub fn run_smc(mut self) -> f64 {
         let n_runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
-        println!("Runs: {:?}. Max Steps; {:?}", n_runs as i64, self.max_steps);
+        println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         for _ in 0..n_runs as i64 {
@@ -235,7 +237,7 @@ where
                 SimulationOutput::GoalReached => score += 1,
                 SimulationOutput::MaxSteps => count_more_steps_needed += 1,
                 SimulationOutput::NoStatesAvailable => {
-                    println!("No States Available, something went wrong...");
+                    //println!("Deadlock reached");
                 }
             }
         }

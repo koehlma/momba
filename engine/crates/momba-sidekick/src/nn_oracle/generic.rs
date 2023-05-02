@@ -84,6 +84,9 @@ where
         }
     }
 
+    //Available should, given a state, return the available actions for the state
+    //Resolve, should given an action (the one available with the highest value) return the transitions.
+
     fn resolve<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
@@ -95,8 +98,8 @@ where
                 match v {
                     (0, value) => {
                         //println!(
-                        //    "Action: {:?} vs NRV value: {:?}. IDX:{:?}",
-                        //    action, value, i
+                        //    "Action: {:?} vs num ref value value: {:?}",
+                        //    action, value
                         //);
                         if action as usize != value {
                             remove_trans_idxs.push(i);

@@ -1,8 +1,10 @@
 use std::sync::Arc;
 
+use hashbrown::HashMap;
 //use std::sync::Arc;
 use momba_explore::*;
 use rand::seq::IteratorRandom;
+use rayon::vec;
 use serde::{Deserialize, Serialize};
 use tch::{
     kind::*,
@@ -13,7 +15,7 @@ use tch::{
 
 use crate::{
     nn_oracle::generic::{Context, GenericExplorer},
-    simulate::{Oracle, SimulationOutput, Simulator},
+    simulate::{Oracle, Simulator},
 };
 
 use self::generic::{ActionResolver, EdgeByIndexResolver};
@@ -60,7 +62,7 @@ where
     G: Fn(&State<T>) -> bool,
     //A: ActionResolver<T>,
 {
-    pub fn new(model: Sequential, exp: &'a Explorer<T>, goal: G, size: usize) -> Self {
+    pub fn _new(model: Sequential, exp: &'a Explorer<T>, goal: G, size: usize) -> Self {
         //let _test = generic::EdgeByLabelResolver::new(exp);
         let ctx = Context::new(
             exp,
@@ -86,22 +88,6 @@ where
         let action = self.gen_exp.tensor_to_action(tensor);
         let _output = self.gen_exp.step(action);
         //println!("Action: {:?}. Output: {:?}", action, _output);
-    }
-
-    // Esto no deberia.
-    pub fn simulate(&mut self) -> SimulationOutput {
-        self.reset();
-        let mut c = 0;
-        while let Some(_state) = self.next() {
-            //let next_state = state.into();
-            if self.gen_exp.has_reached_goal() {
-                return SimulationOutput::GoalReached;
-            } else if c >= 99 {
-                return SimulationOutput::MaxSteps;
-            }
-            c += 1;
-        }
-        return SimulationOutput::NoStatesAvailable;
     }
 }
 
@@ -227,13 +213,14 @@ where
     //pub fn build(nn: NeuralNetwork, explorer: &'a Explorer<T>) -> Self {
     pub fn build(nn: NeuralNetwork, explorer: Arc<Explorer<T>>) -> Self {
         let mut tch_nn = nn::seq();
+        let mut default_nn = nn::seq();
         let _vs = nn::VarStore::new(Device::Cpu);
         let mut input_sizes: Vec<i64> = vec![];
         let mut output_sizes: Vec<i64> = vec![];
         for lay in nn.layers.into_iter() {
             match lay {
                 Layers::Linear {
-                    name: _,
+                    name: _name,
                     input_size,
                     output_size,
                     has_biases,
@@ -242,14 +229,21 @@ where
                 } => {
                     input_sizes.push(input_size);
                     output_sizes.push(output_size);
-                    //let mut layer_name = "layer".to_owned();
-                    //layer_name.push_str(&name);
+                    let mut layer_name = "layer".to_owned();
+                    layer_name.push_str(&_name);
 
+                    // Find a way to know the type of the tensor values.
                     let mut weights_tensor =
                         Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
+                    // Here it should be double, because the tch tool takes the f64 as doubles for
+                    // each of the vectors.
                     for w in weights {
+                        //println!("LALA:");
+                        //Tensor::of_slice(&w).print();
                         weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
                     }
+                    //weights_tensor.print();
+
                     let biases_tensor: Option<Tensor>;
                     if has_biases {
                         biases_tensor = Some(Tensor::of_slice(&biases));
@@ -261,19 +255,22 @@ where
                         bs: biases_tensor,
                     };
                     tch_nn = tch_nn.add(linear_layer);
-
-                    // If its a new model, it should be initialized this way, and then be trained.
-                    // tch_nn = tch_nn.add(nn::linear(
-                    //     &vs.root() / layer_name,
-                    //     input_size,
-                    //     output_size,
-                    //     //LinearConfig { ws_init: (weights), bs_init: (biases), bias: has_biases }
-                    //     Default::default(),
-                    // ));
+                    default_nn = default_nn.add(nn::linear(
+                        &_vs.root() / layer_name,
+                        input_size,
+                        output_size,
+                        Default::default(),
+                    ));
                 }
-                Layers::ReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.relu()),
+                Layers::ReLU { name: _ } => {
+                    tch_nn = tch_nn.add_fn(|xs| xs.relu());
+                    default_nn = default_nn.add_fn(|xs| xs.relu())
+                }
             }
         }
+        //println!("{:#?}\n\nvs\n\n", tch_nn);
+        //println!("{:#?}", default_nn);
+
         let action_resolver = EdgeByIndexResolver::new(explorer.clone());
         NnOracle {
             model: tch_nn,
@@ -286,30 +283,59 @@ where
     }
 
     fn state_to_tensor(&self, state: &State<T>) -> Tensor {
-        let mut tensor = Tensor::empty(&[self.input_size as i64], DOUBLE_CPU);
-
-        for (id, _) in &self.explorer.network.declarations.global_variables {
+        //Old version
+        // let mut tensor = Tensor::empty(&[self.input_size as i64], INT64_CPU);
+        // for (id, _) in &self.explorer.network.declarations.global_variables {
+        //     let g_value = state.get_global_value(&self.explorer, &id).unwrap();
+        //     tensor = match g_value.get_type() {
+        //         model::Type::Bool => panic!("Tensor type not valid"),
+        //         //tensor.f_add_scalar(g_value.unwrap_bool()).unwrap(),
+        //         model::Type::Float64 => tensor
+        //             .f_add_scalar(g_value.unwrap_float64().into_inner())
+        //             .unwrap(),
+        //         model::Type::Int64 => tensor.f_add_scalar(g_value.unwrap_int64()).unwrap(),
+        //         model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
+        //         //tensor.f_add_(g_value.unwrap_vector()).unwrap(),
+        //         model::Type::Unknown => panic!("Tensor type not valid"),
+        //     };
+        //     tensor.print();
+        // }
+        // for (id, _) in &self.explorer.network.declarations.transient_variables {
+        //     let l_value = state
+        //         .get_transient_value(&self.explorer.network, id)
+        //         .unwrap_int64();
+        //     tensor = tensor.f_add_scalar(l_value).unwrap();
+        // }
+        // tensor
+        let mut vec_values = vec![];
+        for (id, v) in &self.explorer.network.declarations.global_variables {
             let g_value = state.get_global_value(&self.explorer, &id).unwrap();
-            tensor = match g_value.get_type() {
+            match g_value.get_type() {
                 model::Type::Bool => panic!("Tensor type not valid"),
-                //tensor.f_add_scalar(g_value.unwrap_bool()).unwrap(),
-                model::Type::Float64 => tensor
-                    .f_add_scalar(g_value.unwrap_float64().into_inner())
-                    .unwrap(),
-                model::Type::Int64 => tensor.f_add_scalar(g_value.unwrap_int64()).unwrap(),
                 model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
-                //tensor.f_add_(g_value.unwrap_vector()).unwrap(),
                 model::Type::Unknown => panic!("Tensor type not valid"),
+                model::Type::Float64 => vec_values.push(g_value.unwrap_float64().into_inner()),
+                model::Type::Int64 => vec_values.push(g_value.unwrap_int64() as f64),
             };
         }
-
-        for (id, _) in &self.explorer.network.declarations.transient_variables {
-            let l_value = state
-                .get_transient_value(&self.explorer.network, id)
-                .unwrap_int64();
-            tensor = tensor.f_add_scalar(l_value).unwrap();
-        }
+        let tensor = Tensor::of_slice(&vec_values);
         tensor
+    }
+
+    // The idea is to have another function that will return me the available action with the highest
+    // q value from the model.
+    fn get_edges_ids(&self, transitions: &[Transition<T>]) -> Vec<i64> {
+        //Should be a filter and a flatten.
+        let mut actions = vec![];
+        for t in transitions.into_iter() {
+            for (ins, val) in t.numeric_reference_vector().into_iter() {
+                match ins {
+                    0 => actions.push(val as i64),
+                    _ => continue,
+                }
+            }
+        }
+        actions
     }
 
     fn tensor_to_action(&self, tensor: Tensor) -> i64 {
@@ -317,6 +343,12 @@ where
             panic!("Vector size and NN output size does not match");
         }
         let idx = tensor.argmax(None, true).int64_value(&[0]);
+        //println!(
+        //    "Max value overall {:?} in action:{:?}",
+        //    tensor.double_value(&[idx]),
+        //    idx
+        //);
+
         idx
     }
 }
@@ -325,6 +357,9 @@ impl<T> Oracle<T> for NnOracle<T>
 where
     T: time::Time,
 {
+    /*
+
+    */
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
@@ -332,25 +367,56 @@ where
     ) -> &'t Transition<'t, T> {
         //println!("Transitions Received in choose: {:?}", transitions.len());
         if transitions.len() == 1 {
-            //println!("No choice to make");
             transitions.into_iter().next().unwrap()
         } else {
-            println!("Resolving the indetermination.");
+            let mut rng = rand::thread_rng();
             let tensor = self.state_to_tensor(state);
-            let output_tensor = self.model.forward(&tensor);
-            output_tensor.print();
-            let action = self.tensor_to_action(output_tensor);
-            let selected_transitions = self.action_resolver.resolve(&transitions, action);
 
-            println!("Action: {}. #Selec transitions: {:?}", action, selected_transitions.len());
+            let output_tensor = self.model.forward(&tensor);
+
+            let mut action_map: HashMap<i64, f64> = HashMap::new();
+            //let mut available_transitions = vec![];
+            //let mut out = vec![];
+            //self.action_resolver.available(state, &mut out);
+            //for (i, t) in transitions.iter().enumerate() {
+            //    if out[i] {
+            //        available_transitions.push(t)
+            //    }
+            //}
+            //println!();
+            //println!("{:?}", out);
+            for a in self.get_edges_ids(transitions).into_iter() {
+                action_map.insert(a, output_tensor.double_value(&[a]));
+            }
+            let mut max_val: f64 = 0.0;
+            let mut max_key: i64 = -1;
+            for (k, v) in action_map.iter() {
+                if *v > max_val {
+                    max_key = *k;
+                    max_val = *v;
+                }
+            }
+
+            let _action = self.tensor_to_action(output_tensor);
+            let selected_transitions = self.action_resolver.resolve(&transitions, max_key);
+
+            //let action = self.tensor_to_action(output_tensor);
+            //let selected_transitions = self.action_resolver.resolve(&transitions, action);
+
             if selected_transitions.is_empty() {
-                println!("Something went wrong!. Empty transitions");
-                return transitions.first().unwrap()
+                //println!(
+                //    "he choose poorly: {:?}. Resolving uniformly between {:?} actions",
+                //    action,
+                //    transitions.len()
+                //);
+                return transitions.into_iter().choose(&mut rng).unwrap();
+            } else {
+                //println!("You have choosen wisely: {:?}", action);
             }
             if selected_transitions.len() > 1 {
                 println!("Uncontrolled nondeterminism resolved uniformly.");
             }
-            let mut rng = rand::thread_rng();
+
             let transition = selected_transitions.into_iter().choose(&mut rng).unwrap();
             transition
         }

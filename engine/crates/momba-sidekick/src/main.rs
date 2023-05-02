@@ -12,7 +12,7 @@ use momba_explore::{model::Expression, time::Float64Zone, *};
 mod nn_oracle;
 mod simulate;
 use crate::nn_oracle::*;
-use crate::simulate::{SimulationOutput, StatisticalSimulator};
+use crate::simulate::StatisticalSimulator;
 
 #[derive(Clap)]
 #[clap(
@@ -241,41 +241,10 @@ fn check_nn(nn_command: NN) {
     let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone());
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.max_steps(2).with_delta(0.5).with_eps(0.5);
+    stat_checker = stat_checker.max_steps(300).with_delta(0.05).with_eps(0.01);
     let score = stat_checker.run_smc();
-
     println!("Score: {}", score);
 
-
-    //let (model, input_size) = build_nn(readed_nn);
-    //let mut simulator = NnSimulator::new(model, &explorer, goal, input_size);
-    //let mut simulator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    //---
-    // let start = Instant::now();
-    // let n_runs = 999;
-    // let max_steps = 300;
-    // let mut count_more_steps = 0;
-    // println!("Runs: {:?}. Max Steps: {:?}", n_runs, max_steps);
-    // let mut score: i64 = 0;
-    // for _ in 0..n_runs as i64 {
-    //     let v = simulator.simulate();
-    //     match v {
-    //         SimulationOutput::GoalReached => score += 1,
-    //         SimulationOutput::MaxSteps => {count_more_steps += 1},
-    //         SimulationOutput::NoStatesAvailable => {
-    //             println!("No States Available, something went wrong...");
-    //         }
-    //     }
-    // }
-    // let duration = start.elapsed();
-    // println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
-    // println!("COunt more steps: {}", count_more_steps);
-
-    // let nn_oracle = NnOracle::build(readed_nn, &explorer);
-    // let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
-
-    // let mut simulator = simulate::StateIter::new(explorer, nn_oracle);
-    // let stat_checker = StatisticalSimulator::new(&mut simulator, goal);
 }
 
 fn main() {
