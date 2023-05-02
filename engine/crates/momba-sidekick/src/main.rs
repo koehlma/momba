@@ -1,6 +1,7 @@
 use hashbrown::HashSet;
 use std::io::BufReader;
 use std::path::Path;
+use std::sync::Arc;
 use std::time::Instant;
 use std::{env, fs::File};
 
@@ -11,7 +12,7 @@ use momba_explore::{model::Expression, time::Float64Zone, *};
 mod nn_oracle;
 mod simulate;
 use crate::nn_oracle::*;
-use crate::simulate::{StatisticalSimulator, SimulationOutput};
+use crate::simulate::{SimulationOutput, StatisticalSimulator};
 
 #[derive(Clap)]
 #[clap(
@@ -145,7 +146,8 @@ fn random_walk(walk: Simulate) {
     let expr: Expression = serde_json::from_reader(BufReader::new(_prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal)
@@ -170,11 +172,12 @@ fn smc(walks: SMC) {
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker. max_steps(99).with_delta(0.05).with_eps(0.05);
+    stat_checker = stat_checker.max_steps(99).with_delta(0.05).with_eps(0.05);
     let score = stat_checker.run_smc();
 
     println!("Score: {}", score);
@@ -194,7 +197,8 @@ fn sprt(walks: SPRT) {
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
+    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
@@ -223,41 +227,55 @@ fn check_nn(nn_command: NN) {
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let comp_expr_v2 = explorer.compiled_network.compile_global_expression(&expr);
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     let nn_path = Path::new(&nn_command.nn);
     let nn_file = File::open(nn_path).expect("Unable to open model file!");
     let readed_nn: nn_oracle::NeuralNetwork =
         serde_json::from_reader(BufReader::new(nn_file)).expect("Error while reading model file!");
-    let (model, input_size) = build_nn(readed_nn);
 
-    let _goal_v2 = move |s: &&State<Float64Zone>| s.evaluate(&comp_expr_v2).unwrap_bool();
-    let goal = move |s: &State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+    let arc_explorer = Arc::new(explorer);
 
-    let mut simulator = NnSimulator::new(model, &explorer, goal, input_size);
+
+    let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone());
+    let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
+    let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
+    stat_checker = stat_checker.max_steps(2).with_delta(0.5).with_eps(0.5);
+    let score = stat_checker.run_smc();
+
+    println!("Score: {}", score);
+
+
+    //let (model, input_size) = build_nn(readed_nn);
+    //let mut simulator = NnSimulator::new(model, &explorer, goal, input_size);
     //let mut simulator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    //let stat_checker = StatisticalSimulator::new(&mut simulator, goal_v2);
-    
-    let start = Instant::now();
-    let n_runs = 999;
-    let max_steps = 300;
-    let mut count_more_steps = 0;
-    println!("Runs: {:?}. Max Steps: {:?}", n_runs, max_steps);
-    let mut score: i64 = 0;
-    for _ in 0..n_runs as i64 {
-        let v = simulator.simulate();
-        match v {
-            SimulationOutput::GoalReached => score += 1,
-            SimulationOutput::MaxSteps => {count_more_steps += 1},
-            SimulationOutput::NoStatesAvailable => {
-                println!("No States Available, something went wrong...");
-            }
-        }
-    }
-    let duration = start.elapsed();
-    println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
-    println!("COunt more steps: {}", count_more_steps);
+    //---
+    // let start = Instant::now();
+    // let n_runs = 999;
+    // let max_steps = 300;
+    // let mut count_more_steps = 0;
+    // println!("Runs: {:?}. Max Steps: {:?}", n_runs, max_steps);
+    // let mut score: i64 = 0;
+    // for _ in 0..n_runs as i64 {
+    //     let v = simulator.simulate();
+    //     match v {
+    //         SimulationOutput::GoalReached => score += 1,
+    //         SimulationOutput::MaxSteps => {count_more_steps += 1},
+    //         SimulationOutput::NoStatesAvailable => {
+    //             println!("No States Available, something went wrong...");
+    //         }
+    //     }
+    // }
+    // let duration = start.elapsed();
+    // println!("Score: {}. Time Elapsed:{:?}", score as f64 / n_runs as f64, duration);
+    // println!("COunt more steps: {}", count_more_steps);
+
+    // let nn_oracle = NnOracle::build(readed_nn, &explorer);
+    // let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
+
+    // let mut simulator = simulate::StateIter::new(explorer, nn_oracle);
+    // let stat_checker = StatisticalSimulator::new(&mut simulator, goal);
 }
 
 fn main() {

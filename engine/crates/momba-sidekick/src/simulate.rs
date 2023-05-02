@@ -6,6 +6,8 @@ use rand::seq::IteratorRandom;
 use rand::Rng;
 use rayon::{current_num_threads, prelude::*};
 
+//use crate::nn_oracle::{NeuralNetwork, NnOracle};
+
 #[derive(Debug)]
 pub enum SprtComparison {
     BiggerThan(i64),
@@ -18,7 +20,8 @@ pub enum SimulationOutput {
     NoStatesAvailable,
 }
 
-pub trait Oracle<T: time::Time>: Clone {
+//pub trait Oracle<T: time::Time>: Clone {
+pub trait Oracle<T: time::Time> {
     fn choose<'s, 't>(
         &self,
         _state: &State<T>,
@@ -56,10 +59,10 @@ pub trait Simulator {
 }
 
 #[derive(Clone)]
-pub struct StateIter<T: time::Time> {
+pub struct StateIter<T: time::Time, O: Oracle<T>> {
     pub state: State<T>,
     explorer: Arc<Explorer<T>>,
-    oracle: UniformOracle,
+    oracle: O,
     /*
     TODO:
         generalize this parameter.
@@ -68,8 +71,9 @@ pub struct StateIter<T: time::Time> {
     */
 }
 
-impl<T: time::Time> StateIter<T> {
-    pub fn new(explorer: Explorer<T>, oracle: UniformOracle) -> Self {
+impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
+    //pub fn new(explorer: Explorer<T>, oracle: O) -> Self {
+    pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {    
         let mut rng = rand::thread_rng();
         StateIter {
             state: explorer
@@ -77,15 +81,16 @@ impl<T: time::Time> StateIter<T> {
                 .into_iter()
                 .choose(&mut rng)
                 .unwrap(),
-            explorer: Arc::new(explorer),
+            //explorer: Arc::new(explorer),
+            explorer,
             oracle,
         }
     }
 }
 
-impl<T: time::Time> Simulator for StateIter<T> {
+impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     type State<'sim> = &'sim State<T> where Self:'sim;
-    
+
     // Return None if there are not destinations.
     fn next(&mut self) -> Option<Self::State<'_>> {
         let mut rng = rand::thread_rng();
@@ -108,7 +113,7 @@ impl<T: time::Time> Simulator for StateIter<T> {
         }
         None
     }
-    
+
     fn reset(&mut self) -> Self::State<'_> {
         let mut rng = rand::thread_rng();
         self.state = self
@@ -119,7 +124,7 @@ impl<T: time::Time> Simulator for StateIter<T> {
             .unwrap();
         &self.state
     }
-    
+
     fn current_state(&mut self) -> Self::State<'_> {
         &self.state
     }
@@ -155,10 +160,10 @@ where
             alpha: 1.0,
             beta: 1.0,
             ind_reg: 0.0,
-            n_threads: 8,
+            n_threads: 4,
         }
     }
-
+    
     pub fn max_steps(mut self, max_steps: i64) -> Self {
         self.max_steps = max_steps;
         self
@@ -341,7 +346,6 @@ where
         }
         result.unwrap()
     }
-
 }
 
 fn parallel_simulation<S, G>(mut sim: S, goal: G, max_steps: i64) -> SimulationOutput

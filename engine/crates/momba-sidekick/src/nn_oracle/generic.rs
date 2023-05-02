@@ -1,12 +1,10 @@
 #![allow(dead_code, unused_variables, unused_assignments)]
+use std::sync::Arc;
+
 use crate::nn_oracle::DOUBLE_CPU;
 use hashbrown::{HashMap, HashSet};
-use momba_explore::{
-    model::{Automaton, Network, Value},
-    *,
-};
+use momba_explore::{model::Automaton, *};
 use rand::seq::IteratorRandom;
-use rayon::vec;
 //use std::{collections::HashMap};
 use tch::Tensor;
 
@@ -37,31 +35,35 @@ pub trait ActionResolver<T: time::Time> {
     ) -> Vec<&'t Transition<'s, T>>;
 }
 
-pub struct EdgeByIndexResolver<'a, T>
+//pub struct EdgeByIndexResolver<'a, T>
+pub struct EdgeByIndexResolver<T>
 where
     T: time::Time,
 {
     num_actions: i64, //amount of edges in the automaton.
-    _automaton: &'a Automaton,
-    explorer: &'a Explorer<T>,
+    //_automaton: &'a Automaton,
+    //explorer: &'a Explorer<T>,
+    explorer: Arc<Explorer<T>>,
 }
 
-impl<'a, T: time::Time> EdgeByIndexResolver<'a, T> {
-    pub fn new(explorer: &'a Explorer<T>) -> Self {
-        let automaton = explorer.network.automata.values().next().unwrap();
+//impl<'a, T: time::Time> EdgeByIndexResolver<'a, T> {
+impl<'a, T: time::Time> EdgeByIndexResolver<T> {
+    //pub fn new(explorer: &'a Explorer<T>) -> Self {
+    pub fn new(explorer: Arc<Explorer<T>>) -> Self {
+        //let automaton = explorer.network.automata.values().next().unwrap();
         let mut num_actions: i64 = 0;
-        for (_, l) in (&automaton.locations).into_iter() {
+        for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
             num_actions += l.edges.len() as i64;
         }
         EdgeByIndexResolver {
             num_actions,
-            _automaton: automaton,
+            //    _automaton: automaton,
             explorer,
         }
     }
 }
 //May be useful. edge.number contains a number from the jani model.
-impl<'a, T> ActionResolver<T> for EdgeByIndexResolver<'a, T>
+impl<'a, T> ActionResolver<T> for EdgeByIndexResolver<T>
 where
     T: time::Time,
 {
@@ -92,7 +94,11 @@ where
             for v in t.numeric_reference_vector().into_iter() {
                 match v {
                     (0, value) => {
-                        if action as usize == value {
+                        //println!(
+                        //    "Action: {:?} vs NRV value: {:?}. IDX:{:?}",
+                        //    action, value, i
+                        //);
+                        if action as usize != value {
                             remove_trans_idxs.push(i);
                         }
                     }
@@ -100,13 +106,19 @@ where
                 };
             }
         }
-        let transitions: Vec<&Transition<T>> = transitions
+        let out_transitions: Vec<&Transition<T>> = transitions
             .iter()
             .enumerate()
-            .filter(|(i, _)| remove_trans_idxs.contains(i))
+            .filter(|(i, _)| !remove_trans_idxs.contains(i))
             .map(|(_, t)| t)
             .collect();
-        transitions
+        /*
+        This will clean all the available transitions that do not match with the
+        computed action.
+        println!("{:#?}", remove_trans_idxs);
+        println!("len after: {:#?}. len Before: {:?}", out_transitions.len(), transitions.len());
+        */
+        out_transitions
     }
 }
 
@@ -243,7 +255,7 @@ where
     _actions: Actions,
     observations: Observations,
     //action_resolver: &'a A,
-    action_resolver: EdgeByIndexResolver<'a, T>,
+    action_resolver: EdgeByIndexResolver<T>,
     global_variables: Vec<String>,
     local_variables: Vec<String>,
     other_variables: HashMap<String, Vec<String>>,
@@ -257,7 +269,7 @@ where
 {
     pub fn new(explorer: &'a Explorer<T>, actions: Actions, observations: Observations) -> Self {
         let action_resolver = match actions {
-            Actions::EdgeByIndex => EdgeByIndexResolver::new(explorer),
+            Actions::EdgeByIndex => panic!("Not yet implemented the edge by index resolver"), //EdgeByIndexResolver::new(explorer),
             Actions::EdgeByLabel => panic!("Not yet implemented the edge by label resolver"),
         };
 
@@ -346,49 +358,35 @@ where
     pub fn has_reached_goal(&self) -> bool {
         (self.goal)(&self.state)
     }
-    fn _explore_until_choice() {
-        todo!()
+
+    fn _explore_until_choice(&mut self) {
+        while !self.has_choice() && !self.has_terminated() {
+            let mut rng = rand::thread_rng();
+            let all_transitions = self.context.explorer.transitions(&self.state);
+            if all_transitions.len() > 1 {
+                println!("Uncontrolled nondeterminism has been resolved uniformly.")
+            }
+            let transition = all_transitions.into_iter().choose(&mut rng).unwrap();
+            let destination = self
+                .context
+                .explorer
+                .destinations(&self.state, &transition)
+                .into_iter()
+                .choose(&mut rng)
+                .unwrap();
+            self.state = self
+                .context
+                .explorer
+                .successor(&self.state, &transition, &destination);
+        }
     }
+
     fn _available_actions(&self) -> Vec<bool> {
         let mut out = vec![];
         self.context
             .action_resolver
             .available(&self.state, &mut out);
         out
-    }
-
-    //pub fn available_transitions<'t>(&self) -> &'t [Transition<'t, T>] {
-    pub fn _available_transitions<'t>(&self, transitions: &mut Vec<Transition<'t, T>>) {
-        /*
-        if terminated, return empty
-        else enumerate
-        */
-        transitions.clear();
-        if self.has_terminated() {
-            return;
-        }
-        let av_actions = self._available_actions();
-        for (action, available) in av_actions.into_iter().enumerate() {
-            if !available {
-                continue;
-            }
-            let all_transitions = self.context.explorer.transitions(&self.state);
-            let transitions = self
-                .context
-                .action_resolver
-                .resolve(&all_transitions, action as i64);
-            if transitions.len() > 1 {
-                println!("Uncontrolled nondeterminism has been resolved uniformly.")
-            }
-            let t_prob = 1.0 / transitions.len() as f32;
-            let mut _destinations: HashMap<f64, Destination<T>> = HashMap::new();
-            for t in transitions.into_iter() {
-                let all_destinations = self.context.explorer.destinations(&self.state, &t);
-                for d in all_destinations.into_iter() {
-                    todo!()
-                }
-            }
-        }
     }
 
     pub fn step(&mut self, action: i64) -> StepOutput {
@@ -481,7 +479,7 @@ where
             let l_value = state
                 .get_transient_value(&self.context.explorer.network, id)
                 .unwrap_int64();
-                tensor = tensor.f_add_scalar(l_value).unwrap();
+            tensor = tensor.f_add_scalar(l_value).unwrap();
         }
         if size != tensor.size()[0] as usize {
             panic!("Vector size and NN input size does not match")
