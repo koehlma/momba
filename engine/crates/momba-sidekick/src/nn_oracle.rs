@@ -9,12 +9,13 @@ use tch::{
     kind::*,
     nn,
     nn::{Linear, Module, Sequential},
-    Device, Tensor,
+    //Device, 
+    Tensor,
 };
 
 use crate::{
-    nn_oracle::generic::{Context, GenericExplorer},
-    simulate::{Oracle, Simulator},
+    //nn_oracle::generic::{Context, GenericExplorer},
+    simulate::{Oracle, /*Simulator*/},
 };
 
 use self::generic::{ActionResolver, EdgeByIndexResolver};
@@ -24,6 +25,21 @@ mod generic;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct NeuralNetwork {
     layers: Vec<Layers>,
+}
+
+impl NeuralNetwork{
+    pub fn get_input_size(&self)-> i64{
+        match self.layers.first().unwrap(){
+            Layers::Linear { name:_, input_size, output_size:_, has_biases:_, weights:_, biases:_ } => *input_size,
+            _ => 0
+        }
+    }
+    pub fn get_output_size(&self)-> i64{
+        match self.layers.last().unwrap(){
+            Layers::Linear { name:_, input_size:_, output_size, has_biases:_, weights:_, biases:_ } => *output_size,
+            _ => 0
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -238,13 +254,14 @@ impl Clone for ModelWrapper {
     }
 }
 
-//#[derive(Clone)] //If its really needed for the oracle trait, then its a problem
+
+#[derive(Clone)] //If its really needed for the oracle trait, then its a problem
 // beacuse sequential does not implement Clone trait.
 pub struct NnOracle<T>
 where
     T: time::Time,
 {
-    model: Sequential,
+    //model: Sequential,
     model_wrapper: ModelWrapper,
     input_size: usize,
     output_size: usize,
@@ -254,10 +271,11 @@ where
 
 impl<'a, T> NnOracle<T>
 where
-    T: time::Time,
+    T: time::Time,  
 {
     //pub fn build(nn: NeuralNetwork, explorer: &'a Explorer<T>) -> Self {
     pub fn build(nn: NeuralNetwork, explorer: Arc<Explorer<T>>) -> Self {
+        /*
         let mut tch_nn = nn::seq();
         let mut default_nn = nn::seq();
         let _vs = nn::VarStore::new(Device::Cpu);
@@ -316,12 +334,15 @@ where
         }
         //println!("{:#?}\n\nvs\n\n", tch_nn);
         //println!("{:#?}", default_nn);
+        */
 
+        let input_size  = nn.get_input_size() as usize;
+        let output_size = nn.get_output_size() as usize;
         let action_resolver = EdgeByIndexResolver::new(explorer.clone());
         NnOracle {
-            model: tch_nn,
-            input_size: input_sizes.into_iter().next().unwrap() as usize,
-            output_size: output_sizes.into_iter().last().unwrap() as usize,
+            //model: tch_nn,
+            input_size,
+            output_size,
             explorer,
             action_resolver,
             model_wrapper: ModelWrapper::new(Arc::new(nn))

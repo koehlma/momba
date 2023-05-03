@@ -1,5 +1,8 @@
 #![allow(unused_variables, dead_code)]
-use std::sync::Arc;
+use std::{
+    ops::Deref,
+    sync::{atomic, Arc},
+};
 
 use momba_explore::*;
 use rand::seq::{IteratorRandom, SliceRandom};
@@ -55,6 +58,9 @@ pub trait Simulator {
     fn next(&mut self) -> Option<Self::State<'_>>;
     fn reset(&mut self) -> Self::State<'_>;
     fn current_state(&mut self) -> Self::State<'_>;
+    
+    //It's no needed, can be just a function.
+    //fn simulate(&mut self, goal: Fn(State) -> bool) -> bool;
 }
 
 #[derive(Clone)]
@@ -62,12 +68,6 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
     pub state: State<T>,
     explorer: Arc<Explorer<T>>,
     oracle: O,
-    /*
-    TODO:
-        generalize this parameter.
-        Then see how the other json things actually make the decisions
-        and create an structure able to read from this kinda of files
-    */
 }
 
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
@@ -84,6 +84,22 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
             explorer,
             oracle,
         }
+    }
+
+    pub fn simulate_v2(&mut self) -> bool {
+        self.reset();
+        while let Some(state) = self.next() {
+            // Here it needs to check if the state satisfies the goal condition.
+            //let next_state = state;
+            //if (self.goal)(&next_state) {
+            //    return 1;
+            //} else if c >= self.max_steps {
+            //    return 0;
+            //}
+            //self.state = state;
+            return true;
+        }
+        false
     }
 }
 
@@ -224,9 +240,38 @@ where
         return SimulationOutput::NoStatesAvailable;
     }
 
+    pub fn better_parallel_smc(&self) -> i64
+    where
+    S: Simulator + Clone + Send,
+    G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync, 
+    {
+        let countdown = atomic::AtomicI64::new(9999); //N_RUNS by thread
+        let num_workers = self.n_threads;
+        let max_steps = self.max_steps;
+        let goal = &self.goal;
+        let goal_counter = atomic::AtomicUsize::new(0);
+        std::thread::scope(|scope| {
+            for _ in 0..num_workers {
+                let sim = self.sim.clone();
+                let goal_counter = &goal_counter;
+                let goal = &self.goal;
+                let countdown = &countdown;
+                scope.spawn(move || {
+                    let mut sim = sim;
+                    while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
+                        if simulate_run(&mut sim, goal, max_steps) {
+                            goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                        }
+                    }
+                });
+            }
+        });
+        goal_counter.into_inner() as i64
+    }
+
     pub fn run_smc(mut self) -> f64 {
-        let n_runs = 5000;
-        //(f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs =
+            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
@@ -253,28 +298,28 @@ where
     {
         let n_runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_threads = current_num_threads();
         println!(
             "Runs: {:?}. Max Steps: {:?}. Threads: {}",
-            n_runs as i64,
-            self.max_steps,
-            current_num_threads()
+            n_runs as i64, self.max_steps, n_threads
         );
-
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
-        let updated = (0..n_runs as u64).into_par_iter().map(|_| {
-            let v = parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps);
-            v
-        });
+        let mut deadlocks = 0;
+        let mut simulators: Vec<S> = vec![];
+        for _ in 0..n_threads {
+            simulators.push(self.sim.clone());
+        }
+        let updated = (0..n_runs as u64)
+            .into_par_iter()
+            .map(|_| parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
 
         let result: Vec<_> = updated.collect();
         for sout in result {
             match sout {
                 SimulationOutput::GoalReached => score += 1,
                 SimulationOutput::MaxSteps => count_more_steps_needed += 1,
-                SimulationOutput::NoStatesAvailable => {
-                    //println!("No States Available, something went wrong...");
-                }
+                SimulationOutput::NoStatesAvailable => deadlocks += 1,
             }
         }
         score as f64 / n_runs as f64
@@ -294,6 +339,10 @@ where
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         let cycles = (n_runs as f64 / self.n_threads as f64) as i64;
+        let mut simulators: Vec<&S> = vec![];
+        for _ in 0..current_num_threads() {
+            simulators.push((&self.sim).clone())
+        }
         println!(
             "Runs: {:?}. Max Steps: {:?}. Cycles: {}. Threads: {}",
             n_runs as i64, self.max_steps, cycles, self.n_threads
@@ -369,4 +418,23 @@ where
         c += 1;
     }
     return SimulationOutput::NoStatesAvailable;
+}
+
+fn simulate_run<S, G>(sim:&mut  S, goal: & G, max_steps: i64) -> bool
+where
+    S: Simulator,
+    G: Fn(&S::State<'_>) -> bool,
+{
+    sim.reset();
+    let mut c = 0;
+    while let Some(state) = sim.next() {
+        let next_state = state.into();
+        if (goal)(&next_state) {
+            return true
+        } else if c >= max_steps {
+            return false
+        }
+        c += 1;
+    }
+    return false
 }

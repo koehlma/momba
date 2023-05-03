@@ -41,6 +41,7 @@ pub trait ActionResolver<T: time::Time> {
 }
 
 //pub struct EdgeByIndexResolver<'a, T>
+#[derive(Clone)]
 pub struct EdgeByIndexResolver<T>
 where
     T: time::Time,

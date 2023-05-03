@@ -244,9 +244,9 @@ fn check_nn(nn_command: NN) {
     let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone());
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.max_steps(99).with_delta(0.05).with_eps(0.01);
+    stat_checker = stat_checker.max_steps(99).with_delta(0.05).with_eps(0.01).n_threads(16);
     let start = Instant::now();
-    let score = stat_checker.run_smc();
+    let score = stat_checker.better_parallel_smc();
     let duration = start.elapsed();
     println!("Time elapsed is: {:?}. Score:{:?}", duration, score);
 }
@@ -263,3 +263,39 @@ fn main() {
         Command::NN(nn_command) => check_nn(nn_command),
     }
 }
+
+/*
+#[derive(Default, Clone)]
+pub struct Simulator {
+    x: RefCell<i64>,
+}
+
+impl Simulator {
+    pub fn simulate_run(&mut self) -> bool {
+        *self.x.borrow_mut() += 1;
+        *self.x.borrow() % 2 == 0
+    }
+}
+
+#[test]
+fn test_naza() {
+    let countdown = atomic::AtomicI64::new(5000);
+    let num_workers = 10;
+    let sim = Simulator::default();
+    let goal_counter = atomic::AtomicUsize::new(0);
+    std::thread::scope(|scope| {
+        for _ in 0..num_workers {
+            let mut sim = sim.clone();
+            let goal_counter = &goal_counter;
+            let countdown = &countdown;
+            scope.spawn(move || {
+                while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
+                    if sim.simulate_run() {
+                        goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                    }
+                }
+            });
+        }
+    });
+}
+*/
