@@ -195,7 +195,7 @@ pub fn count_states_concurrent(
 
                 let mut sync_stack = Vec::new();
                 let mut destinations_product = CartesianProductReusable::new();
-                while let Some(state) = ctx.pop_task() {
+                while let Some(state) = ctx.next_task() {
                     // if visited.len() % (1 << 18) == 0 {
                     //     println!("Visited: {}", visited.len());
                     // }
@@ -469,6 +469,7 @@ pub fn count_states_concurrent(
     let end = Instant::now();
 
     println!("Total Time: {:.02}", (end - start).as_secs_f64());
+    println!("States: {}", visited.len());
 
     std::process::exit(0);
 }

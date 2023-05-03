@@ -24,13 +24,18 @@ impl<'cx, T> WorkerCtx<'cx, T> {
     }
 
     /// Pops a task from the context.
-    pub fn pop_task(&self) -> Option<T> {
+    pub fn next_task(&self) -> Option<T> {
         self.local_queue.pop().or_else(|| self.pop_task_slow())
     }
 
-    /// Pops a task from the global queue or steals it.
+    /// Pops a task from the global queue or steals it from another worker.
     #[cold]
     fn pop_task_slow(&self) -> Option<T> {
+        debug_assert_eq!(
+            self.local_queue.len(),
+            0,
+            "Local queue should be empty at this point."
+        );
         std::iter::repeat_with(|| {
             self.global_queue
                 .steal_batch_and_pop(&self.local_queue)
@@ -83,8 +88,8 @@ pub fn spawn_and_run_workers<F, W, T, I>(
         .enumerate()
         .map(|(worker_id, local_queue)| WorkerCtx {
             worker_id,
-            local_queue,
             global_queue: &global_queue,
+            local_queue,
             stealers: stealers
                 .iter()
                 .enumerate()
@@ -113,19 +118,19 @@ pub fn spawn_and_run_workers<F, W, T, I>(
 
 #[cfg(test)]
 mod tests {
-    use parking_lot::Mutex;
+    use std::sync::atomic;
 
     use super::*;
 
     #[test]
     pub fn test_workers() {
-        let sum = Mutex::new(0);
+        let sum = atomic::AtomicI32::new(0);
         spawn_and_run_workers(
             2,
             |_| {
                 |ctx| {
-                    while let Some(mut task) = ctx.pop_task() {
-                        *sum.lock() += task;
+                    while let Some(mut task) = ctx.next_task() {
+                        sum.fetch_add(task, atomic::Ordering::Relaxed);
                         task -= 1;
                         if task > 0 {
                             ctx.push_task(task);
@@ -136,6 +141,9 @@ mod tests {
             WorkerQueueStrategy::Lifo,
             [3, 6, 4],
         );
-        assert_eq!(*sum.lock(), 3 * (1 + 2 + 3) + 2 * 4 + 5 + 6);
+        assert_eq!(
+            sum.load(atomic::Ordering::Acquire),
+            3 * (1 + 2 + 3) + 2 * 4 + 5 + 6
+        );
     }
 }
