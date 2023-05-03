@@ -1,11 +1,27 @@
 //! Worker infrastructure for exhaustive concurrent state space exploration.
 
+use std::sync::atomic;
+
+struct Ctx {
+    num_workers: usize,
+    done_counter: atomic::AtomicUsize,
+}
+
+impl Ctx {
+    pub fn new(num_workers: usize) -> Self {
+        Self {
+            num_workers,
+            done_counter: atomic::AtomicUsize::new(0),
+        }
+    }
+}
+
 /// A worker context holding all relevant queues.
 pub struct WorkerCtx<'cx, T> {
     /// The unique id of the worker.
     worker_id: usize,
     /// The global injector queue.
-    global_queue: &'cx crossbeam_deque::Injector<T>,
+    ctx: &'cx Ctx,
     /// The local queue.
     local_queue: crossbeam_deque::Worker<T>,
     /// The work stealers.
@@ -25,29 +41,36 @@ impl<'cx, T> WorkerCtx<'cx, T> {
 
     /// Pops a task from the context.
     pub fn next_task(&self) -> Option<T> {
-        self.local_queue.pop().or_else(|| self.pop_task_slow())
+        self.local_queue.pop().or_else(|| self.next_task_slow())
     }
 
     /// Pops a task from the global queue or steals it from another worker.
     #[cold]
-    fn pop_task_slow(&self) -> Option<T> {
+    fn next_task_slow(&self) -> Option<T> {
         debug_assert_eq!(
             self.local_queue.len(),
             0,
             "Local queue should be empty at this point."
         );
-        std::iter::repeat_with(|| {
-            self.global_queue
-                .steal_batch_and_pop(&self.local_queue)
-                .or_else(|| {
-                    self.stealers
-                        .iter()
-                        .map(|stealer| stealer.steal())
-                        .collect()
-                })
-        })
-        .find(|stolen| !stolen.is_retry())
-        .and_then(|stolen| stolen.success())
+        // We can use `Relaxed` here because synchronization happens via the stealers.
+        self.ctx
+            .done_counter
+            .fetch_add(1, atomic::Ordering::Relaxed);
+        let next_task = 'search: loop {
+            for stealer in &self.stealers {
+                if let Some(next_task) = stealer.steal().success() {
+                    break 'search next_task;
+                }
+            }
+            // There is no next task.
+            let done_counter = self.ctx.done_counter.load(atomic::Ordering::Acquire);
+            if done_counter == self.ctx.num_workers {
+                // Everyone is done.
+                return None;
+            }
+        };
+        self.ctx.done_counter.fetch_sub(1, atomic::Ordering::AcqRel);
+        Some(next_task)
     }
 }
 
@@ -72,13 +95,16 @@ pub fn spawn_and_run_workers<F, W, T, I>(
     W: Send + FnOnce(WorkerCtx<'_, T>),
     I: IntoIterator<Item = T>,
 {
-    let global_queue = crossbeam_deque::Injector::new();
+    let ctx = Ctx::new(num_workers);
     let local_queues = (0..num_workers)
         .map(|_| match strategy {
             WorkerQueueStrategy::Fifo => crossbeam_deque::Worker::new_fifo(),
             WorkerQueueStrategy::Lifo => crossbeam_deque::Worker::new_lifo(),
         })
         .collect::<Vec<_>>();
+    for (task_idx, task) in tasks.into_iter().enumerate() {
+        local_queues[task_idx % num_workers].push(task);
+    }
     let stealers = local_queues
         .iter()
         .map(|local_queue| local_queue.stealer())
@@ -88,7 +114,7 @@ pub fn spawn_and_run_workers<F, W, T, I>(
         .enumerate()
         .map(|(worker_id, local_queue)| WorkerCtx {
             worker_id,
-            global_queue: &global_queue,
+            ctx: &ctx,
             local_queue,
             stealers: stealers
                 .iter()
@@ -104,9 +130,6 @@ pub fn spawn_and_run_workers<F, W, T, I>(
                 .collect(),
         })
         .collect::<Vec<_>>();
-    for task in tasks {
-        global_queue.push(task);
-    }
     crossbeam::scope(|scope| {
         for ctx in ctxs.into_iter() {
             let worker = factory(&ctx);
