@@ -174,8 +174,8 @@ pub fn count_states_concurrent(
         }
     };
 
-    let visited = dashmap::DashSet::new();
-    visited.insert(initial_state);
+    let visited = dashmap::DashMap::with_shard_amount(64);
+    visited.insert(initial_state, ());
 
     exhaustive::workers::spawn_and_run_workers(
         num_workers,
@@ -443,7 +443,7 @@ pub fn count_states_concurrent(
 
                                 drop(dst_state_mut);
 
-                                if visited.insert(unsafe { &*next_state_bump }) {
+                                if visited.insert(unsafe { &*next_state_bump }, ()).is_none() {
                                     ctx.push_task(unsafe { &*next_state_bump });
                                     next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
                                     // println!("Pushed!");
