@@ -7,10 +7,7 @@ use momba_model::{types::Type, values::Value};
 use parking_lot::RwLock;
 use thiserror::Error;
 
-use super::{
-    units::{NumBits, NumWords},
-    MemRegion,
-};
+use super::{units::NumBits, MemRegion};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum WordTyKind {

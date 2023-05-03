@@ -1,19 +1,26 @@
 #![doc = include_str!("../README.md")]
 
-use std::{error::Error, marker::PhantomData, ops::Range, time::Instant};
+use core::num;
+use std::{
+    collections::VecDeque,
+    error::Error,
+    marker::PhantomData,
+    ops::Range,
+    time::{Duration, Instant},
+};
 
 use bumpalo::Bump;
 use compiler::compiled::{
     ActionIdx, CompiledLinkPattern, CompiledModel, DestinationIdx, EdgeIdx, InstanceIdx,
 };
 use datatypes::idxvec::new_idx_type;
-use hashbrown::{hash_map::DefaultHashBuilder, HashSet};
+use hashbrown::HashSet;
 use momba_model::models::Model;
 use params::Params;
 
 use crate::{
     compiler::{compile_model, compiled::CompiledDestination, Options, StateLayout},
-    datatypes::idxvec::{Idx, IdxVec},
+    datatypes::idxvec::IdxVec,
     values::{
         memory::{bits::BitSlice, Load},
         types::ValueTyKind,
@@ -84,6 +91,72 @@ pub struct DestinationItem {
 struct StackTransitionItem<'stack> {
     parent: Option<&'stack StackTransitionItem<'stack>>,
     item: &'stack TransitionItem,
+}
+
+pub struct WorkerCtx<'cx, T> {
+    worker_id: usize,
+    global_queue: &'cx crossbeam_deque::Injector<T>,
+    local_queue: crossbeam_deque::Worker<T>,
+    stealers: Vec<crossbeam_deque::Stealer<T>>,
+}
+
+impl<'cx, T> WorkerCtx<'cx, T> {
+    pub fn worker_id(&self) -> usize {
+        self.worker_id
+    }
+
+    pub fn push_task(&self, task: T) {
+        self.local_queue.push(task);
+    }
+
+    pub fn pop_task(&self) -> Option<T> {
+        self.local_queue.pop().or_else(|| {
+            std::iter::repeat_with(|| {
+                self.global_queue
+                    .steal_batch_and_pop(&self.local_queue)
+                    .or_else(|| self.stealers.iter().map(|s| s.steal()).collect())
+            })
+            .find(|steal| !steal.is_retry())
+            .and_then(|steal| steal.success())
+        })
+    }
+}
+
+pub fn spawn_and_run_workers<F, W, T, I>(num_threads: usize, mut factory: F, tasks: I)
+where
+    T: Send,
+    F: FnMut(&WorkerCtx<'_, T>) -> W,
+    W: Send + FnOnce(WorkerCtx<'_, T>),
+    I: IntoIterator<Item = T>,
+{
+    let global_queue = crossbeam_deque::Injector::new();
+    let local_queues = (0..num_threads)
+        .map(|_| crossbeam_deque::Worker::new_fifo())
+        .collect::<Vec<_>>();
+    let stealers = local_queues
+        .iter()
+        .map(|local_queue| local_queue.stealer())
+        .collect::<Vec<_>>();
+    let ctxs = local_queues
+        .into_iter()
+        .enumerate()
+        .map(|(worker_id, local_queue)| WorkerCtx {
+            worker_id,
+            local_queue,
+            global_queue: &global_queue,
+            stealers: stealers.clone(),
+        })
+        .collect::<Vec<_>>();
+    for task in tasks {
+        global_queue.push(task);
+    }
+    crossbeam::scope(|scope| {
+        for ctx in ctxs.into_iter() {
+            let worker = factory(&ctx);
+            scope.spawn(move |_| worker(ctx));
+        }
+    })
+    .expect("Error while executing worker.")
 }
 
 impl<'stack> StackTransitionItem<'stack> {
@@ -165,7 +238,7 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
     let initial_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
     initial_state_bump.copy_from_slice(&compiled.variables.initial_state);
 
-    let mut state_stack = vec![&*initial_state_bump];
+    let mut state_stack = VecDeque::from(vec![&*initial_state_bump]);
 
     let mut next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8) as *mut [u8];
 
@@ -182,15 +255,18 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
     let mut enabled_sync_edges = Vec::new();
     let mut instance_sync_edges = IdxVec::<InstanceIdx, _>::new();
 
-    // let states = state_allocator::StateStore::<u8>::new();
-
-    // let page =
+    #[cfg(feature = "statistics")]
+    let mut computing_enabled_edges = Duration::default();
+    #[cfg(feature = "statistics")]
+    let mut computing_transitions = Duration::default();
+    #[cfg(feature = "statistics")]
+    let mut computing_successors = Duration::default();
 
     let mut queue_pressure = 0;
 
     let mut sync_stack = Vec::new();
     let mut destinations_product = CartesianProductReusable::new();
-    while let Some(state) = state_stack.pop() {
+    while let Some(state) = state_stack.pop_front() {
         if visited.len() % (1 << 18) == 0 {
             println!("Visited: {}", visited.len());
         }
@@ -207,6 +283,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
         transitions.clear();
         enabled_sync_edges.clear();
         instance_sync_edges.clear();
+
+        #[cfg(feature = "statistics")]
+        let computing_enabled_edges_start = Instant::now();
 
         for (instance_idx, instance) in compiled.instances.indexed_iter() {
             let enabled_sync_edges_start = enabled_sync_edges.len();
@@ -231,6 +310,11 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             instance_sync_edges.push(enabled_sync_edges_start..enabled_sync_edges.len());
         }
 
+        #[cfg(feature = "statistics")]
+        {
+            computing_enabled_edges += Instant::now() - computing_enabled_edges_start;
+        }
+
         // println!("Transition Items: {:?}", transition_items);
         // println!("Transitions: {:?}", transitions);
 
@@ -243,6 +327,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
         //         enabled_range.end - enabled_range.start
         //     );
         // }
+
+        #[cfg(feature = "statistics")]
+        let computing_transitions_start = Instant::now();
 
         for link in &compiled.links.links {
             sync_stack.clear();
@@ -354,8 +441,16 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             // }
         }
 
+        #[cfg(feature = "statistics")]
+        {
+            computing_transitions += Instant::now() - computing_transitions_start;
+        }
+
         // println!("Transition Items: {:?}", transition_items);
         //println!("Transitions: {}", transitions.len());
+
+        #[cfg(feature = "statistics")]
+        let computing_successors_start = Instant::now();
 
         for transition in &transitions {
             let items = &transition_items[transition.items.clone()];
@@ -381,7 +476,7 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
                     //let mut probability = 1.0;
                     unsafe { (&mut *next_state_bump).copy_from_slice(state) }
                     let dst_state_mut =
-                        BitSlice::<StateLayout>::from_slice_mut(unsafe { (&mut *next_state_bump) });
+                        BitSlice::<StateLayout>::from_slice_mut(unsafe { &mut *next_state_bump });
                     // println!("Destination:");
 
                     // println!("  Source: {}", compiled.fmt_state(&env.state));
@@ -444,7 +539,7 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
                     drop(dst_state_mut);
 
                     if visited.insert(unsafe { &*next_state_bump }) {
-                        state_stack.push(unsafe { &*next_state_bump });
+                        state_stack.push_back(unsafe { &*next_state_bump });
                         next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
                         // println!("Pushed!");
                     }
@@ -452,6 +547,11 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
                 },
             );
             //println!("Destinations: {}", destinations_counter);
+        }
+
+        #[cfg(feature = "statistics")]
+        {
+            computing_successors += Instant::now() - computing_successors_start;
         }
     }
 
@@ -463,7 +563,16 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let end = Instant::now();
 
-    println!("Time: {:.02}", (end - start).as_secs_f64());
+    println!("Total Time: {:.02}", (end - start).as_secs_f64());
+    #[cfg(feature = "statistics")]
+    {
+        println!(
+            "Enabled Edges: {:.02}",
+            computing_enabled_edges.as_secs_f64()
+        );
+        println!("Transitions: {:.02}", computing_transitions.as_secs_f64());
+        println!("Successors: {:.02}", computing_successors.as_secs_f64());
+    }
 
     std::process::exit(0);
 }

@@ -1,14 +1,12 @@
 //! Compiled model representation.
 
-use std::{
-    fmt::{Pointer, Write},
-    ops::Range,
-};
+use std::{fmt::Write, ops::Range};
 
 use momba_model::{
     actions::ActionLabel,
     automata::{AutomatonName, LocationName},
 };
+use rayon::prelude::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::{
     datatypes::idxvec::{new_idx_type, Idx, IdxVec},
@@ -49,6 +47,10 @@ new_idx_type! {
 
 new_idx_type! {
     pub ActionIdx(u16)
+}
+
+new_idx_type! {
+    pub TransientVariableIdx(u16)
 }
 
 /// A compiled model.
@@ -184,6 +186,23 @@ impl CompiledInstance {
                 callback((edges_range.start.as_usize() + idx).into());
             }
         }
+    }
+
+    #[inline(always)]
+    pub fn foreach_enabled_edge_concurrent<C: Sync + Fn(EdgeIdx)>(
+        &self,
+        env: &mut Env,
+        callback: C,
+    ) {
+        let loc = self.load_location(&env.state);
+        let edges_range = self.locations[loc].edges.clone();
+        let edges = &self.edges[edges_range.clone()];
+        let state = env.state;
+        edges.par_iter().enumerate().for_each(|(idx, edge)| {
+            if edge.guard.evaluate(&mut Env { state }) {
+                callback((edges_range.start.as_usize() + idx).into());
+            }
+        });
     }
 }
 

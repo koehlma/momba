@@ -7,16 +7,16 @@ use crate::{
     datatypes::idxvec::{new_idx_type, Idx, IdxVec},
     params::Params,
     values::{
-        layout::{Addr, DenseBitLayout, Field, FieldIdx, FieldOffsets, StructLayout, ValueLayout},
+        layout::{DenseBitLayout, Field, FieldIdx, FieldOffsets, StructLayout},
         memory::{bits::BitSlice, Store},
-        types::{HasType, IntTy, TypeCtx, TypeError, ValueTy, ValueTyKind, WordTy},
+        types::{HasType, TypeCtx, TypeError, ValueTy, ValueTyKind, WordTy},
         FromWord, IntoWord, Word,
     },
 };
 
 use momba_model::{
     actions::{ActionLabel, ActionPattern},
-    automata::{Automaton, AutomatonName, Edge, Instance, LocationName},
+    automata::{Automaton, AutomatonName, Edge, LocationName},
     expressions::{ConstantExpression, Expression},
     models::Model,
     types::Type,
@@ -31,8 +31,8 @@ use self::{
     assignments::compile_assignment,
     compiled::{
         ActionIdx, CompiledDestination, CompiledEdge, CompiledInstance, CompiledLink,
-        CompiledLinks, CompiledLocation, CompiledModel, DestinationIdx, EdgeIdx, InstanceIdx,
-        LocationIdx,
+        CompiledLinks, CompiledLocation, CompiledModel, InstanceIdx, LocationIdx,
+        TransientVariableIdx,
     },
     expressions::{compile_expression, Constant},
     scope::ScopeItem,
