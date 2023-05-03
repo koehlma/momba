@@ -3,7 +3,7 @@ use std::{error::Error, path::PathBuf, sync::Arc, time::Instant};
 use clap::Parser;
 use momba_explicit::{
     compiler::{compile_model, Options, StateLayout},
-    count_states,
+    count_states, count_states_concurrent,
     params::Params,
 };
 use momba_model::{models::Model, values::Value};
@@ -13,6 +13,8 @@ pub struct Arguments {
     model_path: PathBuf,
     #[clap(long)]
     params: Option<String>,
+    #[clap(long)]
+    threads: Option<usize>,
 }
 
 pub fn parse_params(string: &str) -> Params {
@@ -48,7 +50,11 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let model: Model = serde_json::from_str(&std::fs::read_to_string(&args.model_path)?)?;
     let params = parse_params(args.params.as_ref().map(String::as_str).unwrap_or(""));
 
-    count_states(&model, &params)?;
+    if let Some(threads) = args.threads {
+        count_states_concurrent(&model, &params, threads)?;
+    } else {
+        count_states(&model, &params)?;
+    }
 
     Ok(())
 }

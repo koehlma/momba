@@ -6,6 +6,7 @@ use std::{
     error::Error,
     marker::PhantomData,
     ops::Range,
+    ptr::NonNull,
     time::{Duration, Instant},
 };
 
@@ -17,6 +18,9 @@ use datatypes::idxvec::new_idx_type;
 use hashbrown::HashSet;
 use momba_model::models::Model;
 use params::Params;
+use parking_lot::Mutex;
+
+pub mod exhaustive;
 
 use crate::{
     compiler::{compile_model, compiled::CompiledDestination, Options, StateLayout},
@@ -93,72 +97,6 @@ struct StackTransitionItem<'stack> {
     item: &'stack TransitionItem,
 }
 
-pub struct WorkerCtx<'cx, T> {
-    worker_id: usize,
-    global_queue: &'cx crossbeam_deque::Injector<T>,
-    local_queue: crossbeam_deque::Worker<T>,
-    stealers: Vec<crossbeam_deque::Stealer<T>>,
-}
-
-impl<'cx, T> WorkerCtx<'cx, T> {
-    pub fn worker_id(&self) -> usize {
-        self.worker_id
-    }
-
-    pub fn push_task(&self, task: T) {
-        self.local_queue.push(task);
-    }
-
-    pub fn pop_task(&self) -> Option<T> {
-        self.local_queue.pop().or_else(|| {
-            std::iter::repeat_with(|| {
-                self.global_queue
-                    .steal_batch_and_pop(&self.local_queue)
-                    .or_else(|| self.stealers.iter().map(|s| s.steal()).collect())
-            })
-            .find(|steal| !steal.is_retry())
-            .and_then(|steal| steal.success())
-        })
-    }
-}
-
-pub fn spawn_and_run_workers<F, W, T, I>(num_threads: usize, mut factory: F, tasks: I)
-where
-    T: Send,
-    F: FnMut(&WorkerCtx<'_, T>) -> W,
-    W: Send + FnOnce(WorkerCtx<'_, T>),
-    I: IntoIterator<Item = T>,
-{
-    let global_queue = crossbeam_deque::Injector::new();
-    let local_queues = (0..num_threads)
-        .map(|_| crossbeam_deque::Worker::new_fifo())
-        .collect::<Vec<_>>();
-    let stealers = local_queues
-        .iter()
-        .map(|local_queue| local_queue.stealer())
-        .collect::<Vec<_>>();
-    let ctxs = local_queues
-        .into_iter()
-        .enumerate()
-        .map(|(worker_id, local_queue)| WorkerCtx {
-            worker_id,
-            local_queue,
-            global_queue: &global_queue,
-            stealers: stealers.clone(),
-        })
-        .collect::<Vec<_>>();
-    for task in tasks {
-        global_queue.push(task);
-    }
-    crossbeam::scope(|scope| {
-        for ctx in ctxs.into_iter() {
-            let worker = factory(&ctx);
-            scope.spawn(move |_| worker(ctx));
-        }
-    })
-    .expect("Error while executing worker.")
-}
-
 impl<'stack> StackTransitionItem<'stack> {
     pub fn build_transition(
         &self,
@@ -209,6 +147,330 @@ fn filter_edges(
         }
     }
     edges
+}
+
+pub fn count_states_concurrent(
+    model: &Model,
+    params: &Params,
+    num_workers: usize,
+) -> Result<(), Box<dyn Error>> {
+    assert!(num_workers > 0);
+
+    let start = Instant::now();
+
+    let compiled = compile_model(&model, &params, &Options::new())?;
+    let state_size = compiled.variables.initial_state.len();
+
+    let state_storage = (0..num_workers)
+        .map(|_| Mutex::new(Bump::new()))
+        .collect::<Vec<_>>();
+
+    let initial_state = unsafe {
+        &*{
+            let bump = state_storage[0].lock();
+            let initial_state = bump.alloc_slice_fill_copy(state_size, 0u8);
+            initial_state.copy_from_slice(&compiled.variables.initial_state);
+            initial_state as *const [u8]
+        }
+    };
+
+    let visited = dashmap::DashSet::new();
+    visited.insert(initial_state);
+
+    exhaustive::workers::spawn_and_run_workers(
+        num_workers,
+        |_| {
+            |ctx| {
+                let bump = state_storage[ctx.worker_id()].lock();
+                let mut next_state_bump =
+                    bump.alloc_slice_fill_copy(state_size, 0u8) as *mut [u8];
+
+                //let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
+
+                let mut transition_items = IdxVec::new();
+                let mut transitions = Vec::new();
+
+                let mut enabled_sync_edges = Vec::new();
+                let mut instance_sync_edges = IdxVec::<InstanceIdx, _>::new();
+
+                let mut sync_stack = Vec::new();
+                let mut destinations_product = CartesianProductReusable::new();
+                while let Some(state) = ctx.pop_task() {
+                    // if visited.len() % (1 << 18) == 0 {
+                    //     println!("Visited: {}", visited.len());
+                    // }
+
+                    let mut env = Env::new(BitSlice::<StateLayout>::from_slice(&state));
+
+                    transition_items.clear();
+                    transitions.clear();
+                    enabled_sync_edges.clear();
+                    instance_sync_edges.clear();
+
+                    #[cfg(feature = "statistics")]
+                    let computing_enabled_edges_start = Instant::now();
+
+                    for (instance_idx, instance) in compiled.instances.indexed_iter() {
+                        let enabled_sync_edges_start = enabled_sync_edges.len();
+                        instance.foreach_enabled_edge(&mut env, |edge_idx| {
+                            let item = TransitionItem {
+                                instance_idx,
+                                edge_idx,
+                            };
+                            let edge = &instance.edges[edge_idx];
+                            if let Some(action) = edge.action {
+                                // This edge requires synchronizing.
+                                enabled_sync_edges.push((item, action));
+                            } else {
+                                // This edge is internal and does not require synchronizing.
+                                let item_idx = transition_items.next_idx();
+                                transition_items.push(item);
+                                transitions.push(Transition {
+                                    items: (item_idx..transition_items.next_idx()),
+                                })
+                            }
+                        });
+                        instance_sync_edges
+                            .push(enabled_sync_edges_start..enabled_sync_edges.len());
+                    }
+
+                    for link in &compiled.links.links {
+                        sync_stack.clear();
+                        let patterns = &compiled.links.patterns[link.patterns.clone()];
+                        let [first_pattern, remaining_patterns @ ..] = patterns else {
+                // Link does not contain any patters => No transitions!
+                continue;
+            };
+                        let enabled_edges = filter_edges(
+                            &enabled_sync_edges
+                                [instance_sync_edges[first_pattern.instance].clone()],
+                            first_pattern.action,
+                        );
+                        match enabled_edges {
+                            [selected_edge, remaining_edges @ ..] => {
+                                debug_assert_eq!(selected_edge.1, first_pattern.action);
+                                sync_stack.push((
+                                    remaining_edges as *const [(TransitionItem, ActionIdx)],
+                                    selected_edge as *const (TransitionItem, ActionIdx),
+                                    remaining_patterns as *const [CompiledLinkPattern],
+                                ))
+                            }
+                            [] => {
+                                // No edges with a matching action => No transitions!
+                                continue;
+                            }
+                        }
+
+                        // println!("Sync stack:");
+                        // for (remaining_edges, selected_edge, remaining_patterns) in &sync_stack {
+                        //     println!(
+                        //         "  {:?}, {:?}, {:?}",
+                        //         remaining_edges, selected_edge, remaining_patterns
+                        //     );
+                        // }
+
+                        while let Some((_, _, remaining_patterns)) = sync_stack.last() {
+                            let remaining_patterns = unsafe { &**remaining_patterns };
+                            // println!("Sync stack:");
+                            // for (remaining_edges, selected_edge, remaining_patterns) in &sync_stack {
+                            //     println!(
+                            //         "  {:?}, {:?}, {:?}",
+                            //         remaining_edges, selected_edge, remaining_patterns
+                            //     );
+                            // }
+                            match remaining_patterns {
+                                [next_pattern, remaining_patterns @ ..] => {
+                                    let enabled_edges = filter_edges(
+                                        &enabled_sync_edges
+                                            [instance_sync_edges[next_pattern.instance].clone()],
+                                        next_pattern.action,
+                                    );
+                                    match enabled_edges {
+                                        [selected_edge, remaining_edges @ ..] => {
+                                            debug_assert_eq!(selected_edge.1, next_pattern.action);
+                                            sync_stack.push((
+                                                remaining_edges,
+                                                selected_edge,
+                                                remaining_patterns,
+                                            ))
+                                        }
+                                        [] => {
+                                            // No edges with a matching action => No transitions!
+                                            break;
+                                        }
+                                    }
+                                }
+                                [] => {
+                                    // We found a transition.
+                                    let items_start = transition_items.next_idx();
+                                    for (_, selected_edge, _) in &sync_stack {
+                                        let (item, _) = unsafe { &**selected_edge };
+                                        transition_items.push(item.clone());
+                                    }
+                                    let items_end = transition_items.next_idx();
+                                    //println!("Add sync transition!");
+                                    transitions.push(Transition {
+                                        items: items_start..items_end,
+                                    });
+
+                                    // After adding the transition, we need to update the stack.
+                                    while let Some((
+                                        remaining_edges,
+                                        previous_edge,
+                                        remaining_patterns,
+                                    )) = sync_stack.pop()
+                                    {
+                                        let remaining_edges = unsafe { &*remaining_edges };
+                                        let previous_edge = unsafe { &*previous_edge };
+                                        let remaining_patterns = unsafe { &*remaining_patterns };
+                                        let enabled_edges =
+                                            filter_edges(remaining_edges, previous_edge.1);
+                                        match enabled_edges {
+                                            [selected_edge, remaining_edges @ ..] => {
+                                                debug_assert_eq!(selected_edge.1, previous_edge.1);
+                                                sync_stack.push((
+                                                    remaining_edges,
+                                                    selected_edge,
+                                                    remaining_patterns,
+                                                ));
+                                                break;
+                                            }
+                                            [] => {
+                                                // No more edges. Try next.
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // for pattern in patterns {
+                        //     sync_stack.push(&enabled_sync_edges[instance_sync_edges[pattern.instance].clone()])
+                        // }
+                    }
+
+                    // println!("Transition Items: {:?}", transition_items);
+
+                    for transition in &transitions {
+                        let items = &transition_items[transition.items.clone()];
+                        // let product = CartesianProduct::new(
+                        //     items,
+                        //     |item| {
+                        //         let instance = &compiled.instances[item.instance_idx];
+                        //         let edge = &instance.edges[item.edge_idx];
+                        //         instance.destinations(edge)
+                        //     },
+                        //     |_, destination| Some(destination),
+                        // );
+                        let mut destinations_counter = 0;
+                        destinations_product.produce(
+                            items,
+                            |item| {
+                                let instance = &compiled.instances[item.instance_idx];
+                                let edge = &instance.edges[item.edge_idx];
+                                instance.destinations(edge)
+                            },
+                            |_, destination| Some(destination as *const _),
+                            |product| {
+                                //let mut probability = 1.0;
+                                unsafe { (&mut *next_state_bump).copy_from_slice(state) }
+                                let dst_state_mut =
+                                    BitSlice::<StateLayout>::from_slice_mut(unsafe {
+                                        &mut *next_state_bump
+                                    });
+                                // println!("Destination:");
+
+                                // println!("  Source: {}", compiled.fmt_state(&env.state));
+                                // println!(
+                                //     "  Locations: {}",
+                                //     compiled
+                                //         .instances
+                                //         .indexed_iter()
+                                //         .map(|(idx, instance)| {
+                                //             let loc = instance.load_location(&env.state);
+
+                                //             format!(
+                                //                 "{} = {:?} ({})",
+                                //                 idx.as_usize(),
+                                //                 instance.locations[loc].name,
+                                //                 loc.as_usize()
+                                //             )
+                                //         })
+                                //         .collect::<Vec<_>>()
+                                //         .join("; ")
+                                // );
+                                for (item, destination) in product.items() {
+                                    let instance = &compiled.instances[item.instance_idx];
+                                    //let edge = &instance.edges[item.edge_idx];
+                                    let destination: &CompiledDestination =
+                                        unsafe { &**destination }; //&instance.destinations[destination.idx];
+                                                                   //  probability *= destination.probability.evaluate(&mut env);
+                                    for assignment in
+                                        &instance.assignments[destination.assignments.clone()]
+                                    {
+                                        assignment.execute(dst_state_mut, &mut env);
+                                    }
+                                    // println!(
+                                    //     "  Destination: {}:{}({}):{}",
+                                    //     item.instance_idx.as_usize(),
+                                    //     item.edge_idx.as_usize(),
+                                    //     edge.original_idx,
+                                    //     destination.idx.as_usize()
+                                    // );
+                                    instance.store_location(dst_state_mut, destination.target);
+                                }
+
+                                // println!("  Target: {}", compiled.fmt_state(dst_state_mut));
+                                // println!(
+                                //     "  Locations: {}",
+                                //     compiled
+                                //         .instances
+                                //         .indexed_iter()
+                                //         .map(|(idx, instance)| {
+                                //             let loc = instance.load_location(dst_state_mut);
+
+                                //             format!(
+                                //                 "{} = {:?} ({})",
+                                //                 idx.as_usize(),
+                                //                 instance.locations[loc].name,
+                                //                 loc.as_usize()
+                                //             )
+                                //         })
+                                //         .collect::<Vec<_>>()
+                                //         .join("; ")
+                                // );
+
+                                drop(dst_state_mut);
+
+                                if visited.insert(unsafe { &*next_state_bump }) {
+                                    ctx.push_task(unsafe { &*next_state_bump });
+                                    next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
+                                    // println!("Pushed!");
+                                }
+                                destinations_counter += 1;
+                            },
+                        );
+                        //println!("Destinations: {}", destinations_counter);
+                    }
+                }
+
+                // println!("{:?}", enabled_sync_edges);
+                // println!("{:?}", instance_sync_edges);
+
+                // println!("Queue Pressure: {}", queue_pressure);
+                // println!("States: {}", visited.len());
+            }
+        },
+        exhaustive::workers::WorkerQueueStrategy::Fifo,
+        [initial_state],
+    );
+
+    let end = Instant::now();
+
+    println!("Total Time: {:.02}", (end - start).as_secs_f64());
+
+    std::process::exit(0);
 }
 
 pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>> {
@@ -267,9 +529,9 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
     let mut sync_stack = Vec::new();
     let mut destinations_product = CartesianProductReusable::new();
     while let Some(state) = state_stack.pop_front() {
-        if visited.len() % (1 << 18) == 0 {
-            println!("Visited: {}", visited.len());
-        }
+        // if visited.len() % (1 << 18) == 0 {
+        //     println!("Visited: {}", visited.len());
+        // }
 
         queue_pressure = queue_pressure.max(state_stack.len());
 
