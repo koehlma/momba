@@ -4,7 +4,6 @@ use hashbrown::HashMap;
 //use std::sync::Arc;
 use momba_explore::*;
 use rand::seq::IteratorRandom;
-use rayon::vec;
 use serde::{Deserialize, Serialize};
 use tch::{
     kind::*,
@@ -283,32 +282,8 @@ where
     }
 
     fn state_to_tensor(&self, state: &State<T>) -> Tensor {
-        //Old version
-        // let mut tensor = Tensor::empty(&[self.input_size as i64], INT64_CPU);
-        // for (id, _) in &self.explorer.network.declarations.global_variables {
-        //     let g_value = state.get_global_value(&self.explorer, &id).unwrap();
-        //     tensor = match g_value.get_type() {
-        //         model::Type::Bool => panic!("Tensor type not valid"),
-        //         //tensor.f_add_scalar(g_value.unwrap_bool()).unwrap(),
-        //         model::Type::Float64 => tensor
-        //             .f_add_scalar(g_value.unwrap_float64().into_inner())
-        //             .unwrap(),
-        //         model::Type::Int64 => tensor.f_add_scalar(g_value.unwrap_int64()).unwrap(),
-        //         model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
-        //         //tensor.f_add_(g_value.unwrap_vector()).unwrap(),
-        //         model::Type::Unknown => panic!("Tensor type not valid"),
-        //     };
-        //     tensor.print();
-        // }
-        // for (id, _) in &self.explorer.network.declarations.transient_variables {
-        //     let l_value = state
-        //         .get_transient_value(&self.explorer.network, id)
-        //         .unwrap_int64();
-        //     tensor = tensor.f_add_scalar(l_value).unwrap();
-        // }
-        // tensor
         let mut vec_values = vec![];
-        for (id, v) in &self.explorer.network.declarations.global_variables {
+        for (id, _) in &self.explorer.network.declarations.global_variables {
             let g_value = state.get_global_value(&self.explorer, &id).unwrap();
             match g_value.get_type() {
                 model::Type::Bool => panic!("Tensor type not valid"),
@@ -324,7 +299,7 @@ where
 
     // The idea is to have another function that will return me the available action with the highest
     // q value from the model.
-    fn get_edges_ids(&self, transitions: &[Transition<T>]) -> Vec<i64> {
+    fn _get_edges_ids(&self, transitions: &[Transition<T>]) -> Vec<i64> {
         //Should be a filter and a flatten.
         let mut actions = vec![];
         for t in transitions.into_iter() {
@@ -338,7 +313,7 @@ where
         actions
     }
 
-    fn tensor_to_action(&self, tensor: Tensor) -> i64 {
+    fn _tensor_to_action(&self, tensor: Tensor) -> i64 {
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
         }
@@ -357,15 +332,11 @@ impl<T> Oracle<T> for NnOracle<T>
 where
     T: time::Time,
 {
-    /*
-
-    */
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
-        //println!("Transitions Received in choose: {:?}", transitions.len());
         if transitions.len() == 1 {
             transitions.into_iter().next().unwrap()
         } else {
@@ -373,45 +344,21 @@ where
             let tensor = self.state_to_tensor(state);
 
             let output_tensor = self.model.forward(&tensor);
-
-            let mut action_map: HashMap<i64, f64> = HashMap::new();
-            //let mut available_transitions = vec![];
-            //let mut out = vec![];
-            //self.action_resolver.available(state, &mut out);
-            //for (i, t) in transitions.iter().enumerate() {
-            //    if out[i] {
-            //        available_transitions.push(t)
-            //    }
-            //}
-            //println!();
-            //println!("{:?}", out);
-            for a in self.get_edges_ids(transitions).into_iter() {
-                action_map.insert(a, output_tensor.double_value(&[a]));
+            let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+            for a in 0..self.output_size as i64 {
+                tensor_map.insert(a, output_tensor.double_value(&[a]));
             }
-            let mut max_val: f64 = 0.0;
-            let mut max_key: i64 = -1;
-            for (k, v) in action_map.iter() {
-                if *v > max_val {
-                    max_key = *k;
-                    max_val = *v;
-                }
-            }
-
-            let _action = self.tensor_to_action(output_tensor);
-            let selected_transitions = self.action_resolver.resolve(&transitions, max_key);
-
-            //let action = self.tensor_to_action(output_tensor);
-            //let selected_transitions = self.action_resolver.resolve(&transitions, action);
-
+            //------------------------------\\
+            // let mut action_map: HashMap<i64, f64> = HashMap::new();
+            // for a in self.get_edges_ids(transitions).into_iter() {
+            //     action_map.insert(a, output_tensor.double_value(&[a]));
+            // }
+            //let _action = self.tensor_to_action(output_tensor);
+            //let selected_transitions = self.action_resolver.resolve_v0(&transitions, max_key);            
+            //------------------------------\\
+            let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
             if selected_transitions.is_empty() {
-                //println!(
-                //    "he choose poorly: {:?}. Resolving uniformly between {:?} actions",
-                //    action,
-                //    transitions.len()
-                //);
                 return transitions.into_iter().choose(&mut rng).unwrap();
-            } else {
-                //println!("You have choosen wisely: {:?}", action);
             }
             if selected_transitions.len() > 1 {
                 println!("Uncontrolled nondeterminism resolved uniformly.");

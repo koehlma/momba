@@ -3,7 +3,6 @@ use std::sync::Arc;
 
 use momba_explore::*;
 use rand::seq::{IteratorRandom, SliceRandom};
-use rand::Rng;
 use rayon::{current_num_threads, prelude::*};
 
 //use crate::nn_oracle::{NeuralNetwork, NnOracle};
@@ -226,21 +225,24 @@ where
     }
 
     pub fn run_smc(mut self) -> f64 {
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs = 5000;
+        //(f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
+        let mut deadlock_count = 0;
         for _ in 0..n_runs as i64 {
             let v = self.simulate();
             match v {
                 SimulationOutput::GoalReached => score += 1,
                 SimulationOutput::MaxSteps => count_more_steps_needed += 1,
-                SimulationOutput::NoStatesAvailable => {
-                    //println!("Deadlock reached");
-                }
+                SimulationOutput::NoStatesAvailable => deadlock_count += 1,
             }
         }
+        println!(
+            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}",
+            count_more_steps_needed, score, deadlock_count
+        );
         score as f64 / n_runs as f64
     }
 

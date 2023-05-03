@@ -147,7 +147,8 @@ fn random_walk(walk: Simulate) {
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let mut state_iterator =
+        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal)
@@ -173,14 +174,16 @@ fn smc(walks: SMC) {
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
     //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let mut state_iterator =
+        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(99).with_delta(0.05).with_eps(0.05);
+    stat_checker = stat_checker.max_steps(300).with_delta(0.05).with_eps(0.01);
+    let start = Instant::now();
     let score = stat_checker.run_smc();
-
-    println!("Score: {}", score);
+    let duration = start.elapsed();
+    println!("Time elapsed is: {:?}. Score:{:?}", duration, score);
 }
 
 fn sprt(walks: SPRT) {
@@ -198,7 +201,8 @@ fn sprt(walks: SPRT) {
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    let mut state_iterator = simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let mut state_iterator =
+        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
@@ -237,14 +241,14 @@ fn check_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
     let arc_explorer = Arc::new(explorer);
 
-
     let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone());
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.max_steps(300).with_delta(0.05).with_eps(0.01);
+    stat_checker = stat_checker.max_steps(99).with_delta(0.05).with_eps(0.01);
+    let start = Instant::now();
     let score = stat_checker.run_smc();
-    println!("Score: {}", score);
-
+    let duration = start.elapsed();
+    println!("Time elapsed is: {:?}. Score:{:?}", duration, score);
 }
 
 fn main() {

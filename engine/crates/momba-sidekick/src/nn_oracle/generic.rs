@@ -27,11 +27,16 @@ pub enum Observations {
 }
 
 pub trait ActionResolver<T: time::Time> {
-    fn available(&self, state: &State<T>, out: &mut Vec<bool>);
-    fn resolve<'s, 't>(
+    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>);
+    fn resolve_v0<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
+    ) -> Vec<&'t Transition<'s, T>>;
+    fn resolve<'s, 't>(
+        &self,
+        transitions: &'t [Transition<'s, T>],
+        action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>>;
 }
 
@@ -67,7 +72,7 @@ impl<'a, T> ActionResolver<T> for EdgeByIndexResolver<T>
 where
     T: time::Time,
 {
-    fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
+    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>) {
         out.clear();
         let mut available_actions: HashSet<i64> = HashSet::new();
         for t in self.explorer.transitions(&state).iter() {
@@ -87,7 +92,7 @@ where
     //Available should, given a state, return the available actions for the state
     //Resolve, should given an action (the one available with the highest value) return the transitions.
 
-    fn resolve<'s, 't>(
+    fn resolve_v0<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
@@ -121,6 +126,49 @@ where
         println!("{:#?}", remove_trans_idxs);
         println!("len after: {:#?}. len Before: {:?}", out_transitions.len(), transitions.len());
         */
+        out_transitions
+    }
+
+    fn resolve<'s, 't>(
+        &self,
+        transitions: &'t [Transition<'s, T>],
+        action_map: &HashMap<i64, f64>,
+    ) -> Vec<&'t Transition<'s, T>> {
+        // Find the available actions for the state
+        let mut actions = vec![];
+        for t in transitions.into_iter() {
+            for (ins, val) in t.numeric_reference_vector().into_iter() {
+                match ins {
+                    0 => actions.push(val as i64),
+                    _ => continue,
+                }
+            }
+        }
+        // Only the available actions remains on the tensor map.
+        let mut keep_actions = vec![];
+        for (i, _) in action_map.into_iter() {
+            if actions.contains(i) {
+                keep_actions.push(i);
+            }
+        }
+        let filtered_map: HashMap<i64, f64> = action_map
+        .iter()
+        .filter(|(k, _v)| keep_actions.contains(k))
+        .map(|(k, v)| (*k, *v))
+        .collect();
+    
+        // Take the action with the highest score
+        let mut max_val: f64 = 0.0;
+        let mut max_key: i64 = -1;
+        for (k, v) in filtered_map.iter() {
+            if *v > max_val {
+                max_key = *k;
+                max_val = *v;
+            }
+        }
+        //Filter the transitions. Remains only the ones with the max key on the
+        //numeric ref vector
+        let out_transitions = self.resolve_v0(transitions, max_key);
         out_transitions
     }
 }
@@ -174,7 +222,7 @@ impl<'a, T> ActionResolver<T> for EdgeByLabelResolver<'a, T>
 where
     T: time::Time,
 {
-    fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
+    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>) {
         out.clear();
         let mut available_actions: HashSet<i64> = HashSet::new();
         for t in self.explorer.transitions(&state).iter() {
@@ -192,7 +240,7 @@ where
     }
     // Im really not sure about this way of playing with labels/actions/index.
     // Otherway, may be the labeldActions thing
-    fn resolve<'s, 't>(
+    fn resolve_v0<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
@@ -222,6 +270,13 @@ where
             .collect();
         transitions
         //todo!()
+    }
+    fn resolve<'s, 't>(
+        &self,
+        transitions: &'t [Transition<'s, T>],
+        action_map: &HashMap<i64, f64>,
+    ) -> Vec<&'t Transition<'s, T>> {
+        todo!()
     }
 }
 
@@ -276,9 +331,9 @@ where
             Actions::EdgeByLabel => panic!("Not yet implemented the edge by label resolver"),
         };
 
-        let mut global_variables = vec![];
+        let mut _global_variables = vec![];
         for (s, _) in &explorer.network.declarations.global_variables {
-            global_variables.push(s.into());
+            _global_variables.push(s.into());
         }
 
         let mut local_variables = vec![];
@@ -303,7 +358,7 @@ where
             _actions: actions,
             observations,
             action_resolver,
-            global_variables,
+            global_variables: _global_variables,
             local_variables,
             other_variables,
         }
@@ -388,7 +443,7 @@ where
         let mut out = vec![];
         self.context
             .action_resolver
-            .available(&self.state, &mut out);
+            .available_v0(&self.state, &mut out);
         out
     }
 
@@ -405,7 +460,7 @@ where
         let selected_transitions = self
             .context
             .action_resolver
-            .resolve(&all_transitions, action);
+            .resolve_v0(&all_transitions, action);
         if selected_transitions.is_empty() {
             return StepOutput::InvalidAction;
         } else {
