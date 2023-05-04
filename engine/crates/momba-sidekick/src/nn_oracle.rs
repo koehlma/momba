@@ -263,7 +263,7 @@ where
 {
     //model: Sequential,
     model_wrapper: ModelWrapper,
-    input_size: usize,
+    _input_size: usize,
     output_size: usize,
     explorer: Arc<Explorer<T>>,
     action_resolver: EdgeByIndexResolver<T>,
@@ -341,7 +341,7 @@ where
         let action_resolver = EdgeByIndexResolver::new(explorer.clone());
         NnOracle {
             //model: tch_nn,
-            input_size,
+            _input_size: input_size,
             output_size,
             explorer,
             action_resolver,

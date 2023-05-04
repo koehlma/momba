@@ -1,8 +1,5 @@
 #![allow(unused_variables, dead_code)]
-use std::{
-    ops::Deref,
-    sync::{atomic, Arc},
-};
+use std::sync::{atomic, Arc};
 
 use momba_explore::*;
 use rand::seq::{IteratorRandom, SliceRandom};
@@ -58,7 +55,7 @@ pub trait Simulator {
     fn next(&mut self) -> Option<Self::State<'_>>;
     fn reset(&mut self) -> Self::State<'_>;
     fn current_state(&mut self) -> Self::State<'_>;
-    
+
     //It's no needed, can be just a function.
     //fn simulate(&mut self, goal: Fn(State) -> bool) -> bool;
 }
@@ -240,14 +237,21 @@ where
         return SimulationOutput::NoStatesAvailable;
     }
 
-    pub fn better_parallel_smc(&self) -> i64
+    pub fn better_parallel_smc(&self) -> (i64, i64)
     where
-    S: Simulator + Clone + Send,
-    G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync, 
+        S: Simulator + Clone + Send,
+        G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
     {
-        let countdown = atomic::AtomicI64::new(9999); //N_RUNS by thread
+        let n_runs =
+            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         let num_workers = self.n_threads;
+        let runs_per_threads = (n_runs / num_workers as f64) as i64;
+        let countdown = atomic::AtomicI64::new(runs_per_threads); //N_RUNS by thread
         let max_steps = self.max_steps;
+        println!(
+            "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}",
+            n_runs as i64, max_steps, num_workers
+        );
         let goal = &self.goal;
         let goal_counter = atomic::AtomicUsize::new(0);
         std::thread::scope(|scope| {
@@ -266,7 +270,7 @@ where
                 });
             }
         });
-        goal_counter.into_inner() as i64
+        (goal_counter.into_inner() as i64, n_runs as i64)
     }
 
     pub fn run_smc(mut self) -> f64 {
@@ -420,7 +424,7 @@ where
     return SimulationOutput::NoStatesAvailable;
 }
 
-fn simulate_run<S, G>(sim:&mut  S, goal: & G, max_steps: i64) -> bool
+fn simulate_run<S, G>(sim: &mut S, goal: &G, max_steps: i64) -> bool
 where
     S: Simulator,
     G: Fn(&S::State<'_>) -> bool,
@@ -430,11 +434,11 @@ where
     while let Some(state) = sim.next() {
         let next_state = state.into();
         if (goal)(&next_state) {
-            return true
+            return true;
         } else if c >= max_steps {
-            return false
+            return false;
         }
         c += 1;
     }
-    return false
+    return false;
 }
