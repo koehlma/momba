@@ -1,15 +1,11 @@
 //! Algorithms and data structures for state space exploration.
 
-
 use serde::{Deserialize, Serialize};
 
 use itertools::Itertools;
 
 //use std::marker::PhantomData;
-use crate::{
-    //time::Time,
-    model::{EdgeReference, LabelIndex, Value},
-};
+use crate::model::{EdgeReference, LabelIndex, Value};
 
 use super::model;
 use super::time;

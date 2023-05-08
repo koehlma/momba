@@ -72,9 +72,6 @@ struct NN {
     #[clap(about = "A MombaCR model")]
     model: String,
     goal_property: String,
-    //dead_property: String,
-    //It would be really cool, if we can have all the properties in the same file.
-    // And then iterate over each property.
     nn: String,
 }
 
@@ -144,13 +141,13 @@ fn random_walk(walk: Simulate) {
     let model_path = Path::new(&walk.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    let tracer_exp: Explorer<time::Float64Zone> = Explorer::new(
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
     let prop_path = Path::new(&walk.property);
-    let _prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let _prop_name = walk
+    let prop_file = File::open(prop_path).expect("Unable to open model file!");
+    let prop_name = walk
         .property
         .split("/")
         .last()
@@ -159,21 +156,24 @@ fn random_walk(walk: Simulate) {
         .unwrap()
         .strip_prefix("prop_")
         .unwrap();
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+    let mut state_iterator =
+        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let mut tracer = simulate::StateIter::new(Arc::new(tracer_exp), simulate::UniformOracle::new());
-
-    let res = tracer.generate_trace(30);
-    for (i, e) in res.into_iter().enumerate() {
-        println!("Step: {:?}:\n{:#?}", i, e);
-    }
-
-    //let stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal)
-    //.max_steps(99)
-    //.with_eps(0.01);
-    //let start = Instant::now();
-    //let score = stat_checker.run_parallel_smc();
-    //let duration = start.elapsed();
-    //println!("Time elapsed is: {:?}. Score:{:?}", duration, score);
+    let stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal)
+        .max_steps(99)
+        .with_eps(0.01);
+    let start = Instant::now();
+    let (score, n_runs) = stat_checker.run_smc();
+    let duration = start.elapsed();
+    println!(
+        "Property: {}.\nTime elapsed is: {:?}. Prob:{:?}",
+        prop_name,
+        duration,
+        (score as f64 / n_runs as f64)
+    );
 }
 
 fn smc(walks: SMC) {
@@ -224,12 +224,12 @@ fn smc(walks: SMC) {
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
-        .max_steps(12)
-        .with_delta(0.5)
-        .with_eps(0.2)
-        .n_threads(2);
+        .max_steps(50)
+        .with_delta(0.05)
+        .with_eps(0.01)
+        .n_threads(8);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.run_smc();
+    let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
         "Property: {}.\nTime elapsed is: {:?}. Prob:{:?}",
@@ -237,7 +237,6 @@ fn smc(walks: SMC) {
         duration,
         (score as f64 / n_runs as f64)
     );
-    println!("Trace: {:#?}", state_iterator.trace);
 }
 
 fn sprt(walks: SPRT) {

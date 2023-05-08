@@ -4,10 +4,8 @@ use std::{
 };
 
 use momba_explore::{model::Value, *};
-use rand::seq::{IteratorRandom, SliceRandom};
+use rand::{seq::IteratorRandom, Rng};
 use rayon::{current_num_threads, prelude::*};
-
-//use crate::nn_oracle::{NeuralNetwork, NnOracle};
 
 #[derive(Debug)]
 pub enum SprtComparison {
@@ -21,7 +19,6 @@ pub enum SimulationOutput {
     NoStatesAvailable,
 }
 
-//pub trait Oracle<T: time::Time>: Clone {
 pub trait Oracle<T: time::Time> {
     fn choose<'s, 't>(
         &self,
@@ -44,9 +41,6 @@ impl<T: time::Time> Oracle<T> for UniformOracle {
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
-        if transitions.len() != 1 {
-            println!("Dude wtf");
-        }
         let mut rng = rand::thread_rng();
         let elected_transition = transitions.into_iter().choose(&mut rng).unwrap();
         elected_transition
@@ -60,8 +54,6 @@ pub trait Simulator {
     fn next(&mut self) -> Option<Self::State<'_>>;
     fn reset(&mut self) -> Self::State<'_>;
     fn current_state(&mut self) -> Self::State<'_>;
-    //New function, to output the global values in a state.
-    fn state_representation(&mut self) -> HashMap<String, Value>;
 }
 
 #[derive(Clone)]
@@ -87,23 +79,16 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
         }
     }
 
-    pub fn generate_trace(&mut self, steps: usize) -> Vec<HashMap<String, Value>> {
+    pub fn _generate_trace(&mut self, steps: usize) -> Vec<HashMap<String, Value>> {
         self.reset();
         let mut c = 0;
         let mut visited: Vec<HashMap<String, Value>> = vec![];
-        //let mut visited_hm: HashMap<usize, Vec<Value>> = HashMap::new();
-        //ill prefer a hashmap, with the id and the value.
-        //let mut state_rep = vec![];
         let mut state_rep: HashMap<String, Value> = HashMap::new();
         for (id, _) in &self.explorer.network.declarations.global_variables {
             let val = self.state.get_global_value(&self.explorer, id).unwrap();
             state_rep.insert(id.clone(), val.clone());
-
-            //(val);
         }
         visited.push(state_rep);
-        //visited.push(state_rep);
-        //let succ = ;
         while c < steps {
             match self.next() {
                 None => {
@@ -115,7 +100,6 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
                         let val = self.state.get_global_value(&self.explorer, id).unwrap();
                         state_rep.insert(id.clone(), val.clone());
                     }
-                    //visited.insert(state_rep);
                     visited.push(state_rep);
                     c += 1;
                 }
@@ -135,15 +119,22 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         }
         let transition = self.oracle.choose(&self.state, &transitions);
         let destinations = self.explorer.destinations(&self.state, &transition);
+
         if destinations.is_empty() {
             return None;
         }
-        self.state = self.explorer.successor(
-            &self.state,
-            &transition,
-            destinations.choose(&mut rng).unwrap(),
-        );
-        self.state_representation();
+        let threshold: f64 = rng.gen();
+        let mut accumulated = 0.0;
+
+        for destination in destinations {
+            accumulated += destination.probability();
+            if accumulated >= threshold {
+                self.state = self
+                    .explorer
+                    .successor(&self.state, &transition, &destination);
+                break;
+            }
+        }
         Some(&self.state)
     }
 
@@ -162,16 +153,16 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         &self.state
     }
 
-    //ONLY USE THIS ON SMALL MODELS.
-    fn state_representation(&mut self) -> HashMap<String, Value> {
-        let mut state_rep: HashMap<String, Value> = HashMap::new();
-        for (id, _) in &self.explorer.network.declarations.global_variables {
-            let val = self.state.get_global_value(&self.explorer, id).unwrap();
-            state_rep.insert(id.clone(), val.clone());
-        }
-        self.trace.push(state_rep.clone());
-        state_rep
-    }
+    // I commented it, because can be useful in the future.
+    // fn state_representation(&mut self) -> HashMap<String, Value> {
+    //     let mut state_rep: HashMap<String, Value> = HashMap::new();
+    //     for (id, _) in &self.explorer.network.declarations.global_variables {
+    //         let val = self.state.get_global_value(&self.explorer, id).unwrap();
+    //         state_rep.insert(id.clone(), val.clone());
+    //     }
+    //     self.trace.push(state_rep.clone());
+    //     state_rep
+    // }
 }
 
 #[must_use]
@@ -252,17 +243,11 @@ where
         self
     }
 
-    fn save_state_representation(&mut self) -> HashMap<String, Value> {
-        self.sim.state_representation()
-    }
-
     fn simulate(&mut self) -> SimulationOutput {
         self.sim.reset();
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
             let next_state = state.into();
-
-            //I need to save some values from the state in here, and print or something.
             if (self.goal)(&next_state) {
                 return SimulationOutput::GoalReached(c);
             } else if c >= self.max_steps {
@@ -270,9 +255,6 @@ where
             }
             c += 1;
         }
-        // Here it should be really cool if we can have the dead predicate.
-        // but probably will delete some traces. Needs testing.
-        // println!("Steps done: {:?}", c);
         return SimulationOutput::NoStatesAvailable;
     }
 
@@ -314,8 +296,8 @@ where
     }
 
     pub fn run_smc(mut self) -> (i64, i64) {
-        let n_runs = 10;
-        //(f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs =
+            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
@@ -340,7 +322,7 @@ where
         (score, n_runs as i64)
     }
 
-    pub fn run_parallel_smc(self) -> (i64, i64)
+    pub fn _run_parallel_smc(self) -> (i64, i64)
     where
         S: Simulator + Send + Clone + Sync,
         G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
@@ -355,13 +337,9 @@ where
         let mut score: i64 = 0;
         let mut _count_more_steps_needed = 0;
         let mut _deadlocks = 0;
-        let mut simulators: Vec<S> = vec![];
-        for _ in 0..n_threads {
-            simulators.push(self.sim.clone());
-        }
         let updated = (0..n_runs as u64)
             .into_par_iter()
-            .map(|_| parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
+            .map(|_| _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
 
         let result: Vec<_> = updated.collect();
         for sout in result {
@@ -398,7 +376,7 @@ where
         );
         for _ in 0..cycles {
             let v = pool.broadcast(|_| {
-                parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps)
+                _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps)
             });
             for sout in v {
                 match sout {
@@ -450,21 +428,18 @@ where
     }
 }
 
-fn parallel_simulation<S, G>(mut sim: S, goal: G, max_steps: usize) -> SimulationOutput
+fn _parallel_simulation<S, G>(mut sim: S, goal: G, max_steps: usize) -> SimulationOutput
 where
     S: Simulator,
     G: Fn(&S::State<'_>) -> bool,
 {
-    //sim.reset();
+    sim.reset();
     let mut c = 0;
     while let Some(state) = sim.next() {
         let next_state = state.into();
-        //println!("Res of evaluation: {:?}", (goal)(&next_state));
         if (goal)(&next_state) {
-            //println!("------------Score one for the republic------------Thread_id: {:?}", current_thread_index());
             return SimulationOutput::GoalReached(c);
         } else if c >= max_steps {
-            //println!("------------NOPE------------Thread_id: {:?}", current_thread_index());
             return SimulationOutput::MaxSteps;
         }
         c += 1;
