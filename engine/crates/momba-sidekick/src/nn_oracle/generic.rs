@@ -1,12 +1,12 @@
 #![allow(dead_code, unused_variables, unused_assignments)]
 use std::sync::Arc;
 
-use crate::nn_oracle::DOUBLE_CPU;
+//use crate::nn_oracle::DOUBLE_CPU;
 use hashbrown::{HashMap, HashSet};
 use momba_explore::{model::Automaton, *};
-use rand::seq::IteratorRandom;
+//use rand::seq::IteratorRandom;
 //use std::{collections::HashMap};
-use tch::Tensor;
+//use tch::Tensor;
 
 pub enum Actions {
     EdgeByIndex,
@@ -303,6 +303,7 @@ impl Rewards {
     }
 }
 
+/*
 //pub struct Context<'a, T, A>
 pub struct Context<'a, T>
 where
@@ -567,3 +568,4 @@ where
         // In python actually creates another GenExplorer. idk why, it looks not efficient.
     }
 }
+*/

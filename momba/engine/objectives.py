@@ -6,6 +6,8 @@ import typing as t
 
 
 from .. import engine, model
+
+
 @d.dataclass(frozen=True)
 class Objective:
     r"""A reach-avoid objective.
@@ -39,10 +41,8 @@ def extract_objective(prop: model.Expression) -> Objective:
             prop.predicate.predicate is model.properties.StatePredicate.INITIAL
         ), "Unsupported state predicate for aggregation."
         prop = prop.values
-
     if isinstance(prop, model.properties.Probability):
         prop = prop.formula
-    
     if isinstance(prop, model.properties.UnaryPathFormula):
         assert (
             prop.operator is model.operators.UnaryPathOperator.EVENTUALLY
@@ -54,14 +54,32 @@ def extract_objective(prop: model.Expression) -> Objective:
         assert (
             prop.operator is model.operators.BinaryPathOperator.UNTIL
         ), "Unsupported binary path formula."
-        left = prop.left
+        lft = prop.left
         right = prop.right
         return Objective(
-            goal_predicate=right, dead_predicate=model.expressions.logic_not(left)
+            goal_predicate=right, dead_predicate=model.expressions.logic_not(lft)
         )
     elif isinstance(prop, model.properties.ExpectedReward):
-        #print(f'TESTING: {prop.reachability.left} {prop.reachability.right}')
         return Objective(goal_predicate=prop.reachability,
-                        dead_predicate=model.ensure_expr(False))
+                         dead_predicate=model.ensure_expr(False))
+    elif isinstance(prop, model.expressions.Comparison):
+        """
+        For example, the first 3 properties of teh firewire model are a composition
+        of expression with probabilities.
+        """
+        subprop_l = prop.left
+        subprop_r = prop.right
+
+        if isinstance(subprop_l.formula, model.properties.BinaryPathFormula):
+            assert (
+                subprop_l.formula.operator is model.operators.BinaryPathOperator.UNTIL
+            ), "Unsupported unary path formula."
+            lft = prop.left
+            right = prop.right
+            obj = Objective(
+                goal_predicate=right, dead_predicate=model.expressions.logic_not(lft)
+            )
+
+            return obj
     else:
         raise Exception("Unsupported property!")

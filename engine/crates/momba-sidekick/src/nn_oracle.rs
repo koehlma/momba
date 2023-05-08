@@ -9,14 +9,11 @@ use tch::{
     kind::*,
     nn,
     nn::{Linear, Module, Sequential},
-    //Device, 
+    //Device,
     Tensor,
 };
 
-use crate::{
-    //nn_oracle::generic::{Context, GenericExplorer},
-    simulate::{Oracle, /*Simulator*/},
-};
+use crate::simulate::Oracle;
 
 use self::generic::{ActionResolver, EdgeByIndexResolver};
 
@@ -27,17 +24,31 @@ pub struct NeuralNetwork {
     layers: Vec<Layers>,
 }
 
-impl NeuralNetwork{
-    pub fn get_input_size(&self)-> i64{
-        match self.layers.first().unwrap(){
-            Layers::Linear { name:_, input_size, output_size:_, has_biases:_, weights:_, biases:_ } => *input_size,
-            _ => 0
+impl NeuralNetwork {
+    pub fn get_input_size(&self) -> i64 {
+        match self.layers.first().unwrap() {
+            Layers::Linear {
+                name: _,
+                input_size,
+                output_size: _,
+                has_biases: _,
+                weights: _,
+                biases: _,
+            } => *input_size,
+            _ => 0,
         }
     }
-    pub fn get_output_size(&self)-> i64{
-        match self.layers.last().unwrap(){
-            Layers::Linear { name:_, input_size:_, output_size, has_biases:_, weights:_, biases:_ } => *output_size,
-            _ => 0
+    pub fn get_output_size(&self) -> i64 {
+        match self.layers.last().unwrap() {
+            Layers::Linear {
+                name: _,
+                input_size: _,
+                output_size,
+                has_biases: _,
+                weights: _,
+                biases: _,
+            } => *output_size,
+            _ => 0,
         }
     }
 }
@@ -59,7 +70,7 @@ enum Layers {
         name: String,
     },
 }
-/* 
+/*
 pub struct NnSimulator<'a, T, G>
 //pub struct NnSimulator<'a, T, G, A>
 where
@@ -158,7 +169,7 @@ pub fn _build_nn(nn: NeuralNetwork) -> (Sequential, usize) {
                 input_sizes.push(input_size);
                 let mut layer_name = "layer".to_owned();
                 layer_name.push_str(&name);
-                
+
                 let mut weights_tensor =
                 Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
                 for w in weights {
@@ -175,7 +186,7 @@ pub fn _build_nn(nn: NeuralNetwork) -> (Sequential, usize) {
                     bs: biases_tensor,
                 };
                 tch_nn = tch_nn.add(linear_layer);
-                
+
                 // If its a new model, it should be initialized this way, and then be trained.
                 // tch_nn = tch_nn.add(nn::linear(
                     //     &vs.root() / layer_name,
@@ -217,18 +228,11 @@ impl ModelWrapper {
                     let mut layer_name = "layer".to_owned();
                     layer_name.push_str(&_name);
 
-                    // Find a way to know the type of the tensor values.
                     let mut weights_tensor =
                         Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
-                    // Here it should be double, because the tch tool takes the f64 as doubles for
-                    // each of the vectors.
                     for w in weights {
-                        //println!("LALA:");
-                        //Tensor::of_slice(&w).print();
                         weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
                     }
-                    //weights_tensor.print();
-
                     let biases_tensor: Option<Tensor>;
                     if *has_biases {
                         biases_tensor = Some(Tensor::of_slice(&biases));
@@ -244,7 +248,11 @@ impl ModelWrapper {
                 Layers::ReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.relu()),
             }
         }
-        ModelWrapper { _model: tch_nn, _nn: nn }
+        // println!("{:#?}", tch_nn);
+        ModelWrapper {
+            _model: tch_nn,
+            _nn: nn,
+        }
     }
 }
 
@@ -254,9 +262,7 @@ impl Clone for ModelWrapper {
     }
 }
 
-
-#[derive(Clone)] //If its really needed for the oracle trait, then its a problem
-// beacuse sequential does not implement Clone trait.
+#[derive(Clone)]
 pub struct NnOracle<T>
 where
     T: time::Time,
@@ -271,81 +277,18 @@ where
 
 impl<'a, T> NnOracle<T>
 where
-    T: time::Time,  
+    T: time::Time,
 {
-    //pub fn build(nn: NeuralNetwork, explorer: &'a Explorer<T>) -> Self {
     pub fn build(nn: NeuralNetwork, explorer: Arc<Explorer<T>>) -> Self {
-        /*
-        let mut tch_nn = nn::seq();
-        let mut default_nn = nn::seq();
-        let _vs = nn::VarStore::new(Device::Cpu);
-        let mut input_sizes: Vec<i64> = vec![];
-        let mut output_sizes: Vec<i64> = vec![];
-        for lay in (&nn.layers).into_iter() {
-            match lay {
-                Layers::Linear {
-                    name: _name,
-                    input_size,
-                    output_size,
-                    has_biases,
-                    weights,
-                    biases,
-                } => {
-                    input_sizes.push(*input_size);
-                    output_sizes.push(*output_size);
-                    let mut layer_name = "layer".to_owned();
-                    layer_name.push_str(&_name);
-
-                    // Find a way to know the type of the tensor values.
-                    let mut weights_tensor =
-                        Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
-                    // Here it should be double, because the tch tool takes the f64 as doubles for
-                    // each of the vectors.
-                    for w in weights {
-                        //println!("LALA:");
-                        //Tensor::of_slice(&w).print();
-                        weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
-                    }
-                    //weights_tensor.print();
-
-                    let biases_tensor: Option<Tensor>;
-                    if *has_biases {
-                        biases_tensor = Some(Tensor::of_slice(&biases));
-                    } else {
-                        biases_tensor = None;
-                    }
-                    let linear_layer = Linear {
-                        ws: weights_tensor,
-                        bs: biases_tensor,
-                    };
-                    tch_nn = tch_nn.add(linear_layer);
-                    default_nn = default_nn.add(nn::linear(
-                        &_vs.root() / layer_name,
-                        *input_size,
-                        *output_size,
-                        Default::default(),
-                    ));
-                }
-                Layers::ReLU { name: _ } => {
-                    tch_nn = tch_nn.add_fn(|xs| xs.relu());
-                    default_nn = default_nn.add_fn(|xs| xs.relu())
-                }
-            }
-        }
-        //println!("{:#?}\n\nvs\n\n", tch_nn);
-        //println!("{:#?}", default_nn);
-        */
-
-        let input_size  = nn.get_input_size() as usize;
+        let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
         let action_resolver = EdgeByIndexResolver::new(explorer.clone());
         NnOracle {
-            //model: tch_nn,
             _input_size: input_size,
             output_size,
             explorer,
             action_resolver,
-            model_wrapper: ModelWrapper::new(Arc::new(nn))
+            model_wrapper: ModelWrapper::new(Arc::new(nn)),
         }
     }
 
@@ -365,33 +308,11 @@ where
         tensor
     }
 
-    // The idea is to have another function that will return me the available action with the highest
-    // q value from the model.
-    fn _get_edges_ids(&self, transitions: &[Transition<T>]) -> Vec<i64> {
-        //Should be a filter and a flatten.
-        let mut actions = vec![];
-        for t in transitions.into_iter() {
-            for (ins, val) in t.numeric_reference_vector().into_iter() {
-                match ins {
-                    0 => actions.push(val as i64),
-                    _ => continue,
-                }
-            }
-        }
-        actions
-    }
-
     fn _tensor_to_action(&self, tensor: Tensor) -> i64 {
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
         }
         let idx = tensor.argmax(None, true).int64_value(&[0]);
-        //println!(
-        //    "Max value overall {:?} in action:{:?}",
-        //    tensor.double_value(&[idx]),
-        //    idx
-        //);
-
         idx
     }
 }
@@ -421,8 +342,8 @@ where
             // for a in self.get_edges_ids(transitions).into_iter() {
             //     action_map.insert(a, output_tensor.double_value(&[a]));
             // }
-            //let _action = self.tensor_to_action(output_tensor);
-            //let selected_transitions = self.action_resolver.resolve_v0(&transitions, max_key);
+            // let _action = self.tensor_to_action(output_tensor);
+            // let selected_transitions = self.action_resolver.resolve_v0(&transitions, max_key);
             //------------------------------\\
             let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
             if selected_transitions.is_empty() {

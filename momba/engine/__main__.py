@@ -17,24 +17,25 @@ from . import objectives
 
 import json
 
+
 @click.group()
 def main() -> None:
     """
     Toolset for working with MOML models.
     """
 
+
 def parse_constants(cmd_input: str) -> dict:
     """
     Input expected:
-    Cons_1=Val_1,...,Const_k=Val_k.
+    Cons_1:Val_1,...,Const_k:Val_k.
     And for all i Val_i : Int
     """
     data = {}
-    for l in cmd_input.split(','):
-        data[l.split(':')[0]] = int(l.split(':')[1])
+    for l in cmd_input.split(","):
+        data[l.split(":")[0]] = int(l.split(":")[1])
     return data
 
-    
 
 @main.command()
 @click.argument(
@@ -47,8 +48,8 @@ def parse_constants(cmd_input: str) -> dict:
     metavar="OUTPUT",
     type=click.Path(exists=False, dir_okay=True, writable=True),
 )
-@click.option('-c', '--consts')
-def translate(model_path: str, output_path: str, consts = None) -> None:
+@click.option("-c", "--consts")
+def translate(model_path: str, output_path: str, consts=None) -> None:
     """
     Translates a MOML model to MombaIR.
     """
@@ -63,11 +64,15 @@ def translate(model_path: str, output_path: str, consts = None) -> None:
     properties = network.ctx.properties
 
     for i, (name, definition) in enumerate(properties.items()):
-        print(f"Saving property: {name}")
+        txt = name.lower().replace(" ", "_").strip()
+        print(f"Saving property: {txt}")
         obj = objectives.extract_objective(definition.expression)
         goal = translation.translate_global_expression(obj.goal_predicate)
-        pathlib.Path(f"{output_path}/prop_{i}.json").write_text(goal, "utf-8")
-    pathlib.Path(f"{output_path}/model.json").write_text(translation.json_network, "utf-8")
+        # pathlib.Path(f"{output_path}/prop_{i}.json").write_text(goal, "utf-8")
+        pathlib.Path(f"{output_path}/prop_{txt}.json").write_text(goal, "utf-8")
+    pathlib.Path(f"{output_path}/model.json").write_text(
+        translation.json_network, "utf-8"
+    )
 
 
 if __name__ == "__main__":
