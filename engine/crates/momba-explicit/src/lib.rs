@@ -5,6 +5,7 @@ use std::{
     error::Error,
     marker::PhantomData,
     ops::Range,
+    sync::atomic,
     time::{Duration, Instant},
 };
 
@@ -163,6 +164,11 @@ pub fn count_states_concurrent(
     let compiled = compile_model(&model, &params, &Options::new())?;
     let state_size = compiled.variables.initial_state.len();
 
+    println!(
+        "Assignment Groups: {:?}",
+        compiled.instances.assignment_groups
+    );
+
     let state_storage = (0..num_workers)
         .map(|_| Mutex::new(Bump::new()))
         .collect::<Vec<_>>();
@@ -179,6 +185,16 @@ pub fn count_states_concurrent(
     let visited = dashmap::DashMap::with_shard_amount(64);
     visited.insert(initial_state, ());
 
+    let transition_counter = atomic::AtomicUsize::new(0);
+    let total_destinations = atomic::AtomicUsize::new(0);
+
+    println!(
+        "Initial State: {}",
+        compiled.fmt_state(BitSlice::from_slice(&initial_state))
+    );
+
+    // println!("{}", compiled.variables.state_layout);
+
     exhaustive::workers::spawn_and_run_workers(
         num_workers,
         |_| {
@@ -186,6 +202,11 @@ pub fn count_states_concurrent(
                 let bump = state_storage[ctx.worker_id()].lock();
                 let mut next_state_bump =
                     bump.alloc_slice_fill_copy(state_size, 0u8) as *mut [u8];
+
+                let state_buffer1 = bump.alloc_slice_fill_copy(state_size, 0u8);
+                let state_buffer2 = bump.alloc_slice_fill_copy(state_size, 0u8);
+
+                let mut transient_buffer = IdxVec::new();
 
                 //let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
 
@@ -204,6 +225,8 @@ pub fn count_states_concurrent(
 
                 let empty_transient_values = IdxVec::new();
 
+                let mut assignment_slices = Vec::new();
+
                 while let Some(state) = ctx.next_task() {
                     // if visited.len() % (1 << 18) == 0 {
                     //     println!("Visited: {}", visited.len());
@@ -221,7 +244,7 @@ pub fn count_states_concurrent(
                         transient_values.push(value);
                     }
                     // Execute the state assignments.
-                    for instance in compiled.instances.iter() {
+                    for instance in compiled.instances.instances.iter() {
                         let location = instance.load_location(&transient_env.state);
                         for transient_assignment in
                             instance.locations[location].transient_assignments.iter()
@@ -245,7 +268,7 @@ pub fn count_states_concurrent(
                     enabled_sync_edges.clear();
                     instance_sync_edges.clear();
 
-                    for (instance_idx, instance) in compiled.instances.indexed_iter() {
+                    for (instance_idx, instance) in compiled.instances.instances.indexed_iter() {
                         let enabled_sync_edges_start = enabled_sync_edges.len();
                         instance.foreach_enabled_edge(&mut env, |edge_idx| {
                             let item = TransitionItem {
@@ -268,6 +291,11 @@ pub fn count_states_concurrent(
                         instance_sync_edges
                             .push(enabled_sync_edges_start..enabled_sync_edges.len());
                     }
+
+                    // println!("State: {:?}", state);
+                    // println!("State: {}", compiled.fmt_state(&env.state));
+                    // println!("Enabled Sync Edges: {}", enabled_sync_edges.len());
+                    // println!("Transitions: {}", transitions.len());
 
                     for link in &compiled.links.links {
                         sync_stack.clear();
@@ -387,6 +415,9 @@ pub fn count_states_concurrent(
 
                     // println!("Transition Items: {:?}", transition_items);
 
+                    transition_counter.fetch_add(transitions.len(), atomic::Ordering::Relaxed);
+
+                    let mut destinations_counter = 0;
                     for transition in &transitions {
                         let items = &transition_items[transition.items.clone()];
                         // let product = CartesianProduct::new(
@@ -398,54 +429,34 @@ pub fn count_states_concurrent(
                         //     },
                         //     |_, destination| Some(destination),
                         // );
-                        let mut destinations_counter = 0;
                         destinations_product.produce(
                             items,
                             |item| {
-                                let instance = &compiled.instances[item.instance_idx];
+                                let instance = &compiled.instances.instances[item.instance_idx];
                                 let edge = &instance.edges[item.edge_idx];
                                 instance.destinations(edge)
                             },
                             |_, destination| Some(destination as *const _),
                             |product| {
                                 //let mut probability = 1.0;
-                                unsafe { (&mut *next_state_bump).copy_from_slice(state) }
-                                let dst_state_mut =
-                                    BitSlice::<StateLayout>::from_slice_mut(unsafe {
-                                        &mut *next_state_bump
-                                    });
-                                // println!("Destination:");
+                                state_buffer1.copy_from_slice(state);
+                                // unsafe { (&mut *next_state_bump).copy_from_slice(state) }
 
-                                // println!("  Source: {}", compiled.fmt_state(&env.state));
-                                // println!(
-                                //     "  Locations: {}",
-                                //     compiled
-                                //         .instances
-                                //         .indexed_iter()
-                                //         .map(|(idx, instance)| {
-                                //             let loc = instance.load_location(&env.state);
-
-                                //             format!(
-                                //                 "{} = {:?} ({})",
-                                //                 idx.as_usize(),
-                                //                 instance.locations[loc].name,
-                                //                 loc.as_usize()
-                                //             )
-                                //         })
-                                //         .collect::<Vec<_>>()
-                                //         .join("; ")
-                                // );
+                                assignment_slices.clear();
                                 for (item, destination) in product.items() {
-                                    let instance = &compiled.instances[item.instance_idx];
+                                    let instance = &compiled.instances.instances[item.instance_idx];
                                     //let edge = &instance.edges[item.edge_idx];
                                     let destination: &CompiledDestination =
                                         unsafe { &**destination }; //&instance.destinations[destination.idx];
                                                                    //  probability *= destination.probability.evaluate(&mut env);
-                                    for assignment in
-                                        &instance.assignments[destination.assignments.clone()]
-                                    {
-                                        assignment.execute(dst_state_mut, &mut env);
-                                    }
+                                    assignment_slices.push(
+                                        &instance.assignments[destination.assignments.clone()],
+                                    );
+                                    // for assignment in
+                                    //     &instance.assignments[destination.assignments.clone()]
+                                    // {
+                                    //     assignment.execute(dst_state_mut, &mut env);
+                                    // }
                                     // println!(
                                     //     "  Destination: {}:{}({}):{}",
                                     //     item.instance_idx.as_usize(),
@@ -453,30 +464,49 @@ pub fn count_states_concurrent(
                                     //     edge.original_idx,
                                     //     destination.idx.as_usize()
                                     // );
+                                    let dst_state_mut =
+                                        BitSlice::<StateLayout>::from_slice_mut(state_buffer1);
                                     instance.store_location(dst_state_mut, destination.target);
                                 }
 
-                                // println!("  Target: {}", compiled.fmt_state(dst_state_mut));
-                                // println!(
-                                //     "  Locations: {}",
-                                //     compiled
-                                //         .instances
-                                //         .indexed_iter()
-                                //         .map(|(idx, instance)| {
-                                //             let loc = instance.load_location(dst_state_mut);
+                                for group in &compiled.instances.assignment_groups {
+                                    state_buffer2.copy_from_slice(&state_buffer1);
+                                    transient_buffer.clear();
+                                    transient_buffer.extend(transient_values.iter());
+                                    let dst_state_mut =
+                                        BitSlice::<StateLayout>::from_slice_mut(state_buffer1);
+                                    let mut env = Env::new(
+                                        BitSlice::<StateLayout>::from_slice(&state_buffer2),
+                                        &transient_buffer,
+                                    );
+                                    for assignment_slice in assignment_slices.iter_mut() {
+                                        loop {
+                                            match assignment_slice {
+                                                [assignment, rest @ ..]
+                                                    if assignment.group == *group =>
+                                                {
+                                                    *assignment_slice = rest;
 
-                                //             format!(
-                                //                 "{} = {:?} ({})",
-                                //                 idx.as_usize(),
-                                //                 instance.locations[loc].name,
-                                //                 loc.as_usize()
-                                //             )
-                                //         })
-                                //         .collect::<Vec<_>>()
-                                //         .join("; ")
-                                // );
+                                                    assignment.execute(
+                                                        dst_state_mut,
+                                                        &mut transient_values,
+                                                        &mut env,
+                                                    );
+                                                }
+                                                _ => {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                // for assignment in
+                                //     &instance.assignments[destination.assignments.clone()]
+                                // {
+                                //     assignment.execute(dst_state_mut, &mut env);
+                                // }
 
-                                drop(dst_state_mut);
+                                unsafe { (&mut *next_state_bump).copy_from_slice(&state_buffer1) }
 
                                 if visited.insert(unsafe { &*next_state_bump }, ()).is_none() {
                                     ctx.push_task(unsafe { &*next_state_bump });
@@ -488,6 +518,8 @@ pub fn count_states_concurrent(
                         );
                         //println!("Destinations: {}", destinations_counter);
                     }
+
+                    total_destinations.fetch_add(destinations_counter, atomic::Ordering::Relaxed);
                 }
 
                 // println!("{:?}", enabled_sync_edges);
@@ -505,6 +537,14 @@ pub fn count_states_concurrent(
 
     println!("Total Time: {:.02}", (end - start).as_secs_f64());
     println!("States: {}", visited.len());
+    println!(
+        "Transitions: {}",
+        transition_counter.load(atomic::Ordering::SeqCst)
+    );
+    println!(
+        "Destinations: {}",
+        total_destinations.load(atomic::Ordering::SeqCst)
+    );
 
     std::process::exit(0);
 }
@@ -542,10 +582,13 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     //let s = core::hash::BuildHasherDefault::<fxhash::FxHasher>::default();
 
-    let mut visited = HashSet::<&[u8]>::with_capacity(100_000_000);
+    let visited = dashmap::DashMap::with_shard_amount(64);
     for state in &state_stack {
-        visited.insert(*state);
+        visited.insert(*state, ());
     }
+
+    let mut transition_counter = 0;
+    let mut total_destinations = 0;
 
     let mut transition_items = IdxVec::new();
     let mut transitions = Vec::new();
@@ -562,35 +605,58 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut queue_pressure = 0;
 
-    let transient_values = IdxVec::new();
+    // let transient_values: IdxVec<TransientVariableIdx, Word> = IdxVec::new();
 
     let mut sync_stack = Vec::new();
     let mut destinations_product = CartesianProductReusable::new();
+
+    let mut transient_values = IdxVec::new();
+
+    let empty_transient_values = IdxVec::new();
+
+    let state_buffer1 = bump.alloc_slice_fill_copy(state_size, 0u8);
+    let state_buffer2 = bump.alloc_slice_fill_copy(state_size, 0u8);
+
+    let mut transient_buffer = IdxVec::new();
+
+    let mut assignment_slices = Vec::new();
+
     while let Some(state) = state_stack.pop_front() {
-        // if visited.len() % (1 << 18) == 0 {
-        //     println!("Visited: {}", visited.len());
-        // }
+        transient_values.clear();
+        let mut transient_env = Env::new(
+            BitSlice::<StateLayout>::from_slice(&state),
+            &empty_transient_values,
+        );
 
-        queue_pressure = queue_pressure.max(state_stack.len());
-
-        // println!("State: {:?}", state);
+        // Initialize the transient variables to their default values.
+        for variable in compiled.variables.transient_variables.iter() {
+            let value = variable.default.evaluate(&mut transient_env);
+            transient_values.push(value);
+        }
+        // Execute the state assignments.
+        for instance in compiled.instances.instances.iter() {
+            let location = instance.load_location(&transient_env.state);
+            for transient_assignment in instance.locations[location].transient_assignments.iter() {
+                let mut env = Env::new(
+                    BitSlice::<StateLayout>::from_slice(&state),
+                    &transient_values,
+                );
+                let value = transient_assignment.value.evaluate(&mut env);
+                transient_values[transient_assignment.variable] = value;
+            }
+        }
 
         let mut env = Env::new(
             BitSlice::<StateLayout>::from_slice(&state),
             &transient_values,
         );
 
-        //compiled.print_state(&env.state);
-
         transition_items.clear();
         transitions.clear();
         enabled_sync_edges.clear();
         instance_sync_edges.clear();
 
-        #[cfg(feature = "statistics")]
-        let computing_enabled_edges_start = Instant::now();
-
-        for (instance_idx, instance) in compiled.instances.indexed_iter() {
+        for (instance_idx, instance) in compiled.instances.instances.indexed_iter() {
             let enabled_sync_edges_start = enabled_sync_edges.len();
             instance.foreach_enabled_edge(&mut env, |edge_idx| {
                 let item = TransitionItem {
@@ -613,26 +679,10 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             instance_sync_edges.push(enabled_sync_edges_start..enabled_sync_edges.len());
         }
 
-        #[cfg(feature = "statistics")]
-        {
-            computing_enabled_edges += Instant::now() - computing_enabled_edges_start;
-        }
-
-        // println!("Transition Items: {:?}", transition_items);
-        // println!("Transitions: {:?}", transitions);
-
-        // println!("Enabled Sync Transitions:",);
-        // for (instance_idx, enabled_range) in instance_sync_edges.indexed_iter() {
-        //     let instance = &compiled.instances[instance_idx];
-        //     println!(
-        //         "  {:?}: {}",
-        //         instance.automaton,
-        //         enabled_range.end - enabled_range.start
-        //     );
-        // }
-
-        #[cfg(feature = "statistics")]
-        let computing_transitions_start = Instant::now();
+        // println!("State: {:?}", state);
+        // println!("State: {}", compiled.fmt_state(&env.state));
+        // println!("Enabled Sync Edges: {}", enabled_sync_edges.len());
+        // println!("Transitions: {}", transitions.len());
 
         for link in &compiled.links.links {
             sync_stack.clear();
@@ -744,17 +794,11 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             // }
         }
 
-        #[cfg(feature = "statistics")]
-        {
-            computing_transitions += Instant::now() - computing_transitions_start;
-        }
-
         // println!("Transition Items: {:?}", transition_items);
-        //println!("Transitions: {}", transitions.len());
 
-        #[cfg(feature = "statistics")]
-        let computing_successors_start = Instant::now();
+        transition_counter += transitions.len();
 
+        let mut destinations_counter = 0;
         for transition in &transitions {
             let items = &transition_items[transition.items.clone()];
             // let product = CartesianProduct::new(
@@ -766,49 +810,32 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             //     },
             //     |_, destination| Some(destination),
             // );
-            let mut destinations_counter = 0;
             destinations_product.produce(
                 items,
                 |item| {
-                    let instance = &compiled.instances[item.instance_idx];
+                    let instance = &compiled.instances.instances[item.instance_idx];
                     let edge = &instance.edges[item.edge_idx];
                     instance.destinations(edge)
                 },
                 |_, destination| Some(destination as *const _),
                 |product| {
                     //let mut probability = 1.0;
-                    unsafe { (&mut *next_state_bump).copy_from_slice(state) }
-                    let dst_state_mut =
-                        BitSlice::<StateLayout>::from_slice_mut(unsafe { &mut *next_state_bump });
-                    // println!("Destination:");
+                    state_buffer1.copy_from_slice(state);
+                    // unsafe { (&mut *next_state_bump).copy_from_slice(state) }
 
-                    // println!("  Source: {}", compiled.fmt_state(&env.state));
-                    // println!(
-                    //     "  Locations: {}",
-                    //     compiled
-                    //         .instances
-                    //         .indexed_iter()
-                    //         .map(|(idx, instance)| {
-                    //             let loc = instance.load_location(&env.state);
-
-                    //             format!(
-                    //                 "{} = {:?} ({})",
-                    //                 idx.as_usize(),
-                    //                 instance.locations[loc].name,
-                    //                 loc.as_usize()
-                    //             )
-                    //         })
-                    //         .collect::<Vec<_>>()
-                    //         .join("; ")
-                    // );
+                    assignment_slices.clear();
                     for (item, destination) in product.items() {
-                        let instance = &compiled.instances[item.instance_idx];
+                        let instance = &compiled.instances.instances[item.instance_idx];
                         //let edge = &instance.edges[item.edge_idx];
                         let destination: &CompiledDestination = unsafe { &**destination }; //&instance.destinations[destination.idx];
                                                                                            //  probability *= destination.probability.evaluate(&mut env);
-                        for assignment in &instance.assignments[destination.assignments.clone()] {
-                            assignment.execute(dst_state_mut, &mut env);
-                        }
+                        assignment_slices
+                            .push(&instance.assignments[destination.assignments.clone()]);
+                        // for assignment in
+                        //     &instance.assignments[destination.assignments.clone()]
+                        // {
+                        //     assignment.execute(dst_state_mut, &mut env);
+                        // }
                         // println!(
                         //     "  Destination: {}:{}({}):{}",
                         //     item.instance_idx.as_usize(),
@@ -816,32 +843,47 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
                         //     edge.original_idx,
                         //     destination.idx.as_usize()
                         // );
+                        let dst_state_mut = BitSlice::<StateLayout>::from_slice_mut(state_buffer1);
                         instance.store_location(dst_state_mut, destination.target);
                     }
 
-                    // println!("  Target: {}", compiled.fmt_state(dst_state_mut));
-                    // println!(
-                    //     "  Locations: {}",
-                    //     compiled
-                    //         .instances
-                    //         .indexed_iter()
-                    //         .map(|(idx, instance)| {
-                    //             let loc = instance.load_location(dst_state_mut);
+                    for group in &compiled.instances.assignment_groups {
+                        state_buffer2.copy_from_slice(&state_buffer1);
+                        transient_buffer.clear();
+                        transient_buffer.extend(transient_values.iter());
+                        let dst_state_mut = BitSlice::<StateLayout>::from_slice_mut(state_buffer1);
+                        let mut env = Env::new(
+                            BitSlice::<StateLayout>::from_slice(&state_buffer2),
+                            &transient_buffer,
+                        );
+                        for assignment_slice in assignment_slices.iter_mut() {
+                            loop {
+                                match assignment_slice {
+                                    [assignment, rest @ ..] if assignment.group == *group => {
+                                        *assignment_slice = rest;
 
-                    //             format!(
-                    //                 "{} = {:?} ({})",
-                    //                 idx.as_usize(),
-                    //                 instance.locations[loc].name,
-                    //                 loc.as_usize()
-                    //             )
-                    //         })
-                    //         .collect::<Vec<_>>()
-                    //         .join("; ")
-                    // );
+                                        assignment.execute(
+                                            dst_state_mut,
+                                            &mut transient_values,
+                                            &mut env,
+                                        );
+                                    }
+                                    _ => {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // for assignment in
+                    //     &instance.assignments[destination.assignments.clone()]
+                    // {
+                    //     assignment.execute(dst_state_mut, &mut env);
+                    // }
 
-                    drop(dst_state_mut);
+                    unsafe { (&mut *next_state_bump).copy_from_slice(&state_buffer1) }
 
-                    if visited.insert(unsafe { &*next_state_bump }) {
+                    if visited.insert(unsafe { &*next_state_bump }, ()).is_none() {
                         state_stack.push_back(unsafe { &*next_state_bump });
                         next_state_bump = bump.alloc_slice_fill_copy(state_size, 0u8);
                         // println!("Pushed!");
@@ -852,10 +894,7 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
             //println!("Destinations: {}", destinations_counter);
         }
 
-        #[cfg(feature = "statistics")]
-        {
-            computing_successors += Instant::now() - computing_successors_start;
-        }
+        total_destinations += destinations_counter;
     }
 
     // println!("{:?}", enabled_sync_edges);

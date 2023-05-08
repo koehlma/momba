@@ -14,6 +14,7 @@ use crate::{
     },
 };
 
+use hashbrown::HashSet;
 use momba_model::{
     actions::{ActionLabel, ActionPattern},
     automata::{Automaton, AutomatonName, Edge, LocationName},
@@ -30,8 +31,8 @@ use thiserror::Error;
 use self::{
     assignments::compile_assignment,
     compiled::{
-        ActionIdx, CompiledDestination, CompiledEdge, CompiledInstance, CompiledLink,
-        CompiledLinks, CompiledLocation, CompiledModel, InstanceIdx, LocationIdx,
+        ActionIdx, CompiledDestination, CompiledEdge, CompiledInstance, CompiledInstances,
+        CompiledLink, CompiledLinks, CompiledLocation, CompiledModel, InstanceIdx, LocationIdx,
         TransientVariableIdx,
     },
     expressions::{compile_expression, CompiledExpression, Constant},
@@ -351,7 +352,8 @@ impl<'cx> Ctx<'cx> {
                         }
                         _ => {
                             return_error!(
-                                "Invalid constant value {value:?} for constant of type {:?}.",
+                                "Invalid constant value `{value:?}` for constant `{}` of type {:?}.",
+                                decl.name,
                                 &decl.typ
                             )
                         }
@@ -518,11 +520,18 @@ impl<'cx> Ctx<'cx> {
 
             let mut initial_state = vec![0u8; usize::from(state_size)];
 
-            let mut_initial_state = BitSlice::<StateLayout>::from_slice_mut(&mut initial_state);
-
+            // println!("{initial_state:?}");
             for var in &state_variables {
-                mut_initial_state.store(state_offsets[var.field], &var.ty, var.initial.unwrap())
+                // println!(
+                //     "Initial `{}`: {:?}",
+                //     state_layout[var.field].name().unwrap(),
+                //     var.initial.unwrap()
+                // );
+                let mut_initial_state = BitSlice::<StateLayout>::from_slice_mut(&mut initial_state);
+                mut_initial_state.store(state_offsets[var.field], &var.ty, var.initial.unwrap());
+                // println!("{initial_state:?}");
             }
+            let mut_initial_state = BitSlice::<StateLayout>::from_slice_mut(&mut initial_state);
             for var in location_variables.iter() {
                 mut_initial_state.store(state_offsets[var.field], &var.ty, var.initial)
             }
@@ -540,8 +549,10 @@ impl<'cx> Ctx<'cx> {
         }))
     }
 
-    fn compile_instances(&self) -> CompileResult<IdxVec<InstanceIdx, CompiledInstance>> {
+    fn compile_instances(&self) -> CompileResult<CompiledInstances> {
         let mut instances = Vec::new();
+
+        let mut group_ids = HashSet::new();
 
         let variables = self.query_variables()?;
 
@@ -588,13 +599,19 @@ impl<'cx> Ctx<'cx> {
                                 instance_idx,
                                 edge_idx,
                                 destination_idx,
-                            );
-                            match assignment {
-                                Ok(assignment) => assignments.push(assignment),
-                                Err(_) => continue,
-                            }
+                            )?;
+                            // match assignment {
+                            //     Ok(assignment) => {
+                            group_ids.insert(assignment.group);
+                            assignments.push(assignment);
+                            //     }
+                            //     Err(_) => continue,
+                            // }
                         }
                         let assignments_end = assignments.next_idx();
+
+                        assignments[assignments_start..assignments_end]
+                            .sort_by_key(|assignment| assignment.group);
 
                         destinations.push(CompiledDestination {
                             idx: destination_idx,
@@ -675,7 +692,12 @@ impl<'cx> Ctx<'cx> {
                 assignments,
             });
         }
-        Ok(instances.into())
+        let mut assignment_groups = Vec::from_iter(group_ids);
+        assignment_groups.sort();
+        Ok(CompiledInstances {
+            assignment_groups,
+            instances: instances.into(),
+        })
     }
 
     fn compile_links(&self) -> CompileResult<CompiledLinks> {

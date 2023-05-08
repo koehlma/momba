@@ -27,8 +27,8 @@ pub fn parse_params(string: &str) -> Params {
             panic!("Invalid params!");
         };
         let value = match value {
-            "true" => Value::Bool(true),
-            "false" => Value::Bool(false),
+            "true" | "True" => Value::Bool(true),
+            "false" | "False" => Value::Bool(false),
             value @ _ => {
                 if let Ok(value) = value.parse::<i64>() {
                     Value::Int(value)

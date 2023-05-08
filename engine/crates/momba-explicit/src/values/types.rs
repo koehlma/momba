@@ -278,6 +278,8 @@ impl TypeCtx {
             let bits = (64 - magnitude.leading_zeros()) + 1;
             Ok(self.value_signed_int(IntTy::new((bits as usize).into())))
         } else {
+            // FIXME: We want to use the actual lower bound to save bits.
+            let lower_bound = 0;
             // Use an unsigned integer type with an offset.
             let offset = -lower_bound;
             let bits = 64 - (upper_bound - lower_bound).leading_zeros();

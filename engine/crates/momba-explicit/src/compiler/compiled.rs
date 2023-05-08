@@ -19,7 +19,7 @@ use crate::{
 };
 
 use super::{
-    assignments::{AssignmentIdx, CompiledAssignment},
+    assignments::{AssignmentGroup, AssignmentIdx, CompiledAssignment},
     expressions::CompiledExpression,
     CompiledTransientAssignment, CompiledVariables, StateLayout,
 };
@@ -56,7 +56,7 @@ new_idx_type! {
 pub struct CompiledModel {
     // pub(crate) actions: IdxVec<ActionIdx, CompiledAction>,
     /// The compiled automaton instances of the model.
-    pub(crate) instances: IdxVec<InstanceIdx, CompiledInstance>,
+    pub(crate) instances: CompiledInstances,
     /// The layout of states.
     pub variables: CompiledVariables,
     pub links: CompiledLinks,
@@ -141,6 +141,11 @@ pub struct CompiledInstance {
     pub(crate) assignments: IdxVec<AssignmentIdx, CompiledAssignment>,
     /// The state field where the location of the automaton is stored.
     pub(crate) location_field: (Addr<StateLayout>, IntTy),
+}
+
+pub struct CompiledInstances {
+    pub assignment_groups: Vec<AssignmentGroup>,
+    pub instances: IdxVec<InstanceIdx, CompiledInstance>,
 }
 
 impl CompiledInstance {

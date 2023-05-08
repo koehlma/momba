@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, ops};
+use std::{collections::btree_map::Range, marker::PhantomData, ops};
 
 pub trait Idx {
     fn as_usize(self) -> usize;
@@ -110,6 +110,12 @@ impl<I: Idx, T> ops::Index<ops::Range<I>> for IdxVec<I, T> {
 
     fn index(&self, index: ops::Range<I>) -> &Self::Output {
         &self.vec[index.start.as_usize()..index.end.as_usize()]
+    }
+}
+
+impl<I: Idx, T> ops::IndexMut<ops::Range<I>> for IdxVec<I, T> {
+    fn index_mut(&mut self, index: ops::Range<I>) -> &mut Self::Output {
+        &mut self.vec[index.start.as_usize()..index.end.as_usize()]
     }
 }
 
