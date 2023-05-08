@@ -1,26 +1,48 @@
 //! Worker infrastructure for exhaustive concurrent state space exploration.
 
-use std::sync::atomic;
+use std::{sync::atomic, time::Duration};
 
+/// A context in which work is done.
 struct Ctx {
+    /// The number of workers.
     num_workers: usize,
-    done_counter: atomic::AtomicUsize,
+    /// The number of workers which are waiting for tasks.
+    waiting: atomic::AtomicUsize,
 }
 
 impl Ctx {
+    /// Creates a new context with the given number of workers.
     pub fn new(num_workers: usize) -> Self {
         Self {
             num_workers,
-            done_counter: atomic::AtomicUsize::new(0),
+            waiting: atomic::AtomicUsize::new(0),
         }
+    }
+
+    /// Checks whether all work is done.
+    pub fn is_all_done(&self) -> bool {
+        self.waiting.load(atomic::Ordering::Acquire) == self.num_workers
+    }
+
+    /// Waits in case there are no more tasks.
+    pub fn wait_with<F, T>(&self, closure: F) -> T
+    where
+        F: FnOnce() -> T,
+    {
+        self.waiting.fetch_add(1, atomic::Ordering::AcqRel);
+        let output = closure();
+        if !self.is_all_done() {
+            self.waiting.fetch_sub(1, atomic::Ordering::AcqRel);
+        }
+        output
     }
 }
 
-/// A worker context holding all relevant queues.
+/// A worker context holding all relevant data.
 pub struct WorkerCtx<'cx, T> {
     /// The unique id of the worker.
     worker_id: usize,
-    /// The global injector queue.
+    /// The work context.
     ctx: &'cx Ctx,
     /// The local queue.
     local_queue: crossbeam_deque::Worker<T>,
@@ -39,38 +61,45 @@ impl<'cx, T> WorkerCtx<'cx, T> {
         self.local_queue.push(task);
     }
 
-    /// Pops a task from the context.
+    /// Returns the next task to execute.
     pub fn next_task(&self) -> Option<T> {
-        self.local_queue.pop().or_else(|| self.next_task_slow())
+        self.local_queue.pop().or_else(|| self.steal_next_task())
     }
 
-    /// Pops a task from the global queue or steals it from another worker.
+    /// Tries steal a task from other workers.
     #[cold]
-    fn next_task_slow(&self) -> Option<T> {
-        debug_assert_eq!(
-            self.local_queue.len(),
-            0,
+    fn steal_next_task(&self) -> Option<T> {
+        debug_assert!(
+            self.local_queue.is_empty(),
             "Local queue should be empty at this point."
         );
-        // We can use `Relaxed` here because synchronization happens via the stealers.
-        self.ctx
-            .done_counter
-            .fetch_add(1, atomic::Ordering::Relaxed);
-        let next_task = 'search: loop {
-            for stealer in &self.stealers {
-                if let Some(next_task) = stealer.steal().success() {
-                    break 'search next_task;
+        self.ctx.wait_with(|| {
+            let mut spin_counter = 0;
+            let mut back_off_duration = Duration::from_nanos(100);
+            loop {
+                for stealer in &self.stealers {
+                    let stolen_task = stealer.steal().success();
+                    if stolen_task.is_some() {
+                        return stolen_task;
+                    }
+                }
+                if self.ctx.is_all_done() {
+                    return None;
+                }
+                spin_counter += 1;
+                if spin_counter >= 16 {
+                    spin_counter = 0;
+                    std::thread::sleep(back_off_duration);
+                    // The back-off duration increases exponentially up to `10ms`.
+                    back_off_duration = Duration::from_nanos(
+                        (back_off_duration.as_nanos() * back_off_duration.as_nanos())
+                            .min(10_000_000) as u64,
+                    );
+                } else {
+                    std::thread::yield_now();
                 }
             }
-            // There is no next task.
-            let done_counter = self.ctx.done_counter.load(atomic::Ordering::Acquire);
-            if done_counter == self.ctx.num_workers {
-                // Everyone is done.
-                return None;
-            }
-        };
-        self.ctx.done_counter.fetch_sub(1, atomic::Ordering::AcqRel);
-        Some(next_task)
+        })
     }
 }
 
@@ -130,13 +159,12 @@ pub fn spawn_and_run_workers<F, W, T, I>(
                 .collect(),
         })
         .collect::<Vec<_>>();
-    crossbeam::scope(|scope| {
+    std::thread::scope(|scope| {
         for ctx in ctxs.into_iter() {
             let worker = factory(&ctx);
-            scope.spawn(move |_| worker(ctx));
+            scope.spawn(move || worker(ctx));
         }
-    })
-    .expect("Panic while executing workers.")
+    });
 }
 
 #[cfg(test)]

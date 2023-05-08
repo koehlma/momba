@@ -34,7 +34,7 @@ use self::{
         CompiledLinks, CompiledLocation, CompiledModel, InstanceIdx, LocationIdx,
         TransientVariableIdx,
     },
-    expressions::{compile_expression, Constant},
+    expressions::{compile_expression, CompiledExpression, Constant},
     scope::ScopeItem,
 };
 
@@ -190,11 +190,38 @@ pub type StateLayout = DenseBitLayout;
 pub struct CompiledVariables {
     pub(crate) global_scope: Scope,
     pub(crate) instance_scopes: IdxVec<InstanceIdx, Scope>,
-    pub(crate) instance_locations: IdxVec<InstanceIdx, FieldIdx>,
+
+    //pub(crate) instance_locations: IdxVec<InstanceIdx, FieldIdx>,
     pub state_layout: StructLayout,
     pub(crate) state_offsets: FieldOffsets<StateLayout>,
-    pub initial_values: IdxVec<FieldIdx, Word>,
+    //pub initial_values: IdxVec<FieldIdx, Word>,
     pub initial_state: Vec<u8>,
+
+    pub state_variables: Vec<CompiledStateVariable>,
+    pub transient_variables: IdxVec<TransientVariableIdx, CompiledTransientVariable>,
+    pub location_variables: IdxVec<InstanceIdx, CompiledLocationVariable>,
+}
+
+pub struct CompiledTransientVariable {
+    pub ty: ValueTy,
+    pub default: CompiledExpression,
+}
+
+pub struct CompiledTransientAssignment {
+    pub variable: TransientVariableIdx,
+    pub value: CompiledExpression,
+}
+
+pub struct CompiledStateVariable {
+    pub ty: ValueTy,
+    pub initial: Option<Word>,
+    pub field: FieldIdx,
+}
+
+pub struct CompiledLocationVariable {
+    pub ty: ValueTy,
+    pub initial: Word,
+    pub field: FieldIdx,
 }
 
 /// The root compilation context.
@@ -215,6 +242,87 @@ impl<'cx> Ctx<'cx> {
             tcx: TypeCtx::new(),
             cache: CtxQueryCache::default(),
         }
+    }
+
+    fn compile_expression(
+        &self,
+        scope: &Scope,
+        expr: &Expression,
+    ) -> CompileResult<CompiledExpression> {
+        compile_expression(self, scope, expr)
+    }
+
+    /// Compile a state variable.
+    fn compile_state_variable(
+        &self,
+        prefix: &str,
+        scope: &mut Scope,
+        decl: &VariableDeclaration,
+        state_layout: &mut StructLayout,
+        state_variables: &mut Vec<CompiledStateVariable>,
+    ) -> CompileResult<()> {
+        assert!(!decl.is_transient(), "Variable must not be transient.");
+        let ty = self.compute_variable_type(decl)?;
+        let initial = decl
+            .default
+            .as_ref()
+            .map(|initial| -> CompileResult<_> {
+                Ok(self
+                    .eval_const_expr(initial, &self.tcx.loaded_value_ty(&ty)?)?
+                    .value())
+            })
+            .transpose()?;
+
+        let field = state_layout
+            .add_field(Field::new(ty.clone()).with_name(format!("{}.{}", prefix, decl.name)));
+        scope.insert(decl.name.clone(), ScopeItem::StateVariable(field));
+
+        state_variables.push(CompiledStateVariable { ty, initial, field });
+        Ok(())
+    }
+
+    /// Compile a transient variable.
+    fn compile_transient_variable(
+        &self,
+        scope: &mut Scope,
+        decl: &VariableDeclaration,
+        transient_variables: &mut IdxVec<TransientVariableIdx, CompiledTransientVariable>,
+    ) -> CompileResult<()> {
+        assert!(decl.is_transient(), "Variable must be transient.");
+        let ty = self.compute_variable_type(decl)?;
+        let Some(default) = &decl.default else {
+            return_error!("Transient variables must have a default value.");
+        };
+        let default = self
+            .compile_expression(scope, default)?
+            .coerce_to(&self.tcx, &self.tcx.loaded_value_ty(&ty)?)?;
+        let compiled = CompiledTransientVariable { ty, default };
+        let idx = transient_variables.insert(compiled);
+
+        scope.insert(decl.name.clone(), ScopeItem::TransientVariable(idx));
+        Ok(())
+    }
+
+    fn compile_variable_decls(
+        &self,
+        prefix: &str,
+        scope: &mut Scope,
+        decls: &[VariableDeclaration],
+        state_layout: &mut StructLayout,
+        state_variables: &mut Vec<CompiledStateVariable>,
+        transient_variables: &mut IdxVec<TransientVariableIdx, CompiledTransientVariable>,
+    ) -> CompileResult<()> {
+        for decl in decls {
+            if !decl.is_transient() {
+                self.compile_state_variable(prefix, scope, decl, state_layout, state_variables)?;
+            }
+        }
+        for decl in decls {
+            if decl.is_transient() {
+                self.compile_transient_variable(scope, decl, transient_variables)?;
+            }
+        }
+        Ok(())
     }
 
     pub(crate) fn query_constants(&self) -> CompileResult<&CompiledConstants> {
@@ -330,32 +438,22 @@ impl<'cx> Ctx<'cx> {
 
     pub fn query_variables(&self) -> CompileResult<&CompiledVariables> {
         clone_result(self.cache.variables.get_or_init(|| {
-            let mut state_layout = StructLayout::new();
             let mut global_scope = self.query_constant_scope()?.create_child();
 
-            let mut initial_values = Vec::new();
+            let mut state_layout = StructLayout::new();
 
-            for (idx, decl) in self.model.globals.iter().enumerate() {
-                if decl.transient.unwrap_or(false) {
-                    return_error!("Transient variables are not supported!");
-                }
-                let ty = self.compute_variable_type(decl)?;
+            let mut state_variables = Vec::new();
+            let mut transient_variables = IdxVec::new();
+            let mut location_variables = IdxVec::new();
 
-                let Some(initial) = &decl.default else {
-                    return_error!("Variables must have initial values");
-                };
-
-                initial_values.push(
-                    self.eval_const_expr(initial, &self.tcx.loaded_value_ty(&ty)?)?
-                        .value(),
-                );
-
-                let field_idx = state_layout
-                    .add_field(Field::new(ty.clone()).with_name(format!("globals.{}", decl.name)));
-                global_scope.insert(decl.name.clone(), ScopeItem::StateVariable(field_idx));
-            }
-
-            let mut instance_locations = Vec::new();
+            self.compile_variable_decls(
+                "globals",
+                &mut global_scope,
+                &self.model.globals,
+                &mut state_layout,
+                &mut state_variables,
+                &mut transient_variables,
+            )?;
 
             for (idx, instance) in self.model.instances.iter().enumerate() {
                 let automaton = self
@@ -381,13 +479,15 @@ impl<'cx> Ctx<'cx> {
                     return_error!("Instance has no initial location");
                 };
 
-                initial_values.push((initial_location as i64).into_word());
-
-                instance_locations.push(
-                    state_layout.add_field(
-                        Field::new(loc_value_ty).with_name(format!("locations[{}]", idx)),
-                    ),
+                let field = state_layout.add_field(
+                    Field::new(loc_value_ty.clone()).with_name(format!("locations[{}]", idx)),
                 );
+
+                location_variables.push(CompiledLocationVariable {
+                    ty: loc_value_ty,
+                    initial: (initial_location as i64).into_word(),
+                    field,
+                });
             }
 
             let mut instance_scopes = Vec::new();
@@ -401,25 +501,14 @@ impl<'cx> Ctx<'cx> {
                     .unwrap();
 
                 let mut instance_scope = global_scope.create_child();
-                for decl in automaton.locals.iter() {
-                    if decl.transient.unwrap_or(false) {
-                        return_error!("Transient variables are not supported!");
-                    }
-                    let ty = self.compute_variable_type(decl)?;
-                    let field_idx = state_layout.add_field(
-                        Field::new(ty.clone()).with_name(format!("locals[{}].{}", idx, decl.name)),
-                    );
-                    let Some(initial) = &decl.default else {
-                        return_error!("Variables must have initial values");
-                    };
-
-                    initial_values.push(
-                        self.eval_const_expr(initial, &self.tcx.loaded_value_ty(&ty)?)?
-                            .value(),
-                    );
-
-                    instance_scope.insert(decl.name.clone(), ScopeItem::StateVariable(field_idx))
-                }
+                self.compile_variable_decls(
+                    &format!("locals[{}]", idx),
+                    &mut instance_scope,
+                    &automaton.locals,
+                    &mut state_layout,
+                    &mut state_variables,
+                    &mut transient_variables,
+                )?;
                 instance_scopes.push(instance_scope);
             }
 
@@ -431,22 +520,22 @@ impl<'cx> Ctx<'cx> {
 
             let mut_initial_state = BitSlice::<StateLayout>::from_slice_mut(&mut initial_state);
 
-            for ((field_idx, field), value) in state_layout
-                .fields
-                .indexed_iter()
-                .zip(initial_values.iter())
-            {
-                mut_initial_state.store(state_offsets[field_idx], field.ty(), *value)
+            for var in &state_variables {
+                mut_initial_state.store(state_offsets[var.field], &var.ty, var.initial.unwrap())
+            }
+            for var in location_variables.iter() {
+                mut_initial_state.store(state_offsets[var.field], &var.ty, var.initial)
             }
 
             Ok(CompiledVariables {
                 global_scope,
                 instance_scopes: instance_scopes.into(),
-                instance_locations: instance_locations.into(),
                 state_layout,
                 state_offsets,
-                initial_values: initial_values.into(),
                 initial_state,
+                transient_variables,
+                location_variables,
+                state_variables,
             })
         }))
     }
@@ -492,14 +581,18 @@ impl<'cx> Ctx<'cx> {
 
                         let assignments_start = assignments.next_idx();
                         for assignment in destination.assignments.iter() {
-                            assignments.push(compile_assignment(
+                            let assignment = compile_assignment(
                                 self,
                                 instance_scope,
                                 assignment,
                                 instance_idx,
                                 edge_idx,
                                 destination_idx,
-                            )?);
+                            );
+                            match assignment {
+                                Ok(assignment) => assignments.push(assignment),
+                                Err(_) => continue,
+                            }
                         }
                         let assignments_end = assignments.next_idx();
 
@@ -538,13 +631,34 @@ impl<'cx> Ctx<'cx> {
                     })
                 }
                 let edges_end = edges.next_idx();
+
+                let mut transient_assignments = Vec::new();
+                if let Some(assignments) = &location.assignments {
+                    for assignment in assignments {
+                        match &assignment.target {
+                            Expression::Identifier(expr) => {
+                                match instance_scope.lookup(&expr.identifier) {
+                                    Some(ScopeItem::TransientVariable(variable)) => {
+                                        let compiled = &variables.transient_variables[variable];
+                                        let value = self.compile_expression(&instance_scope, &assignment.value)?.coerce_to(&self.tcx, &self.tcx.loaded_value_ty(&compiled.ty)?)?;
+                                        transient_assignments.push(CompiledTransientAssignment { variable, value });
+                                    },
+                                    _ => return_error!("Unsupported assignment target in location (not transient).")
+                                }
+                            }
+                            _ => return_error!("Unsupported assignment target in location."),
+                        }
+                    }
+                }
+
                 locations.push(CompiledLocation {
                     name: location.name.clone(),
                     edges: edges_start..edges_end,
+                    transient_assignments,
                 })
             }
 
-            let location_field_idx = variables.instance_locations[instance_idx];
+            let location_field_idx = variables.location_variables[instance_idx].field;
             let location_field = &variables.state_layout[location_field_idx];
             let location_addr = variables.state_offsets[location_field_idx];
 

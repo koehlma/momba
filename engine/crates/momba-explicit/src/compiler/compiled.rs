@@ -6,12 +6,11 @@ use momba_model::{
     actions::ActionLabel,
     automata::{AutomatonName, LocationName},
 };
-use rayon::prelude::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 use crate::{
     datatypes::idxvec::{new_idx_type, Idx, IdxVec},
     values::{
-        layout::{Addr, StructLayout},
+        layout::Addr,
         memory::{bits::BitSlice, Load, Store},
         types::{IntTy, ValueTyKind},
         FromWord, IntoWord,
@@ -20,9 +19,9 @@ use crate::{
 };
 
 use super::{
-    assignments::{AssignmentGroupIdx, AssignmentIdx, CompiledAssignment},
+    assignments::{AssignmentIdx, CompiledAssignment},
     expressions::CompiledExpression,
-    CompiledVariables, StateLayout,
+    CompiledTransientAssignment, CompiledVariables, StateLayout,
 };
 
 new_idx_type! {
@@ -187,23 +186,6 @@ impl CompiledInstance {
             }
         }
     }
-
-    #[inline(always)]
-    pub fn foreach_enabled_edge_concurrent<C: Sync + Fn(EdgeIdx)>(
-        &self,
-        env: &mut Env,
-        callback: C,
-    ) {
-        let loc = self.load_location(&env.state);
-        let edges_range = self.locations[loc].edges.clone();
-        let edges = &self.edges[edges_range.clone()];
-        let state = env.state;
-        edges.par_iter().enumerate().for_each(|(idx, edge)| {
-            if edge.guard.evaluate(&mut Env { state }) {
-                callback((edges_range.start.as_usize() + idx).into());
-            }
-        });
-    }
 }
 
 /// A compiled location of an automaton instance.
@@ -211,6 +193,7 @@ pub struct CompiledLocation {
     pub name: LocationName,
     /// The outgoing edges of the location.
     pub(crate) edges: Range<EdgeIdx>,
+    pub(crate) transient_assignments: Vec<CompiledTransientAssignment>,
 }
 
 /// A compiled edge.

@@ -26,3 +26,9 @@ impl models::InstanceIdx {
         self.0
     }
 }
+
+impl variables::VariableDeclaration {
+    pub fn is_transient(&self) -> bool {
+        self.transient.unwrap_or(false)
+    }
+}

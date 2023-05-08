@@ -8,7 +8,7 @@ use parking_lot::Mutex;
 
 use crate::values::{layout::FieldIdx, types::ValueTy, units::NumWords};
 
-use super::{functions::FunctionIdx, ConstantIdx};
+use super::{compiled::TransientVariableIdx, functions::FunctionIdx, ConstantIdx};
 
 struct StackLayoutInner {
     parent: Option<StackLayout>,
@@ -163,6 +163,7 @@ impl Scope {
 pub enum ScopeItem {
     Constant(ConstantIdx),
     StateVariable(FieldIdx),
+    TransientVariable(TransientVariableIdx),
     StackVariable { offset: NumWords, ty: ValueTy },
 }
 

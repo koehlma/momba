@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use momba_model::{expressions::*, values::Value};
+use momba_model::expressions::*;
 
 use crate::{
     compiler::return_error,
@@ -303,6 +303,7 @@ impl<'cx> ExprCtx<'cx> {
                     expr_ty,
                 )
             }
+            ScopeItem::TransientVariable(_) => todo!(),
         })
     }
 

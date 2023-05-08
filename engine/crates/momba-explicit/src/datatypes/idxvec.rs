@@ -7,6 +7,7 @@ pub trait Idx {
 }
 
 #[derive(Debug, Clone)]
+#[repr(transparent)]
 pub struct IdxVec<I, T> {
     vec: Vec<T>,
     _phantom_idx: PhantomData<fn(&I)>,
@@ -31,6 +32,16 @@ impl<I, T> From<Vec<T>> for IdxVec<I, T> {
 }
 
 impl<I: Idx, T> IdxVec<I, T> {
+    pub fn from_vec_ref(vec: &Vec<T>) -> &Self {
+        // SAFETY: `IdxVec<I, T>` and `Vec<T>` have the same memory layout.
+        unsafe { std::mem::transmute(vec) }
+    }
+
+    pub fn from_vec_mut(vec: &mut Vec<T>) -> &mut Self {
+        // SAFETY: `IdxVec<I, T>` and `Vec<T>` have the same memory layout.
+        unsafe { std::mem::transmute(vec) }
+    }
+
     pub fn next_idx(&self) -> I {
         I::from_idx(self.vec.len())
     }
@@ -40,6 +51,12 @@ impl<I: Idx, T> IdxVec<I, T> {
             .iter()
             .enumerate()
             .map(|(idx, item)| (I::from_idx(idx), item))
+    }
+
+    pub fn insert(&mut self, value: T) -> I {
+        let idx = self.next_idx();
+        self.push(value);
+        idx
     }
 }
 
@@ -79,6 +96,12 @@ impl<I: Idx, T> ops::Index<I> for IdxVec<I, T> {
 
     fn index(&self, index: I) -> &Self::Output {
         &self.vec[index.as_usize()]
+    }
+}
+
+impl<I: Idx, T> ops::IndexMut<I> for IdxVec<I, T> {
+    fn index_mut(&mut self, index: I) -> &mut Self::Output {
+        &mut self.vec[index.as_usize()]
     }
 }
 

@@ -88,7 +88,7 @@ pub(crate) fn compile_assignment(
         return_error!("Unable to resolve identifier {:?}.", target.identifier);
     };
     let ScopeItem::StateVariable(field_idx) = item else {
-        return_error!("Cannot assign to {:?}.", target.identifier);
+        return_error!("Cannot assign to {:?} (not a state variable).", target.identifier);
     };
     let field = &variables.state_layout[field_idx];
     let addr = variables.state_offsets[field_idx];

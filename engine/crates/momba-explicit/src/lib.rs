@@ -1,12 +1,10 @@
 #![doc = include_str!("../README.md")]
 
-use core::num;
 use std::{
     collections::VecDeque,
     error::Error,
     marker::PhantomData,
     ops::Range,
-    ptr::NonNull,
     time::{Duration, Instant},
 };
 
@@ -23,12 +21,16 @@ use parking_lot::Mutex;
 pub mod exhaustive;
 
 use crate::{
-    compiler::{compile_model, compiled::CompiledDestination, Options, StateLayout},
+    compiler::{
+        compile_model,
+        compiled::{CompiledDestination, TransientVariableIdx},
+        Options, StateLayout,
+    },
     datatypes::idxvec::IdxVec,
     values::{
         memory::{bits::BitSlice, Load},
         types::ValueTyKind,
-        FromWord,
+        FromWord, Word,
     },
     vm::evaluate::Env,
 };
@@ -193,22 +195,55 @@ pub fn count_states_concurrent(
                 let mut enabled_sync_edges = Vec::new();
                 let mut instance_sync_edges = IdxVec::<InstanceIdx, _>::new();
 
+                let mut transient_values: IdxVec<TransientVariableIdx, Word> = IdxVec::new();
+
                 let mut sync_stack = Vec::new();
                 let mut destinations_product = CartesianProductReusable::new();
+
+                let mut transient_values = IdxVec::new();
+
+                let empty_transient_values = IdxVec::new();
+
                 while let Some(state) = ctx.next_task() {
                     // if visited.len() % (1 << 18) == 0 {
                     //     println!("Visited: {}", visited.len());
                     // }
 
-                    let mut env = Env::new(BitSlice::<StateLayout>::from_slice(&state));
+                    transient_values.clear();
+                    let mut transient_env = Env::new(
+                        BitSlice::<StateLayout>::from_slice(&state),
+                        &empty_transient_values,
+                    );
+
+                    // Initialize the transient variables to their default values.
+                    for variable in compiled.variables.transient_variables.iter() {
+                        let value = variable.default.evaluate(&mut transient_env);
+                        transient_values.push(value);
+                    }
+                    // Execute the state assignments.
+                    for instance in compiled.instances.iter() {
+                        let location = instance.load_location(&transient_env.state);
+                        for transient_assignment in
+                            instance.locations[location].transient_assignments.iter()
+                        {
+                            let mut env = Env::new(
+                                BitSlice::<StateLayout>::from_slice(&state),
+                                &transient_values,
+                            );
+                            let value = transient_assignment.value.evaluate(&mut env);
+                            transient_values[transient_assignment.variable] = value;
+                        }
+                    }
+
+                    let mut env = Env::new(
+                        BitSlice::<StateLayout>::from_slice(&state),
+                        &transient_values,
+                    );
 
                     transition_items.clear();
                     transitions.clear();
                     enabled_sync_edges.clear();
                     instance_sync_edges.clear();
-
-                    #[cfg(feature = "statistics")]
-                    let computing_enabled_edges_start = Instant::now();
 
                     for (instance_idx, instance) in compiled.instances.indexed_iter() {
                         let enabled_sync_edges_start = enabled_sync_edges.len();
@@ -462,7 +497,7 @@ pub fn count_states_concurrent(
                 // println!("States: {}", visited.len());
             }
         },
-        exhaustive::workers::WorkerQueueStrategy::Fifo,
+        exhaustive::workers::WorkerQueueStrategy::Lifo,
         [initial_state],
     );
 
@@ -527,6 +562,8 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
     let mut queue_pressure = 0;
 
+    let transient_values = IdxVec::new();
+
     let mut sync_stack = Vec::new();
     let mut destinations_product = CartesianProductReusable::new();
     while let Some(state) = state_stack.pop_front() {
@@ -538,7 +575,10 @@ pub fn count_states(model: &Model, params: &Params) -> Result<(), Box<dyn Error>
 
         // println!("State: {:?}", state);
 
-        let mut env = Env::new(BitSlice::<StateLayout>::from_slice(&state));
+        let mut env = Env::new(
+            BitSlice::<StateLayout>::from_slice(&state),
+            &transient_values,
+        );
 
         //compiled.print_state(&env.state);
 

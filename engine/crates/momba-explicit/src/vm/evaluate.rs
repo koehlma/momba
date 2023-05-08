@@ -2,15 +2,26 @@
 
 use std::marker::PhantomData;
 
-use crate::{compiler::StateLayout, values::memory::bits::BitSlice};
+use crate::{
+    compiler::{compiled::TransientVariableIdx, StateLayout},
+    datatypes::idxvec::IdxVec,
+    values::{memory::bits::BitSlice, Word},
+};
 
 pub struct Env<'env> {
     pub(crate) state: &'env BitSlice<StateLayout>,
+    pub(crate) transient_values: &'env IdxVec<TransientVariableIdx, Word>,
 }
 
 impl<'env> Env<'env> {
-    pub fn new(state: &'env BitSlice<StateLayout>) -> Self {
-        Self { state }
+    pub fn new(
+        state: &'env BitSlice<StateLayout>,
+        transient_values: &'env IdxVec<TransientVariableIdx, Word>,
+    ) -> Self {
+        Self {
+            state,
+            transient_values,
+        }
     }
 }
 
