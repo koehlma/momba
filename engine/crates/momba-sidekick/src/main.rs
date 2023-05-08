@@ -1,5 +1,6 @@
 use hashbrown::HashSet;
 use momba_explore::model::ConstantExpression;
+use std::env;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
@@ -197,26 +198,26 @@ fn smc(walks: SMC) {
         .unwrap();
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    //let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    // let dead_expr: Expression = match &expr {
-    //     //When the goal is binary, with an Until: (phi U psi)
-    //     // => dead: not phi
-    //     Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
-    //         operator: model::UnaryOperator::Not,
-    //         operand: bin_expr.left.clone(),
-    //     }),
-    //     // When the goal is a Finally, then is true U psi => dead: false
-    //     // And the default value for the dead expression will be the false predicate.
-    //     _ => Expression::Constant(ConstantExpression {
-    //         value: model::Value::Bool(false),
-    //     }),
-    // };
+    let dead_expr: Expression = match &expr {
+        //When the goal is binary, with an Until: (phi U psi)
+        // => dead: not phi
+        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
+            operator: model::UnaryOperator::Not,
+            operand: bin_expr.left.clone(),
+        }),
+        // When the goal is a Finally, then is true U psi => dead: false
+        // And the default value for the dead expression will be the false predicate.
+        _ => Expression::Constant(ConstantExpression {
+            value: model::Value::Bool(false),
+        }),
+    };
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    // let _dead_comp_expr = explorer
-    //     .compiled_network
-    //     .compile_global_expression(&dead_expr);
-    // println!("Goal Expression:\n{:#?}\n\n", &expr);
+    let _dead_comp_expr = explorer
+        .compiled_network
+        .compile_global_expression(&dead_expr);
+    println!("Goal Expression:\n{:#?}\n\n", &expr);
+    println!("Dead Expression:\n{:#?}\n\n", &dead_expr);
 
     let mut state_iterator =
         simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
@@ -225,8 +226,8 @@ fn smc(walks: SMC) {
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
         .max_steps(50)
-        .with_delta(0.05)
-        .with_eps(0.01)
+        .with_delta(0.5)
+        .with_eps(0.1)
         .n_threads(8);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.explicit_parallel_smc();
@@ -310,17 +311,16 @@ fn check_nn(nn_command: NN) {
         }),
     };
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let dead_comp_expr = explorer
+    let _dead_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&dead_expr);
 
-    let ini_state = &explorer.initial_states().into_iter().next().unwrap();
-
-    println!(
-        "Goal expr: {:?}.\nDead Expr: {:?}",
-        ini_state.evaluate(&goal_comp_expr),
-        ini_state.evaluate(&dead_comp_expr)
-    );
+    /*
+    To do:
+    Send the instance name when creating the oracle, and pass to the action resolver.
+    then, read by cmd
+    */
+    let instance_name = "car";
 
     let nn_path = Path::new(&nn_command.nn);
     let nn_file = File::open(nn_path).expect("Unable to open model file!");
@@ -330,17 +330,16 @@ fn check_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
     let arc_explorer = Arc::new(explorer);
 
-    let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone());
+    let nn_oracle = NnOracle::build(readed_nn, arc_explorer.clone(), String::from(instance_name));
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
     stat_checker = stat_checker
-        .max_steps(100)
+        .max_steps(5000)
         .with_delta(0.5)
-        .with_eps(0.05)
+        .with_eps(0.01)
         .n_threads(8);
-
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.explicit_parallel_smc();
+    let (score, n_runs) = stat_checker.explicit_parallel_smc(); //stat_checker.run_smc(); //
     let duration = start.elapsed();
     println!(
         "Time elapsed is: {:?}. Score:{:?}",
@@ -350,7 +349,7 @@ fn check_nn(nn_command: NN) {
 }
 
 fn main() {
-    //env::set_var("RUST_BACKTRACE", "1");
+    env::set_var("RUST_BACKTRACE", "1");
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Count(count) => count_states(count),

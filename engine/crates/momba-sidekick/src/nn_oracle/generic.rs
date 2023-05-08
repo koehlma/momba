@@ -1,5 +1,5 @@
 #![allow(dead_code, unused_variables, unused_assignments)]
-use std::sync::Arc;
+use std::{fmt::format, sync::Arc};
 
 //use crate::nn_oracle::DOUBLE_CPU;
 use hashbrown::{HashMap, HashSet};
@@ -48,24 +48,39 @@ where
 {
     num_actions: i64, //amount of edges in the automaton.
     //_automaton: &'a Automaton,
-    //explorer: &'a Explorer<T>,
     explorer: Arc<Explorer<T>>,
+    //instance_name: String,
+    instance: usize,
 }
 
 //impl<'a, T: time::Time> EdgeByIndexResolver<'a, T> {
 impl<'a, T: time::Time> EdgeByIndexResolver<T> {
-    //pub fn new(explorer: &'a Explorer<T>) -> Self {
-    pub fn new(explorer: Arc<Explorer<T>>) -> Self {
-        //let automaton = explorer.network.automata.values().next().unwrap();
+    //pub fn new(explorer: Arc<Explorer<T>>) -> Self {
+    pub fn new(explorer: Arc<Explorer<T>>, name: String) -> Self {
+        let instance_name = format!("_{}", name);
+        let instance_id = &explorer
+            .network
+            .automata
+            .keys()
+            .filter(|name| name.ends_with(&instance_name))
+            .next()
+            .unwrap()
+            .strip_suffix(&instance_name)
+            .unwrap_or("0");
+        println!("{:?}", instance_id);
         let mut num_actions: i64 = 0;
         for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
             num_actions += l.edges.len() as i64;
         }
         EdgeByIndexResolver {
             num_actions,
-            //    _automaton: automaton,
+            instance: instance_id.parse::<usize>().unwrap(),
             explorer,
         }
+    }
+
+    fn get_instance(&self) -> usize {
+        self.instance
     }
 }
 //May be useful. edge.number contains a number from the jani model.
@@ -76,12 +91,21 @@ where
     fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>) {
         out.clear();
         let mut available_actions: HashSet<i64> = HashSet::new();
+        let id = self.get_instance();
         for t in self.explorer.transitions(&state).iter() {
-            for v in t.numeric_reference_vector().iter() {
-                match v {
-                    (0, value) => available_actions.insert(*value as i64),
-                    (_, _) => panic!("Error, only 1 instance of automaton"),
-                };
+            for (ins, value) in t.numeric_reference_vector().iter() {
+                if *ins == id {
+                    available_actions.insert(*value as i64);
+                }
+
+                //println!("{:#?}", v);
+                //self.get_instance();
+                //match v {
+                //    (id, value) => available_actions.insert(*value as i64),
+                //    (_, _) => {
+                //        continue;
+                //    } //panic!("Error, only 1 instance of automaton"),
+                //};
             }
         }
         available_actions.remove(&-1);
@@ -98,23 +122,28 @@ where
         transitions: &'t [Transition<'s, T>],
         action: i64,
     ) -> Vec<&'t Transition<'s, T>> {
+        let id = self.get_instance();
         let mut remove_trans_idxs = vec![];
         for (i, t) in transitions.into_iter().enumerate() {
-            for v in t.numeric_reference_vector().into_iter() {
-                match v {
-                    (0, value) => {
-                        //println!(
-                        //    "Action: {:?} vs num ref value value: {:?}",
-                        //    action, value
-                        //);
-                        if action as usize != value {
-                            remove_trans_idxs.push(i);
-                        }
-                    }
-                    (_, _) => panic!("Error, only 1 instance of automaton"),
+            for (ins, value) in t.numeric_reference_vector().iter() {
+                if *ins == id && !(*value == action as usize) {
+                    remove_trans_idxs.push(i);
                 };
             }
         }
+        //for v in t.numeric_reference_vector().into_iter() {
+        // match v {
+        //     (0, value) => {
+        //         //println!(
+        //         //    "Action: {:?} vs num ref value value: {:?}",
+        //         //    action, value
+        //         //);
+        //         if action as usize != value {
+        //             remove_trans_idxs.push(i);
+        //         }
+        //     }
+        //     (_, _) => panic!("Error, only 1 instance of automaton"),
+
         let out_transitions: Vec<&Transition<T>> = transitions
             .iter()
             .enumerate()
@@ -153,11 +182,11 @@ where
             }
         }
         let filtered_map: HashMap<i64, f64> = action_map
-        .iter()
-        .filter(|(k, _v)| keep_actions.contains(k))
-        .map(|(k, v)| (*k, *v))
-        .collect();
-    
+            .iter()
+            .filter(|(k, _v)| keep_actions.contains(k))
+            .map(|(k, v)| (*k, *v))
+            .collect();
+
         // Take the action with the highest score
         let mut max_val: f64 = 0.0;
         let mut max_key: i64 = -1;
@@ -174,6 +203,7 @@ where
     }
 }
 
+//This is basically garbage, needs a lot of love.
 pub struct EdgeByLabelResolver<'a, T>
 where
     T: time::Time,

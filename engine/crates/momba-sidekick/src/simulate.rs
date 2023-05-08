@@ -61,7 +61,7 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
     pub state: State<T>,
     explorer: Arc<Explorer<T>>,
     oracle: O,
-    pub trace: Vec<HashMap<String, Value>>,
+    //pub trace: Vec<HashMap<String, Value>>,
 }
 
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
@@ -75,7 +75,7 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
                 .unwrap(),
             explorer,
             oracle,
-            trace: vec![],
+            //            trace: vec![],
         }
     }
 
