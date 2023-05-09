@@ -7,25 +7,35 @@ use momba_explore::{model::Value, *};
 use rand::{seq::IteratorRandom, Rng};
 use rayon::{current_num_threads, prelude::*};
 
+/// Represents the Output of the SPRT simulations, saying if we are above
+/// or below of the provided *x* value
 #[derive(Debug)]
 pub enum SprtComparison {
     BiggerThan(i64),
     LesserThan(i64),
 }
+/// Output of each Simulation.
 #[derive(Debug, PartialEq)]
 pub enum SimulationOutput {
+    /// The simulation reached a State where the goal predicate its satisfied
     GoalReached(usize),
+    /// The simulation has made the max amount of steps without reaching an absorbent or a goal state.
     MaxSteps,
+    /// We have reached an absorbent state and finished the simulation.
     NoStatesAvailable,
 }
 
+/// Represents and oracle that tells us how to resolve undeterminations.
 pub trait Oracle<T: time::Time> {
+    /// Chooses a transition between the provided ones, and can have access to all
+    /// the information of the current state.
     fn choose<'s, 't>(
         &self,
-        _state: &State<T>,
+        state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T>;
 }
+/// Oracle that resolves no-determinis uniformly
 #[derive(Clone)]
 pub struct UniformOracle {}
 
@@ -42,31 +52,38 @@ impl<T: time::Time> Oracle<T> for UniformOracle {
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
         let mut rng = rand::thread_rng();
-        if transitions.len() != 1 {
-            println!("WTF")
-        }
         let elected_transition = transitions.into_iter().choose(&mut rng).unwrap();
         elected_transition
     }
 }
 
+/// Represents a Simulator
 pub trait Simulator {
+    /// the type of the states that the simulator will deal with.
     type State<'sim>
     where
         Self: 'sim;
+    /// Gives the next state using a provided oracle.
     fn next(&mut self) -> Option<Self::State<'_>>;
+    /// Resets the simulator.
     fn reset(&mut self) -> Self::State<'_>;
+    /// Returns the current state that the simulation is in.
     fn current_state(&mut self) -> Self::State<'_>;
 }
 
+/// Struct that will iterate over the states.
 #[derive(Clone)]
 pub struct StateIter<T: time::Time, O: Oracle<T>> {
+    /// The state hes in.
     pub state: State<T>,
+    /// An explorer that will allow the Iterator interact with the model.
     explorer: Arc<Explorer<T>>,
+    /// An oracle that will resolve no-determinism.
     oracle: O,
     //pub trace: Vec<HashMap<String, Value>>,
 }
 
+/// Implementation of the State Iterator.
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
     pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {
         let mut rng = rand::thread_rng();
@@ -81,7 +98,10 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
             //            trace: vec![],
         }
     }
-
+    /// WARNING:
+    /// Only use on small models.
+    /// Outputs a vector with the representation of the global variables on
+    /// each state.
     pub fn _generate_trace(&mut self, steps: usize) -> Vec<HashMap<String, Value>> {
         self.reset();
         let mut c = 0;
@@ -112,8 +132,10 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
     }
 }
 
+/// Implementation of the Simulator trait for the iterator.
 impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     type State<'sim> = &'sim State<T> where Self:'sim;
+
     fn next(&mut self) -> Option<Self::State<'_>> {
         let mut rng = rand::thread_rng();
         let transitions = self.explorer.transitions(&self.state);
@@ -169,75 +191,107 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     // }
 }
 
+/// Struct that provides different types of simulation based on a
+/// Simulator and a Goal predicate.
 #[must_use]
 pub struct StatisticalSimulator<'sim, S, G> {
+    /// The Simulator to use.
     sim: &'sim mut S,
+    /// The Goal function.
     goal: G,
+    /// *ϵ* is the error used in the Okamoto bound for establishing the amount of runs.
+    /// Default value: 0.01
     eps: f64,
+    /// δ is the level of confidence provided.
+    /// δ = 0.02 translates to a 98% in the confidence level.
+    /// Default value: 0.05.
     delta: f64,
+    /// The amount of steps for the simulations.
+    /// Default value: 10000
     max_steps: usize,
+    /// Fixed approximation provided for the usage of the SPRT algorithm.
+    /// *P(eventually G)~x*
+    /// Default value: 0
     x: f64,
+    /// Type I error in SPRT algorithm.
+    /// Default value: 1
     alpha: f64,
+    /// Type II error in SPRT algorithm.
+    /// Default value: II
     beta: f64,
+    /// Indiference region used in the SPRT algorithm.
+    /// Default value: 0
     ind_reg: f64,
+    /// Number of threads to use when simulating with parallel implementations.
+    /// Default value: 1
     n_threads: usize,
 }
 
+/// Implementation of the struct.
 impl<'sim, S, G> StatisticalSimulator<'sim, S, G>
 where
     S: Simulator,
     G: Fn(&S::State<'_>) -> bool,
 {
+    /// Create a new Statiscal Simulator.
     pub fn new(sim: &'sim mut S, goal: G) -> Self {
         Self {
             sim,
             goal,
             eps: 0.01,
             delta: 0.05,
-            max_steps: 200,
+            max_steps: 10000,
             x: 0.0,
             alpha: 1.0,
             beta: 1.0,
             ind_reg: 0.0,
-            n_threads: 4,
+            n_threads: 1,
         }
     }
 
+    /// set field: steps
     pub fn max_steps(mut self, max_steps: usize) -> Self {
         self.max_steps = max_steps;
         self
     }
 
+    /// set field: eps
     pub fn with_eps(mut self, eps: f64) -> Self {
         self.eps = eps;
         self
     }
 
+    /// set field: delta
     pub fn with_delta(mut self, delta: f64) -> Self {
         self.delta = delta;
         self
     }
 
+    /// set field: x
     pub fn with_x(mut self, x: f64) -> Self {
         self.x = x;
         self
     }
 
+    /// set field: alpha
     pub fn with_alpha(mut self, alpha: f64) -> Self {
         self.alpha = alpha;
         self
     }
 
+    /// set field: beta
     pub fn with_beta(mut self, beta: f64) -> Self {
         self.beta = beta;
         self
     }
 
+    /// set field: ind_reg
     pub fn with_ind_reg(mut self, ind_reg: f64) -> Self {
         self.ind_reg = ind_reg;
         self
     }
 
+    /// set field: n_threads
     pub fn n_threads(mut self, n_threads: usize) -> Self {
         self.n_threads = n_threads;
         rayon::ThreadPoolBuilder::new()
@@ -247,6 +301,9 @@ where
         self
     }
 
+    /// Simulation function.
+    /// Simulates a run until satisfing the goal predicate, reaching the max
+    /// amount of steps or reaching an absorbent state.
     fn simulate(&mut self) -> SimulationOutput {
         self.sim.reset();
         let mut c: usize = 0;
@@ -262,44 +319,11 @@ where
         return SimulationOutput::NoStatesAvailable;
     }
 
-    pub fn explicit_parallel_smc(&self) -> (i64, i64)
-    where
-        S: Simulator + Clone + Send,
-        G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
-    {
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
-        let num_workers = self.n_threads;
-        let countdown = atomic::AtomicI64::new(n_runs as i64);
-        let max_steps = self.max_steps;
-        println!(
-            "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}. Runs per thread: {:?}",
-            n_runs as i64,
-            max_steps,
-            num_workers,
-            (n_runs / num_workers as f64)
-        );
-        let goal_counter = atomic::AtomicUsize::new(0);
-        std::thread::scope(|scope| {
-            for _ in 0..num_workers {
-                let sim = self.sim.clone();
-                let goal_counter = &goal_counter;
-                let goal = &self.goal;
-                let countdown = &countdown;
-                scope.spawn(move || {
-                    let mut sim = sim;
-                    while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
-                        if simulate_run(&mut sim, goal, max_steps) {
-                            goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                        }
-                    }
-                });
-            }
-        });
-        (goal_counter.into_inner() as i64, n_runs as i64)
-    }
-
+    /// Run Statistical Model Checking.
+    /// Returns a tuple containing the amount of times that reached the goal state,
+    /// and the number of runs.
     pub fn run_smc(mut self) -> (i64, i64) {
+        //TODO CHANGE THE THING OF THE N_RUNS TO SOME GET METHOD.
         let n_runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
@@ -320,12 +344,76 @@ where
             }
         }
         println!(
-            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}. Steps: {:?}",
+            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}.\nTotal Steps: {:?}",
             count_more_steps_needed, score, deadlock_count, total_steps
         );
         (score, n_runs as i64)
     }
 
+    /// Explicitly run parallel SMC.
+    /// Does not uses the Simulation Output enum, because this
+    /// implementation uses the low level managment of threads.
+    pub fn explicit_parallel_smc(&self) -> (i64, i64)
+    where
+        S: Simulator + Clone + Send,
+        G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
+    {
+        let n_runs =
+            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let num_workers = self.n_threads;
+        let countdown = atomic::AtomicI64::new(n_runs as i64);
+        let max_steps = self.max_steps;
+        println!(
+            "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}. Runs per thread: {:?}",
+            n_runs as i64,
+            max_steps,
+            num_workers,
+            (n_runs / num_workers as f64)
+        );
+        let goal_counter = atomic::AtomicUsize::new(0);
+        let dead_counter = atomic::AtomicUsize::new(0);
+        let more_steps_counter = atomic::AtomicUsize::new(0);
+        std::thread::scope(|scope| {
+            for _ in 0..num_workers {
+                let sim = self.sim.clone();
+                let goal_counter = &goal_counter;
+                let dead_counter = &dead_counter;
+                let more_steps_counter = &more_steps_counter;
+                let goal = &self.goal;
+                let countdown = &countdown;
+                scope.spawn(move || {
+                    let mut sim = sim;
+                    while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
+                        match simulate_run(&mut sim, goal, max_steps) {
+                            SimulationOutput::GoalReached(_) => {
+                                goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                            }
+                            SimulationOutput::MaxSteps => {
+                                more_steps_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                            }
+                            SimulationOutput::NoStatesAvailable => {
+                                dead_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                            }
+                        }
+                        //if simulate_run(&mut sim, goal, max_steps) {
+                        //    goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                        //}
+                    }
+                });
+            }
+        });
+        let score = goal_counter.into_inner() as i64;
+        println!(
+            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}.",
+            more_steps_counter.into_inner() as i64,
+            score,
+            dead_counter.into_inner() as i64
+        );
+        (score, n_runs as i64)
+    }
+
+    /// Runs parallel SMC usign the library rayon and distribution the wrokload
+    /// on the amount of threads.
     pub fn _run_parallel_smc(self) -> (i64, i64)
     where
         S: Simulator + Send + Clone + Sync,
@@ -356,7 +444,7 @@ where
         (score, n_runs as i64)
     }
 
-    pub fn _run_parallel_smc_pool(self) -> (i64, i64)
+    fn _run_parallel_smc_pool(self) -> (i64, i64)
     where
         S: Simulator + Send + Clone + Sync,
         G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
@@ -395,6 +483,7 @@ where
         (score, n_runs as i64)
     }
 
+    /// Runs the simulation of SPRT algorithm.
     pub fn run_sprt(mut self) -> SprtComparison {
         let p0 = (self.x + self.ind_reg).min(1.0);
         let p1 = (self.x - self.ind_reg).max(0.0);
@@ -451,7 +540,8 @@ where
     return SimulationOutput::NoStatesAvailable;
 }
 
-fn simulate_run<S, G>(sim: &mut S, goal: &G, max_steps: usize) -> bool
+fn simulate_run<S, G>(sim: &mut S, goal: &G, max_steps: usize) -> SimulationOutput
+//bool
 where
     S: Simulator,
     G: Fn(&S::State<'_>) -> bool,
@@ -461,11 +551,11 @@ where
     while let Some(state) = sim.next() {
         let next_state = state.into();
         if (goal)(&next_state) {
-            return true;
+            return SimulationOutput::GoalReached(c); //return true;
         } else if c >= max_steps {
-            return false;
+            return SimulationOutput::MaxSteps; //return false;
         }
         c += 1;
     }
-    return false;
+    return SimulationOutput::NoStatesAvailable; // return false;
 }

@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use hashbrown::HashMap;
-//use std::collections::HashMap;
 use momba_explore::*;
 use rand::seq::IteratorRandom;
 use serde::{Deserialize, Serialize};
@@ -18,12 +17,36 @@ use self::generic::{ActionResolver, EdgeByIndexResolver};
 
 mod generic;
 
+/// Structure that allows the reading of the Neural Network from a json file.
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct NeuralNetwork {
+pub struct JsonNN {
+    /// Each layer of the model.
     layers: Vec<Layers>,
 }
 
-impl NeuralNetwork {
+/// This allows us to read different types of layers in the model.
+#[derive(Debug, Deserialize, Serialize, Clone)]
+#[serde(tag = "kind")]
+enum Layers {
+    // There can be much more different types of NN
+    /// Linear Models.
+    #[serde(rename_all = "camelCase")]
+    Linear {
+        name: String,
+        input_size: i64,
+        output_size: i64,
+        has_biases: bool,
+        weights: Vec<Vec<f64>>,
+        biases: Vec<f64>,
+    },
+    /// Rectified Linear Unit (ReLU) is a layer that translates to a
+    /// non-linear activation function.
+    ReLU { name: String },
+}
+
+/// Implementation of the struct for reading the json files.
+impl JsonNN {
+    /// Outputs the input size of the model.
     pub fn get_input_size(&self) -> i64 {
         match self.layers.first().unwrap() {
             Layers::Linear {
@@ -37,6 +60,7 @@ impl NeuralNetwork {
             _ => 0,
         }
     }
+    /// Outputs the output size of the model.
     pub fn get_output_size(&self) -> i64 {
         match self.layers.last().unwrap() {
             Layers::Linear {
@@ -52,30 +76,16 @@ impl NeuralNetwork {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
-#[serde(tag = "kind")]
-enum Layers {
-    // There can be much more different types of NN
-    #[serde(rename_all = "camelCase")]
-    Linear {
-        name: String,
-        input_size: i64,
-        output_size: i64,
-        has_biases: bool,
-        weights: Vec<Vec<f64>>,
-        biases: Vec<f64>,
-    },
-    ReLU {
-        name: String,
-    },
-}
-
+/// Wrapper for the models, that will allow us to create the model and to
+/// clone and not lose the reference to the original JsonNN so we can create
+/// different instances for the parallel simulations.
 struct ModelWrapper {
-    pub _model: Sequential,
-    pub _nn: Arc<NeuralNetwork>,
+    pub model: Sequential,
+    pub nn: Arc<JsonNN>,
 }
+/// Implementation of the wrapper.
 impl ModelWrapper {
-    fn new(nn: Arc<NeuralNetwork>) -> Self {
+    fn new(nn: Arc<JsonNN>) -> Self {
         let mut tch_nn = nn::seq();
         let mut input_sizes: Vec<i64> = vec![];
         let mut output_sizes: Vec<i64> = vec![];
@@ -115,29 +125,32 @@ impl ModelWrapper {
             }
         }
         //println!("{:#?}", tch_nn);
-        ModelWrapper {
-            _model: tch_nn,
-            _nn: nn,
-        }
+        ModelWrapper { model: tch_nn, nn }
     }
 }
 
+/// Cloning capabilities for the model.
 impl Clone for ModelWrapper {
     fn clone(&self) -> Self {
-        ModelWrapper::new(self._nn.clone())
+        ModelWrapper::new(self.nn.clone())
     }
 }
 
+/// Structure that will represent the Oracle that will use the NN.
 #[derive(Clone)]
 pub struct NnOracle<T>
 where
     T: time::Time,
 {
-    //model: Sequential,
+    /// Wrapper for the network.
     model_wrapper: ModelWrapper,
+    /// Input size of the model.
     _input_size: usize,
+    /// Output size of the model
     output_size: usize,
+    /// Explorer for the
     explorer: Arc<Explorer<T>>,
+    ///
     action_resolver: EdgeByIndexResolver<T>,
 }
 
@@ -145,11 +158,7 @@ impl<'a, T> NnOracle<T>
 where
     T: time::Time,
 {
-    pub fn build(
-        nn: NeuralNetwork,
-        explorer: Arc<Explorer<T>>,
-        instance_name: Option<String>,
-    ) -> Self {
+    pub fn build(nn: JsonNN, explorer: Arc<Explorer<T>>, instance_name: Option<String>) -> Self {
         let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
         let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
@@ -207,7 +216,7 @@ where
             let mut rng = rand::thread_rng();
             let tensor = self.state_to_tensor(state);
 
-            let output_tensor = self.model_wrapper._model.forward(&tensor);
+            let output_tensor = self.model_wrapper.model.forward(&tensor);
             let mut tensor_map: HashMap<i64, f64> = HashMap::new();
             for a in 0..self.output_size as i64 {
                 tensor_map.insert(a, output_tensor.double_value(&[a]));
