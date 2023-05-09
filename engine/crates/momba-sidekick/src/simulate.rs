@@ -42,6 +42,9 @@ impl<T: time::Time> Oracle<T> for UniformOracle {
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
         let mut rng = rand::thread_rng();
+        if transitions.len() != 1 {
+            println!("WTF")
+        }
         let elected_transition = transitions.into_iter().choose(&mut rng).unwrap();
         elected_transition
     }
@@ -129,6 +132,7 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         for destination in destinations {
             accumulated += destination.probability();
             if accumulated >= threshold {
+                //println!("Destination prob: {:?}", destination.probability());
                 self.state = self
                     .explorer
                     .successor(&self.state, &transition, &destination);
@@ -307,7 +311,7 @@ where
             let v = self.simulate();
             match v {
                 SimulationOutput::GoalReached(steps) => {
-                    println!("Goal reached at step: {:?}", steps);
+                    // println!("Goal reached at step: {:?}", steps);
                     score += 1;
                     total_steps += steps;
                 }

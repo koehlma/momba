@@ -145,7 +145,11 @@ impl<'a, T> NnOracle<T>
 where
     T: time::Time,
 {
-    pub fn build(nn: NeuralNetwork, explorer: Arc<Explorer<T>>, instance_name: String) -> Self {
+    pub fn build(
+        nn: NeuralNetwork,
+        explorer: Arc<Explorer<T>>,
+        instance_name: Option<String>,
+    ) -> Self {
         let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
         let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);

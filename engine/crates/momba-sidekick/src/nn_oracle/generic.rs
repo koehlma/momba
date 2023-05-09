@@ -1,12 +1,7 @@
 #![allow(dead_code, unused_variables, unused_assignments)]
-use std::{fmt::format, sync::Arc};
-
-//use crate::nn_oracle::DOUBLE_CPU;
 use hashbrown::{HashMap, HashSet};
 use momba_explore::{model::Automaton, *};
-//use rand::seq::IteratorRandom;
-//use std::{collections::HashMap};
-//use tch::Tensor;
+use std::sync::Arc;
 
 pub enum Actions {
     EdgeByIndex,
@@ -40,38 +35,38 @@ pub trait ActionResolver<T: time::Time> {
     ) -> Vec<&'t Transition<'s, T>>;
 }
 
-//pub struct EdgeByIndexResolver<'a, T>
 #[derive(Clone)]
 pub struct EdgeByIndexResolver<T>
 where
     T: time::Time,
 {
-    num_actions: i64, //amount of edges in the automaton.
-    //_automaton: &'a Automaton,
+    num_actions: i64,
     explorer: Arc<Explorer<T>>,
-    //instance_name: String,
     instance: usize,
 }
 
-//impl<'a, T: time::Time> EdgeByIndexResolver<'a, T> {
 impl<'a, T: time::Time> EdgeByIndexResolver<T> {
-    //pub fn new(explorer: Arc<Explorer<T>>) -> Self {
-    pub fn new(explorer: Arc<Explorer<T>>, name: String) -> Self {
-        let instance_name = format!("_{}", name);
+    pub fn new(explorer: Arc<Explorer<T>>, name: Option<String>) -> Self {
+        let default = String::from("0");
+        let instance_name = format!("_{}", name.unwrap_or_default());
         let instance_id = &explorer
             .network
             .automata
             .keys()
             .filter(|name| name.ends_with(&instance_name))
             .next()
-            .unwrap()
+            .unwrap_or_else(|| {
+                println!("Using default value for index automata: 0");
+                &default
+            })
             .strip_suffix(&instance_name)
             .unwrap_or("0");
-        println!("{:?}", instance_id);
+
         let mut num_actions: i64 = 0;
         for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
             num_actions += l.edges.len() as i64;
         }
+
         EdgeByIndexResolver {
             num_actions,
             instance: instance_id.parse::<usize>().unwrap(),
@@ -164,14 +159,17 @@ where
         transitions: &'t [Transition<'s, T>],
         action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
-        // Find the available actions for the state
+        let id = self.get_instance();
         let mut actions = vec![];
         for t in transitions.into_iter() {
-            for (ins, val) in t.numeric_reference_vector().into_iter() {
-                match ins {
-                    0 => actions.push(val as i64),
-                    _ => continue,
-                }
+            for (ins, value) in t.numeric_reference_vector().into_iter() {
+                //match ins {
+                //    0 => actions.push(value as i64),
+                //    _ => continue,
+                //}
+                if ins == id {
+                    actions.push(value as i64);
+                };
             }
         }
         // Only the available actions remains on the tensor map.
