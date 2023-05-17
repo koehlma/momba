@@ -30,11 +30,11 @@ struct Arguments {
 enum Command {
     #[clap(about = "Counts the number of states/zones of the model")]
     Count(Count),
-    #[clap(about = "Simulates a random run of the model")]
-    ParSMC(ParSMC),
     #[clap(about = "Runs SMC with an uniform scheduler")]
     SMC(SMC),
-    #[clap(about = "Runs SPRT with an uniformn scheduler")]
+    #[clap(about = "Runs SMC using parallelism with an uniform scheduler")]
+    ParSMC(ParSMC),
+    #[clap(about = "Runs SPRT with an uniform scheduler")]
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
     NN(NN),
@@ -50,18 +50,23 @@ struct Count {
 struct SMC {
     #[clap(about = "A MombaCR model")]
     model: String,
+    #[clap(about = "A property generated in the MombaCR style")]
     property: String,
 }
 #[derive(Clap)]
 struct ParSMC {
     #[clap(about = "A MombaCR model")]
     model: String,
+    #[clap(about = "A property generated in the MombaCR style")]
     property: String,
+    #[clap(short, long, default_value = "2", about = "number of thread to use")]
+    n_threads: usize,
 }
 #[derive(Clap)]
 struct SPRT {
     #[clap(about = "A MombaCR model")]
     model: String,
+    #[clap(about = "A property generated in the MombaCR style")]
     property: String,
 }
 
@@ -69,11 +74,19 @@ struct SPRT {
 struct NN {
     #[clap(about = "A MombaCR model")]
     model: String,
+    #[clap(about = "A property generated in the MombaCR style")]
     goal_property: String,
+    #[clap(about = "Neural Network in a json file.")]
     nn: String,
-    /// Instance_name, empty is none is provided,
-    #[clap(short, long, default_value = " ")]
+    #[clap(
+        short,
+        long,
+        default_value = " ",
+        about = "Name of the controlled instance."
+    )]
     instance_name: String,
+    #[clap(short, long, default_value = "2", about = "number of thread to use")]
+    n_threads: usize,
 }
 
 fn count_states(count: Count) {
@@ -244,13 +257,9 @@ fn par_smc(walks: ParSMC) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker
-        .max_steps(500)
-        .with_delta(0.05)
-        .with_eps(0.01)
-        .n_threads(8);
+    stat_checker = stat_checker.max_steps(500).n_threads(walks.n_threads);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.run_smc();
+    let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
         "Property: {}.\nTime elapsed is: {:?}. Prob:{:?}",
@@ -335,7 +344,7 @@ fn check_nn(nn_command: NN) {
     );
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(8);
+    stat_checker = stat_checker.n_threads(nn_command.n_threads);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();

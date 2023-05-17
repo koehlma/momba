@@ -1,0 +1,101 @@
+{
+	"name": "Racetrack",
+	"short": "racetrack",
+	"type": "mdp",
+	"original": "MOMBA",
+	"version": 1,
+	"date": "2023-05-04",
+	"version-history": [
+		{
+			"date": "2023-05-04",
+			"notes": "Initial version.",
+			"version": 1
+		}
+	],
+	"author": "Maximilian Kohl <koehl@cs.uni-saarland.de>",
+	"submitter": "Nazareno Garagiola <ngaragiola430@mi.unc.edu.ar>",
+	"source": "https://doi.org/10.1007/978-3-030-72013-1_23",
+	"part-of": {
+		"name": "Momba: JANI Meets Python",
+		"url": "https://doi.org/10.1007/978-3-030-72013-1_23"
+	},
+	"description": "Originally Racetrack has been a pen-and-paper game. A track is a two-dimensional grid comprising start, goal, wall, and blank cells. A vehicle starts oﬀ with some initial velocity from a start cell, with the objective to reach a goal cell as fast as possible without crashing into a wall. The vehicle is controlled by nine possible actions modifying the current velocity vector. In addition, there are diﬀerent undergrounds inducing probabilistic noise modeling slippery road conditions.",
+	"references": [
+		"https://doi.org/10.1007/978-3-030-72013-1_23",
+		"https://dx.doi.org/10.22028/D291-36816",
+		"https://en.wikipedia.org/wiki/Race_track"
+	],
+	"notes": "Racetrack JANI for benchmarking",
+	"parameters": [
+		{
+			"name": "variant",
+			"kind": "file",
+			"description": "The variant of the model",
+			"type": "string"
+		}
+	],
+	"properties": [
+		{
+			"name": "goalProbability",
+			"description": "The maximum probability to reach the desired cells where the goal is defined on each model.",
+			"type": "prob-reach"
+		}
+	],
+	"files": [
+		{
+			"file": "racetrack_barto_sml",
+			"original-file": [
+				"racetrack_barto_sml.jani"
+			],
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "barto_sml"
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "racetrack_barto_big",
+			"original-file": [
+				"racetrack_barto_big.jani"
+			],
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "barto_big"
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		},
+		{
+			"file": "racetrack_ring",
+			"original-file": [
+				"racetrack_ring.jani"
+			],
+			"file-parameter-values": [
+				{
+					"name": "variant",
+					"value": "ring"
+				}
+			],
+			"open-parameter-values": [
+				{
+					"states": [],
+					"results": []
+				}
+			]
+		}
+	],
+	"results": []
+}

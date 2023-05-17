@@ -301,6 +301,13 @@ where
         self
     }
 
+    fn number_of_runs(&self) -> u64 {
+        let runs =
+            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        runs as u64;
+        2000 as u64
+    }
+
     /// Simulation function.
     /// Simulates a run until satisfing the goal predicate, reaching the max
     /// amount of steps or reaching an absorbent state.
@@ -323,15 +330,13 @@ where
     /// Returns a tuple containing the amount of times that reached the goal state,
     /// and the number of runs.
     pub fn run_smc(mut self) -> (i64, i64) {
-        //TODO CHANGE THE THING OF THE N_RUNS TO SOME GET METHOD.
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
-        println!("Runs: {:?}. Max Steps: {:?}", n_runs as i64, self.max_steps);
+        let n_runs = self.number_of_runs();
+        println!("Runs: {:?}. Max Steps: {:?}", n_runs, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
         let mut total_steps = 0;
-        for _ in 0..n_runs as i64 {
+        for _ in 0..n_runs {
             let v = self.simulate();
             match v {
                 SimulationOutput::GoalReached(steps) => {
@@ -358,17 +363,16 @@ where
         S: Simulator + Clone + Send,
         G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
     {
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs = self.number_of_runs();
         let num_workers = self.n_threads;
         let countdown = atomic::AtomicI64::new(n_runs as i64);
         let max_steps = self.max_steps;
         println!(
             "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}. Runs per thread: {:?}",
-            n_runs as i64,
+            n_runs,
             max_steps,
             num_workers,
-            (n_runs / num_workers as f64)
+            (n_runs as f64 / num_workers as f64)
         );
         let goal_counter = atomic::AtomicUsize::new(0);
         let dead_counter = atomic::AtomicUsize::new(0);
@@ -419,12 +423,11 @@ where
         S: Simulator + Send + Clone + Sync,
         G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
     {
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs = self.number_of_runs();
         let n_threads = current_num_threads();
         println!(
             "Runs: {:?}. Max Steps: {:?}. Threads: {}",
-            n_runs as i64, self.max_steps, n_threads
+            n_runs as u64, self.max_steps, n_threads
         );
         let mut score: i64 = 0;
         let mut _count_more_steps_needed = 0;
@@ -453,8 +456,7 @@ where
             .num_threads(self.n_threads)
             .build()
             .unwrap();
-        let n_runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let n_runs = self.number_of_runs();
         let mut score: i64 = 0;
         let mut _count_more_steps_needed = 0;
         let cycles = (n_runs as f64 / self.n_threads as f64) as i64;
@@ -464,7 +466,7 @@ where
         }
         println!(
             "Runs: {:?}. Max Steps: {:?}. Cycles: {}. Threads: {}",
-            n_runs as i64, self.max_steps, cycles, self.n_threads
+            n_runs, self.max_steps, cycles, self.n_threads
         );
         for _ in 0..cycles {
             let v = pool.broadcast(|_| {
