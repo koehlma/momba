@@ -29,6 +29,7 @@ pub enum SimulationOutput {
 pub trait Oracle<T: time::Time> {
     /// Chooses a transition between the provided ones, and can have access to all
     /// the information of the current state.
+    /// Precondition: transitions slice is not empty.
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
@@ -51,7 +52,9 @@ impl<T: time::Time> Oracle<T> for UniformOracle {
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
+        //let mut srng = StdRng::seed_from_u64(42);
         let mut rng = rand::thread_rng();
+
         let elected_transition = transitions.into_iter().choose(&mut rng).unwrap();
         elected_transition
     }
@@ -87,6 +90,7 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
     pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {
         let mut rng = rand::thread_rng();
+        //let mut srng = StdRng::seed_from_u64(42);
         StateIter {
             state: explorer
                 .initial_states()
@@ -95,14 +99,13 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
                 .unwrap(),
             explorer,
             oracle,
-            //            trace: vec![],
         }
     }
     /// WARNING:
     /// Only use on small models.
     /// Outputs a vector with the representation of the global variables on
     /// each state.
-    pub fn _generate_trace(&mut self, steps: usize) -> Vec<HashMap<String, Value>> {
+    fn _generate_trace(&mut self, steps: usize) -> Vec<HashMap<String, Value>> {
         self.reset();
         let mut c = 0;
         let mut visited: Vec<HashMap<String, Value>> = vec![];
@@ -138,15 +141,25 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
 
     fn next(&mut self) -> Option<Self::State<'_>> {
         let mut rng = rand::thread_rng();
+        //let mut srng = StdRng::seed_from_u64(42);
         let transitions = self.explorer.transitions(&self.state);
+
         if transitions.is_empty() {
             return None;
         }
-        let transition = self.oracle.choose(&self.state, &transitions);
-        let destinations = self.explorer.destinations(&self.state, &transition);
+
+        let transition: &Transition<T>;
+
+        if transitions.len() == 1 {
+            transition = transitions.first().unwrap();
+        } else {
+            transition = self.oracle.choose(&self.state, &transitions);
+        }
+
+        let destinations = self.explorer.destinations(&self.state, transition);
 
         if destinations.is_empty() {
-            return None;
+            panic!("There are no destinations, something is wrong...");
         }
         let threshold: f64 = rng.gen();
         let mut accumulated = 0.0;
@@ -154,10 +167,9 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         for destination in destinations {
             accumulated += destination.probability();
             if accumulated >= threshold {
-                //println!("Destination prob: {:?}", destination.probability());
                 self.state = self
                     .explorer
-                    .successor(&self.state, &transition, &destination);
+                    .successor(&self.state, transition, &destination);
                 break;
             }
         }
@@ -166,6 +178,7 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
 
     fn reset(&mut self) -> Self::State<'_> {
         let mut rng = rand::thread_rng();
+        //let mut srng = StdRng::seed_from_u64(42);
         self.state = self
             .explorer
             .initial_states()
@@ -178,17 +191,6 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     fn current_state(&mut self) -> Self::State<'_> {
         &self.state
     }
-
-    // I commented it, because can be useful in the future.
-    // fn state_representation(&mut self) -> HashMap<String, Value> {
-    //     let mut state_rep: HashMap<String, Value> = HashMap::new();
-    //     for (id, _) in &self.explorer.network.declarations.global_variables {
-    //         let val = self.state.get_global_value(&self.explorer, id).unwrap();
-    //         state_rep.insert(id.clone(), val.clone());
-    //     }
-    //     self.trace.push(state_rep.clone());
-    //     state_rep
-    // }
 }
 
 /// Struct that provides different types of simulation based on a
@@ -240,7 +242,7 @@ where
             goal,
             eps: 0.01,
             delta: 0.05,
-            max_steps: 10000,
+            max_steps: 5000,
             x: 0.0,
             alpha: 1.0,
             beta: 1.0,
@@ -302,16 +304,20 @@ where
     }
 
     fn number_of_runs(&self) -> u64 {
-        let runs =
+        println!(
+            "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
+            self.eps, self.delta
+        );
+        let _runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
-        runs as u64;
-        2000 as u64
+        //_runs as u64
+        100 as u64
     }
 
     /// Simulation function.
     /// Simulates a run until satisfing the goal predicate, reaching the max
-    /// amount of steps or reaching an absorbent state.
-    fn simulate(&mut self) -> SimulationOutput {
+    /// amount of steps or just reaching a deadlock state with no outgoing transitions..
+    pub fn simulate(&mut self) -> SimulationOutput {
         self.sim.reset();
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
@@ -323,6 +329,7 @@ where
             }
             c += 1;
         }
+        //println!("---------Simulation Finished---------");
         return SimulationOutput::NoStatesAvailable;
     }
 
@@ -349,7 +356,7 @@ where
             }
         }
         println!(
-            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}.\nTotal Steps: {:?}",
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}.\nTotal Steps when reached: {:?}",
             count_more_steps_needed, score, deadlock_count, total_steps
         );
         (score, n_runs as i64)
@@ -408,7 +415,7 @@ where
         });
         let score = goal_counter.into_inner() as i64;
         println!(
-            "More steps needed: {:?}. Reached: {:?}. Deadlocks: {:?}.",
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}.",
             more_steps_counter.into_inner() as i64,
             score,
             dead_counter.into_inner() as i64
@@ -543,7 +550,6 @@ where
 }
 
 fn simulate_run<S, G>(sim: &mut S, goal: &G, max_steps: usize) -> SimulationOutput
-//bool
 where
     S: Simulator,
     G: Fn(&S::State<'_>) -> bool,

@@ -8,7 +8,7 @@ use tch::{
     kind::*,
     nn,
     nn::{Linear, Module, Sequential},
-    Tensor,
+    Device, Tensor,
 };
 
 use crate::simulate::Oracle;
@@ -86,6 +86,7 @@ struct ModelWrapper {
 /// Implementation of the wrapper.
 impl ModelWrapper {
     fn new(nn: Arc<JsonNN>) -> Self {
+        let _vs = nn::VarStore::new(Device::Cpu);
         let mut tch_nn = nn::seq();
         let mut input_sizes: Vec<i64> = vec![];
         let mut output_sizes: Vec<i64> = vec![];
@@ -105,21 +106,54 @@ impl ModelWrapper {
                     layer_name.push_str(&_name);
 
                     let mut weights_tensor =
-                        Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
-                    for w in weights {
-                        weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
+                        //Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], FLOAT_CPU);
+                        Tensor::zeros(&[weights.len() as i64, weights[0].len() as i64], FLOAT_CPU);
+
+                    for (i, w) in weights.iter().enumerate() {
+                        let tensor = Tensor::of_slice(&w).to_dtype(Kind::Float, true, false);
+                        let idx = Tensor::of_slice(&[i as i32]);
+
+                        // weights_tensor.print();
+                        // HERE WAS THE ERROR!!!!! It can be seen how its actaully adding the values, and that its not desired at all.
+                        // weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
+
+                        //weights_tensor.index_fill_int_tensor(0, &idx, &tensor);
+                        weights_tensor = weights_tensor.index_put(&[Some(idx)], &tensor, true);
+                        // index_fill_int_tensor(0, &idx, &tensor);
+                        //weights_tensor.print();
                     }
+
                     let biases_tensor: Option<Tensor>;
                     if *has_biases {
-                        biases_tensor = Some(Tensor::of_slice(&biases));
+                        let aux = Tensor::of_slice(&biases).to_dtype(Kind::Float, true, false);
+                        biases_tensor = Some(aux);
                     } else {
                         biases_tensor = None;
                     }
+
+                    // println!(
+                    //     "{:?}.{:?}.{:?}",
+                    //     weights_tensor.kind(),
+                    //     weights_tensor.size(),
+                    //     weights_tensor.dim()
+                    // );
+
+                    // weights_tensor.print();
+
                     let linear_layer = Linear {
                         ws: weights_tensor,
                         bs: biases_tensor,
                     };
                     tch_nn = tch_nn.add(linear_layer);
+
+                    // Default settings for the layer. used if there is intention in training.
+                    //tch_nn = tch_nn.add(nn::linear(
+                    //    &_vs.root() / layer_name,
+                    //    *input_size,
+                    //    *output_size,
+                    //    //LinearConfig { ws_init: weights_tensor, bs_init: None, bias: has_biases }
+                    //    Default::default(),
+                    //));
                 }
                 Layers::ReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.relu()),
             }
@@ -173,26 +207,37 @@ where
 
     fn state_to_tensor(&self, state: &State<T>) -> Tensor {
         let mut vec_values = vec![];
-        for (id, _) in &self.explorer.network.declarations.global_variables {
+        for (id, t) in &self.explorer.network.declarations.global_variables {
             if id.starts_with("local_") {
                 // For the moment, we only use the global.
+                // TODO: check what to do about the observations, global, local and omnicient.
                 continue;
             }
-            let g_value = state.get_global_value(&self.explorer, &id).unwrap();
-            //println!("({:?},{:?})", id, g_value);
-            match g_value.get_type() {
+            match t {
                 model::Type::Bool => panic!("Tensor type not valid"),
                 model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
                 model::Type::Unknown => panic!("Tensor type not valid"),
-                model::Type::Float64 => vec_values.push(g_value.unwrap_float64().into_inner()),
-                model::Type::Int64 => vec_values.push(g_value.unwrap_int64() as f64),
+                model::Type::Float64 => vec_values.push(
+                    state
+                        .get_global_value(&self.explorer, &id)
+                        .unwrap()
+                        .unwrap_float64()
+                        .into_inner(),
+                ),
+                model::Type::Int64 => vec_values.push(
+                    state
+                        .get_global_value(&self.explorer, &id)
+                        .unwrap()
+                        .unwrap_int64() as f64,
+                ),
             };
         }
-        let tensor = Tensor::of_slice(&vec_values);
+        //let tensor = Tensor::of_slice(&vec_values);
+        let tensor = Tensor::of_slice(&vec_values).to_dtype(Kind::Float, false, false);
         tensor
     }
 
-    fn _tensor_to_action(&self, tensor: Tensor) -> i64 {
+    fn _greedy_tensor_to_action(&self, tensor: Tensor) -> i64 {
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
         }
@@ -213,24 +258,36 @@ where
         if transitions.len() == 1 {
             transitions.into_iter().next().unwrap()
         } else {
+            //let mut srng = StdRng::seed_from_u64(42);
             let mut rng = rand::thread_rng();
             let tensor = self.state_to_tensor(state);
 
             let output_tensor = self.model_wrapper.model.forward(&tensor);
+            //println!("Output Tensor: {:?}", output_tensor);
+            //output_tensor.print();
             let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+            let mut nan_flag = false;
+
+            //println!("Output Tensor: {}", output_tensor);
+            //output_tensor.to_dtype(Kind::Float, false, false).print();
+
             for a in 0..self.output_size as i64 {
-                tensor_map.insert(a, output_tensor.double_value(&[a]));
+                let value = output_tensor.double_value(&[a]);
+                nan_flag |= value.is_nan();
+                tensor_map.insert(a, value);
             }
-            //------------------------------\\
-            // let mut action_map: HashMap<i64, f64> = HashMap::new();
-            // for a in self.get_edges_ids(transitions).into_iter() {
-            //     action_map.insert(a, output_tensor.double_value(&[a]));
-            // }
-            // let _action = self.tensor_to_action(output_tensor);
-            // let selected_transitions = self.action_resolver.resolve_v0(&transitions, max_key);
-            //------------------------------\\
+            if nan_flag {
+                panic!("The NN returned values that are NAN.")
+            }
+            //if nan_flag {
+            //    // Why the NN is returning NaN, what does this means?
+            //    //println!("NN returned NaN. Resolving uniformly.");
+            //    return transitions.into_iter().choose(&mut rng).unwrap();
+            //}
+
             let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
             if selected_transitions.is_empty() {
+                println!("Empty selected transitions...");
                 return transitions.into_iter().choose(&mut rng).unwrap();
             }
             if selected_transitions.len() > 1 {

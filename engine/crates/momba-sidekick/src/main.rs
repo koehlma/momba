@@ -1,5 +1,6 @@
 use hashbrown::HashSet;
 use momba_explore::model::ConstantExpression;
+use std::env;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
@@ -141,7 +142,7 @@ fn count_states(count: Count) {
 
     let duration = start.elapsed();
 
-    println!("Time elapsed is: {:?}", duration);
+    println!("Time elapsed: {:?}", duration);
     println!("States: {}", visited.len());
     println!("Transitions: {}", count_transitions);
     println!("Destinations: {}", count_destinations);
@@ -205,7 +206,7 @@ fn smc(walks: SMC) {
     let (score, n_runs) = stat_checker.run_smc();
     let duration = start.elapsed();
     println!(
-        "Property: {}.\nTime elapsed is: {:?}. Prob:{:?}",
+        "Property: {}.\nTime elapsed: {:?}. Prob:{:?}",
         prop_name,
         duration,
         (score as f64 / n_runs as f64)
@@ -262,7 +263,7 @@ fn par_smc(walks: ParSMC) {
     let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
-        "Property: {}.\nTime elapsed is: {:?}. Prob:{:?}",
+        "Property: {}.\nTime elapsed: {:?}. Prob:{:?}",
         prop_name,
         duration,
         (score as f64 / n_runs as f64)
@@ -296,7 +297,7 @@ fn sprt(walks: SPRT) {
         .with_alpha(0.1)
         .with_beta(0.1);
     let testt = stat_checker.run_sprt();
-    println!("Score: {:?}", testt);
+    println!("Estimated Probability: {:?}", testt);
 }
 
 fn _print_type_of<T>(_: &T) {
@@ -310,24 +311,20 @@ fn check_nn(nn_command: NN) {
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-
+    let prop_name = nn_command
+        .goal_property
+        .split("/")
+        .last()
+        .unwrap()
+        .strip_suffix(".json")
+        .unwrap()
+        .strip_prefix("prop_")
+        .unwrap();
     let prop_path = Path::new(&nn_command.goal_property);
     let goal_prop_file = File::open(prop_path).expect("Unable to open model file!");
     let expr: Expression = serde_json::from_reader(BufReader::new(goal_prop_file)).unwrap();
 
-    let dead_expr: Expression = match &expr {
-        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
-            operator: model::UnaryOperator::Not,
-            operand: bin_expr.left.clone(),
-        }),
-        _ => Expression::Constant(ConstantExpression {
-            value: model::Value::Bool(false),
-        }),
-    };
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let _dead_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&dead_expr);
 
     let nn_path = Path::new(&nn_command.nn);
     let nn_file = File::open(nn_path).expect("Unable to open model file!");
@@ -344,19 +341,21 @@ fn check_nn(nn_command: NN) {
     );
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads);
+    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(5000);
+
+    println!("Checking Property: {}", prop_name);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.explicit_parallel_smc();
+    let (score, n_runs) = stat_checker.run_smc(); //explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
-        "Time elapsed is: {:?}. Score:{:?}",
+        "Time elapsed: {:?}. Estimated Probability:{:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
 }
 
 fn main() {
-    //env::set_var("RUST_BACKTRACE", "1");
+    env::set_var("RUST_BACKTRACE", "1");
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Count(count) => count_states(count),

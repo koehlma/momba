@@ -78,7 +78,7 @@ impl<'a, T: time::Time> EdgeByIndexResolver<T> {
         self.instance
     }
 }
-//May be useful. edge.number contains a number from the jani model.
+
 impl<'a, T> ActionResolver<T> for EdgeByIndexResolver<T>
 where
     T: time::Time,
@@ -92,15 +92,6 @@ where
                 if *ins == id {
                     available_actions.insert(*value as i64);
                 }
-
-                //println!("{:#?}", v);
-                //self.get_instance();
-                //match v {
-                //    (id, value) => available_actions.insert(*value as i64),
-                //    (_, _) => {
-                //        continue;
-                //    } //panic!("Error, only 1 instance of automaton"),
-                //};
             }
         }
         available_actions.remove(&-1);
@@ -122,22 +113,11 @@ where
         for (i, t) in transitions.into_iter().enumerate() {
             for (ins, value) in t.numeric_reference_vector().iter() {
                 if *ins == id && !(*value == action as usize) {
+                    //println!("Removing action: {:?}, at index:{:?}", value, i);
                     remove_trans_idxs.push(i);
                 };
             }
         }
-        //for v in t.numeric_reference_vector().into_iter() {
-        // match v {
-        //     (0, value) => {
-        //         //println!(
-        //         //    "Action: {:?} vs num ref value value: {:?}",
-        //         //    action, value
-        //         //);
-        //         if action as usize != value {
-        //             remove_trans_idxs.push(i);
-        //         }
-        //     }
-        //     (_, _) => panic!("Error, only 1 instance of automaton"),
 
         let out_transitions: Vec<&Transition<T>> = transitions
             .iter()
@@ -163,15 +143,12 @@ where
         let mut actions = vec![];
         for t in transitions.into_iter() {
             for (ins, value) in t.numeric_reference_vector().into_iter() {
-                //match ins {
-                //    0 => actions.push(value as i64),
-                //    _ => continue,
-                //}
                 if ins == id {
                     actions.push(value as i64);
                 };
             }
         }
+
         // Only the available actions remains on the tensor map.
         let mut keep_actions = vec![];
         for (i, _) in action_map.into_iter() {
@@ -181,13 +158,13 @@ where
         }
         let filtered_map: HashMap<i64, f64> = action_map
             .iter()
-            .filter(|(k, _v)| keep_actions.contains(k))
+            .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
             .map(|(k, v)| (*k, *v))
             .collect();
-
+        //println!("Filtered Map: {:#?}", filtered_map);
         // Take the action with the highest score
-        let mut max_val: f64 = 0.0;
         let mut max_key: i64 = -1;
+        let mut max_val: f64 = f64::NEG_INFINITY;
         for (k, v) in filtered_map.iter() {
             if *v > max_val {
                 max_key = *k;
@@ -196,6 +173,7 @@ where
         }
         //Filter the transitions. Remains only the ones with the max key on the
         //numeric ref vector
+        //println!("Choosen Action: {:?}, with Qval: {:?}.", max_key, max_val);
         let out_transitions = self.resolve_v0(transitions, max_key);
         out_transitions
     }
@@ -212,6 +190,7 @@ where
     reverse_action_mapping: HashMap<String, i64>,
     explorer: &'a Explorer<T>,
 }
+
 impl<'a, T: time::Time> EdgeByLabelResolver<'a, T> {
     pub fn new(explorer: &'a Explorer<T>) -> Self {
         let automaton = explorer.network.automata.values().next().unwrap();
@@ -330,270 +309,3 @@ impl Rewards {
         }
     }
 }
-
-/*
-//pub struct Context<'a, T, A>
-pub struct Context<'a, T>
-where
-    T: time::Time,
-    //A: ActionResolver<T>,
-{
-    explorer: &'a Explorer<T>,
-    _rewards: Rewards,
-    _actions: Actions,
-    observations: Observations,
-    //action_resolver: &'a A,
-    action_resolver: EdgeByIndexResolver<T>,
-    global_variables: Vec<String>,
-    local_variables: Vec<String>,
-    other_variables: HashMap<String, Vec<String>>,
-}
-
-impl<'a, T> Context<'a, T>
-//impl<'a, T, A> Context<'a, T, A>
-where
-    T: time::Time,
-    //A: ActionResolver<T>,
-{
-    pub fn new(explorer: &'a Explorer<T>, actions: Actions, observations: Observations) -> Self {
-        let action_resolver = match actions {
-            Actions::EdgeByIndex => panic!("Not yet implemented the edge by index resolver"), //EdgeByIndexResolver::new(explorer),
-            Actions::EdgeByLabel => panic!("Not yet implemented the edge by label resolver"),
-        };
-
-        let mut _global_variables = vec![];
-        for (s, _) in &explorer.network.declarations.global_variables {
-            _global_variables.push(s.into());
-        }
-
-        let mut local_variables = vec![];
-        if vec![Observations::GlobalOnly, Observations::Omniscient].contains(&observations) {
-            for (s, _) in &explorer.network.declarations.transient_variables {
-                local_variables.push(s.into());
-            }
-        }
-        let other_variables: HashMap<String, Vec<String>> = HashMap::new();
-        if observations == Observations::Omniscient {
-            // TODO: Check this, i can know the controlled instance via a new argument on cmd.
-            // But the issue is when trying to get the string from the automaton.
-            //for (idx, aut) in &explorer.network.automata{
-            //    let mut ins_variables: Vec<String> = vec![];
-            //    for d in explorer.network.
-            //}
-        }
-
-        Context {
-            explorer,
-            _rewards: Rewards::new(),
-            _actions: actions,
-            observations,
-            action_resolver,
-            global_variables: _global_variables,
-            local_variables,
-            other_variables,
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum StepOutput {
-    GoalReached,
-    DeadEnd,
-    InvalidAction,
-    StepTaken,
-}
-//pub struct GenericExplorer<'a, T, G, A>
-pub struct GenericExplorer<'a, T, G>
-where
-    T: time::Time,
-    //A: ActionResolver<T>,
-{
-    context: Context<'a, T>,
-    pub state: State<T>,
-    goal: G,
-}
-
-//impl<'a, T, G, A> GenericExplorer<'a, T, G, A>
-impl<'a, T, G> GenericExplorer<'a, T, G>
-where
-    T: time::Time,
-    G: Fn(&State<T>) -> bool,
-    //A: ActionResolver<T>,
-{
-    pub fn new(context: Context<'a, T>, goal: G) -> Self {
-        let init_state = (&context)
-            .explorer
-            .initial_states()
-            .into_iter()
-            .next()
-            .unwrap();
-        GenericExplorer {
-            context,
-            state: init_state,
-            goal,
-        }
-    }
-    pub fn has_terminated(&self) -> bool {
-        let transitions = self.context.explorer.transitions(&self.state);
-        self.has_reached_goal() || transitions.len() == 0
-        //Should add the is dead predicate, that can be another function.
-    }
-    pub fn has_choice(&self) -> bool {
-        let transitions = self.context.explorer.transitions(&self.state);
-        let has_choice = transitions.len() > 1;
-        has_choice
-    }
-    pub fn has_reached_goal(&self) -> bool {
-        (self.goal)(&self.state)
-    }
-
-    fn _explore_until_choice(&mut self) {
-        while !self.has_choice() && !self.has_terminated() {
-            let mut rng = rand::thread_rng();
-            let all_transitions = self.context.explorer.transitions(&self.state);
-            if all_transitions.len() > 1 {
-                println!("Uncontrolled nondeterminism has been resolved uniformly.")
-            }
-            let transition = all_transitions.into_iter().choose(&mut rng).unwrap();
-            let destination = self
-                .context
-                .explorer
-                .destinations(&self.state, &transition)
-                .into_iter()
-                .choose(&mut rng)
-                .unwrap();
-            self.state = self
-                .context
-                .explorer
-                .successor(&self.state, &transition, &destination);
-        }
-    }
-
-    fn _available_actions(&self) -> Vec<bool> {
-        let mut out = vec![];
-        self.context
-            .action_resolver
-            .available_v0(&self.state, &mut out);
-        out
-    }
-
-    pub fn step(&mut self, action: i64) -> StepOutput {
-        let mut rng = rand::thread_rng();
-        if self.has_terminated() {
-            if self.has_reached_goal() {
-                return StepOutput::GoalReached;
-            } else {
-                return StepOutput::DeadEnd;
-            }
-        }
-        let all_transitions = self.context.explorer.transitions(&self.state);
-        let selected_transitions = self
-            .context
-            .action_resolver
-            .resolve_v0(&all_transitions, action);
-        if selected_transitions.is_empty() {
-            return StepOutput::InvalidAction;
-        } else {
-            if selected_transitions.len() > 1 {
-                println!("Uncontrolled nondeterminism has been resolved uniformly.")
-            }
-            let transition = selected_transitions.into_iter().choose(&mut rng).unwrap();
-            let destination = self
-                .context
-                .explorer
-                .destinations(&self.state, transition)
-                .into_iter()
-                .choose(&mut rng)
-                .unwrap();
-            self.state = self
-                .context
-                .explorer
-                .successor(&self.state, &transition, &destination);
-            return StepOutput::StepTaken;
-        }
-    }
-
-    pub fn uniform_step(&mut self) -> StepOutput {
-        if self.has_terminated() {
-            if self.has_reached_goal() {
-                return StepOutput::GoalReached;
-            } else {
-                return StepOutput::DeadEnd;
-            }
-        }
-        let mut rng = rand::thread_rng();
-        let all_transitions = self.context.explorer.transitions(&self.state);
-        let transition = all_transitions.into_iter().choose(&mut rng).unwrap();
-        let destination = self
-            .context
-            .explorer
-            .destinations(&self.state, &transition)
-            .into_iter()
-            .choose(&mut rng)
-            .unwrap();
-        self.state = self
-            .context
-            .explorer
-            .successor(&self.state, &transition, &destination);
-        return StepOutput::StepTaken;
-    }
-
-    /*
-    Transform the state into a vectorial representation using the local and
-    global variables of the model. Then, cast the vector into a tch Tensor.
-    */
-    pub fn state_to_tensor(&self, state: &State<T>, size: usize) -> Tensor {
-        let input_size = size;
-        let mut tensor = Tensor::empty(&[input_size as i64], DOUBLE_CPU);
-
-        //for id in &self.context.explorer.network.declarations.global_variables {
-        for id in &self.context.global_variables {
-            let g_value = state.get_global_value(&self.context.explorer, &id).unwrap();
-            tensor = match g_value.get_type() {
-                model::Type::Bool => panic!("Tensor type not valid"),
-                //tensor.f_add_scalar(g_value.unwrap_bool()).unwrap(),
-                model::Type::Float64 => tensor
-                    .f_add_scalar(g_value.unwrap_float64().into_inner())
-                    .unwrap(),
-                model::Type::Int64 => tensor.f_add_scalar(g_value.unwrap_int64()).unwrap(),
-                model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
-                //tensor.f_add_(g_value.unwrap_vector()).unwrap(),
-                model::Type::Unknown => panic!("Tensor type not valid"),
-            };
-        }
-
-        //for id in &self.context.explorer.network.declarations.transient_variables {
-        for id in &self.context.local_variables {
-            let l_value = state
-                .get_transient_value(&self.context.explorer.network, id)
-                .unwrap_int64();
-            tensor = tensor.f_add_scalar(l_value).unwrap();
-        }
-        if size != tensor.size()[0] as usize {
-            panic!("Vector size and NN input size does not match")
-        };
-        tensor
-    }
-
-    /*
-    Interpret the vector according to the what it means.
-    Currently, uses argmax to find the index of the action with the highest score.
-    */
-    pub fn tensor_to_action(&self, tensor: Tensor) -> i64 {
-        let idx = tensor.argmax(None, true).int64_value(&[0]);
-        //println!("Value {:?} at index {:?}", tensor.double_value(&[idx]), idx);
-        idx
-    }
-
-    pub fn reset(&mut self) {
-        self.state = self
-            .context
-            .explorer
-            .initial_states()
-            .into_iter()
-            .next()
-            .unwrap();
-        // In python actually creates another GenExplorer. idk why, it looks not efficient.
-    }
-}
-*/
