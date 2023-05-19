@@ -311,7 +311,7 @@ where
         let _runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         //_runs as u64
-        100 as u64
+        99 as u64
     }
 
     /// Simulation function.
@@ -329,7 +329,7 @@ where
             }
             c += 1;
         }
-        //println!("---------Simulation Finished---------");
+        println!("---------Simulation Finished---------");
         return SimulationOutput::NoStatesAvailable;
     }
 
@@ -342,22 +342,23 @@ where
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
-        let mut total_steps = 0;
+        let mut _total_steps = 0;
         for _ in 0..n_runs {
             let v = self.simulate();
+            println!("Result of simulation: {:?}", v);
             match v {
                 SimulationOutput::GoalReached(steps) => {
                     // println!("Goal reached at step: {:?}", steps);
                     score += 1;
-                    total_steps += steps;
+                    _total_steps += steps;
                 }
                 SimulationOutput::MaxSteps => count_more_steps_needed += 1,
                 SimulationOutput::NoStatesAvailable => deadlock_count += 1,
             }
         }
         println!(
-            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}.\nTotal Steps when reached: {:?}",
-            count_more_steps_needed, score, deadlock_count, total_steps
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}",
+            count_more_steps_needed, score, deadlock_count
         );
         (score, n_runs as i64)
     }

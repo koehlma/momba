@@ -107,38 +107,23 @@ impl ModelWrapper {
 
                     let mut weights_tensor =
                         //Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], FLOAT_CPU);
-                        Tensor::zeros(&[weights.len() as i64, weights[0].len() as i64], FLOAT_CPU);
+                        Tensor::zeros(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU); //FLOAT_CPU);
 
                     for (i, w) in weights.iter().enumerate() {
-                        let tensor = Tensor::of_slice(&w).to_dtype(Kind::Float, true, false);
+                        let tensor = Tensor::of_slice(&w); //.to_dtype(Kind::Float, true, false);
                         let idx = Tensor::of_slice(&[i as i32]);
-
-                        // weights_tensor.print();
-                        // HERE WAS THE ERROR!!!!! It can be seen how its actaully adding the values, and that its not desired at all.
-                        // weights_tensor = weights_tensor.f_add(&Tensor::of_slice(&w)).unwrap();
-
-                        //weights_tensor.index_fill_int_tensor(0, &idx, &tensor);
                         weights_tensor = weights_tensor.index_put(&[Some(idx)], &tensor, true);
-                        // index_fill_int_tensor(0, &idx, &tensor);
-                        //weights_tensor.print();
                     }
 
                     let biases_tensor: Option<Tensor>;
                     if *has_biases {
-                        let aux = Tensor::of_slice(&biases).to_dtype(Kind::Float, true, false);
+                        let aux = Tensor::of_slice(&biases); //.to_dtype(Kind::Float, true, false);
                         biases_tensor = Some(aux);
                     } else {
                         biases_tensor = None;
                     }
 
-                    // println!(
-                    //     "{:?}.{:?}.{:?}",
-                    //     weights_tensor.kind(),
-                    //     weights_tensor.size(),
-                    //     weights_tensor.dim()
-                    // );
-
-                    // weights_tensor.print();
+                    //weights_tensor.print();
 
                     let linear_layer = Linear {
                         ws: weights_tensor,
@@ -233,7 +218,7 @@ where
             };
         }
         //let tensor = Tensor::of_slice(&vec_values);
-        let tensor = Tensor::of_slice(&vec_values).to_dtype(Kind::Float, false, false);
+        let tensor = Tensor::of_slice(&vec_values); //.to_dtype(Kind::Float, false, false);
         tensor
     }
 

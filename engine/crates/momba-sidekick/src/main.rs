@@ -1,6 +1,6 @@
 use hashbrown::HashSet;
 use momba_explore::model::ConstantExpression;
-use std::env;
+
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
@@ -197,17 +197,13 @@ fn smc(walks: SMC) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker
-        .max_steps(500)
-        .with_delta(0.05)
-        .with_eps(0.01)
-        .n_threads(8);
+    stat_checker = stat_checker.max_steps(500).with_delta(0.05).with_eps(0.01);
+    println!("Checking Property: {}", prop_name);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.run_smc();
     let duration = start.elapsed();
     println!(
-        "Property: {}.\nTime elapsed: {:?}. Prob:{:?}",
-        prop_name,
+        "Time elapsed: {:?}. Estimated Probability:{:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
@@ -259,12 +255,13 @@ fn par_smc(walks: ParSMC) {
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker.max_steps(500).n_threads(walks.n_threads);
+
+    println!("Checking Property: {}", prop_name);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
-        "Property: {}.\nTime elapsed: {:?}. Prob:{:?}",
-        prop_name,
+        "Time elapsed: {:?}. Estimated Probability:{:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
@@ -341,11 +338,11 @@ fn check_nn(nn_command: NN) {
     );
     let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(5000);
+    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(500);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.run_smc(); //explicit_parallel_smc();
+    let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
         "Time elapsed: {:?}. Estimated Probability:{:?}",
@@ -355,7 +352,7 @@ fn check_nn(nn_command: NN) {
 }
 
 fn main() {
-    env::set_var("RUST_BACKTRACE", "1");
+    //env::set_var("RUST_BACKTRACE", "1");
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Count(count) => count_states(count),

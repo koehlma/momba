@@ -156,6 +156,7 @@ where
                 keep_actions.push(i);
             }
         }
+        //println!("Filtered Map: {:#?}", action_map);
         let filtered_map: HashMap<i64, f64> = action_map
             .iter()
             .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
@@ -173,7 +174,7 @@ where
         }
         //Filter the transitions. Remains only the ones with the max key on the
         //numeric ref vector
-        //println!("Choosen Action: {:?}, with Qval: {:?}.", max_key, max_val);
+        //  println!("Choosen Action: {:?}, with Qval: {:?}.", max_key, max_val);
         let out_transitions = self.resolve_v0(transitions, max_key);
         out_transitions
     }
