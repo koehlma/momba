@@ -22,12 +22,20 @@ pub enum Observations {
 }
 
 pub trait ActionResolver<T: time::Time> {
+    /// Available (v0) puts on the vector out boolean values indicating which
+    /// index of transitions are available from that state.
     fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>);
+    /// Resolve (v0) takes a set of transitions and an action, and returns a
+    /// vector with the transitions that can be done with that action.
     fn resolve_v0<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
     ) -> Vec<&'t Transition<'s, T>>;
+    /// Resolve also takes a set of transitions, but instead of an action,
+    /// takes a dict that maps the index of the edges to the output
+    /// result of the NN. So it can compute the highest scored action.
+    /// Returns also a vector with the transitions that can be done with that action.
     fn resolve<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
@@ -156,7 +164,7 @@ where
                 keep_actions.push(i);
             }
         }
-        //println!("Filtered Map: {:#?}", action_map);
+        //println!("Action Map: {:#?}", action_map);
         let filtered_map: HashMap<i64, f64> = action_map
             .iter()
             .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
@@ -172,8 +180,8 @@ where
                 max_val = *v;
             }
         }
-        //Filter the transitions. Remains only the ones with the max key on the
-        //numeric ref vector
+        // Filter the transitions. Remains only the ones with the max key on the
+        // numeric ref vector.
         //  println!("Choosen Action: {:?}, with Qval: {:?}.", max_key, max_val);
         let out_transitions = self.resolve_v0(transitions, max_key);
         out_transitions

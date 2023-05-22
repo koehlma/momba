@@ -1,10 +1,11 @@
 use std::{
+    cell::RefCell,
     collections::HashMap,
     sync::{atomic, Arc},
 };
 
 use momba_explore::{model::Value, *};
-use rand::{seq::IteratorRandom, Rng};
+use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use rayon::{current_num_threads, prelude::*};
 
 /// Represents the Output of the SPRT simulations, saying if we are above
@@ -38,24 +39,28 @@ pub trait Oracle<T: time::Time> {
 }
 /// Oracle that resolves no-determinis uniformly
 #[derive(Clone)]
-pub struct UniformOracle {}
+pub struct UniformOracle {
+    rng: RefCell<StdRng>,
+}
 
 impl UniformOracle {
-    pub fn new() -> Self {
-        UniformOracle {}
+    pub fn new(rng: StdRng) -> Self {
+        UniformOracle {
+            rng: RefCell::new(rng),
+        }
     }
 }
 
 impl<T: time::Time> Oracle<T> for UniformOracle {
     fn choose<'s, 't>(
-        &self,
+        &self, //&mut self
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
-        //let mut srng = StdRng::seed_from_u64(42);
-        let mut rng = rand::thread_rng();
-
-        let elected_transition = transitions.into_iter().choose(&mut rng).unwrap();
+        let elected_transition = transitions
+            .into_iter()
+            .choose(&mut *(self.rng.borrow_mut()))
+            .unwrap();
         elected_transition
     }
 }
@@ -83,22 +88,24 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
     explorer: Arc<Explorer<T>>,
     /// An oracle that will resolve no-determinism.
     oracle: O,
-    //pub trace: Vec<HashMap<String, Value>>,
+    /// RNG for the iterator.
+    rng: RefCell<StdRng>,
 }
 
 /// Implementation of the State Iterator.
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
-    pub fn new(explorer: Arc<Explorer<T>>, oracle: O) -> Self {
-        let mut rng = rand::thread_rng();
-        //let mut srng = StdRng::seed_from_u64(42);
+    pub fn new(explorer: Arc<Explorer<T>>, oracle: O, rng: StdRng) -> Self {
+        //let mut rng = rand::thread_rng();
+
         StateIter {
             state: explorer
                 .initial_states()
                 .into_iter()
-                .choose(&mut rng)
+                .choose(&mut rng.clone())
                 .unwrap(),
             explorer,
             oracle,
+            rng: RefCell::new(rng),
         }
     }
     /// WARNING:
@@ -140,8 +147,8 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     type State<'sim> = &'sim State<T> where Self:'sim;
 
     fn next(&mut self) -> Option<Self::State<'_>> {
-        let mut rng = rand::thread_rng();
-        //let mut srng = StdRng::seed_from_u64(42);
+        //let mut rng = rand::thread_rng();
+        let mut rng = self.rng.borrow_mut();
         let transitions = self.explorer.transitions(&self.state);
 
         if transitions.is_empty() {
@@ -165,6 +172,7 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         let mut accumulated = 0.0;
 
         for destination in destinations {
+            //println!("Accum: {:?}. Thresh: {:?}", accumulated, threshold);
             accumulated += destination.probability();
             if accumulated >= threshold {
                 self.state = self
@@ -177,13 +185,13 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     }
 
     fn reset(&mut self) -> Self::State<'_> {
-        let mut rng = rand::thread_rng();
-        //let mut srng = StdRng::seed_from_u64(42);
+        //let mut rng = rand::thread_rng();
+        let mut rng = self.rng.borrow_mut();
         self.state = self
             .explorer
             .initial_states()
             .into_iter()
-            .choose(&mut rng)
+            .choose(&mut *rng)
             .unwrap();
         &self.state
     }
@@ -311,7 +319,7 @@ where
         let _runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         //_runs as u64
-        99 as u64
+        10000 as u64
     }
 
     /// Simulation function.

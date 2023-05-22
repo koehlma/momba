@@ -1,8 +1,8 @@
-use std::sync::Arc;
+use std::{cell::RefCell, sync::Arc};
 
 use hashbrown::HashMap;
 use momba_explore::*;
-use rand::seq::IteratorRandom;
+use rand::{rngs::StdRng, seq::IteratorRandom};
 use serde::{Deserialize, Serialize};
 use tch::{
     kind::*,
@@ -167,17 +167,24 @@ where
     _input_size: usize,
     /// Output size of the model
     output_size: usize,
-    /// Explorer for the
+    /// Explorer reference to the oracle.
     explorer: Arc<Explorer<T>>,
-    ///
+    /// Action resolver that helps in resolving the un-determinations.
     action_resolver: EdgeByIndexResolver<T>,
+    /// RNG for the oracle.
+    rng: RefCell<StdRng>,
 }
 
 impl<'a, T> NnOracle<T>
 where
     T: time::Time,
 {
-    pub fn build(nn: JsonNN, explorer: Arc<Explorer<T>>, instance_name: Option<String>) -> Self {
+    pub fn build(
+        nn: JsonNN,
+        explorer: Arc<Explorer<T>>,
+        instance_name: Option<String>,
+        rng: StdRng,
+    ) -> Self {
         let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
         let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
@@ -187,6 +194,7 @@ where
             explorer,
             action_resolver,
             model_wrapper: ModelWrapper::new(Arc::new(nn)),
+            rng: RefCell::new(rng),
         }
     }
 
@@ -235,6 +243,10 @@ impl<T> Oracle<T> for NnOracle<T>
 where
     T: time::Time,
 {
+    /// From a state and a group of transitions, choosese the next one using the NN as an oracle.
+    /// The NN outputs the aproximated Q_values for each transitions, then we
+    /// clear this transitions using the action resolver.
+    /// Panics if the NN outputs NaN or infs.
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
@@ -243,8 +255,9 @@ where
         if transitions.len() == 1 {
             transitions.into_iter().next().unwrap()
         } else {
-            //let mut srng = StdRng::seed_from_u64(42);
-            let mut rng = rand::thread_rng();
+            //let mut rng = rand::thread_rng();
+            let mut rng = self.rng.borrow_mut();
+
             let tensor = self.state_to_tensor(state);
 
             let output_tensor = self.model_wrapper.model.forward(&tensor);
@@ -262,24 +275,22 @@ where
                 tensor_map.insert(a, value);
             }
             if nan_flag {
-                panic!("The NN returned values that are NAN.")
+                panic!("The NN returned values that are NAN. Was correctly trained?")
             }
-            //if nan_flag {
-            //    // Why the NN is returning NaN, what does this means?
-            //    //println!("NN returned NaN. Resolving uniformly.");
-            //    return transitions.into_iter().choose(&mut rng).unwrap();
-            //}
 
             let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
             if selected_transitions.is_empty() {
                 println!("Empty selected transitions...");
-                return transitions.into_iter().choose(&mut rng).unwrap();
+                return transitions.into_iter().choose(&mut (*rng)).unwrap();
             }
             if selected_transitions.len() > 1 {
                 println!("Uncontrolled nondeterminism resolved uniformly.");
             }
 
-            let transition = selected_transitions.into_iter().choose(&mut rng).unwrap();
+            let transition = selected_transitions
+                .into_iter()
+                .choose(&mut (*rng))
+                .unwrap();
             transition
         }
     }

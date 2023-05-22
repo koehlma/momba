@@ -1,5 +1,7 @@
 use hashbrown::HashSet;
 use momba_explore::model::ConstantExpression;
+use rand::rngs::StdRng;
+use rand::SeedableRng;
 
 use std::fs::File;
 use std::io::BufReader;
@@ -192,8 +194,13 @@ fn smc(walks: SMC) {
         .compiled_network
         .compile_global_expression(&dead_expr);
 
-    let mut state_iterator =
-        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let oracle_seed = 42;
+    let state_iter_seed = 77;
+    let mut state_iterator = simulate::StateIter::new(
+        Arc::new(explorer),
+        simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
+        StdRng::seed_from_u64(state_iter_seed),
+    );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
@@ -249,8 +256,13 @@ fn par_smc(walks: ParSMC) {
         .compiled_network
         .compile_global_expression(&dead_expr);
 
-    let mut state_iterator =
-        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let oracle_seed = 42;
+    let state_iter_seed = 77;
+    let mut state_iterator = simulate::StateIter::new(
+        Arc::new(explorer),
+        simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
+        StdRng::seed_from_u64(state_iter_seed),
+    );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
@@ -281,9 +293,13 @@ fn sprt(walks: SPRT) {
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    //let mut state_iterator = simulate::StateIter::new(explorer, simulate::UniformOracle::new());
-    let mut state_iterator =
-        simulate::StateIter::new(Arc::new(explorer), simulate::UniformOracle::new());
+    let oracle_seed = 42;
+    let state_iter_seed = 77;
+    let mut state_iterator = simulate::StateIter::new(
+        Arc::new(explorer),
+        simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
+        StdRng::seed_from_u64(state_iter_seed),
+    );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
@@ -331,12 +347,22 @@ fn check_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
     let arc_explorer = Arc::new(explorer);
 
+    let oracle_seed = 42;
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
         Some(String::from(nn_command.instance_name)),
+        StdRng::seed_from_u64(oracle_seed),
     );
-    let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
+    //let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
+
+    let state_iter_seed = 77;
+    let mut simulator = simulate::StateIter::new(
+        arc_explorer.clone(),
+        nn_oracle,
+        StdRng::seed_from_u64(state_iter_seed),
+    );
+
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
     stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(500);
 
