@@ -252,46 +252,42 @@ where
         state: &State<T>,
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
-        if transitions.len() == 1 {
-            transitions.into_iter().next().unwrap()
-        } else {
-            //let mut rng = rand::thread_rng();
-            let mut rng = self.rng.borrow_mut();
+        let mut rng = self.rng.borrow_mut();
+        //if transitions.len() == 1 {
+        // Check if the instance is right!
+        // transitions.into_iter().next().unwrap()
+        //} else {
+        //let mut rng = rand::thread_rng();
 
-            let tensor = self.state_to_tensor(state);
+        let tensor = self.state_to_tensor(state);
+        let output_tensor = self.model_wrapper.model.forward(&tensor);
 
-            let output_tensor = self.model_wrapper.model.forward(&tensor);
-            //println!("Output Tensor: {:?}", output_tensor);
-            //output_tensor.print();
-            let mut tensor_map: HashMap<i64, f64> = HashMap::new();
-            let mut nan_flag = false;
-
-            //println!("Output Tensor: {}", output_tensor);
-            //output_tensor.to_dtype(Kind::Float, false, false).print();
-
-            for a in 0..self.output_size as i64 {
-                let value = output_tensor.double_value(&[a]);
-                nan_flag |= value.is_nan();
-                tensor_map.insert(a, value);
-            }
-            if nan_flag {
-                panic!("The NN returned values that are NAN. Was correctly trained?")
-            }
-
-            let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
-            if selected_transitions.is_empty() {
-                println!("Empty selected transitions...");
-                return transitions.into_iter().choose(&mut (*rng)).unwrap();
-            }
-            if selected_transitions.len() > 1 {
-                println!("Uncontrolled nondeterminism resolved uniformly.");
-            }
-
-            let transition = selected_transitions
-                .into_iter()
-                .choose(&mut (*rng))
-                .unwrap();
-            transition
+        let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+        let mut nan_flag = false;
+        for a in 0..self.output_size as i64 {
+            let value = output_tensor.double_value(&[a]);
+            nan_flag |= value.is_nan();
+            tensor_map.insert(a, value);
         }
+        if nan_flag {
+            panic!("The NN returned values that are NAN. Was correctly trained?")
+        }
+
+        let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
+        if selected_transitions.is_empty() {
+            panic!("Empty selected transitions...");
+            //return transitions.into_iter().choose(&mut *rng).unwrap();
+        }
+        if selected_transitions.len() > 1 {
+            println!("Uncontrolled nondeterminism resolved uniformly.");
+        }
+
+        let transition = selected_transitions
+            .into_iter()
+            .choose(&mut (*rng))
+            .unwrap();
+
+        transition
+        //}
     }
 }

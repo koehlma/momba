@@ -37,7 +37,7 @@ pub trait Oracle<T: time::Time> {
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T>;
 }
-/// Oracle that resolves no-determinis uniformly
+/// Oracle that resolves no-determinism uniformly
 #[derive(Clone)]
 pub struct UniformOracle {
     rng: RefCell<StdRng>,
@@ -61,6 +61,27 @@ impl<T: time::Time> Oracle<T> for UniformOracle {
             .into_iter()
             .choose(&mut *(self.rng.borrow_mut()))
             .unwrap();
+        elected_transition
+    }
+}
+
+/// Oracle that resolves no-determinism uniformly
+#[derive(Clone)]
+pub struct FIFOOracle {}
+
+impl FIFOOracle {
+    pub fn _new() -> Self {
+        FIFOOracle {}
+    }
+}
+
+impl<T: time::Time> Oracle<T> for FIFOOracle {
+    fn choose<'s, 't>(
+        &self, //&mut self
+        _state: &State<T>,
+        transitions: &'t [Transition<'s, T>],
+    ) -> &'t Transition<'t, T> {
+        let elected_transition = transitions.first().unwrap();
         elected_transition
     }
 }
@@ -95,8 +116,6 @@ pub struct StateIter<T: time::Time, O: Oracle<T>> {
 /// Implementation of the State Iterator.
 impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
     pub fn new(explorer: Arc<Explorer<T>>, oracle: O, rng: StdRng) -> Self {
-        //let mut rng = rand::thread_rng();
-
         StateIter {
             state: explorer
                 .initial_states()
@@ -143,49 +162,46 @@ impl<T: time::Time, O: Oracle<T>> StateIter<T, O> {
 }
 
 /// Implementation of the Simulator trait for the iterator.
+/// Panics if there aren't destination on the choosed transition.
 impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     type State<'sim> = &'sim State<T> where Self:'sim;
 
     fn next(&mut self) -> Option<Self::State<'_>> {
-        //let mut rng = rand::thread_rng();
         let mut rng = self.rng.borrow_mut();
         let transitions = self.explorer.transitions(&self.state);
-
         if transitions.is_empty() {
             return None;
         }
 
-        let transition: &Transition<T>;
-
-        if transitions.len() == 1 {
-            transition = transitions.first().unwrap();
-        } else {
-            transition = self.oracle.choose(&self.state, &transitions);
-        }
+        let transition = self.oracle.choose(&self.state, &transitions);
 
         let destinations = self.explorer.destinations(&self.state, transition);
 
         if destinations.is_empty() {
             panic!("There are no destinations, something is wrong...");
-        }
-        let threshold: f64 = rng.gen();
-        let mut accumulated = 0.0;
+        } else if destinations.len() == 1 {
+            let destination = destinations.first().unwrap();
+            self.state = self
+                .explorer
+                .successor(&self.state, transition, &destination);
+        } else {
+            let threshold: f64 = rng.gen();
+            let mut accumulated = 0.0;
+            for destination in destinations {
+                accumulated += destination.probability();
 
-        for destination in destinations {
-            //println!("Accum: {:?}. Thresh: {:?}", accumulated, threshold);
-            accumulated += destination.probability();
-            if accumulated >= threshold {
-                self.state = self
-                    .explorer
-                    .successor(&self.state, transition, &destination);
-                break;
+                if accumulated >= threshold {
+                    self.state = self
+                        .explorer
+                        .successor(&self.state, transition, &destination);
+                    break;
+                }
             }
         }
         Some(&self.state)
     }
 
     fn reset(&mut self) -> Self::State<'_> {
-        //let mut rng = rand::thread_rng();
         let mut rng = self.rng.borrow_mut();
         self.state = self
             .explorer
@@ -266,37 +282,37 @@ where
     }
 
     /// set field: eps
-    pub fn with_eps(mut self, eps: f64) -> Self {
+    pub fn _with_eps(mut self, eps: f64) -> Self {
         self.eps = eps;
         self
     }
 
     /// set field: delta
-    pub fn with_delta(mut self, delta: f64) -> Self {
+    pub fn _with_delta(mut self, delta: f64) -> Self {
         self.delta = delta;
         self
     }
 
     /// set field: x
-    pub fn with_x(mut self, x: f64) -> Self {
+    pub fn _with_x(mut self, x: f64) -> Self {
         self.x = x;
         self
     }
 
     /// set field: alpha
-    pub fn with_alpha(mut self, alpha: f64) -> Self {
+    pub fn _with_alpha(mut self, alpha: f64) -> Self {
         self.alpha = alpha;
         self
     }
 
     /// set field: beta
-    pub fn with_beta(mut self, beta: f64) -> Self {
+    pub fn _with_beta(mut self, beta: f64) -> Self {
         self.beta = beta;
         self
     }
 
     /// set field: ind_reg
-    pub fn with_ind_reg(mut self, ind_reg: f64) -> Self {
+    pub fn _with_ind_reg(mut self, ind_reg: f64) -> Self {
         self.ind_reg = ind_reg;
         self
     }
@@ -319,7 +335,7 @@ where
         let _runs =
             (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
         //_runs as u64
-        10000 as u64
+        1000 as u64
     }
 
     /// Simulation function.
@@ -330,14 +346,20 @@ where
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
             let next_state = state.into();
+            //println!("{:?}-Evaluation: {:?}", c, (self.goal)(&next_state));
             if (self.goal)(&next_state) {
+                // println!(
+                //     "{:?} steps -> Evaluation: {:?}",
+                //     c,
+                //     (self.goal)(&next_state)
+                // );
                 return SimulationOutput::GoalReached(c);
             } else if c >= self.max_steps {
                 return SimulationOutput::MaxSteps;
             }
             c += 1;
         }
-        println!("---------Simulation Finished---------");
+        // println!("Deadlock in {:?} steps", c);
         return SimulationOutput::NoStatesAvailable;
     }
 
@@ -351,12 +373,10 @@ where
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
         let mut _total_steps = 0;
-        for _ in 0..n_runs {
+        for _i in 0..n_runs {
             let v = self.simulate();
-            println!("Result of simulation: {:?}", v);
             match v {
                 SimulationOutput::GoalReached(steps) => {
-                    // println!("Goal reached at step: {:?}", steps);
                     score += 1;
                     _total_steps += steps;
                 }
@@ -365,8 +385,8 @@ where
             }
         }
         println!(
-            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}",
-            count_more_steps_needed, score, deadlock_count
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. steps taken: {:?}",
+            count_more_steps_needed, score, deadlock_count, _total_steps
         );
         (score, n_runs as i64)
     }
@@ -415,9 +435,6 @@ where
                                 dead_counter.fetch_add(1, atomic::Ordering::Relaxed);
                             }
                         }
-                        //if simulate_run(&mut sim, goal, max_steps) {
-                        //    goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                        //}
                     }
                 });
             }

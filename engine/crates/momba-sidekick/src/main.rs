@@ -62,7 +62,7 @@ struct ParSMC {
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(short, long, default_value = "2", about = "number of thread to use")]
+    #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
 }
 #[derive(Clap)]
@@ -88,7 +88,7 @@ struct NN {
         about = "Name of the controlled instance."
     )]
     instance_name: String,
-    #[clap(short, long, default_value = "2", about = "number of thread to use")]
+    #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
 }
 
@@ -194,8 +194,8 @@ fn smc(walks: SMC) {
         .compiled_network
         .compile_global_expression(&dead_expr);
 
-    let oracle_seed = 42;
-    let state_iter_seed = 77;
+    let oracle_seed = 10;
+    let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -204,7 +204,8 @@ fn smc(walks: SMC) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(500).with_delta(0.05).with_eps(0.01);
+    stat_checker = stat_checker.max_steps(10000);
+
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.run_smc();
@@ -238,7 +239,7 @@ fn par_smc(walks: ParSMC) {
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
 
-    let dead_expr: Expression = match &expr {
+    let _dead_expr: Expression = match &expr {
         //When the goal is binary, with an Until: (phi U psi)
         // => dead: not phi
         Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
@@ -254,19 +255,20 @@ fn par_smc(walks: ParSMC) {
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
     let _dead_comp_expr = explorer
         .compiled_network
-        .compile_global_expression(&dead_expr);
+        .compile_global_expression(&_dead_expr);
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let oracle_seed = 42;
-    let state_iter_seed = 77;
+    let oracle_seed = 10;
+    let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
+        //simulate::FIFOOracle::new(),
         StdRng::seed_from_u64(state_iter_seed),
     );
-    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(500).n_threads(walks.n_threads);
+    stat_checker = stat_checker.max_steps(10000).n_threads(walks.n_threads);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -304,17 +306,12 @@ fn sprt(walks: SPRT) {
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
-        .with_x(0.20)
-        .max_steps(999)
-        .with_ind_reg(0.05)
-        .with_alpha(0.1)
-        .with_beta(0.1);
+        ._with_x(0.85)
+        ._with_ind_reg(0.05)
+        ._with_alpha(0.1)
+        ._with_beta(0.1);
     let testt = stat_checker.run_sprt();
     println!("Estimated Probability: {:?}", testt);
-}
-
-fn _print_type_of<T>(_: &T) {
-    println!("TYPE OF: {}", std::any::type_name::<T>())
 }
 
 fn check_nn(nn_command: NN) {
@@ -337,6 +334,22 @@ fn check_nn(nn_command: NN) {
     let goal_prop_file = File::open(prop_path).expect("Unable to open model file!");
     let expr: Expression = serde_json::from_reader(BufReader::new(goal_prop_file)).unwrap();
 
+    let _dead_expr: Expression = match &expr {
+        //When the goal is binary, with an Until: (phi U psi)
+        // => dead: not phi
+        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
+            operator: model::UnaryOperator::Not,
+            operand: bin_expr.left.clone(),
+        }),
+        // When the goal is a Finally, then is true U psi => dead: false
+        // And the default value for the dead expression will be the false predicate.
+        _ => Expression::Constant(ConstantExpression {
+            value: model::Value::Bool(false),
+        }),
+    };
+    //println!("goal expr: {:#?}", expr);
+    //println!("Dead expr: {:#?}", dead_expr);
+
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     let nn_path = Path::new(&nn_command.nn);
@@ -345,18 +358,17 @@ fn check_nn(nn_command: NN) {
         serde_json::from_reader(BufReader::new(nn_file)).expect("Error while reading model file!");
 
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
-    let arc_explorer = Arc::new(explorer);
 
-    let oracle_seed = 42;
+    let arc_explorer = Arc::new(explorer);
+    let oracle_seed = 10;
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
         Some(String::from(nn_command.instance_name)),
         StdRng::seed_from_u64(oracle_seed),
     );
-    //let mut simulator = simulate::StateIter::new(arc_explorer.clone(), nn_oracle);
 
-    let state_iter_seed = 77;
+    let state_iter_seed = 10;
     let mut simulator = simulate::StateIter::new(
         arc_explorer.clone(),
         nn_oracle,
@@ -364,11 +376,11 @@ fn check_nn(nn_command: NN) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(500);
+    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(1000);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.explicit_parallel_smc();
+    let (score, n_runs) = stat_checker.run_smc(); //explicit_parallel_smc(); //
     let duration = start.elapsed();
     println!(
         "Time elapsed: {:?}. Estimated Probability:{:?}",

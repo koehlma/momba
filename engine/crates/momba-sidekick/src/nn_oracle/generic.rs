@@ -1,4 +1,4 @@
-#![allow(dead_code, unused_variables, unused_assignments)]
+#![allow(dead_code)]
 use hashbrown::{HashMap, HashSet};
 use momba_explore::{model::Automaton, *};
 use std::sync::Arc;
@@ -120,7 +120,7 @@ where
         let mut remove_trans_idxs = vec![];
         for (i, t) in transitions.into_iter().enumerate() {
             for (ins, value) in t.numeric_reference_vector().iter() {
-                if *ins == id && !(*value == action as usize) {
+                if *ins == id && *value != action as usize {
                     //println!("Removing action: {:?}, at index:{:?}", value, i);
                     remove_trans_idxs.push(i);
                 };
@@ -139,6 +139,7 @@ where
         println!("{:#?}", remove_trans_idxs);
         println!("len after: {:#?}. len Before: {:?}", out_transitions.len(), transitions.len());
         */
+
         out_transitions
     }
 
@@ -148,6 +149,7 @@ where
         action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
         let id = self.get_instance();
+
         let mut actions = vec![];
         for t in transitions.into_iter() {
             for (ins, value) in t.numeric_reference_vector().into_iter() {
@@ -156,35 +158,40 @@ where
                 };
             }
         }
+        // Actions contains the actions I can do with the transitions i have.
+        // keepActions help in filtering the map from the actions I can do.
 
-        // Only the available actions remains on the tensor map.
-        let mut keep_actions = vec![];
-        for (i, _) in action_map.into_iter() {
-            if actions.contains(i) {
-                keep_actions.push(i);
+        // So, if actions is empty, it means that from the transitions, I dont
+        // have anyone on the controlled automata.
+
+        // If it is not empty, then, i have to choose the transition with
+        // the action that contains the highest Q-val.
+        if !actions.is_empty() {
+            let mut keep_actions = vec![];
+            for (i, _) in action_map.into_iter() {
+                if actions.contains(i) {
+                    keep_actions.push(i);
+                }
             }
-        }
-        //println!("Action Map: {:#?}", action_map);
-        let filtered_map: HashMap<i64, f64> = action_map
-            .iter()
-            .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
-            .map(|(k, v)| (*k, *v))
-            .collect();
-        //println!("Filtered Map: {:#?}", filtered_map);
-        // Take the action with the highest score
-        let mut max_key: i64 = -1;
-        let mut max_val: f64 = f64::NEG_INFINITY;
-        for (k, v) in filtered_map.iter() {
-            if *v > max_val {
-                max_key = *k;
-                max_val = *v;
+
+            let filtered_map: HashMap<i64, f64> = action_map
+                .iter()
+                .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
+                .map(|(k, v)| (*k, *v))
+                .collect();
+
+            let mut max_key: i64 = -1;
+            let mut max_val: f64 = f64::NEG_INFINITY;
+            for (k, v) in filtered_map.iter() {
+                if *v >= max_val {
+                    max_key = *k;
+                    max_val = *v;
+                }
             }
+            self.resolve_v0(transitions, max_key)
+        } else {
+            transitions.iter().collect()
         }
-        // Filter the transitions. Remains only the ones with the max key on the
-        // numeric ref vector.
-        //  println!("Choosen Action: {:?}, with Qval: {:?}.", max_key, max_val);
-        let out_transitions = self.resolve_v0(transitions, max_key);
-        out_transitions
     }
 }
 
@@ -195,8 +202,8 @@ where
 {
     num_actions: i64,
     _automaton: &'a Automaton,
-    action_mapping: HashMap<i64, String>,
-    reverse_action_mapping: HashMap<String, i64>,
+    _action_mapping: HashMap<i64, String>,
+    _reverse_action_mapping: HashMap<String, i64>,
     explorer: &'a Explorer<T>,
 }
 
@@ -228,8 +235,8 @@ impl<'a, T: time::Time> EdgeByLabelResolver<'a, T> {
         EdgeByLabelResolver {
             num_actions,
             _automaton: &automaton,
-            action_mapping,
-            reverse_action_mapping: rev_action_mapping,
+            _action_mapping: action_mapping,
+            _reverse_action_mapping: rev_action_mapping,
             explorer,
         }
     }
@@ -309,7 +316,7 @@ struct Rewards {
     //The reward when an invalid decision has been taken.
 }
 impl Rewards {
-    pub fn new() -> Self {
+    pub fn _new() -> Self {
         Rewards {
             _goal_reached: 100.0,
             _dead_end: -100.0,
