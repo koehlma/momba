@@ -29,11 +29,22 @@ def parse_constants(cmd_input: str) -> dict:
     """
     Input expected:
     Cons_1:Val_1,...,Const_k:Val_k.
-    And for all i Val_i : Int
+    And for all i Val_i in (Int, Bool)
     """
     data = {}
     for l in cmd_input.split(","):
-        data[l.split(":")[0]] = int(l.split(":")[1])
+        if l.split("=")[1].isdecimal():
+            data[l.split("=")[0]] = int(l.split("=")[1])
+        elif (l.split("=")[1]).lower() in ("false", "true"):
+            match l.split("=")[1]:
+                case "False":
+                    data[l.split("=")[0]] = False
+                case "false":
+                    data[l.split("=")[0]] = False
+                case "True":
+                    data[l.split("=")[0]] = True
+                case "true":
+                    data[l.split("=")[0]] = True
     return data
 
 
@@ -70,6 +81,7 @@ def translate(model_path: str, output_path: str, consts=None) -> None:
         goal = translation.translate_global_expression(obj.goal_predicate)
         # pathlib.Path(f"{output_path}/prop_{i}.json").write_text(goal, "utf-8")
         pathlib.Path(f"{output_path}/prop_{txt}.json").write_text(goal, "utf-8")
+
     pathlib.Path(f"{output_path}/model.json").write_text(
         translation.json_network, "utf-8"
     )

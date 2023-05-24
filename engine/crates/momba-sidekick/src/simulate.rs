@@ -168,6 +168,30 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
 
     fn next(&mut self) -> Option<Self::State<'_>> {
         let mut rng = self.rng.borrow_mut();
+
+        // for (id, _) in &self.explorer.network.declarations.global_variables {
+        //     println!(
+        //         "ID: {} - Value: {:?}",
+        //         id,
+        //         self.state.get_global_value(&self.explorer, &id).unwrap()
+        //     );
+        // }
+        // println!("---------------");
+
+        // for (id, _) in &self.explorer.network.declarations.transient_variables {
+        //     let value = self
+        //         .state
+        //         .get_transient_value(&self.explorer.network, &id)
+        //         .unwrap_vector();
+        //     println!(
+        //         "ID: {} - Value: {:?}. {:?}",
+        //         id,
+        //         value,
+        //         value[0].unwrap_vector().len()
+        //     );
+        // }
+        // println!("---------------");
+
         let transitions = self.explorer.transitions(&self.state);
         if transitions.is_empty() {
             return None;
@@ -332,10 +356,9 @@ where
             "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
             self.eps, self.delta
         );
-        let _runs =
-            (f64::log(2.0 / self.delta, std::f64::consts::E)) / (2.0 * self.eps.powf(2.0)) as f64;
+        let _runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
         //_runs as u64
-        1000 as u64
+        1 as u64
     }
 
     /// Simulation function.
@@ -346,20 +369,13 @@ where
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
             let next_state = state.into();
-            //println!("{:?}-Evaluation: {:?}", c, (self.goal)(&next_state));
             if (self.goal)(&next_state) {
-                // println!(
-                //     "{:?} steps -> Evaluation: {:?}",
-                //     c,
-                //     (self.goal)(&next_state)
-                // );
                 return SimulationOutput::GoalReached(c);
             } else if c >= self.max_steps {
                 return SimulationOutput::MaxSteps;
             }
             c += 1;
         }
-        // println!("Deadlock in {:?} steps", c);
         return SimulationOutput::NoStatesAvailable;
     }
 
@@ -522,9 +538,9 @@ where
     pub fn run_sprt(mut self) -> SprtComparison {
         let p0 = (self.x + self.ind_reg).min(1.0);
         let p1 = (self.x - self.ind_reg).max(0.0);
-        let a = f64::log10((1.0 - self.alpha) / self.beta);
-        let b = f64::log10(self.beta / (1.0 - self.alpha));
-        let mut finisihed: bool = false;
+        let a = ((1.0 - self.alpha) / self.beta).log10();
+        let b = (self.beta / (1.0 - self.alpha)).log10();
+        let mut finisihed = false;
         let mut r: f64 = 0.0;
         let mut _count_more_steps_needed = 0;
         let mut runs = 0;
@@ -533,10 +549,10 @@ where
             runs += 1;
             let v = self.simulate();
             match v {
-                SimulationOutput::GoalReached(_) => r += f64::log10(p1) - f64::log10(p0),
+                SimulationOutput::GoalReached(_) => r += p1.log10() - p0.log10(),
                 SimulationOutput::MaxSteps => {
                     _count_more_steps_needed += 1;
-                    r += f64::log10(1.0 - p1) - f64::log10(1.0 - p0)
+                    r += (1.0 - p1).log10() - (1.0 - p0).log10()
                 }
                 SimulationOutput::NoStatesAvailable => {
                     println!("No States Available, something went wrong...");

@@ -95,6 +95,7 @@ where
         out.clear();
         let mut available_actions: HashSet<i64> = HashSet::new();
         let id = self.get_instance();
+        // See which action i can take from this state
         for t in self.explorer.transitions(&state).iter() {
             for (ins, value) in t.numeric_reference_vector().iter() {
                 if *ins == id {
@@ -106,6 +107,8 @@ where
         for act in 0..self.num_actions {
             out.push(available_actions.contains(&act))
         }
+        // Push inside of the out vector a boolean value if that indexed action
+        // is available from this state.
     }
 
     //Available should, given a state, return the available actions for the state
@@ -148,18 +151,18 @@ where
         transitions: &'t [Transition<'s, T>],
         action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
-        let id = self.get_instance();
+        let instance_id = self.get_instance();
 
         let mut actions = vec![];
         for t in transitions.into_iter() {
             for (ins, value) in t.numeric_reference_vector().into_iter() {
-                if ins == id {
+                if ins == instance_id {
                     actions.push(value as i64);
                 };
             }
         }
-        // Actions contains the actions I can do with the transitions i have.
-        // keepActions help in filtering the map from the actions I can do.
+
+        // Actions contains the actions I can do with the transitions i have, from the controlled instance.
 
         // So, if actions is empty, it means that from the transitions, I dont
         // have anyone on the controlled automata.
@@ -297,8 +300,8 @@ where
     }
     fn resolve<'s, 't>(
         &self,
-        transitions: &'t [Transition<'s, T>],
-        action_map: &HashMap<i64, f64>,
+        _transitions: &'t [Transition<'s, T>],
+        _action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
         todo!()
     }

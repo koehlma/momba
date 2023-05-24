@@ -102,6 +102,31 @@ fn count_states(count: Count) {
     );
     let start = Instant::now();
 
+    println!(
+        "Automatons in the network: {:?}",
+        explorer.network.automata.keys()
+    );
+    let mut g_vars_count = 0;
+    for (id, _) in &explorer.network.declarations.global_variables {
+        if id.starts_with("local_") {
+            continue;
+        }
+        g_vars_count += 1;
+    }
+    let mut num_actions: i64 = 0;
+    for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
+        num_actions += l.edges.len() as i64;
+    }
+    println!(
+        "Number of global variables (NN input size): {:?}",
+        g_vars_count
+    );
+    println!("Number of actions (NN input size): {:?}", num_actions);
+    println!(
+        "#Transient variables: {:?}",
+        explorer.network.declarations.transient_variables.len()
+    );
+
     println!("Exploring...");
 
     let mut visited: HashSet<State<_>> = HashSet::new();
@@ -360,7 +385,7 @@ fn check_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let arc_explorer = Arc::new(explorer);
-    let oracle_seed = 10;
+    let oracle_seed = 17;
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
@@ -368,7 +393,7 @@ fn check_nn(nn_command: NN) {
         StdRng::seed_from_u64(oracle_seed),
     );
 
-    let state_iter_seed = 10;
+    let state_iter_seed = 17;
     let mut simulator = simulate::StateIter::new(
         arc_explorer.clone(),
         nn_oracle,

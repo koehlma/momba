@@ -106,24 +106,20 @@ impl ModelWrapper {
                     layer_name.push_str(&_name);
 
                     let mut weights_tensor =
-                        //Tensor::empty(&[weights.len() as i64, weights[0].len() as i64], FLOAT_CPU);
-                        Tensor::zeros(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU); //FLOAT_CPU);
+                        Tensor::zeros(&[weights.len() as i64, weights[0].len() as i64], DOUBLE_CPU);
 
                     for (i, w) in weights.iter().enumerate() {
-                        let tensor = Tensor::of_slice(&w); //.to_dtype(Kind::Float, true, false);
+                        let tensor = Tensor::of_slice(&w);
                         let idx = Tensor::of_slice(&[i as i32]);
                         weights_tensor = weights_tensor.index_put(&[Some(idx)], &tensor, true);
                     }
 
                     let biases_tensor: Option<Tensor>;
                     if *has_biases {
-                        let aux = Tensor::of_slice(&biases); //.to_dtype(Kind::Float, true, false);
-                        biases_tensor = Some(aux);
+                        biases_tensor = Some(Tensor::of_slice(&biases));
                     } else {
                         biases_tensor = None;
                     }
-
-                    //weights_tensor.print();
 
                     let linear_layer = Linear {
                         ws: weights_tensor,
@@ -132,13 +128,13 @@ impl ModelWrapper {
                     tch_nn = tch_nn.add(linear_layer);
 
                     // Default settings for the layer. used if there is intention in training.
-                    //tch_nn = tch_nn.add(nn::linear(
-                    //    &_vs.root() / layer_name,
-                    //    *input_size,
-                    //    *output_size,
-                    //    //LinearConfig { ws_init: weights_tensor, bs_init: None, bias: has_biases }
-                    //    Default::default(),
-                    //));
+                    // tch_nn = tch_nn.add(nn::linear(
+                    //     &_vs.root() / layer_name,
+                    //     *input_size,
+                    //     *output_size,
+                    //     //LinearConfig { ws_init: weights_tensor, bs_init: None, bias: has_biases }
+                    //     Default::default(),
+                    // ));
                 }
                 Layers::ReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.relu()),
             }
@@ -225,8 +221,7 @@ where
                 ),
             };
         }
-        //let tensor = Tensor::of_slice(&vec_values);
-        let tensor = Tensor::of_slice(&vec_values); //.to_dtype(Kind::Float, false, false);
+        let tensor = Tensor::of_slice(&vec_values);
         tensor
     }
 
@@ -253,41 +248,63 @@ where
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
         let mut rng = self.rng.borrow_mut();
-        //if transitions.len() == 1 {
-        // Check if the instance is right!
-        // transitions.into_iter().next().unwrap()
-        //} else {
-        //let mut rng = rand::thread_rng();
+        let mut out: Vec<bool> = vec![];
+        self.action_resolver.available_v0(state, &mut out);
+        if !out.into_iter().any(|b| b) {
+            // If there isn't an available action from the controlled instance.
+            // choose uniformly from the transitions.
+            return transitions.into_iter().choose(&mut *rng).unwrap();
+        } else {
+            if transitions.len() == 1 {
+                return transitions.first().unwrap();
+            } else {
+                let tensor = self.state_to_tensor(state);
+                let output_tensor = self.model_wrapper.model.forward(&tensor);
 
-        let tensor = self.state_to_tensor(state);
-        let output_tensor = self.model_wrapper.model.forward(&tensor);
+                let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+                for i in 0..self.output_size as i64 {
+                    let value = output_tensor.double_value(&[i]);
+                    if value.is_nan() {
+                        panic!("The NN returned values that are NAN. Was correctly trained?")
+                    };
+                    tensor_map.insert(i, value);
+                }
 
-        let mut tensor_map: HashMap<i64, f64> = HashMap::new();
-        let mut nan_flag = false;
-        for a in 0..self.output_size as i64 {
-            let value = output_tensor.double_value(&[a]);
-            nan_flag |= value.is_nan();
-            tensor_map.insert(a, value);
+                let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
+                if selected_transitions.is_empty() {
+                    panic!("Empty selected transitions...");
+                    //return transitions.into_iter().choose(&mut *rng).unwrap();
+                }
+                return selected_transitions.into_iter().choose(&mut *rng).unwrap();
+            }
         }
-        if nan_flag {
-            panic!("The NN returned values that are NAN. Was correctly trained?")
-        }
 
-        let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
-        if selected_transitions.is_empty() {
-            panic!("Empty selected transitions...");
-            //return transitions.into_iter().choose(&mut *rng).unwrap();
-        }
-        if selected_transitions.len() > 1 {
-            println!("Uncontrolled nondeterminism resolved uniformly.");
-        }
+        // let tensor = self.state_to_tensor(state);
+        // let output_tensor = self.model_wrapper.model.forward(&tensor);
 
-        let transition = selected_transitions
-            .into_iter()
-            .choose(&mut (*rng))
-            .unwrap();
+        // let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+        // for i in 0..self.output_size as i64 {
+        //     let value = output_tensor.double_value(&[i]);
+        //     if value.is_nan() {
+        //         panic!("The NN returned values that are NAN. Was correctly trained?")
+        //     };
+        //     tensor_map.insert(i, value);
+        // }
 
-        transition
+        // //println!("{:#?}", tensor_map);
+
+        // let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
+        // if selected_transitions.is_empty() {
+        //     panic!("Empty selected transitions...");
+        //     //return transitions.into_iter().choose(&mut *rng).unwrap();
+        // }
+        // if selected_transitions.len() > 1 {
+        //     println!("Uncontrolled nondeterminism resolved uniformly.");
+        // }
+
+        // let transition = selected_transitions.into_iter().choose(&mut *rng).unwrap();
+        // println!("---");
+        // transition
         //}
     }
 }
