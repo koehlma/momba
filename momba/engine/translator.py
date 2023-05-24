@@ -715,9 +715,17 @@ def _extract_constant_value(
     elif isinstance(expr, expressions.RealConstant):
         return expr.as_float
     elif isinstance(expr, expressions.ArrayValue):
-        return [_extract_constant_value(element) for element in expr.elements]
+        return [
+            _extract_constant_value(element, parameters) for element in expr.elements
+        ]
     elif isinstance(expr, expressions.Name):
         return _extract_constant_value(parameters[expr.identifier], parameters)
+    elif isinstance(expr, expressions.BinaryExpression) and hasattr(
+        expr.operator, "native_function"
+    ):
+        left = _extract_constant_value(expr.left, parameters)
+        right = _extract_constant_value(expr.right, parameters)
+        return expr.operator.native_function(left, right)
     else:
         raise CompileError(f"Unable to extract constant value from {expr}.")
 
