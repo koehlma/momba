@@ -704,7 +704,10 @@ def _translate_link(
     return {"slots": slots, "vector": vector, "result": result}
 
 
-def _extract_constant_value(expr: expressions.Expression) -> t.Any:
+def _extract_constant_value(
+    expr: expressions.Expression,
+    parameters: t.Mapping[str, model.Expression],
+) -> t.Any:
     if isinstance(expr, expressions.IntegerConstant):
         return expr.integer
     elif isinstance(expr, expressions.BooleanConstant):
@@ -713,6 +716,8 @@ def _extract_constant_value(expr: expressions.Expression) -> t.Any:
         return expr.as_float
     elif isinstance(expr, expressions.ArrayValue):
         return [_extract_constant_value(element) for element in expr.elements]
+    elif isinstance(expr, expressions.Name):
+        return _extract_constant_value(parameters[expr.identifier], parameters)
     else:
         raise CompileError(f"Unable to extract constant value from {expr}.")
 
@@ -721,12 +726,12 @@ def _update_initial_values(
     initial_values: _JSONObject,
     clock_constraints: t.List[_JSONObject],
     declarations: t.Iterable[VariableDeclaration],
+    parameters: t.Mapping[str, model.Expression],
 ) -> None:
     for declaration in declarations:
         initial_value = declaration.initial_value
         assert initial_value is not None
-        value = _extract_constant_value(initial_value)
-
+        value = _extract_constant_value(initial_value, parameters)
         if declaration.is_transient:
             continue
         elif declaration.typ == model.types.CLOCK:
@@ -769,11 +774,17 @@ def _translate_initial_states(
     initial_values: _JSONObject = {}
     clock_constraints: t.List[_JSONObject] = []
     _update_initial_values(
-        initial_values, clock_constraints, declarations.globals_table.values()
+        initial_values,
+        clock_constraints,
+        declarations.globals_table.values(),
+        parameters,
     )
     for variable_declarations in declarations.locals_table.values():
         _update_initial_values(
-            initial_values, clock_constraints, variable_declarations.values()
+            initial_values,
+            clock_constraints,
+            variable_declarations.values(),
+            parameters,
         )
     # for declaration in declarations.all_declarations:
     #     if declaration.typ != model.types.CLOCK:
