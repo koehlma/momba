@@ -7,11 +7,11 @@ from __future__ import annotations
 
 import typing as t
 
-import gym
+import gymnasium as gym
 import numpy
 
-from gym import spaces
-from gym.error import UnsupportedMode
+from gymnasium import spaces
+from gymnasium.error import UnsupportedMode
 
 from . import abstract
 
