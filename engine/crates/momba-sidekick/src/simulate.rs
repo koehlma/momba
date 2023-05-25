@@ -357,8 +357,8 @@ where
             self.eps, self.delta
         );
         let _runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
-        //_runs as u64
-        1 as u64
+        _runs as u64
+        //1000 as u64
     }
 
     /// Simulation function.

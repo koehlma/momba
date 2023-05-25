@@ -25,6 +25,13 @@ def main() -> None:
     """
 
 
+def is_float(string):
+    if string.replace(".", "").isnumeric():
+        return True
+    else:
+        return False
+
+
 def parse_constants(cmd_input: str) -> dict:
     """
     Input expected:
@@ -33,8 +40,10 @@ def parse_constants(cmd_input: str) -> dict:
     """
     data = {}
     for l in cmd_input.split(","):
-        if l.split("=")[1].isdecimal():
+        if l.split("=")[1].isnumeric():
             data[l.split("=")[0]] = int(l.split("=")[1])
+        elif is_float(l.split("=")[1]):
+            data[l.split("=")[0]] = float(l.split("=")[1])
         elif (l.split("=")[1]).lower() in ("false", "true"):
             match l.split("=")[1]:
                 case "False":

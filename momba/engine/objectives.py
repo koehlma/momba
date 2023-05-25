@@ -24,6 +24,8 @@ class Objective:
     dead_predicate: model.Expression
     r"""A boolean expression for :math:`\phi`."""
 
+    rewards_things: bool = False
+
 
 def extract_objective(prop: model.Expression) -> Objective:
     if isinstance(prop, model.properties.Aggregate):
@@ -60,8 +62,10 @@ def extract_objective(prop: model.Expression) -> Objective:
             goal_predicate=right, dead_predicate=model.expressions.logic_not(lft)
         )
     elif isinstance(prop, model.properties.ExpectedReward):
-        return Objective(goal_predicate=prop.reachability,
-                         dead_predicate=model.ensure_expr(False))
+        # TODO: changue this, we need to support or something like that.
+        return Objective(
+            goal_predicate=prop.reachability, dead_predicate=model.ensure_expr(False)
+        )
     elif isinstance(prop, model.expressions.Comparison):
         """
         For example, the first 3 properties of teh firewire model are a composition
@@ -77,7 +81,7 @@ def extract_objective(prop: model.Expression) -> Objective:
             lft = prop.left
             right = prop.right
             obj = Objective(
-                goal_predicate=right, dead_predicate=model.expressions.logic_not(lft)
+                goal_predicate=lft, dead_predicate=model.expressions.logic_not(lft)
             )
 
             return obj

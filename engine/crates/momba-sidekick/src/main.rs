@@ -293,7 +293,7 @@ fn par_smc(walks: ParSMC) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(10000).n_threads(walks.n_threads);
+    stat_checker = stat_checker.max_steps(1000).n_threads(walks.n_threads);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
