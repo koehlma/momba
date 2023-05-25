@@ -2,6 +2,8 @@
 #
 # Copyright (C) 2019-2021, Saarland University
 # Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
+#
+# type: ignore
 
 from __future__ import annotations
 
