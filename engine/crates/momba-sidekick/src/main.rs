@@ -1,5 +1,4 @@
 use hashbrown::HashSet;
-use momba_explore::model::ConstantExpression;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
@@ -32,7 +31,7 @@ struct Arguments {
 #[derive(Clap)]
 enum Command {
     #[clap(about = "Counts the number of states/zones of the model")]
-    Count(Count),
+    Info(Info),
     #[clap(about = "Runs SMC with an uniform scheduler")]
     SMC(SMC),
     #[clap(about = "Runs SMC using parallelism with an uniform scheduler")]
@@ -41,10 +40,12 @@ enum Command {
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
     NN(NN),
+    #[clap(about = "Create a new default NN for the model.")]
+    New(New),
 }
 
 #[derive(Clap)]
-struct Count {
+struct Info {
     #[clap(about = "A MombaCR model")]
     model: String,
 }
@@ -92,8 +93,18 @@ struct NN {
     n_threads: usize,
 }
 
-fn count_states(count: Count) {
-    let model_path = Path::new(&count.model);
+#[derive(Clap)]
+struct New {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+    #[clap(about = "Input size")]
+    input_size: i64,
+    #[clap(about = "Output size")]
+    output_size: i64,
+}
+
+fn info_of_the_model(info_command: Info) {
+    let model_path = Path::new(&info_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
@@ -121,9 +132,9 @@ fn count_states(count: Count) {
         "Number of global variables (NN input size): {:?}",
         g_vars_count
     );
-    println!("Number of actions (NN input size): {:?}", num_actions);
+    println!("Number of actions (NN output size): {:?}", num_actions);
     println!(
-        "#Transient variables: {:?}",
+        "Number of Transient variables: {:?}",
         explorer.network.declarations.transient_variables.len()
     );
 
@@ -200,25 +211,7 @@ fn smc(walks: SMC) {
         .unwrap();
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-
-    let dead_expr: Expression = match &expr {
-        //When the goal is binary, with an Until: (phi U psi)
-        // => dead: not phi
-        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
-            operator: model::UnaryOperator::Not,
-            operand: bin_expr.left.clone(),
-        }),
-        // When the goal is a Finally, then is true U psi => dead: false
-        // And the default value for the dead expression will be the false predicate.
-        _ => Expression::Constant(ConstantExpression {
-            value: model::Value::Bool(false),
-        }),
-    };
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let _dead_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&dead_expr);
-
     let oracle_seed = 10;
     let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
@@ -236,7 +229,7 @@ fn smc(walks: SMC) {
     let (score, n_runs) = stat_checker.run_smc();
     let duration = start.elapsed();
     println!(
-        "Time elapsed: {:?}. Estimated Probability:{:?}",
+        "Time elapsed: {:?}. Estimated Probability: {:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
@@ -263,24 +256,7 @@ fn par_smc(walks: ParSMC) {
         .unwrap();
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-
-    let _dead_expr: Expression = match &expr {
-        //When the goal is binary, with an Until: (phi U psi)
-        // => dead: not phi
-        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
-            operator: model::UnaryOperator::Not,
-            operand: bin_expr.left.clone(),
-        }),
-        // When the goal is a Finally, then is true U psi => dead: false
-        // And the default value for the dead expression will be the false predicate.
-        _ => Expression::Constant(ConstantExpression {
-            value: model::Value::Bool(false),
-        }),
-    };
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let _dead_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&_dead_expr);
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let oracle_seed = 10;
@@ -288,19 +264,18 @@ fn par_smc(walks: ParSMC) {
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
-        //simulate::FIFOOracle::new(),
         StdRng::seed_from_u64(state_iter_seed),
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(1000).n_threads(walks.n_threads);
+    stat_checker = stat_checker.n_threads(walks.n_threads);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.explicit_parallel_smc();
     let duration = start.elapsed();
     println!(
-        "Time elapsed: {:?}. Estimated Probability:{:?}",
+        "Time elapsed: {:?}. Estimated Probability: {:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
@@ -336,7 +311,12 @@ fn sprt(walks: SPRT) {
         ._with_alpha(0.1)
         ._with_beta(0.1);
     let testt = stat_checker.run_sprt();
-    println!("Estimated Probability: {:?}", testt);
+    println!("Estimated Probability:  {:?}", testt);
+}
+
+fn new_nn(new: New) {
+    let test_nn = nn_oracle::_default_nn(new.input_size, new.output_size, 3);
+    println!("{:#?}", test_nn.model);
 }
 
 fn check_nn(nn_command: NN) {
@@ -358,29 +338,12 @@ fn check_nn(nn_command: NN) {
     let prop_path = Path::new(&nn_command.goal_property);
     let goal_prop_file = File::open(prop_path).expect("Unable to open model file!");
     let expr: Expression = serde_json::from_reader(BufReader::new(goal_prop_file)).unwrap();
-
-    let _dead_expr: Expression = match &expr {
-        //When the goal is binary, with an Until: (phi U psi)
-        // => dead: not phi
-        Expression::Binary(bin_expr) => Expression::Unary(model::UnaryExpression {
-            operator: model::UnaryOperator::Not,
-            operand: bin_expr.left.clone(),
-        }),
-        // When the goal is a Finally, then is true U psi => dead: false
-        // And the default value for the dead expression will be the false predicate.
-        _ => Expression::Constant(ConstantExpression {
-            value: model::Value::Bool(false),
-        }),
-    };
-    //println!("goal expr: {:#?}", expr);
-    //println!("Dead expr: {:#?}", dead_expr);
-
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     let nn_path = Path::new(&nn_command.nn);
     let nn_file = File::open(nn_path).expect("Unable to open model file!");
-    let readed_nn: nn_oracle::JsonNN =
-        serde_json::from_reader(BufReader::new(nn_file)).expect("Error while reading model file!");
+    let readed_nn: nn_oracle::JsonNN = serde_json::from_reader(BufReader::new(nn_file))
+        .expect("Error while reading model file. Are all the layers supported?");
 
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
@@ -401,27 +364,30 @@ fn check_nn(nn_command: NN) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads).max_steps(1000);
+    stat_checker = stat_checker
+        .n_threads(nn_command.n_threads)
+        .max_steps(1000)
+        ._with_n_runs(500);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
     let (score, n_runs) = stat_checker.run_smc(); //explicit_parallel_smc(); //
     let duration = start.elapsed();
     println!(
-        "Time elapsed: {:?}. Estimated Probability:{:?}",
+        "Time elapsed: {:?}. Estimated Probability: {:?}",
         duration,
         (score as f64 / n_runs as f64)
     );
 }
 
 fn main() {
-    //env::set_var("RUST_BACKTRACE", "1");
     let arguments = Arguments::parse();
     match arguments.command {
-        Command::Count(count) => count_states(count),
+        Command::Info(info_command) => info_of_the_model(info_command),
         Command::SMC(walks) => smc(walks),
         Command::ParSMC(walks) => par_smc(walks),
         Command::SPRT(walks) => sprt(walks),
         Command::NN(nn_command) => check_nn(nn_command),
+        Command::New(new) => new_nn(new),
     }
 }

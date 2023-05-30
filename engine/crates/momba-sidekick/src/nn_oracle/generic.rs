@@ -191,8 +191,10 @@ where
                     max_val = *v;
                 }
             }
-            self.resolve_v0(transitions, max_key)
+            //println!("Choosed action: {:?}", max_key);
+            return self.resolve_v0(transitions, max_key);
         } else {
+            //println!("Actopms empty");
             transitions.iter().collect()
         }
     }
@@ -220,8 +222,6 @@ impl<'a, T: time::Time> EdgeByLabelResolver<'a, T> {
         for (_, l) in (&automaton.locations).into_iter() {
             num_actions += (&l.edges).len() as i64;
             for e in (&l.edges).into_iter() {
-                // Python ActionType ~~~> edges.observations.
-                // Soo, i will only take the label. But I need to ask about the parameters.
                 if !e.observations.is_empty() {
                     for o in (&e.observations).into_iter() {
                         action_types.push(o.label.clone())
@@ -249,54 +249,29 @@ impl<'a, T> ActionResolver<T> for EdgeByLabelResolver<'a, T>
 where
     T: time::Time,
 {
-    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>) {
-        out.clear();
-        let mut available_actions: HashSet<i64> = HashSet::new();
-        for t in self.explorer.transitions(&state).iter() {
-            for e in t.edges().into_iter() {
-                //index for the label
-                available_actions.insert(e.index as i64);
-            }
-        }
-        available_actions.remove(&-1);
-        //MM check this part!
-        for act in 0..self.num_actions {
-            out.push(available_actions.contains(&act))
-        }
+    fn available_v0(&self, _state: &State<T>, _out: &mut Vec<bool>) {
+        // out.clear();
+        // let mut available_actions: HashSet<i64> = HashSet::new();
+        // for t in self.explorer.transitions(&state).iter() {
+        //     for e in t.edges().into_iter() {
+        //         //index for the label
+        //         available_actions.insert(e.index as i64);
+        //     }
+        // }
+        // available_actions.remove(&-1);
+        // //MM check this part!
+        // for act in 0..self.num_actions {
+        //     out.push(available_actions.contains(&act))
+        // }
         todo!()
     }
-    // Im really not sure about this way of playing with labels/actions/index.
-    // Otherway, may be the labeldActions thing
+
     fn resolve_v0<'s, 't>(
         &self,
-        transitions: &'t [Transition<'s, T>],
-        action: i64,
+        _transitions: &'t [Transition<'s, T>],
+        _action: i64,
     ) -> Vec<&'t Transition<'s, T>> {
-        let mut remove_trans_idxs = vec![];
-        // No need to compare with the string, because already got the
-        // index of the action in the edge reference.
-        //let action_type;
-        //match self.action_mapping.get(&action) {
-        //    None => panic!("something went wrong"),
-        //    Some(s) => action_type = s,
-        //}
-        for (i, t) in transitions.into_iter().enumerate() {
-            //The edges() method gives me the one associated with the instance already.
-            for e in t.edges().into_iter() {
-                let instance_action = e.index;
-                if instance_action != action as usize {
-                    remove_trans_idxs.push(i)
-                }
-            }
-        }
-        let transitions = transitions
-            .iter()
-            .enumerate()
-            .filter(|(i, _)| remove_trans_idxs.contains(i))
-            .map(|(_, t)| t)
-            .collect();
-        transitions
-        //todo!()
+        todo!()
     }
     fn resolve<'s, 't>(
         &self,
@@ -304,27 +279,5 @@ where
         _action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
         todo!()
-    }
-}
-
-struct Rewards {
-    //Specifies the rewards for a reachability objective.
-    _goal_reached: f64,
-    //The reward when a goal state is reached.
-    _dead_end: f64,
-    //The reward when a dead end or bad state is reached.
-    _step_taken: f64,
-    //The reward when a valid decision has been taken.
-    _invalid_action: f64,
-    //The reward when an invalid decision has been taken.
-}
-impl Rewards {
-    pub fn _new() -> Self {
-        Rewards {
-            _goal_reached: 100.0,
-            _dead_end: -100.0,
-            _step_taken: 0.0,
-            _invalid_action: -100.0,
-        }
     }
 }

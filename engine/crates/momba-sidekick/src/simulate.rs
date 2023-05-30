@@ -169,29 +169,6 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
     fn next(&mut self) -> Option<Self::State<'_>> {
         let mut rng = self.rng.borrow_mut();
 
-        // for (id, _) in &self.explorer.network.declarations.global_variables {
-        //     println!(
-        //         "ID: {} - Value: {:?}",
-        //         id,
-        //         self.state.get_global_value(&self.explorer, &id).unwrap()
-        //     );
-        // }
-        // println!("---------------");
-
-        // for (id, _) in &self.explorer.network.declarations.transient_variables {
-        //     let value = self
-        //         .state
-        //         .get_transient_value(&self.explorer.network, &id)
-        //         .unwrap_vector();
-        //     println!(
-        //         "ID: {} - Value: {:?}. {:?}",
-        //         id,
-        //         value,
-        //         value[0].unwrap_vector().len()
-        //     );
-        // }
-        // println!("---------------");
-
         let transitions = self.explorer.transitions(&self.state);
         if transitions.is_empty() {
             return None;
@@ -275,6 +252,8 @@ pub struct StatisticalSimulator<'sim, S, G> {
     /// Number of threads to use when simulating with parallel implementations.
     /// Default value: 1
     n_threads: usize,
+    /// Number of runs in the simulation
+    n_runs: Option<u64>,
 }
 
 /// Implementation of the struct.
@@ -296,6 +275,7 @@ where
             beta: 1.0,
             ind_reg: 0.0,
             n_threads: 1,
+            n_runs: None,
         }
     }
 
@@ -341,6 +321,12 @@ where
         self
     }
 
+    // setter for number of runs?
+    pub fn _with_n_runs(mut self, runs: u64) -> Self {
+        self.n_runs = Some(runs as u64);
+        self
+    }
+
     /// set field: n_threads
     pub fn n_threads(mut self, n_threads: usize) -> Self {
         self.n_threads = n_threads;
@@ -352,13 +338,19 @@ where
     }
 
     fn number_of_runs(&self) -> u64 {
-        println!(
-            "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
-            self.eps, self.delta
-        );
-        let _runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
-        _runs as u64
-        //1000 as u64
+        // If the number was fixed, then uses that value, otherwise,
+        // computes the value using eps and delta
+        match self.n_runs {
+            None => {
+                println!(
+                    "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
+                    self.eps, self.delta
+                );
+                let _runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
+                _runs as u64
+            }
+            Some(r) => r,
+        }
     }
 
     /// Simulation function.

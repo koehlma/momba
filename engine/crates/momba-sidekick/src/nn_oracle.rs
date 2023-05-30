@@ -2,7 +2,7 @@ use std::{cell::RefCell, sync::Arc};
 
 use hashbrown::HashMap;
 use momba_explore::*;
-use rand::{rngs::StdRng, seq::IteratorRandom};
+use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use serde::{Deserialize, Serialize};
 use tch::{
     kind::*,
@@ -28,8 +28,7 @@ pub struct JsonNN {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(tag = "kind")]
 enum Layers {
-    // There can be much more different types of NN
-    /// Linear Models.
+    /// Linear layer.
     #[serde(rename_all = "camelCase")]
     Linear {
         name: String,
@@ -39,13 +38,58 @@ enum Layers {
         weights: Vec<Vec<f64>>,
         biases: Vec<f64>,
     },
-    /// Rectified Linear Unit (ReLU) is a layer that translates to a
-    /// non-linear activation function.
-    ReLU { name: String },
+    //> Biliear layer.
+    #[serde(rename_all = "camelCase")]
+    Bilinear {
+        name: String,
+        input_size1: i64,
+        input_size2: i64,
+        output_size: i64,
+        has_biases: bool,
+        weights: Vec<Vec<f64>>,
+        biases: Vec<f64>,
+    },
+    /// Activation Functions
+    ReLU {
+        name: String,
+    },
+    CeLU {
+        name: String,
+    },
+    ELU {
+        name: String,
+    },
+    GeLU {
+        name: String,
+    },
+    LeakyReLU {
+        name: String,
+    },
+    Mish {
+        name: String,
+    },
+    RReLU {
+        name: String,
+    },
+    Sigmod {
+        name: String,
+    },
+    LogSoftmax {
+        name: String,
+    },
+    Softmax {
+        name: String,
+    },
+    Tanh {
+        name: String,
+    },
 }
 
 /// Implementation of the struct for reading the json files.
 impl JsonNN {
+    fn new(layers: Vec<Layers>) -> Self {
+        JsonNN { layers }
+    }
     /// Outputs the input size of the model.
     pub fn get_input_size(&self) -> i64 {
         match self.layers.first().unwrap() {
@@ -76,10 +120,46 @@ impl JsonNN {
     }
 }
 
+pub fn _default_nn(input_size: i64, output_size: i64, number_of_layers: u32) -> ModelWrapper {
+    let mut rng = rand::thread_rng();
+    let mut layers: Vec<Layers> = vec![];
+    for i in 0..number_of_layers {
+        let mut in_size = input_size;
+        let mut out_size = output_size;
+        if i != 0 {
+            in_size = 64;
+        }
+        if i != (number_of_layers - 1) {
+            out_size = 64;
+        }
+        //let test: Vec<f64> = (0..in_size).map(|v| (v / in_size) as f64).collect();
+        let test: Vec<Vec<f64>> = (0..in_size)
+            .map(|_| (0..out_size).map(|_| rng.gen::<f64>()).collect())
+            .collect();
+        let layer = Layers::Linear {
+            name: i.to_string(),
+            input_size: in_size,
+            output_size: out_size,
+            has_biases: false,
+            weights: test,
+            biases: vec![],
+        };
+        let relu = Layers::ReLU {
+            name: (i + 1).to_string(),
+        };
+        layers.push(layer);
+        if i != (number_of_layers - 1) {
+            layers.push(relu);
+        }
+    }
+    let json_nn = JsonNN::new(layers);
+    ModelWrapper::new(Arc::new(json_nn))
+}
+
 /// Wrapper for the models, that will allow us to create the model and to
 /// clone and not lose the reference to the original JsonNN so we can create
 /// different instances for the parallel simulations.
-struct ModelWrapper {
+pub struct ModelWrapper {
     pub model: Sequential,
     pub nn: Arc<JsonNN>,
 }
@@ -126,17 +206,33 @@ impl ModelWrapper {
                         bs: biases_tensor,
                     };
                     tch_nn = tch_nn.add(linear_layer);
-
-                    // Default settings for the layer. used if there is intention in training.
-                    // tch_nn = tch_nn.add(nn::linear(
-                    //     &_vs.root() / layer_name,
-                    //     *input_size,
-                    //     *output_size,
-                    //     //LinearConfig { ws_init: weights_tensor, bs_init: None, bias: has_biases }
-                    //     Default::default(),
-                    // ));
+                }
+                Layers::Bilinear {
+                    name: _,
+                    input_size1: _,
+                    input_size2: _,
+                    output_size: _,
+                    has_biases: _,
+                    weights: _,
+                    biases: _,
+                } => {
+                    panic!("BiLinear layer not yet supported!")
                 }
                 Layers::ReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.relu()),
+                Layers::CeLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.celu()),
+                Layers::ELU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.elu()),
+                Layers::GeLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.gelu("none")),
+                Layers::LeakyReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.leaky_relu()),
+                Layers::Mish { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.mish()),
+                Layers::RReLU { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.rrelu(false)),
+                Layers::Sigmod { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.sigmoid()),
+                Layers::LogSoftmax { name: _ } => {
+                    tch_nn = tch_nn.add_fn(|xs| xs.log_softmax(0, Kind::Float))
+                }
+                Layers::Softmax { name: _ } => {
+                    tch_nn = tch_nn.add_fn(|xs| xs.softmax(0, Kind::Float))
+                }
+                Layers::Tanh { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.tanh()),
             }
         }
         //println!("{:#?}", tch_nn);
@@ -175,6 +271,8 @@ impl<'a, T> NnOracle<T>
 where
     T: time::Time,
 {
+    /// Construct the NN Oracle from the Json representation of the NN, a reference to the explorer
+    /// the instance name of the controlled automaton, and a seeded rng.
     pub fn build(
         nn: JsonNN,
         explorer: Arc<Explorer<T>>,
@@ -225,6 +323,9 @@ where
         tensor
     }
 
+    /// This function only makes an argmax of the tensor, and returns the action with the highest value
+    /// We dont use it, because maybe the highest value action is not available on the state you are.
+    /// This can happen because of the NN is a function and not a map.
     fn _greedy_tensor_to_action(&self, tensor: Tensor) -> i64 {
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
@@ -271,6 +372,11 @@ where
                 }
 
                 let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
+                //println!(
+                //    "Len Transitions: {:?}- Len Sel Transitions: {:?}",
+                //    transitions.len(),
+                //    selected_transitions.len()
+                //);
                 if selected_transitions.is_empty() {
                     panic!("Empty selected transitions...");
                     //return transitions.into_iter().choose(&mut *rng).unwrap();
