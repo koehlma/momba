@@ -12,6 +12,7 @@ use clap::Clap;
 
 use momba_explore::{model::Expression, time::Float64Zone, *};
 
+mod custom_oracles;
 mod nn_oracle;
 mod simulate;
 use crate::nn_oracle::*;
@@ -40,8 +41,6 @@ enum Command {
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
     NN(NN),
-    #[clap(about = "Create a new default NN for the model.")]
-    New(New),
 }
 
 #[derive(Clap)]
@@ -91,16 +90,6 @@ struct NN {
     instance_name: String,
     #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
-}
-
-#[derive(Clap)]
-struct New {
-    #[clap(about = "A MombaCR model")]
-    model: String,
-    #[clap(about = "Input size")]
-    input_size: i64,
-    #[clap(about = "Output size")]
-    output_size: i64,
 }
 
 fn info_of_the_model(info_command: Info) {
@@ -272,7 +261,7 @@ fn par_smc(walks: ParSMC) {
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.explicit_parallel_smc();
+    let (score, n_runs) = stat_checker.parallel_smc();
     let duration = start.elapsed();
     println!(
         "Time elapsed: {:?}. Estimated Probability: {:?}",
@@ -312,11 +301,6 @@ fn sprt(walks: SPRT) {
         ._with_beta(0.1);
     let testt = stat_checker.run_sprt();
     println!("Estimated Probability:  {:?}", testt);
-}
-
-fn new_nn(new: New) {
-    let test_nn = nn_oracle::_default_nn(new.input_size, new.output_size, 3);
-    println!("{:#?}", test_nn.model);
 }
 
 fn check_nn(nn_command: NN) {
@@ -366,18 +350,30 @@ fn check_nn(nn_command: NN) {
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
     stat_checker = stat_checker
         .n_threads(nn_command.n_threads)
-        .max_steps(1000)
-        ._with_n_runs(500);
+        .max_steps(500)
+        ._with_n_runs(5200);
 
     println!("Checking Property: {}", prop_name);
-    let start = Instant::now();
-    let (score, n_runs) = stat_checker.run_smc(); //explicit_parallel_smc(); //
-    let duration = start.elapsed();
-    println!(
-        "Time elapsed: {:?}. Estimated Probability: {:?}",
-        duration,
-        (score as f64 / n_runs as f64)
-    );
+
+    if nn_command.n_threads > 1 {
+        let start = Instant::now();
+        let (score, n_runs) = stat_checker.parallel_smc();
+        let duration = start.elapsed();
+        println!(
+            "Time elapsed: {:?}. Estimated Probability: {:?}",
+            duration,
+            (score as f64 / n_runs as f64)
+        )
+    } else {
+        let start = Instant::now();
+        let (score, n_runs) = stat_checker.run_smc();
+        let duration = start.elapsed();
+        println!(
+            "Time elapsed: {:?}. Estimated Probability: {:?}",
+            duration,
+            (score as f64 / n_runs as f64)
+        )
+    };
 }
 
 fn main() {
@@ -388,6 +384,5 @@ fn main() {
         Command::ParSMC(walks) => par_smc(walks),
         Command::SPRT(walks) => sprt(walks),
         Command::NN(nn_command) => check_nn(nn_command),
-        Command::New(new) => new_nn(new),
     }
 }

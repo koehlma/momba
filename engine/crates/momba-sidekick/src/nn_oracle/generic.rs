@@ -97,8 +97,10 @@ where
         let id = self.get_instance();
         // See which action i can take from this state
         for t in self.explorer.transitions(&state).iter() {
+            //println!("{:?}", t.numeric_reference_vector());
             for (ins, value) in t.numeric_reference_vector().iter() {
                 if *ins == id {
+                    //println!("Inserting action: {:?}", value);
                     available_actions.insert(*value as i64);
                 }
             }
@@ -191,10 +193,10 @@ where
                     max_val = *v;
                 }
             }
-            //println!("Choosed action: {:?}", max_key);
+            //println!("Choosed action: {:?}. Actions: {:?}", max_key, actions);
             return self.resolve_v0(transitions, max_key);
         } else {
-            //println!("Actopms empty");
+            //println!("Actions empty");
             transitions.iter().collect()
         }
     }

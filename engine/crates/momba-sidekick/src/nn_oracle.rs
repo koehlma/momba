@@ -120,42 +120,6 @@ impl JsonNN {
     }
 }
 
-pub fn _default_nn(input_size: i64, output_size: i64, number_of_layers: u32) -> ModelWrapper {
-    let mut rng = rand::thread_rng();
-    let mut layers: Vec<Layers> = vec![];
-    for i in 0..number_of_layers {
-        let mut in_size = input_size;
-        let mut out_size = output_size;
-        if i != 0 {
-            in_size = 64;
-        }
-        if i != (number_of_layers - 1) {
-            out_size = 64;
-        }
-        //let test: Vec<f64> = (0..in_size).map(|v| (v / in_size) as f64).collect();
-        let test: Vec<Vec<f64>> = (0..in_size)
-            .map(|_| (0..out_size).map(|_| rng.gen::<f64>()).collect())
-            .collect();
-        let layer = Layers::Linear {
-            name: i.to_string(),
-            input_size: in_size,
-            output_size: out_size,
-            has_biases: false,
-            weights: test,
-            biases: vec![],
-        };
-        let relu = Layers::ReLU {
-            name: (i + 1).to_string(),
-        };
-        layers.push(layer);
-        if i != (number_of_layers - 1) {
-            layers.push(relu);
-        }
-    }
-    let json_nn = JsonNN::new(layers);
-    ModelWrapper::new(Arc::new(json_nn))
-}
-
 /// Wrapper for the models, that will allow us to create the model and to
 /// clone and not lose the reference to the original JsonNN so we can create
 /// different instances for the parallel simulations.
@@ -237,6 +201,44 @@ impl ModelWrapper {
         }
         //println!("{:#?}", tch_nn);
         ModelWrapper { model: tch_nn, nn }
+    }
+
+    /// Function to create a default NN with random values.
+    /// Another good option, is to use the default values specified on the tch docs.
+    fn _default_nn(input_size: i64, output_size: i64, number_of_layers: u32) -> ModelWrapper {
+        let mut rng = rand::thread_rng();
+        let mut layers: Vec<Layers> = vec![];
+        for i in 0..number_of_layers {
+            let mut in_size = input_size;
+            let mut out_size = output_size;
+            if i != 0 {
+                in_size = 64;
+            }
+            if i != (number_of_layers - 1) {
+                out_size = 64;
+            }
+            //let test: Vec<f64> = (0..in_size).map(|v| (v / in_size) as f64).collect();
+            let test: Vec<Vec<f64>> = (0..in_size)
+                .map(|_| (0..out_size).map(|_| rng.gen::<f64>()).collect())
+                .collect();
+            let layer = Layers::Linear {
+                name: i.to_string(),
+                input_size: in_size,
+                output_size: out_size,
+                has_biases: false,
+                weights: test,
+                biases: vec![],
+            };
+            let relu = Layers::ReLU {
+                name: (i + 1).to_string(),
+            };
+            layers.push(layer);
+            if i != (number_of_layers - 1) {
+                layers.push(relu);
+            }
+        }
+        let json_nn = JsonNN::new(layers);
+        ModelWrapper::new(Arc::new(json_nn))
     }
 }
 
@@ -326,7 +328,7 @@ where
     /// This function only makes an argmax of the tensor, and returns the action with the highest value
     /// We dont use it, because maybe the highest value action is not available on the state you are.
     /// This can happen because of the NN is a function and not a map.
-    fn _greedy_tensor_to_action(&self, tensor: Tensor) -> i64 {
+    fn _greedy_tensor_to_action(&self, tensor: &Tensor) -> i64 {
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
         }
@@ -351,9 +353,23 @@ where
         let mut rng = self.rng.borrow_mut();
         let mut out: Vec<bool> = vec![];
         self.action_resolver.available_v0(state, &mut out);
+        // let copy = out.clone();
+        // println!("Availables: {:?}", out);
+
         if !out.into_iter().any(|b| b) {
             // If there isn't an available action from the controlled instance.
             // choose uniformly from the transitions.
+            if transitions.len() > 1 {
+                // Here it means that the are more than one available transitions, but none of those
+                // can be taken from the controlled automaton!
+
+                // So, we have to make a decision, we could:
+                // -> just panic
+                //panic!("Cannot resolve undeterminism of non-controlled automatons")
+                // -> resolve uniformly and set a warning
+                println!("Resolving uniformly the undeterminism of non-controlled automatons.")
+                // -> set up a policy of a game-like thing.
+            }
             return transitions.into_iter().choose(&mut *rng).unwrap();
         } else {
             if transitions.len() == 1 {
@@ -361,6 +377,12 @@ where
             } else {
                 let tensor = self.state_to_tensor(state);
                 let output_tensor = self.model_wrapper.model.forward(&tensor);
+
+                // let highest_action = self._greedy_tensor_to_action(&output_tensor);
+                // println!(
+                //     "Highest Action {:?} available?: {:?}",
+                //     highest_action, copy[highest_action as usize]
+                // );
 
                 let mut tensor_map: HashMap<i64, f64> = HashMap::new();
                 for i in 0..self.output_size as i64 {
@@ -379,7 +401,6 @@ where
                 //);
                 if selected_transitions.is_empty() {
                     panic!("Empty selected transitions...");
-                    //return transitions.into_iter().choose(&mut *rng).unwrap();
                 }
                 return selected_transitions.into_iter().choose(&mut *rng).unwrap();
             }

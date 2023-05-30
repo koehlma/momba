@@ -346,8 +346,8 @@ where
                     "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
                     self.eps, self.delta
                 );
-                let _runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
-                _runs as u64
+                let runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
+                runs as u64
             }
             Some(r) => r,
         }
@@ -360,6 +360,7 @@ where
         self.sim.reset();
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
+            //println!("---step: {:?}---", c);
             let next_state = state.into();
             if (self.goal)(&next_state) {
                 return SimulationOutput::GoalReached(c);
@@ -383,6 +384,7 @@ where
         let mut _total_steps = 0;
         for _i in 0..n_runs {
             let v = self.simulate();
+            //println!("---Simulation Ended---: {:?}", v);
             match v {
                 SimulationOutput::GoalReached(steps) => {
                     score += 1;
@@ -402,7 +404,7 @@ where
     /// Explicitly run parallel SMC.
     /// Does not uses the Simulation Output enum, because this
     /// implementation uses the low level managment of threads.
-    pub fn explicit_parallel_smc(&self) -> (i64, i64)
+    pub fn parallel_smc(&self) -> (i64, i64)
     where
         S: Simulator + Clone + Send,
         G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
@@ -593,11 +595,11 @@ where
     while let Some(state) = sim.next() {
         let next_state = state.into();
         if (goal)(&next_state) {
-            return SimulationOutput::GoalReached(c); //return true;
+            return SimulationOutput::GoalReached(c);
         } else if c >= max_steps {
-            return SimulationOutput::MaxSteps; //return false;
+            return SimulationOutput::MaxSteps;
         }
         c += 1;
     }
-    return SimulationOutput::NoStatesAvailable; // return false;
+    return SimulationOutput::NoStatesAvailable;
 }
