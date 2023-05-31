@@ -360,7 +360,6 @@ where
         self.sim.reset();
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
-            //println!("---step: {:?}---", c);
             let next_state = state.into();
             if (self.goal)(&next_state) {
                 return SimulationOutput::GoalReached(c);
@@ -384,7 +383,6 @@ where
         let mut _total_steps = 0;
         for _i in 0..n_runs {
             let v = self.simulate();
-            //println!("---Simulation Ended---: {:?}", v);
             match v {
                 SimulationOutput::GoalReached(steps) => {
                     score += 1;
@@ -395,13 +393,13 @@ where
             }
         }
         println!(
-            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. steps taken: {:?}",
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. steps taken in total: {:?}",
             count_more_steps_needed, score, deadlock_count, _total_steps
         );
         (score, n_runs as i64)
     }
 
-    /// Explicitly run parallel SMC.
+    /// Parallel SMC.
     /// Does not uses the Simulation Output enum, because this
     /// implementation uses the low level managment of threads.
     pub fn parallel_smc(&self) -> (i64, i64)
@@ -459,7 +457,7 @@ where
         (score, n_runs as i64)
     }
 
-    /// Runs parallel SMC usign the library rayon and distribution the wrokload
+    /// Runs parallel SMC usign the library rayon and distributing the workload
     /// on the amount of threads.
     pub fn _run_parallel_smc(self) -> (i64, i64)
     where
@@ -485,44 +483,6 @@ where
                 SimulationOutput::GoalReached(_) => score += 1,
                 SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
                 SimulationOutput::NoStatesAvailable => _deadlocks += 1,
-            }
-        }
-        (score, n_runs as i64)
-    }
-
-    fn _run_parallel_smc_pool(self) -> (i64, i64)
-    where
-        S: Simulator + Send + Clone + Sync,
-        G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
-    {
-        let pool = rayon::ThreadPoolBuilder::new()
-            .num_threads(self.n_threads)
-            .build()
-            .unwrap();
-        let n_runs = self.number_of_runs();
-        let mut score: i64 = 0;
-        let mut _count_more_steps_needed = 0;
-        let cycles = (n_runs as f64 / self.n_threads as f64) as i64;
-        let mut simulators: Vec<&S> = vec![];
-        for _ in 0..current_num_threads() {
-            simulators.push((&self.sim).clone())
-        }
-        println!(
-            "Runs: {:?}. Max Steps: {:?}. Cycles: {}. Threads: {}",
-            n_runs, self.max_steps, cycles, self.n_threads
-        );
-        for _ in 0..cycles {
-            let v = pool.broadcast(|_| {
-                _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps)
-            });
-            for sout in v {
-                match sout {
-                    SimulationOutput::GoalReached(_) => score += 1,
-                    SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
-                    SimulationOutput::NoStatesAvailable => {
-                        println!("No States Available, something went wrong...");
-                    }
-                }
             }
         }
         (score, n_runs as i64)

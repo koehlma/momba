@@ -1,18 +1,33 @@
-# MDP and DTMC Simulation Tool
+# Momba Simulator
 
-WIP
+[![crate](???)](???)
+[![documentation](???)](???)
+
+A library that provides Simulation capabilities to *Momba*.
+This crates contains a implementation of sequential and parallel 
+*Statistical Model Checking* for DTMC[[1]] and an implementation of SPRT[[3]]. 
+For MDPs[[2]], the undeterminism can be resolved by DSMC[[4]] taken a JSON file
+with the layers of the networks, or by using a Uniform Oracle.
+
+The code is designed to be used to explore and learn mehtods on Markov
+Decision Processes, and can be easily used to explore new oracles.
+
+
+[1]: https://en.wikipedia.org/wiki/Discrete-time_Markov_chain
+[2]: https://en.wikipedia.org/wiki/Markov_decision_process
+[3]: https://en.wikipedia.org/wiki/Sequential_probability_ratio_test
+[4]: http://dx.doi.org/10.22028/D291-36816
+
 ## Features
 - SMC for DTMC, sequential and in parallel.
 - SPRT implementation for DTMC. 
 - DSMC using a NN json file, or a custom Oracle of your choice.
 
-## Future Features
+## Future work
 
-- dead predicates.
-- training of models.
-- use of local variables for the training of the model.
-- action resolver by label.
-- Support for expected rewards.
-- Support for more types of layers in the NN.
-- etc.
-- 
+- Generalization of oracle funtion.
+- Dead predicates.
+- Implementation of training for the NN.
+- Action resolver by label.
+- Support for expected-like properties.
+- Use of local variables for the training of the model.
