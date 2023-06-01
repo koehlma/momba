@@ -405,7 +405,7 @@ where
         &self,
         state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'t, T> {
+    ) -> &'t Transition<'s, T> {
         let mut rng = self.rng.borrow_mut();
         if !self._has_availables_from(&state) {
             if transitions.len() > 1 {

@@ -35,7 +35,7 @@ pub trait Oracle<T: time::Time> {
         &self,
         state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'t, T>;
+    ) -> &'t Transition<'s, T>;
 }
 /// Oracle that resolves no-determinism uniformly
 #[derive(Clone)]
@@ -53,10 +53,10 @@ impl UniformOracle {
 
 impl<T: time::Time> Oracle<T> for UniformOracle {
     fn choose<'s, 't>(
-        &self, //&mut self
+        &self,
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'t, T> {
+    ) -> &'t Transition<'s, T> {
         let elected_transition = transitions
             .into_iter()
             .choose(&mut *(self.rng.borrow_mut()))
@@ -77,10 +77,10 @@ impl FIFOOracle {
 
 impl<T: time::Time> Oracle<T> for FIFOOracle {
     fn choose<'s, 't>(
-        &self, //&mut self
+        &self,
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'t, T> {
+    ) -> &'t Transition<'s, T> {
         let elected_transition = transitions.first().unwrap();
         elected_transition
     }

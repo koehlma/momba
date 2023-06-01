@@ -25,6 +25,7 @@ where
     //I can have something like a buffer, so if wanted can have some memory.
 }
 
+/// Implementation for an Interface for any function to be used as an oracle
 impl<'a, T, G> CustomOracle<T, G>
 where
     T: time::Time,
@@ -56,9 +57,10 @@ where
         &self,
         _state: &State<T>,
         _transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'t, T> {
+    ) -> &'t Transition<'s, T> {
         todo!();
         // let mut rng = self.rng.borrow_mut();
         // let action = (self.oracle_fn)(state);
+        // let transition = (self.oracle_fn)(state);
     }
 }

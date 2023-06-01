@@ -2,16 +2,18 @@
 #
 # Copyright (C) 2019-2021, Saarland University
 # Copyright (C) 2019-2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
+#
+# type: ignore
 
 from __future__ import annotations
 
 import typing as t
 
-import gym
+import gymnasium as gym  # type: ignore
 import numpy
 
-from gym import spaces
-from gym.error import UnsupportedMode
+from gymnasium import spaces  # type: ignore
+from gymnasium.error import UnsupportedMode  # type: ignore
 
 from . import abstract
 
