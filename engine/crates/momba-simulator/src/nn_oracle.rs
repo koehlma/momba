@@ -13,7 +13,7 @@ use tch::{
 
 use crate::simulate::Oracle;
 
-use self::generic::{ActionResolver, EdgeByIndexResolver};
+use self::generic::*;
 
 mod generic;
 
@@ -263,10 +263,12 @@ where
     output_size: usize,
     /// Explorer reference to the oracle.
     explorer: Arc<Explorer<T>>,
-    /// Action resolver that helps in resolving the un-determinations.
-    action_resolver: EdgeByIndexResolver<T>,
+    // /// Action resolver that helps in resolving the un-determinations.
+    // action_resolver: EdgeByIndexResolver<T>,
     /// RNG for the oracle.
     rng: RefCell<StdRng>,
+    /// Action resolver that helps in resolving the undeterminism.
+    action_resolver_v2: EdgeByIndexResolverV2<T>,
 }
 
 impl<'a, T> NnOracle<T>
@@ -283,14 +285,17 @@ where
     ) -> Self {
         let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
-        let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
+        let action_resolver_v2 =
+            EdgeByIndexResolverV2::new(explorer.clone(), instance_name.clone());
+        //let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
         NnOracle {
             _input_size: input_size,
             output_size,
             explorer,
-            action_resolver,
+            //action_resolver,
             model_wrapper: ModelWrapper::new(Arc::new(nn)),
             rng: RefCell::new(rng),
+            action_resolver_v2,
         }
     }
 
@@ -335,6 +340,57 @@ where
         let idx = tensor.argmax(None, true).int64_value(&[0]);
         idx
     }
+
+    /// This function will takes the output tensor, and return the highest available Q-value
+    /// for the current state.
+    fn _tensor_to_action(&self, state: &State<T>, tensor: &Tensor) -> i64 {
+        // Set up tensor map
+        let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+        for i in 0..self.output_size as i64 {
+            let value = tensor.double_value(&[i]);
+            if value.is_nan() {
+                panic!("The NN returned values that are NAN. Was correctly trained?")
+            };
+            tensor_map.insert(i, value);
+        }
+
+        // Check which actions are available.
+        let mut out: Vec<bool> = vec![];
+        self.action_resolver_v2.available(state, &mut out);
+
+        //Filter the map
+        let filtered_map: HashMap<i64, f64> = tensor_map
+            .iter()
+            .filter(|(k, _v)| out[(**k) as usize]) //_v.is_nan() ||
+            .map(|(k, v)| (*k, *v))
+            .collect();
+
+        let mut max_key: i64 = -1;
+        let mut max_val: f64 = f64::NEG_INFINITY;
+        for (k, v) in filtered_map.iter() {
+            if *v >= max_val {
+                max_key = *k;
+                max_val = *v;
+            }
+        }
+
+        max_key
+    }
+
+    /// Returns if from the state there is any possible action in the controlled automaton.
+    fn _has_availables_from(&self, state: &State<T>) -> bool {
+        let mut out: Vec<bool> = vec![];
+        self.action_resolver_v2.available(state, &mut out);
+        out.into_iter().any(|b| b)
+    }
+    /// Calls the action resolver and get the transitions that results from taken the specified action
+    fn _select_transitions<'s, 't>(
+        &self,
+        transitions: &'t [Transition<'s, T>],
+        action: i64,
+    ) -> Vec<&'t Transition<'s, T>> {
+        self.action_resolver_v2.resolve(&transitions, action)
+    }
 }
 
 impl<T> Oracle<T> for NnOracle<T>
@@ -351,24 +407,9 @@ where
         transitions: &'t [Transition<'s, T>],
     ) -> &'t Transition<'t, T> {
         let mut rng = self.rng.borrow_mut();
-        let mut out: Vec<bool> = vec![];
-        self.action_resolver.available_v0(state, &mut out);
-        // let copy = out.clone();
-        // println!("Availables: {:?}", out);
-
-        if !out.into_iter().any(|b| b) {
-            // If there isn't an available action from the controlled instance.
-            // choose uniformly from the transitions.
+        if !self._has_availables_from(&state) {
             if transitions.len() > 1 {
-                // Here it means that the are more than one available transitions, but none of those
-                // can be taken from the controlled automaton!
-
-                // So, we have to make a decision, we could:
-                // -> just panic
-                //panic!("Cannot resolve undeterminism of non-controlled automatons")
-                // -> resolve uniformly and set a warning
                 println!("Resolving uniformly the undeterminism of non-controlled automatons.")
-                // -> set up a policy of a game-like thing.
             }
             return transitions.into_iter().choose(&mut *rng).unwrap();
         } else {
@@ -377,61 +418,76 @@ where
             } else {
                 let tensor = self.state_to_tensor(state);
                 let output_tensor = self.model_wrapper.model.forward(&tensor);
-
-                // let highest_action = self._greedy_tensor_to_action(&output_tensor);
-                // println!(
-                //     "Highest Action {:?} available?: {:?}",
-                //     highest_action, copy[highest_action as usize]
-                // );
-
-                let mut tensor_map: HashMap<i64, f64> = HashMap::new();
-                for i in 0..self.output_size as i64 {
-                    let value = output_tensor.double_value(&[i]);
-                    if value.is_nan() {
-                        panic!("The NN returned values that are NAN. Was correctly trained?")
-                    };
-                    tensor_map.insert(i, value);
-                }
-
-                let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
-                //println!(
-                //    "Len Transitions: {:?}- Len Sel Transitions: {:?}",
-                //    transitions.len(),
-                //    selected_transitions.len()
-                //);
+                let action = self._tensor_to_action(&state, &output_tensor);
+                let selected_transitions = self._select_transitions(&transitions, action);
                 if selected_transitions.is_empty() {
                     panic!("Empty selected transitions...");
                 }
                 return selected_transitions.into_iter().choose(&mut *rng).unwrap();
             }
         }
-
-        // let tensor = self.state_to_tensor(state);
-        // let output_tensor = self.model_wrapper.model.forward(&tensor);
-
-        // let mut tensor_map: HashMap<i64, f64> = HashMap::new();
-        // for i in 0..self.output_size as i64 {
-        //     let value = output_tensor.double_value(&[i]);
-        //     if value.is_nan() {
-        //         panic!("The NN returned values that are NAN. Was correctly trained?")
-        //     };
-        //     tensor_map.insert(i, value);
-        // }
-
-        // //println!("{:#?}", tensor_map);
-
-        // let selected_transitions = self.action_resolver.resolve(&transitions, &tensor_map);
-        // if selected_transitions.is_empty() {
-        //     panic!("Empty selected transitions...");
-        //     //return transitions.into_iter().choose(&mut *rng).unwrap();
-        // }
-        // if selected_transitions.len() > 1 {
-        //     println!("Uncontrolled nondeterminism resolved uniformly.");
-        // }
-
-        // let transition = selected_transitions.into_iter().choose(&mut *rng).unwrap();
-        // println!("---");
-        // transition
-        //}
     }
 }
+
+// impl<T> Oracle<T> for NnOracle<T>
+// where
+//     T: time::Time,
+// {
+//     /// From a state and a group of transitions, choosese the next one using the NN as an oracle.
+//     /// The NN outputs the aproximated Q_values for each transitions, then we
+//     /// clear this transitions using the action resolver.
+//     /// Panics if the NN outputs NaN or infs.
+//     fn choose<'s, 't>(
+//         &self,
+//         state: &State<T>,
+//         transitions: &'t [Transition<'s, T>],
+//     ) -> &'t Transition<'t, T> {
+//         let mut rng = self.rng.borrow_mut();
+//         let mut out: Vec<bool> = vec![];
+//         self.action_resolver.available(state, &mut out);
+//         // let copy = out.clone();
+//         // println!("Availables: {:?}", out);
+//         if !out.into_iter().any(|b| b) {
+//             // If there isn't an available action from the controlled instance.
+//             // choose uniformly from the transitions.
+//             if transitions.len() > 1 {
+//                 // Here it means that the are more than one available transitions, but none of those
+//                 // can be taken from the controlled automaton!
+//                 // So, we have to make a decision, we could:
+//                 // -> just panic
+//                 //panic!("Cannot resolve undeterminism of non-controlled automatons")
+//                 // -> resolve uniformly and set a warning
+//                 println!("Resolving uniformly the undeterminism of non-controlled automatons.")
+//                 // -> set up a policy of a game-like thing.
+//             }
+//             return transitions.into_iter().choose(&mut *rng).unwrap();
+//         } else {
+//             if transitions.len() == 1 {
+//                 return transitions.first().unwrap();
+//             } else {
+//                 let tensor = self.state_to_tensor(state);
+//                 let output_tensor = self.model_wrapper.model.forward(&tensor);
+//                 let mut tensor_map: HashMap<i64, f64> = HashMap::new();
+//                 for i in 0..self.output_size as i64 {
+//                     let value = output_tensor.double_value(&[i]);
+//                     if value.is_nan() {
+//                         panic!("The NN returned values that are NAN. Was correctly trained?")
+//                     };
+//                     tensor_map.insert(i, value);
+//                 }
+//                 let selected_transitions = self
+//                     .action_resolver
+//                     .resolve_with_map(&transitions, &tensor_map);
+//                 //println!(
+//                 //    "Len Transitions: {:?}- Len Sel Transitions: {:?}",
+//                 //    transitions.len(),
+//                 //    selected_transitions.len()
+//                 //);
+//                 if selected_transitions.is_empty() {
+//                     panic!("Empty selected transitions...");
+//                 }
+//                 return selected_transitions.into_iter().choose(&mut *rng).unwrap();
+//             }
+//         }
+//     }
+// }

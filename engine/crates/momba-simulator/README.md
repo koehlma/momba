@@ -1,7 +1,7 @@
 # Momba Simulator
 
-[![crate](???)](???)
-[![documentation](???)](???)
+<!-- [![crate](???)](???) -->
+<!-- [![documentation](???)](???) -->
 
 A library that provides Simulation capabilities to *Momba*.
 This crates contains a implementation of sequential and parallel 
@@ -17,6 +17,15 @@ Decision Processes, and can be easily used to explore new oracles.
 [2]: https://en.wikipedia.org/wiki/Markov_decision_process
 [3]: https://en.wikipedia.org/wiki/Sequential_probability_ratio_test
 [4]: http://dx.doi.org/10.22028/D291-36816
+
+## Commands
+- `info <model>.json`: gives information about the model
+- `smc <model>.json <prop>.json`: runs SMC on the model, using a uniform oracle. If its DTMC, just simulates runs.
+- `par-smc <model>.json <prop>.json`: runs SMC parallel, using a uniform oracle.
+    - Optionals: `-n <number of threads>`
+- `nn <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
+    - Optionals: `-n <number of threads>`; `-i <controlled instance name>`
+    - If not specified the instance name, uses the one with index 0.
 
 ## Features
 - SMC for DTMC, sequential and in parallel.

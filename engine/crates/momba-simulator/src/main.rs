@@ -71,6 +71,8 @@ struct SPRT {
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     property: String,
+    #[clap(about = "x such that P(F goal)~x")]
+    x: f64,
 }
 
 #[derive(Clap)]
@@ -179,17 +181,17 @@ fn info_of_the_model(info_command: Info) {
     )
 }
 
-fn smc(walks: SMC) {
-    let model_path = Path::new(&walks.model);
+fn smc(smc_command: SMC) {
+    let model_path = Path::new(&smc_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&walks.property);
+    let prop_path = Path::new(&smc_command.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = walks
+    let prop_name = smc_command
         .property
         .split("/")
         .last()
@@ -224,17 +226,17 @@ fn smc(walks: SMC) {
     );
 }
 
-fn par_smc(walks: ParSMC) {
-    let model_path = Path::new(&walks.model);
+fn par_smc(psmc_command: ParSMC) {
+    let model_path = Path::new(&psmc_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&walks.property);
+    let prop_path = Path::new(&psmc_command.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = walks
+    let prop_name = psmc_command
         .property
         .split("/")
         .last()
@@ -257,7 +259,7 @@ fn par_smc(walks: ParSMC) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.n_threads(walks.n_threads);
+    stat_checker = stat_checker.n_threads(psmc_command.n_threads);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -270,22 +272,22 @@ fn par_smc(walks: ParSMC) {
     );
 }
 
-fn sprt(walks: SPRT) {
-    let model_path = Path::new(&walks.model);
+fn sprt(sprt_command: SPRT) {
+    let model_path = Path::new(&sprt_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&walks.property);
+    let prop_path = Path::new(&sprt_command.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    let oracle_seed = 42;
-    let state_iter_seed = 77;
+    let oracle_seed = 10;
+    let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -295,12 +297,12 @@ fn sprt(walks: SPRT) {
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
-        ._with_x(0.85)
-        ._with_ind_reg(0.05)
-        ._with_alpha(0.1)
-        ._with_beta(0.1);
-    let testt = stat_checker.run_sprt();
-    println!("Estimated Probability:  {:?}", testt);
+        ._with_x(sprt_command.x)
+        ._with_ind_reg(0.005)
+        ._with_alpha(0.05)
+        ._with_beta(0.05);
+    let result = stat_checker.run_sprt();
+    println!("Result: {:?}", result);
 }
 
 fn check_nn(nn_command: NN) {
@@ -351,7 +353,7 @@ fn check_nn(nn_command: NN) {
     stat_checker = stat_checker
         .n_threads(nn_command.n_threads)
         .max_steps(500)
-        ._with_n_runs(5200);
+        ._with_n_runs(1000);
 
     println!("Checking Property: {}", prop_name);
 
@@ -380,9 +382,9 @@ fn main() {
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Info(info_command) => info_of_the_model(info_command),
-        Command::SMC(walks) => smc(walks),
-        Command::ParSMC(walks) => par_smc(walks),
-        Command::SPRT(walks) => sprt(walks),
+        Command::SMC(smc_command) => smc(smc_command),
+        Command::ParSMC(psmc_command) => par_smc(psmc_command),
+        Command::SPRT(sprt_command) => sprt(sprt_command),
         Command::NN(nn_command) => check_nn(nn_command),
     }
 }

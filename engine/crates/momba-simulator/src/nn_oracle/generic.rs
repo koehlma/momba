@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+#[allow(dead_code)]
 use hashbrown::{HashMap, HashSet};
 use momba_explore::{model::Automaton, *};
 use std::sync::Arc;
@@ -24,10 +24,10 @@ pub enum Observations {
 pub trait ActionResolver<T: time::Time> {
     /// Available (v0) puts on the vector out boolean values indicating which
     /// index of transitions are available from that state.
-    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>);
+    fn available(&self, state: &State<T>, out: &mut Vec<bool>);
     /// Resolve (v0) takes a set of transitions and an action, and returns a
     /// vector with the transitions that can be done with that action.
-    fn resolve_v0<'s, 't>(
+    fn resolve<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
@@ -36,7 +36,7 @@ pub trait ActionResolver<T: time::Time> {
     /// takes a dict that maps the index of the edges to the output
     /// result of the NN. So it can compute the highest scored action.
     /// Returns also a vector with the transitions that can be done with that action.
-    fn resolve<'s, 't>(
+    fn resolve_with_map<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action_map: &HashMap<i64, f64>,
@@ -91,7 +91,7 @@ impl<'a, T> ActionResolver<T> for EdgeByIndexResolver<T>
 where
     T: time::Time,
 {
-    fn available_v0(&self, state: &State<T>, out: &mut Vec<bool>) {
+    fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
         out.clear();
         let mut available_actions: HashSet<i64> = HashSet::new();
         let id = self.get_instance();
@@ -116,7 +116,7 @@ where
     //Available should, given a state, return the available actions for the state
     //Resolve, should given an action (the one available with the highest value) return the transitions.
 
-    fn resolve_v0<'s, 't>(
+    fn resolve<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
@@ -148,7 +148,7 @@ where
         out_transitions
     }
 
-    fn resolve<'s, 't>(
+    fn resolve_with_map<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action_map: &HashMap<i64, f64>,
@@ -194,7 +194,7 @@ where
                 }
             }
             //println!("Choosed action: {:?}. Actions: {:?}", max_key, actions);
-            return self.resolve_v0(transitions, max_key);
+            return self.resolve(transitions, max_key);
         } else {
             //println!("Actions empty");
             transitions.iter().collect()
@@ -202,20 +202,123 @@ where
     }
 }
 
-//This is basically garbage, needs a lot of love.
-pub struct EdgeByLabelResolver<'a, T>
+#[derive(Clone)]
+pub struct EdgeByIndexResolverV2<T>
 where
     T: time::Time,
 {
     num_actions: i64,
+    explorer: Arc<Explorer<T>>,
+    instance: usize,
+}
+
+impl<'a, T: time::Time> EdgeByIndexResolverV2<T> {
+    pub fn new(explorer: Arc<Explorer<T>>, name: Option<String>) -> Self {
+        let default = String::from("0");
+        let instance_name = format!("_{}", name.unwrap_or_default());
+        let instance_id = &explorer
+            .network
+            .automata
+            .keys()
+            .filter(|name| name.ends_with(&instance_name))
+            .next()
+            .unwrap_or_else(|| {
+                println!("Using default value for index automata: 0");
+                &default
+            })
+            .strip_suffix(&instance_name)
+            .unwrap_or("0");
+
+        let mut num_actions: i64 = 0;
+        for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
+            num_actions += l.edges.len() as i64;
+        }
+
+        EdgeByIndexResolverV2 {
+            num_actions,
+            instance: instance_id.parse::<usize>().unwrap(),
+            explorer,
+        }
+    }
+
+    fn get_instance(&self) -> usize {
+        self.instance
+    }
+}
+
+impl<'a, T> ActionResolver<T> for EdgeByIndexResolverV2<T>
+where
+    T: time::Time,
+{
+    fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
+        out.clear();
+        let id = self.get_instance();
+        let mut actions: Vec<usize> = vec![];
+        for t in self.explorer.transitions(&state).into_iter() {
+            actions.append(
+                &mut t
+                    .numeric_reference_vector()
+                    .into_iter()
+                    .filter(|(ins, _)| *ins == id)
+                    .map(|(_, act)| act)
+                    .collect(),
+            )
+        }
+        for act in 0..self.num_actions {
+            out.push(actions.contains(&(act as usize)))
+        }
+    }
+
+    fn resolve<'s, 't>(
+        &self,
+        transitions: &'t [Transition<'s, T>],
+        action: i64,
+    ) -> Vec<&'t Transition<'s, T>> {
+        let id = self.get_instance();
+        let action = action as usize;
+        let mut keep_idx: Vec<usize> = vec![];
+        for (i, t) in transitions.into_iter().enumerate() {
+            let actions_on_transition: Vec<(usize, usize)> = t
+                .numeric_reference_vector()
+                .into_iter()
+                .filter(|(ins, act)| *ins == id && *act == action)
+                .collect();
+            // We keep the idx of the transitions such that they have an available action
+            if !actions_on_transition.is_empty() {
+                keep_idx.push(i)
+            }
+        }
+
+        transitions
+            .into_iter()
+            .enumerate()
+            .filter(|(i, _)| keep_idx.contains(i))
+            .map(|(_, t)| t)
+            .collect()
+    }
+
+    fn resolve_with_map<'s, 't>(
+        &self,
+        _transitions: &'t [Transition<'s, T>],
+        _action_map: &HashMap<i64, f64>,
+    ) -> Vec<&'t Transition<'s, T>> {
+        todo!()
+    }
+}
+
+pub struct EdgeByLabelResolver<'a, T>
+where
+    T: time::Time,
+{
+    _num_actions: i64,
     _automaton: &'a Automaton,
     _action_mapping: HashMap<i64, String>,
     _reverse_action_mapping: HashMap<String, i64>,
-    explorer: &'a Explorer<T>,
+    _explorer: &'a Explorer<T>,
 }
 
 impl<'a, T: time::Time> EdgeByLabelResolver<'a, T> {
-    pub fn new(explorer: &'a Explorer<T>) -> Self {
+    pub fn _new(explorer: &'a Explorer<T>) -> Self {
         let automaton = explorer.network.automata.values().next().unwrap();
         let mut num_actions: i64 = 0;
         let mut action_types = vec![];
@@ -238,11 +341,11 @@ impl<'a, T: time::Time> EdgeByLabelResolver<'a, T> {
             }
         }
         EdgeByLabelResolver {
-            num_actions,
+            _num_actions: num_actions,
             _automaton: &automaton,
             _action_mapping: action_mapping,
             _reverse_action_mapping: rev_action_mapping,
-            explorer,
+            _explorer: explorer,
         }
     }
 }
@@ -251,31 +354,18 @@ impl<'a, T> ActionResolver<T> for EdgeByLabelResolver<'a, T>
 where
     T: time::Time,
 {
-    fn available_v0(&self, _state: &State<T>, _out: &mut Vec<bool>) {
-        // out.clear();
-        // let mut available_actions: HashSet<i64> = HashSet::new();
-        // for t in self.explorer.transitions(&state).iter() {
-        //     for e in t.edges().into_iter() {
-        //         //index for the label
-        //         available_actions.insert(e.index as i64);
-        //     }
-        // }
-        // available_actions.remove(&-1);
-        // //MM check this part!
-        // for act in 0..self.num_actions {
-        //     out.push(available_actions.contains(&act))
-        // }
+    fn available(&self, _state: &State<T>, _out: &mut Vec<bool>) {
         todo!()
     }
 
-    fn resolve_v0<'s, 't>(
+    fn resolve<'s, 't>(
         &self,
         _transitions: &'t [Transition<'s, T>],
         _action: i64,
     ) -> Vec<&'t Transition<'s, T>> {
         todo!()
     }
-    fn resolve<'s, 't>(
+    fn resolve_with_map<'s, 't>(
         &self,
         _transitions: &'t [Transition<'s, T>],
         _action_map: &HashMap<i64, f64>,

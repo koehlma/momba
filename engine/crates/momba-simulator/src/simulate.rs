@@ -30,7 +30,7 @@ pub enum SimulationOutput {
 pub trait Oracle<T: time::Time> {
     /// Chooses a transition between the provided ones, and can have access to all
     /// the information of the current state.
-    /// Precondition: transitions slice is not empty.
+    /// Precondition: transitions is not empty.
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
@@ -490,13 +490,16 @@ where
 
     /// Runs the simulation of SPRT algorithm.
     pub fn run_sprt(mut self) -> SprtComparison {
+        println!(
+            "SPRT algorithm with: \n\t Max Steps: {:?}\n\t Indifference region: {:?}\n\t x: {:?}\n\t Type Err I: {:?} - Type Err II: {:?} ",
+            self.max_steps, self.ind_reg, self.x, self.alpha, self.beta
+        );
         let p0 = (self.x + self.ind_reg).min(1.0);
         let p1 = (self.x - self.ind_reg).max(0.0);
         let a = ((1.0 - self.alpha) / self.beta).log10();
         let b = (self.beta / (1.0 - self.alpha)).log10();
         let mut finisihed = false;
         let mut r: f64 = 0.0;
-        let mut _count_more_steps_needed = 0;
         let mut runs = 0;
         let mut result: Option<SprtComparison> = None;
         while !finisihed {
@@ -505,20 +508,19 @@ where
             match v {
                 SimulationOutput::GoalReached(_) => r += p1.log10() - p0.log10(),
                 SimulationOutput::MaxSteps => {
-                    _count_more_steps_needed += 1;
-                    r += (1.0 - p1).log10() - (1.0 - p0).log10()
+                    r += (1.0 - p1).log10() - (1.0 - p0).log10();
                 }
                 SimulationOutput::NoStatesAvailable => {
-                    println!("No States Available, something went wrong...");
+                    r += (1.0 - p1).log10() - (1.0 - p0).log10();
                 }
             }
             if r <= b {
                 finisihed = true;
-                println!("P(<>G)>={}>={}", p0, self.x);
+                println!("P(<>G)>={}>={}. In {} runs.", p0, self.x, runs);
                 result = Some(SprtComparison::BiggerThan(runs));
             } else if r >= a {
                 finisihed = true;
-                println!("P(<>G)<={}<={}", p1, self.x);
+                println!("P(<>G)<={}<={}. In {} runs.", p1, self.x, runs);
                 result = Some(SprtComparison::LesserThan(runs));
             }
         }
