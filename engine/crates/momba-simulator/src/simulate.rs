@@ -1,9 +1,11 @@
 use std::{
     cell::RefCell,
     collections::HashMap,
+    fmt::Write,
     sync::{atomic, Arc},
 };
 
+use indicatif::{ProgressBar, ProgressState, ProgressStyle};
 use momba_explore::{model::Value, *};
 use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use rayon::{current_num_threads, prelude::*};
@@ -267,8 +269,8 @@ where
         Self {
             sim,
             goal,
-            eps: 0.01,
-            delta: 0.05,
+            eps: 0.05,
+            delta: 0.1,
             max_steps: 5000,
             x: 0.0,
             alpha: 1.0,
@@ -381,7 +383,15 @@ where
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
         let mut _total_steps = 0;
+        let pb = ProgressBar::new(n_runs);
+        pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+        .unwrap()
+        .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
+        .progress_chars("#>-"));
+
         for _i in 0..n_runs {
+            //pb.inc(1);
+            pb.set_position(_i);
             let v = self.simulate();
             match v {
                 SimulationOutput::GoalReached(steps) => {
@@ -392,8 +402,9 @@ where
                 SimulationOutput::NoStatesAvailable => deadlock_count += 1,
             }
         }
+        pb.finish_with_message("Simulation Finished. Results:\n");
         println!(
-            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. steps taken in total: {:?}",
+            "More steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. Steps taken in total: {:?}.",
             count_more_steps_needed, score, deadlock_count, _total_steps
         );
         (score, n_runs as i64)
@@ -422,7 +433,7 @@ where
         let dead_counter = atomic::AtomicUsize::new(0);
         let more_steps_counter = atomic::AtomicUsize::new(0);
         std::thread::scope(|scope| {
-            for _ in 0..num_workers {
+            for _i in 0..num_workers {
                 let sim = self.sim.clone();
                 let goal_counter = &goal_counter;
                 let dead_counter = &dead_counter;
@@ -478,8 +489,8 @@ where
             .map(|_| _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
 
         let result: Vec<_> = updated.collect();
-        for sout in result {
-            match sout {
+        for s_out in result {
+            match s_out {
                 SimulationOutput::GoalReached(_) => score += 1,
                 SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
                 SimulationOutput::NoStatesAvailable => _deadlocks += 1,
