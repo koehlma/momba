@@ -376,7 +376,7 @@ where
     /// and the number of runs.
     pub fn run_smc(mut self) -> (i64, i64) {
         let n_runs = self.number_of_runs();
-        println!("Runs: {:?}. Max Steps: {:?}", n_runs, self.max_steps);
+        println!("Runs:\t\t{:?}\nMax Steps:\t{:?}", n_runs, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
@@ -412,7 +412,7 @@ where
         let countdown = atomic::AtomicI64::new(n_runs as i64);
         let max_steps = self.max_steps;
         println!(
-            "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}. Runs per thread: {:?}",
+            "Runs:\t\t\t{:?}\nMax Steps:\t\t{:?}\nNum Threads:\t\t{:?}\nRuns per thread:\t{:?}",
             n_runs,
             max_steps,
             num_workers,

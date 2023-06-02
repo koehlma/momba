@@ -81,7 +81,7 @@ struct NN {
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     goal_property: String,
-    #[clap(about = "Neural Network in a json file.")]
+    #[clap(about = "Neural Network describe in a json file.")]
     nn: String,
     #[clap(
         short,
@@ -350,10 +350,7 @@ fn check_nn(nn_command: NN) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker
-        .n_threads(nn_command.n_threads)
-        .max_steps(500)
-        ._with_n_runs(1000);
+    stat_checker = stat_checker.n_threads(nn_command.n_threads);
 
     println!("Checking Property: {}", prop_name);
 

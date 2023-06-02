@@ -269,6 +269,8 @@ where
     rng: RefCell<StdRng>,
     /// Action resolver that helps in resolving the undeterminism.
     action_resolver_v2: EdgeByIndexResolverV2<T>,
+    /// Map that indicates the ordering of the global variables
+    keys_order: HashMap<String, usize>,
 }
 
 impl<'a, T> NnOracle<T>
@@ -288,6 +290,20 @@ where
         let action_resolver_v2 =
             EdgeByIndexResolverV2::new(explorer.clone(), instance_name.clone());
         //let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
+
+        // This is for ordering the global variables alphabetically
+        let mut g_keys: Vec<String> = vec![];
+        for id in explorer.network.declarations.global_variables.keys() {
+            if id.starts_with("local_") {
+                continue;
+            }
+            g_keys.push((*id).clone());
+        }
+        g_keys.sort();
+        let mut keys_order: HashMap<String, usize> = HashMap::new();
+        for (i, s) in g_keys.into_iter().enumerate() {
+            keys_order.insert(s, i);
+        }
         NnOracle {
             _input_size: input_size,
             output_size,
@@ -296,35 +312,36 @@ where
             model_wrapper: ModelWrapper::new(Arc::new(nn)),
             rng: RefCell::new(rng),
             action_resolver_v2,
+            keys_order,
         }
     }
 
     fn state_to_tensor(&self, state: &State<T>) -> Tensor {
-        let mut vec_values = vec![];
+        //let mut vec_values = vec![];
+        let k = self.keys_order.len();
+        let mut vec_values = vec![0.0; k];
         for (id, t) in &self.explorer.network.declarations.global_variables {
             if id.starts_with("local_") {
-                // For the moment, we only use the global.
-                // TODO: check what to do about the observations, global, local and omnicient.
                 continue;
             }
             match t {
                 model::Type::Bool => panic!("Tensor type not valid"),
                 model::Type::Vector { element_type: _ } => panic!("Tensor type not valid"),
                 model::Type::Unknown => panic!("Tensor type not valid"),
-                model::Type::Float64 => vec_values.push(
-                    state
+                model::Type::Float64 => {
+                    vec_values[self.keys_order[id]] = state
                         .get_global_value(&self.explorer, &id)
                         .unwrap()
                         .unwrap_float64()
-                        .into_inner(),
-                ),
-                model::Type::Int64 => vec_values.push(
-                    state
+                        .into_inner()
+                }
+                model::Type::Int64 => {
+                    vec_values[self.keys_order[id]] = state
                         .get_global_value(&self.explorer, &id)
                         .unwrap()
-                        .unwrap_int64() as f64,
-                ),
-            };
+                        .unwrap_int64() as f64
+                }
+            }
         }
         let tensor = Tensor::of_slice(&vec_values);
         tensor
@@ -423,7 +440,15 @@ where
                 if selected_transitions.is_empty() {
                     panic!("Empty selected transitions...");
                 }
-                return selected_transitions.into_iter().choose(&mut *rng).unwrap();
+                let t = selected_transitions.into_iter().choose(&mut *rng).unwrap();
+                // println!(
+                //     "{:?} v {:?}. nrv:{:?}. {:?}",
+                //     t.result_action(),
+                //     t.local_actions(),
+                //     t.numeric_reference_vector(),
+                //     action,
+                // );
+                t
             }
         }
     }

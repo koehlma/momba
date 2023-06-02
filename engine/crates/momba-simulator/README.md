@@ -28,12 +28,14 @@ Decision Processes, and can be easily used to explore new oracles.
     - If not specified the instance name, uses the one with index 0.
 
 ## Features
+- Okamoto bound for amount of runs needed.
 - SMC for DTMC, sequential and in parallel.
 - SPRT implementation for DTMC. 
 - DSMC using a NN json file, or a custom Oracle of your choice.
 
 ## Future work
 
+- Other simulation bounds. 
 - Generalization of oracle funtion.
 - Dead predicates.
 - Implementation of training for the NN.

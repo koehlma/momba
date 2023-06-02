@@ -3,23 +3,23 @@ use hashbrown::{HashMap, HashSet};
 use momba_explore::{model::Automaton, *};
 use std::sync::Arc;
 
-pub enum Actions {
-    EdgeByIndex,
-    //The edge is chosen based on its index.
-    EdgeByLabel,
-    //The edge is chosen based on its label.
-}
+// pub enum Actions {
+//     EdgeByIndex,
+//     //The edge is chosen based on its index.
+//     EdgeByLabel,
+//     //The edge is chosen based on its label.
+// }
 
-#[derive(PartialEq, Debug)]
-pub enum Observations {
-    //Specifies what is observable by the agent
-    GlobalOnly,
-    //Only global variables are observable
-    LocalAndGlobal,
-    //Local and global variables are observable
-    Omniscient,
-    //All (non-transient) variables are observable
-}
+// #[derive(PartialEq, Debug)]
+// pub enum Observations {
+//     //Specifies what is observable by the agent
+//     GlobalOnly,
+//     //Only global variables are observable
+//     LocalAndGlobal,
+//     //Local and global variables are observable
+//     Omniscient,
+//     //All (non-transient) variables are observable
+// }
 
 pub trait ActionResolver<T: time::Time> {
     /// Available (v0) puts on the vector out boolean values indicating which
@@ -42,6 +42,8 @@ pub trait ActionResolver<T: time::Time> {
         action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>>;
 }
+
+//--- By index resolver.
 
 #[derive(Clone)]
 pub struct EdgeByIndexResolver<T>
@@ -202,6 +204,7 @@ where
     }
 }
 
+//--- By index resolver. But well done.
 #[derive(Clone)]
 pub struct EdgeByIndexResolverV2<T>
 where
@@ -305,7 +308,7 @@ where
         todo!()
     }
 }
-
+//--- By Label resolver.
 pub struct EdgeByLabelResolver<'a, T>
 where
     T: time::Time,
