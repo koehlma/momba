@@ -3,6 +3,8 @@ use std::{
     collections::HashMap,
     fmt::Write,
     sync::{atomic, Arc},
+    thread::sleep,
+    time::Duration,
 };
 
 use indicatif::{ProgressBar, ProgressState, ProgressStyle};
@@ -269,8 +271,8 @@ where
         Self {
             sim,
             goal,
-            eps: 0.05,
-            delta: 0.1,
+            eps: 0.01,
+            delta: 0.05,
             max_steps: 5000,
             x: 0.0,
             alpha: 1.0,
@@ -282,7 +284,7 @@ where
     }
 
     /// set field: steps
-    pub fn max_steps(mut self, max_steps: usize) -> Self {
+    pub fn _max_steps(mut self, max_steps: usize) -> Self {
         self.max_steps = max_steps;
         self
     }
@@ -339,9 +341,9 @@ where
         self
     }
 
+    /// Set number of runs for the simulation.
+    /// If not used, then the simulations uses the Okamoto bound.
     fn number_of_runs(&self) -> u64 {
-        // If the number was fixed, then uses that value, otherwise,
-        // computes the value using eps and delta
         match self.n_runs {
             None => {
                 println!(
@@ -419,6 +421,11 @@ where
         G: Fn(&S::State<'_>) -> bool + Clone + Send + Sync,
     {
         let n_runs = self.number_of_runs();
+        let pb = ProgressBar::new(n_runs);
+        pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+        .unwrap()
+        .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
+        .progress_chars("#>-"));
         let num_workers = self.n_threads;
         let countdown = atomic::AtomicI64::new(n_runs as i64);
         let max_steps = self.max_steps;
@@ -457,10 +464,16 @@ where
                     }
                 });
             }
+            while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
+                let c = n_runs as i64 - countdown.fetch_add(0, atomic::Ordering::Relaxed);
+                pb.set_position(c as u64);
+                sleep(Duration::new(1, 0));
+            }
         });
+        pb.finish();
         let score = goal_counter.into_inner() as i64;
         println!(
-            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}.",
+            "Results:\nMore steps needed:\t{:?}\nReached:\t\t{:?}\nDeadlocks:\t\t{:?}",
             more_steps_counter.into_inner() as i64,
             score,
             dead_counter.into_inner() as i64

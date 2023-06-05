@@ -1,5 +1,5 @@
 #[allow(dead_code)]
-use hashbrown::{HashMap, HashSet};
+use hashbrown::HashMap;
 use momba_explore::{model::Automaton, *};
 use std::sync::Arc;
 
@@ -22,29 +22,19 @@ use std::sync::Arc;
 // }
 
 pub trait ActionResolver<T: time::Time> {
-    /// Available (v0) puts on the vector out boolean values indicating which
+    /// Available puts on the vector out boolean values indicating which
     /// index of transitions are available from that state.
     fn available(&self, state: &State<T>, out: &mut Vec<bool>);
-    /// Resolve (v0) takes a set of transitions and an action, and returns a
+    /// Resolve takes a set of transitions and an action, and returns a
     /// vector with the transitions that can be done with that action.
     fn resolve<'s, 't>(
         &self,
         transitions: &'t [Transition<'s, T>],
         action: i64,
     ) -> Vec<&'t Transition<'s, T>>;
-    /// Resolve also takes a set of transitions, but instead of an action,
-    /// takes a dict that maps the index of the edges to the output
-    /// result of the NN. So it can compute the highest scored action.
-    /// Returns also a vector with the transitions that can be done with that action.
-    fn resolve_with_map<'s, 't>(
-        &self,
-        transitions: &'t [Transition<'s, T>],
-        action_map: &HashMap<i64, f64>,
-    ) -> Vec<&'t Transition<'s, T>>;
 }
 
 //--- By index resolver.
-
 #[derive(Clone)]
 pub struct EdgeByIndexResolver<T>
 where
@@ -95,166 +85,6 @@ where
 {
     fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
         out.clear();
-        let mut available_actions: HashSet<i64> = HashSet::new();
-        let id = self.get_instance();
-        // See which action i can take from this state
-        for t in self.explorer.transitions(&state).iter() {
-            //println!("{:?}", t.numeric_reference_vector());
-            for (ins, value) in t.numeric_reference_vector().iter() {
-                if *ins == id {
-                    //println!("Inserting action: {:?}", value);
-                    available_actions.insert(*value as i64);
-                }
-            }
-        }
-        available_actions.remove(&-1);
-        for act in 0..self.num_actions {
-            out.push(available_actions.contains(&act))
-        }
-        // Push inside of the out vector a boolean value if that indexed action
-        // is available from this state.
-    }
-
-    //Available should, given a state, return the available actions for the state
-    //Resolve, should given an action (the one available with the highest value) return the transitions.
-
-    fn resolve<'s, 't>(
-        &self,
-        transitions: &'t [Transition<'s, T>],
-        action: i64,
-    ) -> Vec<&'t Transition<'s, T>> {
-        let id = self.get_instance();
-        let mut remove_trans_idxs = vec![];
-        for (i, t) in transitions.into_iter().enumerate() {
-            for (ins, value) in t.numeric_reference_vector().iter() {
-                if *ins == id && *value != action as usize {
-                    //println!("Removing action: {:?}, at index:{:?}", value, i);
-                    remove_trans_idxs.push(i);
-                };
-            }
-        }
-
-        let out_transitions: Vec<&Transition<T>> = transitions
-            .iter()
-            .enumerate()
-            .filter(|(i, _)| !remove_trans_idxs.contains(i))
-            .map(|(_, t)| t)
-            .collect();
-        /*
-        This will clean all the available transitions that do not match with the
-        computed action.
-        println!("{:#?}", remove_trans_idxs);
-        println!("len after: {:#?}. len Before: {:?}", out_transitions.len(), transitions.len());
-        */
-
-        out_transitions
-    }
-
-    fn resolve_with_map<'s, 't>(
-        &self,
-        transitions: &'t [Transition<'s, T>],
-        action_map: &HashMap<i64, f64>,
-    ) -> Vec<&'t Transition<'s, T>> {
-        let instance_id = self.get_instance();
-
-        let mut actions = vec![];
-        for t in transitions.into_iter() {
-            for (ins, value) in t.numeric_reference_vector().into_iter() {
-                if ins == instance_id {
-                    actions.push(value as i64);
-                };
-            }
-        }
-
-        // Actions contains the actions I can do with the transitions i have, from the controlled instance.
-
-        // So, if actions is empty, it means that from the transitions, I dont
-        // have anyone on the controlled automata.
-
-        // If it is not empty, then, i have to choose the transition with
-        // the action that contains the highest Q-val.
-        if !actions.is_empty() {
-            let mut keep_actions = vec![];
-            for (i, _) in action_map.into_iter() {
-                if actions.contains(i) {
-                    keep_actions.push(i);
-                }
-            }
-
-            let filtered_map: HashMap<i64, f64> = action_map
-                .iter()
-                .filter(|(k, _v)| keep_actions.contains(k)) //_v.is_nan() ||
-                .map(|(k, v)| (*k, *v))
-                .collect();
-
-            let mut max_key: i64 = -1;
-            let mut max_val: f64 = f64::NEG_INFINITY;
-            for (k, v) in filtered_map.iter() {
-                if *v >= max_val {
-                    max_key = *k;
-                    max_val = *v;
-                }
-            }
-            //println!("Choosed action: {:?}. Actions: {:?}", max_key, actions);
-            return self.resolve(transitions, max_key);
-        } else {
-            //println!("Actions empty");
-            transitions.iter().collect()
-        }
-    }
-}
-
-//--- By index resolver. But well done.
-#[derive(Clone)]
-pub struct EdgeByIndexResolverV2<T>
-where
-    T: time::Time,
-{
-    num_actions: i64,
-    explorer: Arc<Explorer<T>>,
-    instance: usize,
-}
-
-impl<'a, T: time::Time> EdgeByIndexResolverV2<T> {
-    pub fn new(explorer: Arc<Explorer<T>>, name: Option<String>) -> Self {
-        let default = String::from("0");
-        let instance_name = format!("_{}", name.unwrap_or_default());
-        let instance_id = &explorer
-            .network
-            .automata
-            .keys()
-            .filter(|name| name.ends_with(&instance_name))
-            .next()
-            .unwrap_or_else(|| {
-                println!("Using default value for index automata: 0");
-                &default
-            })
-            .strip_suffix(&instance_name)
-            .unwrap_or("0");
-
-        let mut num_actions: i64 = 0;
-        for (_, l) in (&explorer.network.automata.values().next().unwrap().locations).into_iter() {
-            num_actions += l.edges.len() as i64;
-        }
-
-        EdgeByIndexResolverV2 {
-            num_actions,
-            instance: instance_id.parse::<usize>().unwrap(),
-            explorer,
-        }
-    }
-
-    fn get_instance(&self) -> usize {
-        self.instance
-    }
-}
-
-impl<'a, T> ActionResolver<T> for EdgeByIndexResolverV2<T>
-where
-    T: time::Time,
-{
-    fn available(&self, state: &State<T>, out: &mut Vec<bool>) {
-        out.clear();
         let id = self.get_instance();
         let mut actions: Vec<usize> = vec![];
         for t in self.explorer.transitions(&state).into_iter() {
@@ -298,14 +128,6 @@ where
             .filter(|(i, _)| keep_idx.contains(i))
             .map(|(_, t)| t)
             .collect()
-    }
-
-    fn resolve_with_map<'s, 't>(
-        &self,
-        _transitions: &'t [Transition<'s, T>],
-        _action_map: &HashMap<i64, f64>,
-    ) -> Vec<&'t Transition<'s, T>> {
-        todo!()
     }
 }
 //--- By Label resolver.
@@ -365,13 +187,6 @@ where
         &self,
         _transitions: &'t [Transition<'s, T>],
         _action: i64,
-    ) -> Vec<&'t Transition<'s, T>> {
-        todo!()
-    }
-    fn resolve_with_map<'s, 't>(
-        &self,
-        _transitions: &'t [Transition<'s, T>],
-        _action_map: &HashMap<i64, f64>,
     ) -> Vec<&'t Transition<'s, T>> {
         todo!()
     }

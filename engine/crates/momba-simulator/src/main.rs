@@ -40,7 +40,7 @@ enum Command {
     #[clap(about = "Runs SPRT with an uniform scheduler")]
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
-    NN(NN),
+    DSMCNN(NN),
 }
 
 #[derive(Clap)]
@@ -203,8 +203,8 @@ fn smc(smc_command: SMC) {
 
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
-    let oracle_seed = 10;
-    let state_iter_seed = 10;
+    let oracle_seed = 23;
+    let state_iter_seed = 23;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -212,8 +212,7 @@ fn smc(smc_command: SMC) {
     );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.max_steps(10000);
+    let stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -250,8 +249,8 @@ fn par_smc(psmc_command: ParSMC) {
     let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let oracle_seed = 10;
-    let state_iter_seed = 10;
+    let oracle_seed = 23;
+    let state_iter_seed = 23;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -286,8 +285,8 @@ fn sprt(sprt_command: SPRT) {
     let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
     let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    let oracle_seed = 10;
-    let state_iter_seed = 10;
+    let oracle_seed = 23;
+    let state_iter_seed = 23;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -305,7 +304,7 @@ fn sprt(sprt_command: SPRT) {
     println!("Result: {:?}", result);
 }
 
-fn check_nn(nn_command: NN) {
+fn dsmc_nn(nn_command: NN) {
     let model_path = Path::new(&nn_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
@@ -334,7 +333,7 @@ fn check_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let arc_explorer = Arc::new(explorer);
-    let oracle_seed = 17;
+    let oracle_seed = 23;
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
@@ -342,7 +341,7 @@ fn check_nn(nn_command: NN) {
         StdRng::seed_from_u64(oracle_seed),
     );
 
-    let state_iter_seed = 17;
+    let state_iter_seed = 23;
     let mut simulator = simulate::StateIter::new(
         arc_explorer.clone(),
         nn_oracle,
@@ -382,6 +381,6 @@ fn main() {
         Command::SMC(smc_command) => smc(smc_command),
         Command::ParSMC(psmc_command) => par_smc(psmc_command),
         Command::SPRT(sprt_command) => sprt(sprt_command),
-        Command::NN(nn_command) => check_nn(nn_command),
+        Command::DSMCNN(nn_command) => dsmc_nn(nn_command),
     }
 }

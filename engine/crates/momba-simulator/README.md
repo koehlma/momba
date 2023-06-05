@@ -19,11 +19,13 @@ Decision Processes, and can be easily used to explore new oracles.
 [4]: http://dx.doi.org/10.22028/D291-36816
 
 ## Commands
-- `info <model>.json`: gives information about the model
+- `python3 -m momba.engine translate <model>.jani <output_folder>`: Tranlates the JANI model into the output folder.
+    - Writes JSON files, one for the model and one for each of the properties on the JANI file.
+- `info <model>.json`: gives information about the model.
 - `smc <model>.json <prop>.json`: runs SMC on the model, using a uniform oracle. If its DTMC, just simulates runs.
 - `par-smc <model>.json <prop>.json`: runs SMC parallel, using a uniform oracle.
     - Optionals: `-n <number of threads>`
-- `nn <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
+- `dsmcnn <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
     - Optionals: `-n <number of threads>`; `-i <controlled instance name>`
     - If not specified the instance name, uses the one with index 0.
 
@@ -31,14 +33,14 @@ Decision Processes, and can be easily used to explore new oracles.
 - Okamoto bound for amount of runs needed.
 - SMC for DTMC, sequential and in parallel.
 - SPRT implementation for DTMC. 
-- DSMC using a NN json file, or a custom Oracle of your choice.
+- DSMC using a NN json file as the oracle.
 
 ## Future work
 
 - Other simulation bounds. 
-- Generalization of oracle funtion.
+- Generalization of oracle function.
 - Dead predicates.
 - Implementation of training for the NN.
 - Action resolver by label.
 - Support for expected-like properties.
-- Use of local variables for the training of the model.
+- Support Scheduler Sampling for MDPs.
