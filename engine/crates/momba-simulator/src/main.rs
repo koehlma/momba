@@ -3,6 +3,7 @@ use rand::rngs::StdRng;
 use rand::SeedableRng;
 
 use std::fs::File;
+
 use std::io::BufReader;
 use std::path::Path;
 use std::sync::Arc;
@@ -13,6 +14,7 @@ use clap::Clap;
 use momba_explore::{model::Expression, time::Float64Zone, *};
 
 mod nn_oracle;
+mod sched_sampler;
 mod simulate;
 use crate::nn_oracle::*;
 use crate::simulate::StatisticalSimulator;
@@ -40,6 +42,20 @@ enum Command {
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
     DSMCNN(NN),
+    #[clap(about = "Testing")]
+    SchedSampler(SchedSampler),
+}
+
+#[derive(Clap)]
+struct SchedSampler {
+    #[clap(about = "A MombaCR model")]
+    model: String,
+    #[clap(about = "A property generated in the MombaCR style")]
+    property: String,
+    #[clap(about = "Amount of schedulers to sample")]
+    num_schedulers: usize,
+    #[clap(short, long, default_value = "1", about = "number of thread to use")]
+    n_threads: usize,
 }
 
 #[derive(Clap)]
@@ -215,7 +231,7 @@ fn smc(smc_command: SMC) {
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
-    let (score, n_runs) = stat_checker.run_smc();
+    let (score, n_runs) = stat_checker.run_smc(true);
     let duration = start.elapsed();
     println!(
         "Time elapsed: {:?}. Estimated Probability: {:?}",
@@ -363,7 +379,7 @@ fn dsmc_nn(nn_command: NN) {
         )
     } else {
         let start = Instant::now();
-        let (score, n_runs) = stat_checker.run_smc();
+        let (score, n_runs) = stat_checker.run_smc(true);
         let duration = start.elapsed();
         println!(
             "Time elapsed: {:?}. Estimated Probability: {:?}",
@@ -371,6 +387,50 @@ fn dsmc_nn(nn_command: NN) {
             (score as f64 / n_runs as f64)
         )
     };
+}
+
+fn sample_schedulers(sample_command: SchedSampler) {
+    let model_path = Path::new(&sample_command.model);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
+
+    let prop_name = sample_command
+        .property
+        .split("/")
+        .last()
+        .unwrap()
+        .strip_suffix(".json")
+        .unwrap()
+        .strip_prefix("prop_")
+        .unwrap();
+    let prop_path = Path::new(&sample_command.property);
+    let goal_prop_file = File::open(prop_path).expect("Unable to open model file!");
+    let expr: Expression = serde_json::from_reader(BufReader::new(goal_prop_file)).unwrap();
+    let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
+
+    let arc_explorer = Arc::new(explorer);
+    let mut sampler = sched_sampler::SchedulerSampler::new(arc_explorer, goal);
+    sampler = sampler
+        ._max_steps(500)
+        ._with_n_runs(100)
+        .n_threads(sample_command.n_threads);
+
+    let start = Instant::now();
+    let best = sampler.sample_schedulers(sample_command.num_schedulers);
+    let duration = start.elapsed();
+
+    let best_result = sampler.run_specific_sample(best.0);
+
+    println!("Checking Property: {}", prop_name);
+    println!(
+        "Time elapsed: {:?}. Estimated Probability: {:?}. Seed: {:?}",
+        duration, best_result.1, best_result.0
+    );
 }
 
 fn main() {
@@ -381,5 +441,6 @@ fn main() {
         Command::ParSMC(psmc_command) => par_smc(psmc_command),
         Command::SPRT(sprt_command) => sprt(sprt_command),
         Command::DSMCNN(nn_command) => dsmc_nn(nn_command),
+        Command::SchedSampler(sample_command) => sample_schedulers(sample_command),
     }
 }

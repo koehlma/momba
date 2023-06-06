@@ -1,3 +1,6 @@
+use indicatif::{ProgressBar, ProgressState, ProgressStyle};
+use momba_explore::{model::Value, *};
+use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -6,11 +9,6 @@ use std::{
     thread::sleep,
     time::Duration,
 };
-
-use indicatif::{ProgressBar, ProgressState, ProgressStyle};
-use momba_explore::{model::Value, *};
-use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
-use rayon::{current_num_threads, prelude::*};
 
 /// Represents the Output of the SPRT simulations, saying if we are above
 /// or below of the provided *x* value
@@ -325,7 +323,7 @@ where
         self
     }
 
-    // setter for number of runs?
+    // set number of runs
     pub fn _with_n_runs(mut self, runs: u64) -> Self {
         self.n_runs = Some(runs as u64);
         self
@@ -334,10 +332,10 @@ where
     /// set field: n_threads
     pub fn n_threads(mut self, n_threads: usize) -> Self {
         self.n_threads = n_threads;
-        rayon::ThreadPoolBuilder::new()
-            .num_threads(n_threads)
-            .build_global()
-            .unwrap();
+        // rayon::ThreadPoolBuilder::new()
+        //     .num_threads(n_threads)
+        //     .build_global()
+        //     .unwrap();
         self
     }
 
@@ -378,37 +376,53 @@ where
     /// Run Statistical Model Checking.
     /// Returns a tuple containing the amount of times that reached the goal state,
     /// and the number of runs.
-    pub fn run_smc(mut self) -> (i64, i64) {
+    pub fn run_smc(mut self, display: bool) -> (i64, i64) {
         let n_runs = self.number_of_runs();
-        println!("Runs:\t\t{:?}\nMax Steps:\t{:?}", n_runs, self.max_steps);
         let mut score: i64 = 0;
         let mut count_more_steps_needed = 0;
         let mut deadlock_count = 0;
-        let mut _total_steps = 0;
-        let pb = ProgressBar::new(n_runs);
-        pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
-        .unwrap()
-        .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
-        .progress_chars("#>-"));
+        let mut total_steps = 0;
 
-        for _i in 0..n_runs {
-            //pb.inc(1);
-            pb.set_position(_i);
-            let v = self.simulate();
-            match v {
-                SimulationOutput::GoalReached(steps) => {
-                    score += 1;
-                    _total_steps += steps;
+        if display {
+            println!("Runs:\t\t{:?}\nMax Steps:\t{:?}", n_runs, self.max_steps);
+            let pb = ProgressBar::new(n_runs);
+            pb.set_style(ProgressStyle::with_template("{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+            .unwrap()
+            .with_key("eta", |state: &ProgressState, w: &mut dyn Write| write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap())
+            .progress_chars("#>-"));
+
+            for i in 0..n_runs {
+                pb.inc(1);
+                pb.set_position(i);
+                let v = self.simulate();
+                match v {
+                    SimulationOutput::GoalReached(steps) => {
+                        score += 1;
+                        total_steps += steps;
+                    }
+                    SimulationOutput::MaxSteps => count_more_steps_needed += 1,
+                    SimulationOutput::NoStatesAvailable => deadlock_count += 1,
                 }
-                SimulationOutput::MaxSteps => count_more_steps_needed += 1,
-                SimulationOutput::NoStatesAvailable => deadlock_count += 1,
+            }
+            pb.finish_with_message("Simulation Finished. Results:\n");
+            println!(
+            "More steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. Steps taken in total: {:?}.",
+            count_more_steps_needed, score, deadlock_count, total_steps
+            );
+        } else {
+            for _i in 0..n_runs {
+                let v = self.simulate();
+                match v {
+                    SimulationOutput::GoalReached(steps) => {
+                        score += 1;
+                        total_steps += steps;
+                    }
+                    SimulationOutput::MaxSteps => count_more_steps_needed += 1,
+                    SimulationOutput::NoStatesAvailable => deadlock_count += 1,
+                }
             }
         }
-        pb.finish_with_message("Simulation Finished. Results:\n");
-        println!(
-            "More steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. Steps taken in total: {:?}.",
-            count_more_steps_needed, score, deadlock_count, _total_steps
-        );
+
         (score, n_runs as i64)
     }
 
@@ -478,37 +492,6 @@ where
             score,
             dead_counter.into_inner() as i64
         );
-        (score, n_runs as i64)
-    }
-
-    /// Runs parallel SMC usign the library rayon and distributing the workload
-    /// on the amount of threads.
-    pub fn _run_parallel_smc(self) -> (i64, i64)
-    where
-        S: Simulator + Send + Clone + Sync,
-        G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
-    {
-        let n_runs = self.number_of_runs();
-        let n_threads = current_num_threads();
-        println!(
-            "Runs: {:?}. Max Steps: {:?}. Threads: {}",
-            n_runs as u64, self.max_steps, n_threads
-        );
-        let mut score: i64 = 0;
-        let mut _count_more_steps_needed = 0;
-        let mut _deadlocks = 0;
-        let updated = (0..n_runs as u64)
-            .into_par_iter()
-            .map(|_| _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
-
-        let result: Vec<_> = updated.collect();
-        for s_out in result {
-            match s_out {
-                SimulationOutput::GoalReached(_) => score += 1,
-                SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
-                SimulationOutput::NoStatesAvailable => _deadlocks += 1,
-            }
-        }
         (score, n_runs as i64)
     }
 
