@@ -423,9 +423,7 @@ fn sample_schedulers(sample_command: SchedSampler) {
     let start = Instant::now();
     let best = sampler.sample_schedulers(sample_command.num_schedulers);
     let duration = start.elapsed();
-
     let best_result = sampler.run_specific_sample(best.0);
-
     println!("Checking Property: {}", prop_name);
     println!(
         "Time elapsed: {:?}. Estimated Probability: {:?}. Seed: {:?}",

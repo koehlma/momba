@@ -5,7 +5,7 @@
 
 A library that provides Simulation capabilities to *Momba*.
 This crates contains a implementation of sequential and parallel 
-*Statistical Model Checking* for DTMC[[1]] and an implementation of SPRT[[3]]. 
+*Statistical Model Checking* for DTMC[[1]] and an implementation of the SPRT[[3]] algorithm. 
 For MDPs[[2]], the undeterminism can be resolved by DSMC[[4]] taken a JSON file
 with the layers of the networks, or by using a Uniform Oracle.
 
@@ -28,19 +28,24 @@ Decision Processes, and can be easily used to explore new oracles.
 - `dsmcnn <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
     - Optionals: `-n <number of threads>`; `-i <controlled instance name>`
     - If not specified the instance name, uses the one with index 0.
+- `sched-sampler <model>.json <prop>.json <amount_of_schedulers>`: runs the sampling for the model, with the specified number of tries.
+    - Optionals: `-n <number of threads>`
+
+
 
 ## Features
 - Okamoto bound for amount of runs needed.
 - SMC for DTMC, sequential and in parallel.
 - SPRT implementation for DTMC. 
 - DSMC using a NN json file as the oracle.
+- Scheduler Sampling with hashing functions for MDPs.
 
 ## Future work
 
-- Other simulation bounds. 
+- Other simulation bounds.
+- Smart sampling of schedulers.
 - Generalization of oracle function.
 - Dead predicates.
 - Implementation of training for the NN.
 - Action resolver by label.
 - Support for expected-like properties.
-- Support Scheduler Sampling for MDPs.

@@ -2,9 +2,9 @@ use ahash::RandomState;
 use momba_explore::*;
 use rand::{rngs::StdRng, SeedableRng};
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use std::sync::Arc;
+use std::{ops::Div, sync::Arc};
 
-use crate::simulate::{self, Oracle, StatisticalSimulator};
+use crate::simulate::{self, Oracle, SimulationOutput, StatisticalSimulator};
 
 /// Implementation of the Oracle for a Hash Function.
 /// Keeps a reference to the explorer and the Hash Builder.
@@ -24,7 +24,8 @@ impl<T: time::Time> HashOracle<T> {
         }
     }
 
-    /// Translate the State to a vectorial representation, just like in the NN implementation.
+    /// Translate the State to a vectorial representation, just like in the NN implementation
+    /// but we parse all the element to bits or u64, because floats cant be hashed properly.
     fn state_representation(&self, state: &State<T>) -> Vec<u64> {
         let mut values = vec![];
         for (id, t) in &self.explorer.network.declarations.global_variables {
@@ -32,9 +33,14 @@ impl<T: time::Time> HashOracle<T> {
                 continue;
             }
             match t {
-                model::Type::Bool => panic!("Type not valid"),
                 model::Type::Vector { element_type: _ } => panic!("Type not valid"),
                 model::Type::Unknown => panic!("Type not valid"),
+                model::Type::Bool => values.push(
+                    state
+                        .get_global_value(&self.explorer, &id)
+                        .unwrap()
+                        .unwrap_bool() as u64,
+                ),
                 model::Type::Float64 => values.push(
                     state
                         .get_global_value(&self.explorer, &id)
@@ -91,7 +97,6 @@ where
 {
     explorer: Arc<Explorer<T>>,
     goal: G,
-    best: (usize, f64),
     n_threads: usize,
     max_steps: usize,
     n_runs: usize,
@@ -107,7 +112,6 @@ where
         SchedulerSampler {
             explorer,
             goal,
-            best: (0, -1.0),
             n_runs: 500,
             max_steps: 500,
             n_threads: 1,
@@ -139,6 +143,7 @@ where
     /// It does it in parallel using rayon lib.
     pub fn sample_schedulers(&mut self, amount_samples: usize) -> (usize, f64) {
         println!("Sampling between {:?} schedulers.", amount_samples);
+        let mut best = (0, -1.0);
         let updated = (0..amount_samples).into_par_iter().map(|i| {
             _run_sample(
                 self.explorer.clone(),
@@ -150,11 +155,25 @@ where
         });
         let result: Vec<_> = updated.collect();
         for (seed, score) in result {
-            if score > self.best.1 {
-                self.best = (seed, score);
+            // For the moment, it can only deal with Pmax properties.
+            if score > best.1 {
+                best = (seed, score);
             }
         }
-        self.best
+        best
+    }
+
+    fn _simulate(&mut self, seed: usize) -> SimulationOutput {
+        let mut state_iterator = simulate::StateIter::new(
+            self.explorer.clone(),
+            HashOracle::new(self.explorer.clone(), seed),
+            StdRng::seed_from_u64(10),
+        );
+        let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, self.goal);
+        stat_checker = stat_checker
+            ._with_n_runs(self.n_runs as u64)
+            ._max_steps(self.max_steps);
+        stat_checker.simulate()
     }
 
     /// Run with one specific seed.
