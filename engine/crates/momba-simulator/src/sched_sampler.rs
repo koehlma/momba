@@ -2,7 +2,7 @@ use ahash::RandomState;
 use momba_explore::*;
 use rand::{rngs::StdRng, SeedableRng};
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
-use std::{ops::Div, sync::Arc};
+use std::sync::Arc;
 
 use crate::simulate::{self, Oracle, SimulationOutput, StatisticalSimulator};
 
@@ -144,7 +144,20 @@ where
     pub fn sample_schedulers(&mut self, amount_samples: usize) -> (usize, f64) {
         println!("Sampling between {:?} schedulers.", amount_samples);
         let mut best = (0, -1.0);
+        // let pb = ProgressBar::new(amount_samples as u64);
+        // See how to fix the progress bar with rayon on parallel.
+        // pb.set_style(
+        //     ProgressStyle::with_template(
+        //         "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {percent}% ({eta})",
+        //     )
+        //     .unwrap()
+        //     .with_key("eta", |state: &ProgressState, w: &mut dyn Write| {
+        //         write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap()
+        //     })
+        //     .progress_chars("#>-"),
+        // );
         let updated = (0..amount_samples).into_par_iter().map(|i| {
+            //pb.set_position(i);
             _run_sample(
                 self.explorer.clone(),
                 self.goal,
@@ -153,6 +166,7 @@ where
                 self.n_runs,
             )
         });
+        // pb.finish();
         let result: Vec<_> = updated.collect();
         for (seed, score) in result {
             // For the moment, it can only deal with Pmax properties.
