@@ -1,10 +1,12 @@
+use crate::{
+    simulate::{self, Oracle, SimulationOutput, StatisticalSimulator},
+    MinMax,
+};
 use ahash::RandomState;
 use momba_explore::*;
 use rand::{rngs::StdRng, SeedableRng};
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use std::sync::Arc;
-
-use crate::simulate::{self, Oracle, SimulationOutput, StatisticalSimulator};
 
 /// Implementation of the Oracle for a Hash Function.
 /// Keeps a reference to the explorer and the Hash Builder.
@@ -100,21 +102,23 @@ where
     n_threads: usize,
     max_steps: usize,
     n_runs: usize,
+    op: MinMax,
 }
 
 impl<T, G> SchedulerSampler<T, G>
 where
-    T: time::Time + 'static,
+    T: time::Time + 'static + Clone,
     G: Fn(&&State<T>) -> bool + Sync + Send + Copy,
 {
     /// Create new Sampler.
-    pub fn new(explorer: Arc<Explorer<T>>, goal: G) -> Self {
+    pub fn new(explorer: Arc<Explorer<T>>, goal: G, op: MinMax) -> Self {
         SchedulerSampler {
             explorer,
             goal,
             n_runs: 500,
             max_steps: 500,
             n_threads: 1,
+            op,
         }
     }
 
@@ -142,8 +146,15 @@ where
     /// Sample Schedulers.
     /// It does it in parallel using rayon lib.
     pub fn sample_schedulers(&mut self, amount_samples: usize) -> (usize, f64) {
-        println!("Sampling between {:?} schedulers.", amount_samples);
-        let mut best = (0, -1.0);
+        println!(
+            "Sampling between {:?} schedulers. Type: {:?}",
+            amount_samples, self.op
+        );
+        let mut best: (usize, f64);
+        match self.op {
+            MinMax::Max => best = (0, 0.0),
+            MinMax::Min => best = (0, 1.0),
+        }
         // let pb = ProgressBar::new(amount_samples as u64);
         // See how to fix the progress bar with rayon on parallel.
         // pb.set_style(
@@ -169,11 +180,23 @@ where
         // pb.finish();
         let result: Vec<_> = updated.collect();
         for (seed, score) in result {
-            // For the moment, it can only deal with Pmax properties.
-            if score > best.1 {
-                best = (seed, score);
+            match self.op {
+                MinMax::Max => {
+                    if score > best.1 {
+                        best = (seed, score);
+                    }
+                }
+                MinMax::Min => {
+                    if score < best.1 {
+                        best = (seed, score);
+                    }
+                }
             }
         }
+        println!(
+            "Sampling finished. Seed: {:?} Score: {:?}\n",
+            best.0, best.1
+        );
         best
     }
 
@@ -184,9 +207,7 @@ where
             StdRng::seed_from_u64(10),
         );
         let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, self.goal);
-        stat_checker = stat_checker
-            ._with_n_runs(self.n_runs as u64)
-            ._max_steps(self.max_steps);
+        stat_checker = stat_checker._max_steps(self.max_steps);
         stat_checker.simulate()
     }
 
@@ -198,10 +219,9 @@ where
             StdRng::seed_from_u64(10),
         );
         let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, self.goal);
-        stat_checker = stat_checker
-            ._with_n_runs(self.n_runs as u64)
-            ._max_steps(self.max_steps);
-        let (score, n_runs) = stat_checker.run_smc(true);
+        stat_checker = stat_checker._max_steps(self.max_steps);
+
+        let (score, n_runs) = stat_checker.parallel_smc();
         let sim_result = score as f64 / n_runs as f64;
         (seed, sim_result)
     }
@@ -227,8 +247,9 @@ where
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
         ._with_n_runs(n_runs as u64)
-        ._max_steps(max_steps);
-    let (score, n_runs) = stat_checker.run_smc(false);
+        ._max_steps(max_steps)
+        ._display(false);
+    let (score, n_runs) = stat_checker.run_smc();
     let sim_result = score as f64 / n_runs as f64;
     (seed, sim_result)
 }

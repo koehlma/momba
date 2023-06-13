@@ -4,6 +4,8 @@
 import dataclasses as d
 import typing as t
 
+from momba.model.operators import MinMax
+
 
 from .. import engine, model
 
@@ -24,7 +26,9 @@ class Objective:
     dead_predicate: model.Expression
     r"""A boolean expression for :math:`\phi`."""
 
-    rewards_things: bool = False
+    # add here the min?max
+    op: model.operators.MinMax
+    r"""The type of Objective (min or max)."""
 
 
 def extract_objective(prop: model.Expression) -> Objective:
@@ -43,14 +47,22 @@ def extract_objective(prop: model.Expression) -> Objective:
             prop.predicate.predicate is model.properties.StatePredicate.INITIAL
         ), "Unsupported state predicate for aggregation."
         prop = prop.values
+
     if isinstance(prop, model.properties.Probability):
+        match prop.operator:
+            case MinMax.MIN:
+                op = prop.operator.MIN.name
+            case MinMax.MAX:
+                op = prop.operator.MAX.name
+
         prop = prop.formula
+
     if isinstance(prop, model.properties.UnaryPathFormula):
         assert (
             prop.operator is model.operators.UnaryPathOperator.EVENTUALLY
         ), "Unsupported unary path formula."
         return Objective(
-            goal_predicate=prop.formula, dead_predicate=model.ensure_expr(False)
+            goal_predicate=prop.formula, dead_predicate=model.ensure_expr(False), op=op
         )
     elif isinstance(prop, model.properties.BinaryPathFormula):
         assert (
@@ -59,16 +71,24 @@ def extract_objective(prop: model.Expression) -> Objective:
         lft = prop.left
         right = prop.right
         return Objective(
-            goal_predicate=right, dead_predicate=model.expressions.logic_not(lft)
+            goal_predicate=right, dead_predicate=model.expressions.logic_not(lft), op=op
         )
     elif isinstance(prop, model.properties.ExpectedReward):
-        # TODO: changue this, we need to support or something like that.
+        match prop.operator:
+            case MinMax.MIN:
+                op = prop.operator.MIN.name
+            case MinMax.MAX:
+                op = prop.operator.MAX.name
+        # TODO: change this, we need to support it but this its not the way.
         return Objective(
-            goal_predicate=prop.reachability, dead_predicate=model.ensure_expr(False)
+            goal_predicate=prop.reachability,
+            dead_predicate=model.ensure_expr(False),
+            op=op,
         )
     elif isinstance(prop, model.expressions.Comparison):
+        # TODO: change this, we need to support it but this its not the way.
         """
-        For example, the first 3 properties of teh firewire model are a composition
+        For example, the first 3 properties of the firewire model are a composition
         of expression with probabilities.
         """
         subprop_l = prop.left
@@ -81,7 +101,9 @@ def extract_objective(prop: model.Expression) -> Objective:
             lft = prop.left
             right = prop.right
             obj = Objective(
-                goal_predicate=lft, dead_predicate=model.expressions.logic_not(lft)
+                goal_predicate=lft,
+                dead_predicate=model.expressions.logic_not(lft),
+                op=op,
             )
 
             return obj

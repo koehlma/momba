@@ -1,14 +1,12 @@
-use indicatif::{ProgressBar, ProgressState, ProgressStyle};
-use momba_explore::{model::Value, *};
-use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use std::{
     cell::RefCell,
     collections::HashMap,
-    fmt::Write,
     sync::{atomic, Arc},
-    thread::sleep,
-    time::Duration,
 };
+
+use momba_explore::{model::Value, *};
+use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
+use rayon::{current_num_threads, prelude::*};
 
 /// Represents the Output of the SPRT simulations, saying if we are above
 /// or below of the provided *x* value
@@ -32,12 +30,12 @@ pub enum SimulationOutput {
 pub trait Oracle<T: time::Time> {
     /// Chooses a transition between the provided ones, and can have access to all
     /// the information of the current state.
-    /// Precondition: transitions is not empty.
+    /// Precondition: transitions slice is not empty.
     fn choose<'s, 't>(
         &self,
         state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'s, T>;
+    ) -> &'t Transition<'t, T>;
 }
 /// Oracle that resolves no-determinism uniformly
 #[derive(Clone)]
@@ -55,10 +53,10 @@ impl UniformOracle {
 
 impl<T: time::Time> Oracle<T> for UniformOracle {
     fn choose<'s, 't>(
-        &self,
+        &self, //&mut self
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'s, T> {
+    ) -> &'t Transition<'t, T> {
         let elected_transition = transitions
             .into_iter()
             .choose(&mut *(self.rng.borrow_mut()))
@@ -79,10 +77,10 @@ impl FIFOOracle {
 
 impl<T: time::Time> Oracle<T> for FIFOOracle {
     fn choose<'s, 't>(
-        &self,
+        &self, //&mut self
         _state: &State<T>,
         transitions: &'t [Transition<'s, T>],
-    ) -> &'t Transition<'s, T> {
+    ) -> &'t Transition<'t, T> {
         let elected_transition = transitions.first().unwrap();
         elected_transition
     }
@@ -256,8 +254,6 @@ pub struct StatisticalSimulator<'sim, S, G> {
     n_threads: usize,
     /// Number of runs in the simulation
     n_runs: Option<u64>,
-    /// Display initial conditions and progress.
-    display: bool,
 }
 
 /// Implementation of the struct.
@@ -280,12 +276,11 @@ where
             ind_reg: 0.0,
             n_threads: 1,
             n_runs: None,
-            display: true,
         }
     }
 
     /// set field: steps
-    pub fn _max_steps(mut self, max_steps: usize) -> Self {
+    pub fn max_steps(mut self, max_steps: usize) -> Self {
         self.max_steps = max_steps;
         self
     }
@@ -326,7 +321,7 @@ where
         self
     }
 
-    // set number of runs
+    // setter for number of runs?
     pub fn _with_n_runs(mut self, runs: u64) -> Self {
         self.n_runs = Some(runs as u64);
         self
@@ -335,26 +330,22 @@ where
     /// set field: n_threads
     pub fn n_threads(mut self, n_threads: usize) -> Self {
         self.n_threads = n_threads;
+        rayon::ThreadPoolBuilder::new()
+            .num_threads(n_threads)
+            .build_global()
+            .unwrap();
         self
     }
 
-    /// set display
-    pub fn _display(mut self, display: bool) -> Self {
-        self.display = display;
-        self
-    }
-
-    /// Set number of runs for the simulation.
-    /// If not used, then the simulations uses the Okamoto bound.
     fn number_of_runs(&self) -> u64 {
+        // If the number was fixed, then uses that value, otherwise,
+        // computes the value using eps and delta
         match self.n_runs {
             None => {
-                if self.display {
-                    println!(
-                        "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
-                        self.eps, self.delta
-                    );
-                }
+                println!(
+                    "P(error > ε) < δ.\nUsing ε = {:?} and δ = {:?}",
+                    self.eps, self.delta
+                );
                 let runs = (2.0 / self.delta).ln() / (2.0 * self.eps.powf(2.0));
                 runs as u64
             }
@@ -369,6 +360,7 @@ where
         self.sim.reset();
         let mut c: usize = 0;
         while let Some(state) = self.sim.next() {
+            //println!("---step: {:?}---", c);
             let next_state = state.into();
             if (self.goal)(&next_state) {
                 return SimulationOutput::GoalReached(c);
@@ -380,68 +372,36 @@ where
         return SimulationOutput::NoStatesAvailable;
     }
 
-    /// Statistical Model Checking Algorithm
-    /// Runs one simulation, return the values encoded in a tuple.
-    fn smc(&mut self) -> (i64, i64, i64) {
-        let mut score: i64 = 0;
-        let mut count_more_steps_needed = 0;
-        let mut deadlock_count = 0;
-        let v = self.simulate();
-        match v {
-            SimulationOutput::GoalReached(_) => {
-                score += 1;
-            }
-            SimulationOutput::MaxSteps => count_more_steps_needed += 1,
-            SimulationOutput::NoStatesAvailable => deadlock_count += 1,
-        }
-        (score, count_more_steps_needed, deadlock_count)
-    }
-
     /// Run Statistical Model Checking.
     /// Returns a tuple containing the amount of times that reached the goal state,
     /// and the number of runs.
     pub fn run_smc(mut self) -> (i64, i64) {
         let n_runs = self.number_of_runs();
+        println!("Runs: {:?}. Max Steps: {:?}", n_runs, self.max_steps);
         let mut score: i64 = 0;
-        if self.display {
-            let mut count_more_steps_needed = 0;
-            let mut deadlock_count = 0;
-            println!("Runs:\t\t{:?}\nMax Steps:\t{:?}", n_runs, self.max_steps);
-            let pb = ProgressBar::new(n_runs);
-            pb.set_style(
-                ProgressStyle::with_template(
-                    "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {percent}% ({eta})",
-                )
-                .unwrap()
-                .with_key("eta", |state: &ProgressState, w: &mut dyn Write| {
-                    write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap()
-                })
-                .progress_chars("#>-"),
-            );
-
-            for i in 0..n_runs {
-                pb.inc(1);
-                pb.set_position(i);
-                let (sim_score, sim_more_steps, sim_deadlock) = self.smc();
-                score += sim_score;
-                count_more_steps_needed += sim_more_steps;
-                deadlock_count += sim_deadlock;
-            }
-            pb.finish_with_message("Simulation Finished. Results:\n");
-            println!(
-                "More steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}",
-                count_more_steps_needed, score, deadlock_count
-            );
-        } else {
-            for _ in 0..n_runs {
-                let (sim_score, _, _) = self.smc();
-                score += sim_score;
+        let mut count_more_steps_needed = 0;
+        let mut deadlock_count = 0;
+        let mut _total_steps = 0;
+        for _i in 0..n_runs {
+            let v = self.simulate();
+            //println!("---Simulation Ended---: {:?}", v);
+            match v {
+                SimulationOutput::GoalReached(steps) => {
+                    score += 1;
+                    _total_steps += steps;
+                }
+                SimulationOutput::MaxSteps => count_more_steps_needed += 1,
+                SimulationOutput::NoStatesAvailable => deadlock_count += 1,
             }
         }
+        println!(
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}. steps taken: {:?}",
+            count_more_steps_needed, score, deadlock_count, _total_steps
+        );
         (score, n_runs as i64)
     }
 
-    /// Parallel SMC.
+    /// Explicitly run parallel SMC.
     /// Does not uses the Simulation Output enum, because this
     /// implementation uses the low level managment of threads.
     pub fn parallel_smc(&self) -> (i64, i64)
@@ -451,120 +411,132 @@ where
     {
         let n_runs = self.number_of_runs();
         let num_workers = self.n_threads;
-        let max_steps = self.max_steps;
         let countdown = atomic::AtomicI64::new(n_runs as i64);
+        let max_steps = self.max_steps;
+        println!(
+            "Runs: {:?}. Max Steps: {:?}. Num Threads: {:?}. Runs per thread: {:?}",
+            n_runs,
+            max_steps,
+            num_workers,
+            (n_runs as f64 / num_workers as f64)
+        );
         let goal_counter = atomic::AtomicUsize::new(0);
         let dead_counter = atomic::AtomicUsize::new(0);
         let more_steps_counter = atomic::AtomicUsize::new(0);
-
-        if self.display {
-            let pb = ProgressBar::new(n_runs);
-            pb.set_style(
-                ProgressStyle::with_template(
-                    "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {percent}% ({eta})",
-                )
-                .unwrap()
-                .with_key("eta", |state: &ProgressState, w: &mut dyn Write| {
-                    write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap()
-                })
-                .progress_chars("#>-"),
-            );
-            println!(
-                "Runs:\t\t\t{:?}\nMax Steps:\t\t{:?}\nNum Threads:\t\t{:?}\nRuns per thread:\t{:?}",
-                n_runs,
-                max_steps,
-                num_workers,
-                (n_runs as f64 / num_workers as f64)
-            );
-
-            std::thread::scope(|scope| {
-                for _i in 0..num_workers {
-                    let sim = self.sim.clone();
-                    let goal_counter = &goal_counter;
-                    let dead_counter = &dead_counter;
-                    let more_steps_counter = &more_steps_counter;
-                    let goal = &self.goal;
-                    let countdown = &countdown;
-                    scope.spawn(move || {
-                        let mut sim = sim;
-                        while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
-                            match simulate_run(&mut sim, goal, max_steps) {
-                                SimulationOutput::GoalReached(_) => {
-                                    goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
-                                SimulationOutput::MaxSteps => {
-                                    more_steps_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
-                                SimulationOutput::NoStatesAvailable => {
-                                    dead_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
+        std::thread::scope(|scope| {
+            for _ in 0..num_workers {
+                let sim = self.sim.clone();
+                let goal_counter = &goal_counter;
+                let dead_counter = &dead_counter;
+                let more_steps_counter = &more_steps_counter;
+                let goal = &self.goal;
+                let countdown = &countdown;
+                scope.spawn(move || {
+                    let mut sim = sim;
+                    while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
+                        match simulate_run(&mut sim, goal, max_steps) {
+                            SimulationOutput::GoalReached(_) => {
+                                goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                            }
+                            SimulationOutput::MaxSteps => {
+                                more_steps_counter.fetch_add(1, atomic::Ordering::Relaxed);
+                            }
+                            SimulationOutput::NoStatesAvailable => {
+                                dead_counter.fetch_add(1, atomic::Ordering::Relaxed);
                             }
                         }
-                    });
-                }
-                while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
-                    let c = n_runs as i64 - countdown.fetch_add(0, atomic::Ordering::Relaxed);
-                    pb.set_position(c as u64);
-                    sleep(Duration::new(1, 0));
-                }
-            });
-            pb.finish();
-        } else {
-            std::thread::scope(|scope| {
-                for _i in 0..num_workers {
-                    let sim = self.sim.clone();
-                    let goal_counter = &goal_counter;
-                    let dead_counter = &dead_counter;
-                    let more_steps_counter = &more_steps_counter;
-                    let goal = &self.goal;
-                    let countdown = &countdown;
-                    scope.spawn(move || {
-                        let mut sim = sim;
-                        while countdown.fetch_sub(1, atomic::Ordering::Relaxed) > 0 {
-                            match simulate_run(&mut sim, goal, max_steps) {
-                                SimulationOutput::GoalReached(_) => {
-                                    goal_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
-                                SimulationOutput::MaxSteps => {
-                                    more_steps_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
-                                SimulationOutput::NoStatesAvailable => {
-                                    dead_counter.fetch_add(1, atomic::Ordering::Relaxed);
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
+                    }
+                });
+            }
+        });
         let score = goal_counter.into_inner() as i64;
+        println!(
+            "Results:\nMore steps needed: {:?}.\tReached: {:?}.\tDeadlocks: {:?}.",
+            more_steps_counter.into_inner() as i64,
+            score,
+            dead_counter.into_inner() as i64
+        );
+        (score, n_runs as i64)
+    }
 
-        if self.display {
-            println!(
-                "Results:\nMore steps needed:\t{:?}\nReached:\t\t{:?}\nDeadlocks:\t\t{:?}",
-                more_steps_counter.into_inner() as i64,
-                score,
-                dead_counter.into_inner() as i64
-            );
+    /// Runs parallel SMC usign the library rayon and distribution the wrokload
+    /// on the amount of threads.
+    pub fn _run_parallel_smc(self) -> (i64, i64)
+    where
+        S: Simulator + Send + Clone + Sync,
+        G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
+    {
+        let n_runs = self.number_of_runs();
+        let n_threads = current_num_threads();
+        println!(
+            "Runs: {:?}. Max Steps: {:?}. Threads: {}",
+            n_runs as u64, self.max_steps, n_threads
+        );
+        let mut score: i64 = 0;
+        let mut _count_more_steps_needed = 0;
+        let mut _deadlocks = 0;
+        let updated = (0..n_runs as u64)
+            .into_par_iter()
+            .map(|_| _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps));
+
+        let result: Vec<_> = updated.collect();
+        for sout in result {
+            match sout {
+                SimulationOutput::GoalReached(_) => score += 1,
+                SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
+                SimulationOutput::NoStatesAvailable => _deadlocks += 1,
+            }
+        }
+        (score, n_runs as i64)
+    }
+
+    fn _run_parallel_smc_pool(self) -> (i64, i64)
+    where
+        S: Simulator + Send + Clone + Sync,
+        G: Fn(&S::State<'_>) -> bool + Send + Clone + Sync,
+    {
+        let pool = rayon::ThreadPoolBuilder::new()
+            .num_threads(self.n_threads)
+            .build()
+            .unwrap();
+        let n_runs = self.number_of_runs();
+        let mut score: i64 = 0;
+        let mut _count_more_steps_needed = 0;
+        let cycles = (n_runs as f64 / self.n_threads as f64) as i64;
+        let mut simulators: Vec<&S> = vec![];
+        for _ in 0..current_num_threads() {
+            simulators.push((&self.sim).clone())
+        }
+        println!(
+            "Runs: {:?}. Max Steps: {:?}. Cycles: {}. Threads: {}",
+            n_runs, self.max_steps, cycles, self.n_threads
+        );
+        for _ in 0..cycles {
+            let v = pool.broadcast(|_| {
+                _parallel_simulation(self.sim.clone(), self.goal.clone(), self.max_steps)
+            });
+            for sout in v {
+                match sout {
+                    SimulationOutput::GoalReached(_) => score += 1,
+                    SimulationOutput::MaxSteps => _count_more_steps_needed += 1,
+                    SimulationOutput::NoStatesAvailable => {
+                        println!("No States Available, something went wrong...");
+                    }
+                }
+            }
         }
         (score, n_runs as i64)
     }
 
     /// Runs the simulation of SPRT algorithm.
     pub fn run_sprt(mut self) -> SprtComparison {
-        if self.display {
-            println!(
-            "SPRT algorithm with: \n\t Max Steps: {:?}\n\t Indifference region: {:?}\n\t x: {:?}\n\t Type Err I: {:?} - Type Err II: {:?} ",
-            self.max_steps, self.ind_reg, self.x, self.alpha, self.beta
-        );
-        }
         let p0 = (self.x + self.ind_reg).min(1.0);
         let p1 = (self.x - self.ind_reg).max(0.0);
         let a = ((1.0 - self.alpha) / self.beta).log10();
         let b = (self.beta / (1.0 - self.alpha)).log10();
         let mut finisihed = false;
         let mut r: f64 = 0.0;
+        let mut _count_more_steps_needed = 0;
         let mut runs = 0;
         let mut result: Option<SprtComparison> = None;
         while !finisihed {
@@ -573,23 +545,20 @@ where
             match v {
                 SimulationOutput::GoalReached(_) => r += p1.log10() - p0.log10(),
                 SimulationOutput::MaxSteps => {
-                    r += (1.0 - p1).log10() - (1.0 - p0).log10();
+                    _count_more_steps_needed += 1;
+                    r += (1.0 - p1).log10() - (1.0 - p0).log10()
                 }
                 SimulationOutput::NoStatesAvailable => {
-                    r += (1.0 - p1).log10() - (1.0 - p0).log10();
+                    println!("No States Available, something went wrong...");
                 }
             }
             if r <= b {
                 finisihed = true;
-                if self.display {
-                    println!("P(<>G)>={}>={}. In {} runs.", p0, self.x, runs);
-                }
+                println!("P(<>G)>={}>={}", p0, self.x);
                 result = Some(SprtComparison::BiggerThan(runs));
             } else if r >= a {
                 finisihed = true;
-                if self.display {
-                    println!("P(<>G)<={}<={}. In {} runs.", p1, self.x, runs);
-                }
+                println!("P(<>G)<={}<={}", p1, self.x);
                 result = Some(SprtComparison::LesserThan(runs));
             }
         }

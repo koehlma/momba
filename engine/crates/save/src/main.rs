@@ -1,7 +1,6 @@
 use hashbrown::HashSet;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
-use serde::{Deserialize, Serialize};
 
 use std::fs::File;
 use std::io::BufReader;
@@ -13,8 +12,8 @@ use clap::Clap;
 
 use momba_explore::{model::Expression, time::Float64Zone, *};
 
+mod custom_oracles;
 mod nn_oracle;
-mod sched_sampler;
 mod simulate;
 use crate::nn_oracle::*;
 use crate::simulate::StatisticalSimulator;
@@ -41,21 +40,7 @@ enum Command {
     #[clap(about = "Runs SPRT with an uniform scheduler")]
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
-    DSMCNN(NN),
-    #[clap(about = "Testing")]
-    SchedSampler(SchedSampler),
-}
-
-#[derive(Clap)]
-struct SchedSampler {
-    #[clap(about = "A MombaCR model")]
-    model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
-    property: String,
-    #[clap(about = "Amount of schedulers to sample")]
-    num_schedulers: usize,
-    #[clap(short, long, default_value = "1", about = "number of thread to use")]
-    n_threads: usize,
+    NN(NN),
 }
 
 #[derive(Clap)]
@@ -86,8 +71,6 @@ struct SPRT {
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(about = "x such that P(F goal)~x")]
-    x: f64,
 }
 
 #[derive(Clap)]
@@ -96,7 +79,7 @@ struct NN {
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     goal_property: String,
-    #[clap(about = "Neural Network describe in a json file.")]
+    #[clap(about = "Neural Network in a json file.")]
     nn: String,
     #[clap(
         short,
@@ -196,31 +179,17 @@ fn info_of_the_model(info_command: Info) {
     )
 }
 
-#[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
-struct Property {
-    operator: MinMax,
-    goal: Expression,
-    dead: Expression,
-}
-
-#[derive(Serialize, Deserialize, Eq, PartialEq, Hash, Clone, Debug)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum MinMax {
-    Min,
-    Max,
-}
-
-fn smc(smc_command: SMC) {
-    let model_path = Path::new(&smc_command.model);
+fn smc(walks: SMC) {
+    let model_path = Path::new(&walks.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&smc_command.property);
+    let prop_path = Path::new(&walks.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = smc_command
+    let prop_name = walks
         .property
         .split("/")
         .last()
@@ -230,13 +199,10 @@ fn smc(smc_command: SMC) {
         .strip_prefix("prop_")
         .unwrap();
 
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let goal_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&prop.goal);
-
-    let oracle_seed = 23;
-    let state_iter_seed = 23;
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
+    let oracle_seed = 10;
+    let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -244,7 +210,8 @@ fn smc(smc_command: SMC) {
     );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
+    let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
+    stat_checker = stat_checker.max_steps(10000);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -257,17 +224,17 @@ fn smc(smc_command: SMC) {
     );
 }
 
-fn par_smc(psmc_command: ParSMC) {
-    let model_path = Path::new(&psmc_command.model);
+fn par_smc(walks: ParSMC) {
+    let model_path = Path::new(&walks.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&psmc_command.property);
+    let prop_path = Path::new(&walks.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = psmc_command
+    let prop_name = walks
         .property
         .split("/")
         .last()
@@ -277,14 +244,12 @@ fn par_smc(psmc_command: ParSMC) {
         .strip_prefix("prop_")
         .unwrap();
 
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let goal_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&prop.goal);
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let oracle_seed = 23;
-    let state_iter_seed = 23;
+    let oracle_seed = 10;
+    let state_iter_seed = 10;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
@@ -292,7 +257,7 @@ fn par_smc(psmc_command: ParSMC) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.n_threads(psmc_command.n_threads);
+    stat_checker = stat_checker.n_threads(walks.n_threads);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -305,50 +270,46 @@ fn par_smc(psmc_command: ParSMC) {
     );
 }
 
-fn sprt(sprt_command: SPRT) {
-    let model_path = Path::new(&sprt_command.model);
+fn sprt(walks: SPRT) {
+    let model_path = Path::new(&walks.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&sprt_command.property);
+    let prop_path = Path::new(&walks.property);
     let prop_file = File::open(prop_path).expect("Unable to open model file!");
 
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let goal_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&prop.goal);
+    let expr: Expression = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
-    let oracle_seed = 23;
-    let state_iter_seed = 23;
+    let oracle_seed = 42;
+    let state_iter_seed = 77;
     let mut state_iterator = simulate::StateIter::new(
         Arc::new(explorer),
         simulate::UniformOracle::new(StdRng::seed_from_u64(oracle_seed)),
         StdRng::seed_from_u64(state_iter_seed),
     );
-    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
+    let goal = |s: &&State<Float64Zone>| s.evaluate(&comp_expr).unwrap_bool();
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
-        ._with_x(sprt_command.x)
-        ._with_ind_reg(0.005)
-        ._with_alpha(0.05)
-        ._with_beta(0.05);
-    let result = stat_checker.run_sprt();
-    println!("Result: {:?}", result);
+        ._with_x(0.85)
+        ._with_ind_reg(0.05)
+        ._with_alpha(0.1)
+        ._with_beta(0.1);
+    let testt = stat_checker.run_sprt();
+    println!("Estimated Probability:  {:?}", testt);
 }
 
-fn dsmc_nn(nn_command: NN) {
+fn check_nn(nn_command: NN) {
     let model_path = Path::new(&nn_command.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
     let explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );
-    let prop_path = Path::new(&nn_command.goal_property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
     let prop_name = nn_command
         .goal_property
         .split("/")
@@ -358,11 +319,10 @@ fn dsmc_nn(nn_command: NN) {
         .unwrap()
         .strip_prefix("prop_")
         .unwrap();
-
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let goal_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&prop.goal);
+    let prop_path = Path::new(&nn_command.goal_property);
+    let goal_prop_file = File::open(prop_path).expect("Unable to open model file!");
+    let expr: Expression = serde_json::from_reader(BufReader::new(goal_prop_file)).unwrap();
+    let goal_comp_expr = explorer.compiled_network.compile_global_expression(&expr);
 
     let nn_path = Path::new(&nn_command.nn);
     let nn_file = File::open(nn_path).expect("Unable to open model file!");
@@ -372,7 +332,7 @@ fn dsmc_nn(nn_command: NN) {
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
     let arc_explorer = Arc::new(explorer);
-    let oracle_seed = 23;
+    let oracle_seed = 17;
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
@@ -380,7 +340,7 @@ fn dsmc_nn(nn_command: NN) {
         StdRng::seed_from_u64(oracle_seed),
     );
 
-    let state_iter_seed = 23;
+    let state_iter_seed = 17;
     let mut simulator = simulate::StateIter::new(
         arc_explorer.clone(),
         nn_oracle,
@@ -388,7 +348,10 @@ fn dsmc_nn(nn_command: NN) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads);
+    stat_checker = stat_checker
+        .n_threads(nn_command.n_threads)
+        .max_steps(500)
+        ._with_n_runs(5200);
 
     println!("Checking Property: {}", prop_name);
 
@@ -413,58 +376,13 @@ fn dsmc_nn(nn_command: NN) {
     };
 }
 
-fn sample_schedulers(sample_command: SchedSampler) {
-    let model_path = Path::new(&sample_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
-
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-
-    let prop_path = Path::new(&sample_command.property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = sample_command
-        .property
-        .split("/")
-        .last()
-        .unwrap()
-        .strip_suffix(".json")
-        .unwrap()
-        .strip_prefix("prop_")
-        .unwrap();
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
-    let goal_comp_expr = explorer
-        .compiled_network
-        .compile_global_expression(&prop.goal);
-    let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
-
-    let arc_explorer = Arc::new(explorer);
-    let mut sampler = sched_sampler::SchedulerSampler::new(arc_explorer, goal, prop.operator);
-    sampler = sampler
-        ._max_steps(500)
-        ._with_n_runs(500)
-        .n_threads(sample_command.n_threads);
-
-    let start = Instant::now();
-    let best = sampler.sample_schedulers(sample_command.num_schedulers);
-    let duration = start.elapsed();
-    let best_result = sampler.run_specific_sample(best.0);
-    println!("Checking Property: {:?}", prop_name);
-    println!(
-        "Time elapsed: {:?}. Estimated Probability: {:?}. Seed: {:?}",
-        duration, best_result.1, best_result.0
-    );
-}
-
 fn main() {
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Info(info_command) => info_of_the_model(info_command),
-        Command::SMC(smc_command) => smc(smc_command),
-        Command::ParSMC(psmc_command) => par_smc(psmc_command),
-        Command::SPRT(sprt_command) => sprt(sprt_command),
-        Command::DSMCNN(nn_command) => dsmc_nn(nn_command),
-        Command::SchedSampler(sample_command) => sample_schedulers(sample_command),
+        Command::SMC(walks) => smc(walks),
+        Command::ParSMC(walks) => par_smc(walks),
+        Command::SPRT(walks) => sprt(walks),
+        Command::NN(nn_command) => check_nn(nn_command),
     }
 }

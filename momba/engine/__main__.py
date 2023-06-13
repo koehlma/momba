@@ -40,20 +40,21 @@ def parse_constants(cmd_input: str) -> dict:
     """
     data = {}
     for l in cmd_input.split(","):
+        idx = l.split("=")[0].strip()
         if l.split("=")[1].isnumeric():
-            data[l.split("=")[0]] = int(l.split("=")[1])
+            data[idx] = int(l.split("=")[1])
         elif is_float(l.split("=")[1]):
-            data[l.split("=")[0]] = float(l.split("=")[1])
+            data[idx] = float(l.split("=")[1])
         elif (l.split("=")[1]).lower() in ("false", "true"):
             match l.split("=")[1]:
                 case "False":
-                    data[l.split("=")[0]] = False
+                    data[idx] = False
                 case "false":
-                    data[l.split("=")[0]] = False
+                    data[idx] = False
                 case "True":
-                    data[l.split("=")[0]] = True
+                    data[idx] = True
                 case "true":
-                    data[l.split("=")[0]] = True
+                    data[idx] = True
     return data
 
 
@@ -86,10 +87,18 @@ def translate(model_path: str, output_path: str, consts=None) -> None:
     for i, (name, definition) in enumerate(properties.items()):
         txt = name.lower().replace(" ", "_").strip()
         print(f"Saving property: {txt}")
+
         obj = objectives.extract_objective(definition.expression)
         goal = translation.translate_global_expression(obj.goal_predicate)
-        # pathlib.Path(f"{output_path}/prop_{i}.json").write_text(goal, "utf-8")
-        pathlib.Path(f"{output_path}/prop_{txt}.json").write_text(goal, "utf-8")
+        dead = translation.translate_global_expression(obj.dead_predicate)
+
+        prop = (
+            '{"operator":"' + str(obj.op) + '","goal":' + goal + ',"dead":' + dead + "}"
+        )
+
+        # prop = json.dumps({"operator": str(obj.op), "goal": goal, "dead": dead})
+
+        pathlib.Path(f"{output_path}/prop_{txt}.json").write_text(prop, "utf-8")
 
     pathlib.Path(f"{output_path}/model.json").write_text(
         translation.json_network, "utf-8"
