@@ -271,16 +271,16 @@ where
         Self {
             sim,
             goal,
-            eps: 0.01,
+            eps: 0.05,
             delta: 0.05,
-            max_steps: 5000,
+            max_steps: 2500,
             x: 0.0,
             alpha: 1.0,
             beta: 1.0,
             ind_reg: 0.0,
             n_threads: 1,
             n_runs: None,
-            display: true,
+            display: false,
         }
     }
 

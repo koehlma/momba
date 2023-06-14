@@ -19,13 +19,14 @@ Decision Processes, and can be easily used to explore new oracles.
 [4]: http://dx.doi.org/10.22028/D291-36816
 
 ## Commands
-- `python3 -m momba.engine translate <model>.jani <output_folder>`: Tranlates the JANI model into the output folder.
+- `python3 -m momba.engine translate <model>.jani <output_folder>`: tranlates the JANI model into the output folder.
     - Writes JSON files, one for the model and one for each of the properties on the JANI file.
+- `<run_option> --help`: gives help for running the specified option.
 - `info <model>.json`: gives information about the model.
 - `smc <model>.json <prop>.json`: runs SMC on the model, using a uniform oracle. If its DTMC, just simulates runs.
 - `par-smc <model>.json <prop>.json`: runs SMC parallel, using a uniform oracle.
     - Optionals: `-n <number of threads>`
-- `dsmcnn <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
+- `dsmc <model>.json <prop>.json <nn>.json`: runs SMC using the nn specified in the json.
     - Optionals: `-n <number of threads>`; `-i <controlled instance name>`
     - If not specified the instance name, uses the one with index 0.
 - `sched-sampler <model>.json <prop>.json <amount_of_schedulers>`: runs the sampling for the model, with the specified number of tries.
@@ -42,6 +43,7 @@ Decision Processes, and can be easily used to explore new oracles.
 
 ## Future work
 
+- Support other types of time beyond Float64Zone.
 - Other simulation bounds.
 - Smart sampling of schedulers.
 - Generalization of oracle function.

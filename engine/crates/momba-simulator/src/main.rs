@@ -30,7 +30,7 @@ struct Arguments {
     command: Command,
 }
 
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 enum Command {
     #[clap(about = "Counts the number of states/zones of the model")]
     Info(Info),
@@ -41,12 +41,12 @@ enum Command {
     #[clap(about = "Runs SPRT with an uniform scheduler")]
     SPRT(SPRT),
     #[clap(about = "Runs SMC using a NN as an oracle")]
-    DSMCNN(NN),
-    #[clap(about = "Testing")]
+    DSMC(NN),
+    #[clap(about = "Samples through different random schedulers")]
     SchedSampler(SchedSampler),
 }
 
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct SchedSampler {
     #[clap(about = "A MombaCR model")]
     model: String,
@@ -56,22 +56,26 @@ struct SchedSampler {
     num_schedulers: usize,
     #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
+    #[clap(short, long, about = "display the progress bar")]
+    display: bool,
 }
 
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct Info {
     #[clap(about = "A MombaCR model")]
     model: String,
 }
 
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct SMC {
     #[clap(about = "A MombaCR model")]
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
     property: String,
+    #[clap(short, long, about = "display the progress bar")]
+    display: bool,
 }
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct ParSMC {
     #[clap(about = "A MombaCR model")]
     model: String,
@@ -79,8 +83,10 @@ struct ParSMC {
     property: String,
     #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
+    #[clap(short, long, about = "display the progress bar")]
+    display: bool,
 }
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct SPRT {
     #[clap(about = "A MombaCR model")]
     model: String,
@@ -88,14 +94,16 @@ struct SPRT {
     property: String,
     #[clap(about = "x such that P(F goal)~x")]
     x: f64,
+    #[clap(short, long, about = "display the progress bar")]
+    display: bool,
 }
 
-#[derive(Clap)]
+#[derive(Clap, Clone)]
 struct NN {
     #[clap(about = "A MombaCR model")]
     model: String,
     #[clap(about = "A property generated in the MombaCR style")]
-    goal_property: String,
+    property: String,
     #[clap(about = "Neural Network describe in a json file.")]
     nn: String,
     #[clap(
@@ -107,6 +115,8 @@ struct NN {
     instance_name: String,
     #[clap(short, long, default_value = "1", about = "number of thread to use")]
     n_threads: usize,
+    #[clap(short, long, about = "display the progress bar")]
+    display: bool,
 }
 
 fn info_of_the_model(info_command: Info) {
@@ -210,27 +220,57 @@ pub enum MinMax {
     Max,
 }
 
-fn smc(smc_command: SMC) {
-    let model_path = Path::new(&smc_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
+fn process_input(command: Command) -> (Explorer<time::Float64Zone>, Property, String, bool) {
+    let model = match command {
+        Command::SMC(ref c) => &c.model,
+        Command::DSMC(ref c) => &c.model,
+        Command::ParSMC(ref c) => &c.model,
+        Command::SPRT(ref c) => &c.model,
+        Command::SchedSampler(ref c) => &c.model,
+        Command::Info(ref c) => &c.model,
+    };
+    let prop = match command {
+        Command::SMC(ref c) => &c.property,
+        Command::DSMC(ref c) => &c.property,
+        Command::ParSMC(ref c) => &c.property,
+        Command::SPRT(ref c) => &c.property,
+        Command::SchedSampler(ref c) => &c.property,
+        _ => panic!("Wrong command"),
+    };
+    let display = match command {
+        Command::SMC(ref c) => c.display,
+        Command::DSMC(ref c) => c.display,
+        Command::ParSMC(ref c) => c.display,
+        Command::SPRT(ref c) => c.display,
+        Command::SchedSampler(ref c) => c.display,
+        _ => panic!("Wrong command"),
+    };
 
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-    let prop_path = Path::new(&smc_command.property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = smc_command
-        .property
+    let name = prop
         .split("/")
         .last()
         .unwrap()
         .strip_suffix(".json")
         .unwrap()
         .strip_prefix("prop_")
-        .unwrap();
+        .unwrap()
+        .to_owned();
 
+    let model_path = Path::new(&model);
+    let prop_path = Path::new(&prop);
+    let model_file = File::open(model_path).expect("Unable to open model file!");
+    let prop_file = File::open(prop_path).expect("Unable to open model file!");
+
+    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+        serde_json::from_reader(BufReader::new(model_file))
+            .expect("Error while reading model file!"),
+    );
     let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    (explorer, prop, name, display)
+}
+
+fn smc(smc_command: SMC) {
+    let (explorer, prop, prop_name, display) = process_input(Command::SMC(smc_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
@@ -244,7 +284,7 @@ fn smc(smc_command: SMC) {
     );
     let goal = |s: &&State<Float64Zone>| s.evaluate(&goal_comp_expr).unwrap_bool();
 
-    let stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
+    let stat_checker = StatisticalSimulator::new(&mut state_iterator, goal)._display(display);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -258,26 +298,8 @@ fn smc(smc_command: SMC) {
 }
 
 fn par_smc(psmc_command: ParSMC) {
-    let model_path = Path::new(&psmc_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
-
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-    let prop_path = Path::new(&psmc_command.property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = psmc_command
-        .property
-        .split("/")
-        .last()
-        .unwrap()
-        .strip_suffix(".json")
-        .unwrap()
-        .strip_prefix("prop_")
-        .unwrap();
-
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let n_threads = psmc_command.n_threads.clone();
+    let (explorer, prop, prop_name, display) = process_input(Command::ParSMC(psmc_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
@@ -292,7 +314,7 @@ fn par_smc(psmc_command: ParSMC) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, goal);
-    stat_checker = stat_checker.n_threads(psmc_command.n_threads);
+    stat_checker = stat_checker.n_threads(n_threads)._display(display);
 
     println!("Checking Property: {}", prop_name);
     let start = Instant::now();
@@ -306,17 +328,8 @@ fn par_smc(psmc_command: ParSMC) {
 }
 
 fn sprt(sprt_command: SPRT) {
-    let model_path = Path::new(&sprt_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
-
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-    let prop_path = Path::new(&sprt_command.property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let x = sprt_command.x.clone();
+    let (explorer, prop, _, display) = process_input(Command::SPRT(sprt_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
@@ -332,40 +345,26 @@ fn sprt(sprt_command: SPRT) {
 
     let mut stat_checker = simulate::StatisticalSimulator::new(&mut state_iterator, goal);
     stat_checker = stat_checker
-        ._with_x(sprt_command.x)
+        ._with_x(x)
         ._with_ind_reg(0.005)
         ._with_alpha(0.05)
-        ._with_beta(0.05);
+        ._with_beta(0.05)
+        ._display(display);
     let result = stat_checker.run_sprt();
     println!("Result: {:?}", result);
 }
 
 fn dsmc_nn(nn_command: NN) {
-    let model_path = Path::new(&nn_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-    let prop_path = Path::new(&nn_command.goal_property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = nn_command
-        .goal_property
-        .split("/")
-        .last()
-        .unwrap()
-        .strip_suffix(".json")
-        .unwrap()
-        .strip_prefix("prop_")
-        .unwrap();
+    let nn_path = Path::new(&nn_command.nn);
+    let nn_file = File::open(nn_path).expect("Unable to open model file!");
 
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let n_threads = nn_command.n_threads.clone();
+    let instance_name = nn_command.instance_name.clone();
+    let (explorer, prop, prop_name, display) = process_input(Command::DSMC(nn_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
 
-    let nn_path = Path::new(&nn_command.nn);
-    let nn_file = File::open(nn_path).expect("Unable to open model file!");
     let readed_nn: nn_oracle::JsonNN = serde_json::from_reader(BufReader::new(nn_file))
         .expect("Error while reading model file. Are all the layers supported?");
 
@@ -376,7 +375,7 @@ fn dsmc_nn(nn_command: NN) {
     let nn_oracle = NnOracle::build(
         readed_nn,
         arc_explorer.clone(),
-        Some(String::from(nn_command.instance_name)),
+        Some(String::from(instance_name)),
         StdRng::seed_from_u64(oracle_seed),
     );
 
@@ -388,11 +387,14 @@ fn dsmc_nn(nn_command: NN) {
     );
 
     let mut stat_checker = StatisticalSimulator::new(&mut simulator, goal);
-    stat_checker = stat_checker.n_threads(nn_command.n_threads);
+    stat_checker = stat_checker
+        .n_threads(n_threads)
+        ._display(false)
+        ._display(display);
 
     println!("Checking Property: {}", prop_name);
 
-    if nn_command.n_threads > 1 {
+    if n_threads > 1 {
         let start = Instant::now();
         let (score, n_runs) = stat_checker.parallel_smc();
         let duration = start.elapsed();
@@ -414,26 +416,9 @@ fn dsmc_nn(nn_command: NN) {
 }
 
 fn sample_schedulers(sample_command: SchedSampler) {
-    let model_path = Path::new(&sample_command.model);
-    let model_file = File::open(model_path).expect("Unable to open model file!");
-
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
-        serde_json::from_reader(BufReader::new(model_file))
-            .expect("Error while reading model file!"),
-    );
-
-    let prop_path = Path::new(&sample_command.property);
-    let prop_file = File::open(prop_path).expect("Unable to open model file!");
-    let prop_name = sample_command
-        .property
-        .split("/")
-        .last()
-        .unwrap()
-        .strip_suffix(".json")
-        .unwrap()
-        .strip_prefix("prop_")
-        .unwrap();
-    let prop: Property = serde_json::from_reader(BufReader::new(prop_file)).unwrap();
+    let num_schedulers = sample_command.num_schedulers.clone();
+    let n_threads = sample_command.n_threads.clone();
+    let (explorer, prop, prop_name, _) = process_input(Command::SchedSampler(sample_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
@@ -444,10 +429,10 @@ fn sample_schedulers(sample_command: SchedSampler) {
     sampler = sampler
         ._max_steps(500)
         ._with_n_runs(500)
-        .n_threads(sample_command.n_threads);
+        .n_threads(n_threads);
 
     let start = Instant::now();
-    let best = sampler.sample_schedulers(sample_command.num_schedulers);
+    let best = sampler.sample_schedulers(num_schedulers);
     let duration = start.elapsed();
     let best_result = sampler.run_specific_sample(best.0);
     println!("Checking Property: {:?}", prop_name);
@@ -464,7 +449,7 @@ fn main() {
         Command::SMC(smc_command) => smc(smc_command),
         Command::ParSMC(psmc_command) => par_smc(psmc_command),
         Command::SPRT(sprt_command) => sprt(sprt_command),
-        Command::DSMCNN(nn_command) => dsmc_nn(nn_command),
+        Command::DSMC(nn_command) => dsmc_nn(nn_command),
         Command::SchedSampler(sample_command) => sample_schedulers(sample_command),
     }
 }
