@@ -177,7 +177,6 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
         }
 
         let transition = self.oracle.choose(&self.state, &transitions);
-
         let destinations = self.explorer.destinations(&self.state, transition);
 
         if destinations.is_empty() {
@@ -192,7 +191,6 @@ impl<T: time::Time, O: Oracle<T>> Simulator for StateIter<T, O> {
             let mut accumulated = 0.0;
             for destination in destinations {
                 accumulated += destination.probability();
-
                 if accumulated >= threshold {
                     self.state = self
                         .explorer
@@ -236,7 +234,7 @@ pub struct StatisticalSimulator<'sim, S, G> {
     /// Default value: 0.05.
     delta: f64,
     /// The amount of steps for the simulations.
-    /// Default value: 10000
+    /// Default value: 2500
     max_steps: usize,
     /// Fixed approximation provided for the usage of the SPRT algorithm.
     /// *P(eventually G)~x*
@@ -537,9 +535,7 @@ where
                 }
             });
         }
-
         let score = goal_counter.into_inner() as i64;
-
         if self.display {
             println!(
                 "Results:\nMore steps needed:\t{:?}\nReached:\t\t{:?}\nDeadlocks:\t\t{:?}",

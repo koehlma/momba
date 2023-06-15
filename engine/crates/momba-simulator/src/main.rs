@@ -2,7 +2,6 @@ use hashbrown::HashSet;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 use serde::{Deserialize, Serialize};
-
 use std::fs::File;
 use std::io::BufReader;
 use std::path::Path;
@@ -393,7 +392,6 @@ fn dsmc_nn(nn_command: NN) {
         ._display(display);
 
     println!("Checking Property: {}", prop_name);
-
     if n_threads > 1 {
         let start = Instant::now();
         let (score, n_runs) = stat_checker.parallel_smc();
@@ -418,7 +416,7 @@ fn dsmc_nn(nn_command: NN) {
 fn sample_schedulers(sample_command: SchedSampler) {
     let num_schedulers = sample_command.num_schedulers.clone();
     let n_threads = sample_command.n_threads.clone();
-    let (explorer, prop, prop_name, _) = process_input(Command::SchedSampler(sample_command));
+    let (explorer, prop, prop_name, display) = process_input(Command::SchedSampler(sample_command));
     let goal_comp_expr = explorer
         .compiled_network
         .compile_global_expression(&prop.goal);
@@ -429,7 +427,8 @@ fn sample_schedulers(sample_command: SchedSampler) {
     sampler = sampler
         ._max_steps(500)
         ._with_n_runs(500)
-        .n_threads(n_threads);
+        .n_threads(n_threads)
+        ._display(display);
 
     let start = Instant::now();
     let best = sampler.sample_schedulers(num_schedulers);

@@ -1,20 +1,16 @@
-use std::{cell::RefCell, sync::Arc};
-
+use self::generic::*;
+use crate::simulate::Oracle;
 use hashbrown::HashMap;
 use momba_explore::*;
 use rand::{rngs::StdRng, seq::IteratorRandom, Rng};
 use serde::{Deserialize, Serialize};
+use std::{cell::RefCell, sync::Arc};
 use tch::{
     kind::*,
     nn,
     nn::{Linear, Module, Sequential},
     Device, Tensor,
 };
-
-use crate::simulate::Oracle;
-
-use self::generic::*;
-
 mod generic;
 
 /// Structure that allows the reading of the Neural Network from a json file.
@@ -199,7 +195,6 @@ impl ModelWrapper {
                 Layers::Tanh { name: _ } => tch_nn = tch_nn.add_fn(|xs| xs.tanh()),
             }
         }
-        //println!("{:#?}", tch_nn);
         ModelWrapper { model: tch_nn, nn }
     }
 
@@ -217,8 +212,7 @@ impl ModelWrapper {
             if i != (number_of_layers - 1) {
                 out_size = 64;
             }
-            //let test: Vec<f64> = (0..in_size).map(|v| (v / in_size) as f64).collect();
-            let test: Vec<Vec<f64>> = (0..in_size)
+            let weights: Vec<Vec<f64>> = (0..in_size)
                 .map(|_| (0..out_size).map(|_| rng.gen::<f64>()).collect())
                 .collect();
             let layer = Layers::Linear {
@@ -226,7 +220,7 @@ impl ModelWrapper {
                 input_size: in_size,
                 output_size: out_size,
                 has_biases: false,
-                weights: test,
+                weights,
                 biases: vec![],
             };
             let relu = Layers::ReLU {
@@ -285,8 +279,7 @@ where
     ) -> Self {
         let input_size = nn.get_input_size() as usize;
         let output_size = nn.get_output_size() as usize;
-        let action_resolver_v2 = EdgeByIndexResolver::new(explorer.clone(), instance_name.clone());
-        //let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name);
+        let action_resolver = EdgeByIndexResolver::new(explorer.clone(), instance_name.clone());
 
         // This is for ordering the global variables alphabetically
         let mut g_keys: Vec<String> = vec![];
@@ -305,10 +298,9 @@ where
             _input_size: input_size,
             output_size,
             explorer,
-            //action_resolver,
             model_wrapper: ModelWrapper::new(Arc::new(nn)),
             rng: RefCell::new(rng),
-            action_resolver: action_resolver_v2,
+            action_resolver,
             keys_order,
         }
     }
@@ -352,8 +344,7 @@ where
         if tensor.size()[0] as usize != self.output_size {
             panic!("Vector size and NN output size does not match");
         }
-        let idx = tensor.argmax(None, true).int64_value(&[0]);
-        idx
+        tensor.argmax(None, true).int64_value(&[0])
     }
 
     /// This function will takes the output tensor, and return the highest available Q-value

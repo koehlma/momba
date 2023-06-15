@@ -3,9 +3,13 @@ use crate::{
     MinMax,
 };
 use ahash::RandomState;
+use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use momba_explore::*;
 use rand::{rngs::StdRng, SeedableRng};
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
+use rayon::{
+    current_thread_index, max_num_threads,
+    prelude::{IntoParallelIterator, ParallelIterator},
+};
 use std::sync::Arc;
 
 /// Implementation of the Oracle for a Hash Function.
@@ -98,11 +102,20 @@ where
     G: Fn(&&State<T>) -> bool + Sync + Send + Copy,
 {
     explorer: Arc<Explorer<T>>,
+    /// The Goal function.
     goal: G,
+    /// Number of threads to use when simulating with parallel implementations.
+    /// Default value: 1
     n_threads: usize,
+    /// The amount of steps for the simulations.
+    /// Default value: 2500
     max_steps: usize,
+    /// Number of sampling.
     n_runs: usize,
+    /// Specify which operation to do.
     op: MinMax,
+    /// Display initial conditions and progress.
+    display: bool,
 }
 
 impl<T, G> SchedulerSampler<T, G>
@@ -119,14 +132,21 @@ where
             max_steps: 500,
             n_threads: 1,
             op,
+            display: false,
         }
     }
 
     /// set field: n_threads
     pub fn n_threads(mut self, n_threads: usize) -> Self {
-        self.n_threads = n_threads;
+        let mut n_th = n_threads;
+        if n_threads > max_num_threads() {
+            n_th = max_num_threads();
+        } else if n_threads <= 0 {
+            n_th = 1;
+        }
+        self.n_threads = n_th;
         rayon::ThreadPoolBuilder::new()
-            .num_threads(n_threads)
+            .num_threads(n_th)
             .build_global()
             .unwrap();
         self
@@ -143,42 +163,68 @@ where
         self
     }
 
+    /// set display
+    pub fn _display(mut self, display: bool) -> Self {
+        self.display = display;
+        self
+    }
+
     /// Sample Schedulers.
     /// It does it in parallel using rayon lib.
     pub fn sample_schedulers(&mut self, amount_samples: usize) -> (usize, f64) {
-        println!(
-            "Sampling between {:?} schedulers. Type: {:?}",
-            amount_samples, self.op
-        );
         let mut best: (usize, f64);
         match self.op {
             MinMax::Max => best = (0, 0.0),
             MinMax::Min => best = (0, 1.0),
         }
-        // let pb = ProgressBar::new(amount_samples as u64);
-        // See how to fix the progress bar with rayon on parallel.
-        // pb.set_style(
-        //     ProgressStyle::with_template(
-        //         "{spinner:.green} [{elapsed_precise}] [{wide_bar:.cyan/blue}] {percent}% ({eta})",
-        //     )
-        //     .unwrap()
-        //     .with_key("eta", |state: &ProgressState, w: &mut dyn Write| {
-        //         write!(w, "{:.1}s", state.eta().as_secs_f64()).unwrap()
-        //     })
-        //     .progress_chars("#>-"),
-        // );
-        let updated = (0..amount_samples).into_par_iter().map(|i| {
-            //pb.set_position(i);
-            _run_sample(
-                self.explorer.clone(),
-                self.goal,
-                i,
-                self.max_steps,
-                self.n_runs,
+
+        let result: Vec<_>;
+        if self.display {
+            println!(
+                "Sampling between {:?} schedulers. Type: {:?}",
+                amount_samples, self.op
+            );
+            let m = MultiProgress::new();
+            let sty = ProgressStyle::with_template(
+                "{spinner:.green} [{elapsed_precise}] {wide_bar:.cyan/blue} {percent}% {msg}",
             )
-        });
-        // pb.finish();
-        let result: Vec<_> = updated.collect();
+            .unwrap()
+            .progress_chars("#>-");
+
+            let mut pbs = vec![];
+            for i in 0..self.n_threads {
+                let pb = m.add(ProgressBar::new((amount_samples / self.n_threads) as u64));
+                pb.set_style(sty.clone());
+                pb.set_message(format!("Thread #{}", i));
+                pbs.push(pb);
+            }
+            m.println("Saampling!").unwrap();
+
+            let updated = (0..amount_samples).into_par_iter().map(|i| {
+                pbs[current_thread_index().unwrap()].inc(1);
+                run_sample(
+                    self.explorer.clone(),
+                    self.goal,
+                    i,
+                    self.max_steps,
+                    self.n_runs,
+                )
+            });
+            m.clear().unwrap();
+            result = updated.collect();
+        } else {
+            let updated = (0..amount_samples).into_par_iter().map(|i| {
+                run_sample(
+                    self.explorer.clone(),
+                    self.goal,
+                    i,
+                    self.max_steps,
+                    self.n_runs,
+                )
+            });
+            result = updated.collect();
+        }
+
         for (seed, score) in result {
             match self.op {
                 MinMax::Max => {
@@ -228,7 +274,7 @@ where
 }
 
 /// Helper function for the parallelism
-fn _run_sample<T, G>(
+fn run_sample<T, G>(
     explorer: Arc<Explorer<T>>,
     goal: G,
     seed: usize,
