@@ -8,7 +8,8 @@ use std::path::Path;
 use std::sync::Arc;
 use std::time::Instant;
 
-use clap::Clap;
+use clap::Parser;
+use clap_derive::Parser;
 
 use momba_explore::{model::Expression, time::Float64Zone, *};
 
@@ -18,18 +19,19 @@ mod simulate;
 use crate::nn_oracle::*;
 use crate::simulate::StatisticalSimulator;
 
-#[derive(Clap)]
-#[clap(
-    version = "0.1.0",
-    about = "A command line tool directly exposing some model related functionality."
-)]
+// #[derive(Clap)]
+// #[clap(
+//     version = "0.1.0",
+//     about = "A command line tool directly exposing some model related functionality."
+// )]
 
+#[derive(Parser, Debug)]
 struct Arguments {
     #[clap(subcommand)]
     command: Command,
 }
 
-#[derive(Clap, Clone)]
+#[derive(Parser, Clone, Debug)]
 enum Command {
     #[clap(about = "Counts the number of states/zones of the model")]
     Info(Info),
@@ -44,77 +46,76 @@ enum Command {
     #[clap(about = "Samples through different random schedulers")]
     SchedSampler(SchedSampler),
 }
-
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct SchedSampler {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
+    #[clap(help = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(about = "Amount of schedulers to sample")]
+    #[clap(help = "Amount of schedulers to sample")]
     num_schedulers: usize,
-    #[clap(short, long, default_value = "1", about = "number of thread to use")]
+    #[clap(short, long, default_value = "1", help = "number of thread to use")]
     n_threads: usize,
-    #[clap(short, long, about = "display the progress bar")]
+    #[clap(short, long, help = "display the progress bar")]
     display: bool,
 }
 
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct Info {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
 }
 
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct SMC {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
+    #[clap(help = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(short, long, about = "display the progress bar")]
+    #[clap(short, long, help = "display the progress bar")]
     display: bool,
 }
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct ParSMC {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
+    #[clap(help = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(short, long, default_value = "1", about = "number of thread to use")]
+    #[clap(short, long, default_value = "1", help = "number of thread to use")]
     n_threads: usize,
-    #[clap(short, long, about = "display the progress bar")]
+    #[clap(short, long, help = "display the progress bar")]
     display: bool,
 }
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct SPRT {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
+    #[clap(help = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(about = "x such that P(F goal)~x")]
+    #[clap(help = "x such that P(F goal)~x")]
     x: f64,
-    #[clap(short, long, about = "display the progress bar")]
+    #[clap(short, long, help = "display the progress bar")]
     display: bool,
 }
 
-#[derive(Clap, Clone)]
+#[derive(Parser, Debug, Clone)]
 struct NN {
-    #[clap(about = "A MombaCR model")]
+    #[clap(help = "A MombaCR model")]
     model: String,
-    #[clap(about = "A property generated in the MombaCR style")]
+    #[clap(help = "A property generated in the MombaCR style")]
     property: String,
-    #[clap(about = "Neural Network describe in a json file.")]
+    #[clap(help = "Neural Network describe in a json file.")]
     nn: String,
     #[clap(
         short,
         long,
         default_value = " ",
-        about = "Name of the controlled instance."
+        help = "Name of the controlled instance."
     )]
     instance_name: String,
-    #[clap(short, long, default_value = "1", about = "number of thread to use")]
+    #[clap(short, long, default_value = "1", help = "number of thread to use")]
     n_threads: usize,
-    #[clap(short, long, about = "display the progress bar")]
+    #[clap(short, long, help = "display the progress bar")]
     display: bool,
 }
 

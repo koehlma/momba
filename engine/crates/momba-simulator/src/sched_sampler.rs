@@ -265,7 +265,10 @@ where
             StdRng::seed_from_u64(10),
         );
         let mut stat_checker = StatisticalSimulator::new(&mut state_iterator, self.goal);
-        stat_checker = stat_checker._max_steps(self.max_steps);
+        stat_checker = stat_checker
+            ._max_steps(self.max_steps)
+            ._display(self.display)
+            .n_threads(self.n_threads);
 
         let (score, n_runs) = stat_checker.parallel_smc();
         let sim_result = score as f64 / n_runs as f64;
