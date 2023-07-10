@@ -4,40 +4,34 @@ use std::io::BufReader;
 use std::path::Path;
 use std::time::Instant;
 
-use clap::Clap;
-
-use clock_zones::Zone;
+use clap::Parser;
+use clap_derive::Parser;
 
 use momba_explore::*;
 
-#[derive(Clap)]
-#[clap(
-    version = "0.1.0",
-    about = "A command line tool directly exposing some model related functionality."
-)]
-
+#[derive(Parser, Debug)]
 struct Arguments {
     #[clap(subcommand)]
     command: Command,
 }
 
-#[derive(Clap)]
+#[derive(Parser, Debug)]
 enum Command {
-    #[clap(about = "Counts the number of states/zones of the model")]
+    #[clap()]
     Count(Count),
-    #[clap(about = "Simulates a random run of the model")]
+    #[clap()]
     Simulate(Simulate),
 }
 
-#[derive(Clap)]
+#[derive(Parser, Debug)]
 struct Count {
-    #[clap(about = "A MombaCR model")]
+    #[clap()]
     model: String,
 }
 
-#[derive(Clap)]
+#[derive(Parser, Debug)]
 struct Simulate {
-    #[clap(about = "A MombaCR model")]
+    #[clap()]
     model: String,
 }
 
@@ -113,7 +107,7 @@ fn random_walk(walk: Simulate) {
     let model_path = Path::new(&walk.model);
     let model_file = File::open(model_path).expect("Unable to open model file!");
 
-    let explorer: Explorer<time::Float64Zone> = Explorer::new(
+    let _explorer: Explorer<time::Float64Zone> = Explorer::new(
         serde_json::from_reader(BufReader::new(model_file))
             .expect("Error while reading model file!"),
     );

@@ -1,7 +1,7 @@
 use std::cmp::max;
 use std::convert::TryInto;
 
-use indexmap::{IndexSet, IndexMap};
+use indexmap::{IndexMap, IndexSet};
 
 use super::model::*;
 
@@ -376,10 +376,11 @@ impl<const BANKS: usize> Scope<BANKS> {
                 let vector = self.compile(vector);
                 let index = self.compile(index);
                 construct!(move |env, stack| {
-                    evaluate!(vector, env, stack).unwrap_vector()[evaluate!(index, env, stack).unwrap_int64() as usize].clone()
+                    evaluate!(vector, env, stack).unwrap_vector()
+                        [evaluate!(index, env, stack).unwrap_int64() as usize]
+                        .clone()
                 })
-            }
-            _ => panic!("not implemented {:?}", expression),
+            } //_ => panic!("not implemented {:?}", expression),
         }
     }
 

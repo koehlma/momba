@@ -1,8 +1,7 @@
 //! Algorithms and data structures for representing time.
 
 use std::{
-    convert::{TryFrom, TryInto},
-    env::var,
+    convert::{TryFrom},
     fmt::Debug,
 };
 
@@ -10,10 +9,9 @@ use num_traits::cast::FromPrimitive;
 
 use indexmap::IndexSet;
 
-use ordered_float::NotNan;
 use serde::{Deserialize, Serialize};
 
-use clock_zones::{Bound, Clock, Variable, Zone};
+use clock_zones::Zone;
 
 use super::model;
 

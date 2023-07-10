@@ -772,6 +772,7 @@ def _translate_initial_states(
     ],
     declarations: Declarations,
     parameters: t.Mapping[str, model.Expression],
+    # ctx: _TranslationContext,
 ) -> t.List[_JSONObject]:
     initial_locations: t.Dict[str, str] = {}
     for instance, instance_name in instance_names.items():
@@ -866,6 +867,7 @@ def _translate_network(
                 instance_to_location_names,
                 declarations,
                 parameters,
+                # ctx #added
             ),
         },
         indent=2,
