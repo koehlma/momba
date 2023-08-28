@@ -76,4 +76,4 @@ The Rust command line tool [`momba-sidekick`](https://crates.io/crates/momba-sid
 
 This project is partially supported by the German Research Foundation (DFG) under grant No. 389792660, as part of [TRR 248](https://perspicuous-computing.science).
 
-Thanks to Sarah Sterz for the awesome Momba logo.
+Thanks to Sarah Sterz for the awesome Momba logo and Felix Freiberger for the creative name.
