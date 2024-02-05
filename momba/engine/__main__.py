@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import typing as t
-
 import pathlib
 
 import click
@@ -13,9 +11,6 @@ import click
 from ..engine import translator
 from .. import jani
 from . import objectives
-
-
-import json
 
 
 @click.group()
@@ -39,7 +34,7 @@ def parse_constants(cmd_input: str) -> dict:
     And for all i Val_i in (Int, Bool)
     """
     data = {}
-    for l in cmd_input.split(","):
+    for l in cmd_input.split(","):  # noqa: E741
         idx = l.split("=")[0].strip()
         if l.split("=")[1].isnumeric():
             data[idx] = int(l.split("=")[1])
@@ -84,7 +79,7 @@ def translate(model_path: str, output_path: str, consts=None) -> None:
     translation = translator.translate_network(network, parameters=parameters)
     properties = network.ctx.properties
 
-    for i, (name, definition) in enumerate(properties.items()):
+    for name, definition in properties.items():
         txt = name.lower().replace(" ", "_").strip()
         print(f"Saving property: {txt}")
 

@@ -292,9 +292,11 @@ def _property(jani_property: t.Any) -> expressions.Expression:
     if jani_property["op"] in {"∀", "∃"}:
         _check_fields(jani_property, required={"op", "exp"})
         return properties.PathQuantifier(
-            operators.Quantifier.FORALL
-            if jani_property["op"] == "∀"
-            else operators.Quantifier.EXISTS,
+            (
+                operators.Quantifier.FORALL
+                if jani_property["op"] == "∀"
+                else operators.Quantifier.EXISTS
+            ),
             _expression(jani_property["exp"]),
         )
     if jani_property["op"] in {"Emin", "Emax"}:
@@ -548,9 +550,11 @@ def _location(jani_location: t.Any) -> automata.Location:
             )
             transient_values.add(assignment)
     return automata.Location(
-        name=None
-        if jani_location.get("x-momba-anonymous", False)
-        else jani_location["name"],
+        name=(
+            None
+            if jani_location.get("x-momba-anonymous", False)
+            else jani_location["name"]
+        ),
         progress_invariant=progress_invariant,
         transient_values=frozenset(transient_values),
     )
@@ -795,9 +799,9 @@ def load_model(source: JANIModel, *, ignore_properties: bool = False) -> model.N
         automaton = network.ctx.get_automaton_by_name(element["automaton"])
         input_enable = element.get("input-enable", None)
         instance = automaton.create_instance(
-            input_enable=frozenset()
-            if input_enable is None
-            else frozenset(input_enable)
+            input_enable=(
+                frozenset() if input_enable is None else frozenset(input_enable)
+            )
         )
         network.add_instance(instance)
         instances.append(instance)

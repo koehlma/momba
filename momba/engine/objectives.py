@@ -2,12 +2,11 @@
 
 
 import dataclasses as d
-import typing as t
 
 from momba.model.operators import MinMax
 
 
-from .. import engine, model
+from .. import model
 
 
 @d.dataclass(frozen=True)
@@ -92,7 +91,6 @@ def extract_objective(prop: model.Expression) -> Objective:
         of expression with probabilities.
         """
         subprop_l = prop.left
-        subprop_r = prop.right
 
         if isinstance(subprop_l.formula, model.properties.BinaryPathFormula):
             assert (
