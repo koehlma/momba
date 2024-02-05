@@ -2,7 +2,10 @@
 #
 # Copyright (C) 2021, Maximilian Köhl <koehl@cs.uni-saarland.de>
 
+
 from __future__ import annotations
+
+import typing as t
 
 import pathlib
 
@@ -20,20 +23,20 @@ def main() -> None:
     """
 
 
-def is_float(string):
+def is_float(string: str) -> bool:
     if string.replace(".", "").isnumeric():
         return True
     else:
         return False
 
 
-def parse_constants(cmd_input: str) -> dict:
+def parse_constants(cmd_input: str) -> t.Any:
     """
     Input expected:
     Cons_1:Val_1,...,Const_k:Val_k.
     And for all i Val_i in (Int, Bool)
     """
-    data = {}
+    data: t.Dict[str, t.Union[bool, int, float]] = {}
     for l in cmd_input.split(","):  # noqa: E741
         idx = l.split("=")[0].strip()
         if l.split("=")[1].isnumeric():
@@ -65,7 +68,7 @@ def parse_constants(cmd_input: str) -> dict:
     type=click.Path(exists=False, dir_okay=True, writable=True),
 )
 @click.option("-c", "--consts")
-def translate(model_path: str, output_path: str, consts=None) -> None:
+def translate(model_path: str, output_path: str, consts: t.Any = None) -> None:
     """
     Translates a MOML model to MombaIR.
     """

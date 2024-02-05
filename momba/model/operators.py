@@ -24,7 +24,7 @@ class Operator:
         Symbol associated with the operator.
     """
 
-    name: str
+    # name: str
     symbol: str
 
     def __init__(self, symbol: str):

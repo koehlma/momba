@@ -48,12 +48,12 @@ def extract_objective(prop: model.Expression) -> Objective:
         prop = prop.values
 
     if isinstance(prop, model.properties.Probability):
-        match prop.operator:
-            case MinMax.MIN:
-                op = prop.operator.MIN.name
-            case MinMax.MAX:
-                op = prop.operator.MAX.name
-
+        # match prop.operator:
+        #     case MinMax.MIN:
+        #         op = prop.operator.MIN.name
+        #     case MinMax.MAX:
+        #         op = prop.operator.MAX.name
+        op = prop.operator
         prop = prop.formula
 
     if isinstance(prop, model.properties.UnaryPathFormula):
@@ -72,38 +72,38 @@ def extract_objective(prop: model.Expression) -> Objective:
         return Objective(
             goal_predicate=right, dead_predicate=model.expressions.logic_not(lft), op=op
         )
-    elif isinstance(prop, model.properties.ExpectedReward):
-        match prop.operator:
-            case MinMax.MIN:
-                op = prop.operator.MIN.name
-            case MinMax.MAX:
-                op = prop.operator.MAX.name
-        # TODO: change this, we need to support it but this its not the way.
-        return Objective(
-            goal_predicate=prop.reachability,
-            dead_predicate=model.ensure_expr(False),
-            op=op,
-        )
-    elif isinstance(prop, model.expressions.Comparison):
-        # TODO: change this, we need to support it but this its not the way.
-        """
-        For example, the first 3 properties of the firewire model are a composition
-        of expression with probabilities.
-        """
-        subprop_l = prop.left
+    # elif isinstance(prop, model.properties.ExpectedReward):
+    #     match prop.operator:
+    #         case MinMax.MIN:
+    #             op = prop.operator.MIN.name
+    #         case MinMax.MAX:
+    #             op = prop.operator.MAX.name
+    #     # TODO: change this, we need to support it but this its not the way.
+    #     return Objective(
+    #         goal_predicate=prop.reachability,
+    #         dead_predicate=model.ensure_expr(False),
+    #         op=op,
+    #     )
+    # elif isinstance(prop, model.expressions.Comparison):
+    #     # TODO: change this, we need to support it but this its not the way.
+    #     """
+    #     For example, the first 3 properties of the firewire model are a composition
+    #     of expression with probabilities.
+    #     """
+    #     subprop_l = prop.left
 
-        if isinstance(subprop_l.formula, model.properties.BinaryPathFormula):
-            assert (
-                subprop_l.formula.operator is model.operators.BinaryPathOperator.UNTIL
-            ), "Unsupported unary path formula."
-            lft = prop.left
-            right = prop.right
-            obj = Objective(
-                goal_predicate=lft,
-                dead_predicate=model.expressions.logic_not(lft),
-                op=op,
-            )
+    #     if isinstance(subprop_l.formula, model.properties.BinaryPathFormula):
+    #         assert (
+    #             subprop_l.formula.operator is model.operators.BinaryPathOperator.UNTIL
+    #         ), "Unsupported unary path formula."
+    #         lft = prop.left
+    #         right = prop.right
+    #         obj = Objective(
+    #             goal_predicate=lft,
+    #             dead_predicate=model.expressions.logic_not(lft),
+    #             op=op,
+    #         )
 
-            return obj
+    #         return obj
     else:
         raise Exception("Unsupported property!")
