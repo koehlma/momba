@@ -3,8 +3,6 @@
 
 import dataclasses as d
 
-from momba.model.operators import MinMax
-
 
 from .. import model
 
