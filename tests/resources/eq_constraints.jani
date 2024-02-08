@@ -1,0 +1,177 @@
+{
+    "jani-version": 1,
+    "name": "EqualityConstraints",
+    "type": "ta",
+    "actions": [],
+    "variables": [
+        {
+            "name": "x",
+            "type": "clock",
+            "initial-value": 0
+        },
+        {
+            "name": "y",
+            "type": "clock",
+            "initial-value": 0
+        }
+    ],
+    "properties": [],
+    "automata": [
+        {
+            "name": "T",
+            "locations": [
+                {
+                    "name": "l0",
+                    "time-progress": {
+                        "exp": {
+                            "op": "≤",
+                            "left": "y",
+                            "right": 2
+                        }
+                    }
+                },
+                {
+                    "name": "l1",
+                    "time-progress": {
+                        "exp": {
+                            "op": "≤",
+                            "left": "y",
+                            "right": 1
+                        }
+                    }
+                },
+                {
+                    "name": "l2",
+                    "time-progress": {
+                        "exp": {
+                            "op": "≤",
+                            "left": "y",
+                            "right": 1
+                        }
+                    }
+                },
+                {
+                    "name": "l3",
+                    "time-progress": {
+                        "exp": {
+                            "op": "≤",
+                            "left": "y",
+                            "right": 1
+                        }
+                    }
+                }
+            ],
+            "initial-locations": [
+                "l0"
+            ],
+            "edges": [
+                {
+                    "comment": "l0 - x=1 - y:=0 -> l1",
+                    "location": "l0",
+                    "guard": {
+                        "exp": {
+                            "op": "=",
+                            "left": "x",
+                            "right": 1
+                        }
+                    },
+                    "destinations": [
+                        {
+                            "location": "l1",
+                            "assignments": [
+                                {
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "comment": "l0 - y ≤ 2 - y:=0 -> l3",
+                    "location": "l0",
+                    "guard": {
+                        "exp": {
+                            "op": "≤",
+                            "left": "y",
+                            "right": 2
+                        }
+                    },
+                    "destinations": [
+                        {
+                            "location": "l3",
+                            "assignments": [
+                                {
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "comment": "l1 - y := 0 -> l0",
+                    "location": "l1",
+                    "destinations": [
+                        {
+                            "location": "l0",
+                            "assignments": [
+                                {
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "comment": "l1 -> l2",
+                    "location": "l1",
+                    "destinations": [
+                        {
+                            "location": "l2"
+                        }
+                    ]
+                },
+                {
+                    "comment": "l2 - y := 0 -> l0",
+                    "location": "l2",
+                    "destinations": [
+                        {
+                            "location": "l0",
+                            "assignments": [
+                                {
+                                    "ref": "y",
+                                    "value": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "comment": "l3 - x := 0 -> l0",
+                    "location": "l3",
+                    "destinations": [
+                        {
+                            "location": "l0",
+                            "assignments": [
+                                {
+                                    "ref": "x",
+                                    "value": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "system": {
+        "elements": [
+            {
+                "automaton": "T"
+            }
+        ],
+        "syncs": []
+    }
+}
