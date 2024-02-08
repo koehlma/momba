@@ -520,6 +520,19 @@ def _extract_constraints(
                         },
                     }
                 )
+        elif isinstance(head, expressions.Equality):
+            # equal is ≤ and ≥, not equal is < and >
+            ops = [operators.ComparisonOperator.LE, operators.ComparisonOperator.GE]
+            if head.operator is operators.EqualityOperator.NEQ:
+                ops = [operators.ComparisonOperator.LT, operators.ComparisonOperator.GT]
+
+            pending.extend(
+                [
+                    expressions.Comparison(ops[0], head.left, head.right),
+                    expressions.Comparison(ops[1], head.left, head.right),
+                ]
+            )
+
         else:
             conjuncts.append(head)
     return ExtractedConstraints(conjuncts, constraints)
