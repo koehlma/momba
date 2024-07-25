@@ -630,7 +630,6 @@ class ArrayAccess(Expression):
         return self.infer_type(scope)
 
 
-@d.dataclass(frozen=True)
 class ArrayValue(Expression):
     """
     An array value expression.
@@ -643,7 +642,8 @@ class ArrayValue(Expression):
 
     elements: t.Tuple[Expression, ...]
 
-    def __post_init__(self) -> None:
+    def __init__(self, elements: t.Iterable[Expression]) -> None:
+        self.elements = tuple(elements)
         if not self.elements:
             raise errors.ModelingError("array value expression needs to have elements")
 
