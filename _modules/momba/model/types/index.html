@@ -1,433 +1,378 @@
 
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../../../../" >
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>momba.model.types &#8212; Momba</title>
-    
-  <link href="../../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-jupyter-cells.css" />
-    
-  <link rel="preload" as="script" href="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/fix-jupyter-cells.css?v=6bf19b0d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/documentation_options.js?v=afda12d8"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/thebelab-helper.js"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
-    <script src="../../../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/momba/model/types';</script>
     <link rel="index" title="Index" href="../../../../genindex/" />
     <link rel="search" title="Search" href="../../../../search/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../../">
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
         
       
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../">
+  
+  
+  
+  
+  
+    
+    
       
-      <img src="../../../../_static/logo_with_text.svg" class="logo" alt="logo">
-      
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../../search/" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="../../../../_static/logo_with_text.svg" class="logo__image only-light" alt="Momba - Home"/>
+    <script>document.write(`<img src="../../../../_static/logo_with_text.svg" class="logo__image only-dark" alt="Momba - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../../guide/">
-   User Guide
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../guide/construction/">
-     Model Construction
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../guide/exploration/">
-     Model Exploration
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../guide/analysis/">
-     Model Analysis
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../../examples/">
-   Examples
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../../examples/racetrack/">
-     Racetrack
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/racetrack/quickstart/">
-       Quickstart
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/racetrack/game/">
-       Interactive Game
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../examples/racetrack/model/">
-       The Model
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../../reference/">
-   API Documentation
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../../reference/model/">
-     Momba Models
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/context/">
-       Context
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/automata/">
-       Automata
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/networks/">
-       Networks
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/actions/">
-       Actions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/expressions/">
-       Expressions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/properties/">
-       Properties
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/types/">
-       Types
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/functions/">
-       Functions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../reference/model/exceptions/">
-       Exceptions
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../reference/engine/">
-     Exploration Engine
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../reference/jani/">
-     JANI Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../reference/analysis/">
-     Analysis Interfaces
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../../incubator/">
-   Feature Incubator
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../../incubator/jani/">
-     JANI Extensions
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-    <label for="toctree-checkbox-7">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../incubator/jani/value-passing/">
-       Value Passing
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../incubator/jani/observations/">
-       Observations
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../../incubator/moml/">
-     MOML
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-    <label for="toctree-checkbox-8">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../incubator/moml/grammar/">
-       MOML Grammar
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../../incubator/moml/macros/">
-       Syntax-Aware Macros
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../guide/">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/construction/">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/exploration/">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../guide/analysis/">Model Analysis</a></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Tools
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../../tools/modest/">
-   Modest Toolset
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../../tools/storm/">
-   Storm
-  </a>
- </li>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../examples/">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../examples/racetrack/">Racetrack</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/quickstart/">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/game/">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/racetrack/model/">The Model</a></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Features
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../../gym/">
-   Momba Gym
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../gym/abstract/">
-     Abstract Interface
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../../gym/generic/">
-     Generic Explorer
-    </a>
-   </li>
-  </ul>
- </li>
+</details></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Development
- </span>
-</p>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../reference/">API Documentation</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../reference/model/">Momba Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/context/">Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/automata/">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/networks/">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/actions/">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/expressions/">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/properties/">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/types/">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/functions/">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/model/exceptions/">Exceptions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/engine/">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/jani/">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../reference/analysis/">Analysis Interfaces</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../incubator/">Feature Incubator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/jani/">JANI Extensions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/value-passing/">Value Passing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/jani/observations/">Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../incubator/moml/">MOML</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/grammar/">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../incubator/moml/macros/">Syntax-Aware Macros</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../../contributing/">
-   Contributing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference external" href="https://github.com/koehlma/momba">
-   GitHub Repository
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/modest/">Modest Toolset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tools/storm/">Storm</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../gym/">Momba Gym</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../gym/abstract/">Abstract Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../gym/generic/">Generic Explorer</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing/">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-</div>
 
-
-          
-
-
-          
-<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
-<div class="sbt-scroll-pixel-helper"></div>
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            <div class="topbar-left">
-                
-                <label class="nav-toggle-button" for="__navigation">
-                    <div class="visually-hidden">Toggle navigation</div>
-                    <i class="fas fa-bars"></i>
-                </label>
-                
-            </div>
-            
-            <!-- Source interaction buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/koehlma/momba"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2F_modules/momba/model/types.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
         
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/koehlma/momba" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2F_modules/momba/model/types.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-        </div>
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
 
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1></h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+
+              
                 
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <h1>Source code for momba.model.types</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding:utf-8 -*-</span>
 <span class="c1">#</span>
@@ -455,50 +400,64 @@
     <span class="k">pass</span>
 
 
-<span class="n">Bound</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;expressions.ValueOrExpression&quot;</span><span class="p">,</span> <span class="s2">&quot;ellipsis&quot;</span><span class="p">]]</span>  <span class="c1"># noqa:</span>
+<span class="n">Bound</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;expressions.ValueOrExpression&quot;</span><span class="p">,</span> <span class="s2">&quot;ellipsis&quot;</span><span class="p">]]</span>  <span class="c1"># noqa: F821</span>
 
 
-<div class="viewcode-block" id="Type"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.Type">[docs]</a><span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Type">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.Type">[docs]</a>
+<span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A *type*.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Indicates whether the type is numeric or not.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="Type.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.Type.is_assignable_from">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="Type.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.Type.is_assignable_from">[docs]</a>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether values of the other type can be assigned to</span>
 <span class="sd">        targets of this type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
+
     <span class="k">def</span> <span class="nf">validate_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="n">context</span><span class="o">.</span><span class="n">Scope</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: B027</span>
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="NumericType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.NumericType">[docs]</a><span class="k">class</span> <span class="nc">NumericType</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+
+<div class="viewcode-block" id="NumericType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.NumericType">[docs]</a>
+<span class="k">class</span> <span class="nc">NumericType</span><span class="p">(</span><span class="n">Type</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="NumericType.bound"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.NumericType.bound">[docs]</a>    <span class="k">def</span> <span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="n">Bound</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="n">Bound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoundedType</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NumericType.bound">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.NumericType.bound">[docs]</a>
+    <span class="k">def</span> <span class="nf">bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="n">Bound</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="n">Bound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoundedType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Bounds the numeric type with the given bounds.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">BoundedType</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">BoundedType</span><span class="o">.</span><span class="n">convert_bound</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span> <span class="n">BoundedType</span><span class="o">.</span><span class="n">convert_bound</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="IntegerType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.IntegerType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntegerType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.IntegerType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">IntegerType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The *integer type*.</span>
 
 <span class="sd">    .. hint::</span>
@@ -508,15 +467,21 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;types.INT&quot;</span>
 
-<div class="viewcode-block" id="IntegerType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.IntegerType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="IntegerType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.IntegerType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">BoundedType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">base</span> <span class="o">==</span> <span class="n">INT</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div></div>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div>
+</div>
 
 
-<div class="viewcode-block" id="RealType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.RealType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RealType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.RealType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">RealType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The *real type*.</span>
 
 <span class="sd">    .. hint::</span>
@@ -526,13 +491,19 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;types.REAL&quot;</span>
 
-<div class="viewcode-block" id="RealType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.RealType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div></div>
+<div class="viewcode-block" id="RealType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.RealType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div>
+</div>
 
 
-<div class="viewcode-block" id="BoolType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoolType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BoolType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoolType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BoolType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The *boolean type*.</span>
 
 <span class="sd">    .. hint::</span>
@@ -542,13 +513,19 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;types.BOOL&quot;</span>
 
-<div class="viewcode-block" id="BoolType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoolType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">BOOL</span></div></div>
+<div class="viewcode-block" id="BoolType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoolType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">BOOL</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ClockType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ClockType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ClockType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ClockType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ClockType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The *clock type*.</span>
 
 <span class="sd">    .. hint::</span>
@@ -558,15 +535,21 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;types.CLOCK&quot;</span>
 
-<div class="viewcode-block" id="ClockType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ClockType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ClockType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ClockType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">BoundedType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">base</span> <span class="o">==</span> <span class="n">INT</span>
-        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div></div>
+        <span class="k">return</span> <span class="n">typ</span> <span class="o">==</span> <span class="n">INT</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ContinuousType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ContinuousType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContinuousType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ContinuousType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ContinuousType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The *continuous type*.</span>
 
 <span class="sd">    .. hint::</span>
@@ -576,8 +559,12 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;types.CONTINUOUS&quot;</span>
 
-<div class="viewcode-block" id="ContinuousType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ContinuousType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div></div>
+<div class="viewcode-block" id="ContinuousType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ContinuousType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">typ</span><span class="o">.</span><span class="n">is_numeric</span></div>
+</div>
+
 
 
 <span class="n">INT</span> <span class="o">=</span> <span class="n">IntegerType</span><span class="p">()</span>
@@ -587,9 +574,11 @@
 <span class="n">CONTINUOUS</span> <span class="o">=</span> <span class="n">ContinuousType</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="BoundedType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoundedType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="BoundedType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoundedType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BoundedType</span><span class="p">(</span><span class="n">NumericType</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A *bounded numeric type*.</span>
 
 <span class="sd">    Attributes</span>
@@ -644,13 +633,19 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">expressions</span><span class="o">.</span><span class="n">ensure_expr</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">expressions</span><span class="o">.</span><span class="n">ValueOrExpression</span><span class="p">,</span> <span class="n">bound</span><span class="p">))</span>
 
-<div class="viewcode-block" id="BoundedType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoundedType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="BoundedType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.BoundedType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="ArrayType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ArrayType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ArrayType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ArrayType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">ArrayType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An *array type*.</span>
 
 <span class="sd">    Attributes</span>
@@ -664,22 +659,31 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Array(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-<div class="viewcode-block" id="ArrayType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ArrayType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ArrayType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.ArrayType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span>
             <span class="n">typ</span><span class="o">.</span><span class="n">element</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="array_of"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.array_of">[docs]</a><span class="k">def</span> <span class="nf">array_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="array_of">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.array_of">[docs]</a>
+<span class="k">def</span> <span class="nf">array_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs an array type with the given element type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SetType"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.SetType">[docs]</a><span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SetType">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.SetType">[docs]</a>
+<span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">SetType</span><span class="p">(</span><span class="n">Type</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An *set type*.</span>
 
 <span class="sd">    Attributes</span>
@@ -693,15 +697,22 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Set(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-<div class="viewcode-block" id="SetType.is_assignable_from"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.SetType.is_assignable_from">[docs]</a>    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">SetType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">element</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="SetType.is_assignable_from">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.SetType.is_assignable_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_assignable_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">SetType</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">is_assignable_from</span><span class="p">(</span><span class="n">typ</span><span class="o">.</span><span class="n">element</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="set_of"><a class="viewcode-back" href="../../../../reference/model/types/#momba.model.set_of">[docs]</a><span class="k">def</span> <span class="nf">set_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SetType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="set_of">
+<a class="viewcode-back" href="../../../../reference/model/types/#momba.model.set_of">[docs]</a>
+<span class="k">def</span> <span class="nf">set_of</span><span class="p">(</span><span class="n">element</span><span class="p">:</span> <span class="n">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SetType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constructs a set type with the given element type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SetType</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
+
 
 
 <span class="nd">@d</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -726,35 +737,77 @@
         <span class="k">pass</span>
 </pre></div>
 
-              </div>
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
               
             
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-</div>
+          </div>
+          <footer class="bd-footer-content">
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
     
-        &copy; Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.<br/>
-      <div class="extra_footer">
-        
+<p class="component-author">
+By Author name not set
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  
 <a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
 | Hosted by <a href="https://github.com">GitHub</a>
 – <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
 
-      </div>
-  </p>
-</footer>
-</main>
-
-
-      </div>
-    </div>
+</div>
+  </div>
   
-  <script src="../../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
+          </footer>
+        
 
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

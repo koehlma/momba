@@ -1,507 +1,514 @@
 
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../../../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Automata &#8212; Momba</title>
-    
-  <link href="../../../_static/css/theme.css" rel="stylesheet">
-  <link href="../../../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
-
-    
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-book-theme.css?digest=84ace793992934648b4de8eed757e5a2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
     <link rel="stylesheet" type="text/css" href="../../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/thebelab.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/css/fix-jupyter-cells.css" />
-    
-  <link rel="preload" as="script" href="../../../_static/js/index.be7d3bbb2ef33a8344ce.js">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/fix-jupyter-cells.css?v=6bf19b0d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/documentation_options.js?v=afda12d8"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/thebelab-helper.js"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
-    <script src="../../../_static/sphinx-book-theme.9d8b4a8b9bb19db25eeaddc40d639ba2.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/model/automata';</script>
     <link rel="index" title="Index" href="../../../genindex/" />
     <link rel="search" title="Search" href="../../../search/" />
     <link rel="next" title="Networks" href="../networks/" />
     <link rel="prev" title="Context" href="../context/" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<div class="col-12 col-md-3 bd-sidebar site-navigation " id="site-navigation">
-    
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../../../">
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search/"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../">
+  
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../../../_static/logo_with_text.svg" class="logo" alt="logo">
-      
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../../../search/" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="../../../_static/logo_with_text.svg" class="logo__image only-light" alt="Momba - Home"/>
+    <script>document.write(`<img src="../../../_static/logo_with_text.svg" class="logo__image only-dark" alt="Momba - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../guide/">
-   User Guide
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../guide/construction/">
-     Model Construction
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../guide/exploration/">
-     Model Exploration
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../guide/analysis/">
-     Model Analysis
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../examples/">
-   Examples
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../examples/racetrack/">
-     Racetrack
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/racetrack/quickstart/">
-       Quickstart
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/racetrack/game/">
-       Interactive Game
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../examples/racetrack/model/">
-       The Model
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../../">
-   API Documentation
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-  <label for="toctree-checkbox-4">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2 current active has-children">
-    <a class="reference internal" href="../">
-     Momba Models
-    </a>
-    <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul class="current">
-     <li class="toctree-l3">
-      <a class="reference internal" href="../context/">
-       Context
-      </a>
-     </li>
-     <li class="toctree-l3 current active">
-      <a class="current reference internal" href="#">
-       Automata
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../networks/">
-       Networks
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../actions/">
-       Actions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../expressions/">
-       Expressions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../properties/">
-       Properties
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../types/">
-       Types
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../functions/">
-       Functions
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../exceptions/">
-       Exceptions
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../engine/">
-     Exploration Engine
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../jani/">
-     JANI Models
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../analysis/">
-     Analysis Interfaces
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../incubator/">
-   Feature Incubator
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-  <label for="toctree-checkbox-6">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../incubator/jani/">
-     JANI Extensions
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-    <label for="toctree-checkbox-7">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../incubator/jani/value-passing/">
-       Value Passing
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../incubator/jani/observations/">
-       Observations
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="../../../incubator/moml/">
-     MOML
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/>
-    <label for="toctree-checkbox-8">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../incubator/moml/grammar/">
-       MOML Grammar
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="../../../incubator/moml/macros/">
-       Syntax-Aware Macros
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../guide/">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/construction/">Model Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/exploration/">Model Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../guide/analysis/">Model Analysis</a></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Tools
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../tools/modest/">
-   Modest Toolset
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../tools/storm/">
-   Storm
-  </a>
- </li>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../examples/">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../examples/racetrack/">Racetrack</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/racetrack/quickstart/">Quickstart</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/racetrack/game/">Interactive Game</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/racetrack/model/">The Model</a></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Features
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../../../gym/">
-   Momba Gym
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" type="checkbox"/>
-  <label for="toctree-checkbox-9">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../gym/abstract/">
-     Abstract Interface
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../gym/generic/">
-     Generic Explorer
-    </a>
-   </li>
-  </ul>
- </li>
+</details></li>
 </ul>
-<p class="caption" role="heading">
- <span class="caption-text">
-  Development
- </span>
-</p>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../">API Documentation</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../">Momba Models</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../context/">Context</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">Automata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networks/">Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../actions/">Actions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/">Expressions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../properties/">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../types/">Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../functions/">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../exceptions/">Exceptions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../engine/">Exploration Engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jani/">JANI Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis/">Analysis Interfaces</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../incubator/">Feature Incubator</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/jani/">JANI Extensions</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/jani/value-passing/">Value Passing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/jani/observations/">Observations</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../incubator/moml/">MOML</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/moml/grammar/">MOML Grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../incubator/moml/macros/">Syntax-Aware Macros</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../../../contributing/">
-   Contributing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference external" href="https://github.com/koehlma/momba">
-   GitHub Repository
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/modest/">Modest Toolset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools/storm/">Storm</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Features</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../gym/">Momba Gym</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../gym/abstract/">Abstract Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gym/generic/">Generic Explorer</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing/">Contributing</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/koehlma/momba">GitHub Repository</a></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
-</div>
 
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
 
-          
-
-
-          
-<!-- This is an invisible pixel that we watch to see if we've scrolled. -->
 <div class="sbt-scroll-pixel-helper"></div>
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            <div class="topbar-left">
-                
-                <label class="nav-toggle-button" for="__navigation">
-                    <div class="visually-hidden">Toggle navigation</div>
-                    <i class="fas fa-bars"></i>
-                </label>
-                
-            </div>
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
 
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
-        
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../../../_sources/reference/model/automata.md.txt"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.md</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/koehlma/momba" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2Freference/model/automata.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Source interaction buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
-    <div class="dropdown-buttons sourcebuttons">
-        <a class="repository-button"
-            href="https://github.com/koehlma/momba"><button type="button" class="btn btn-secondary topbarbtn"
-                data-toggle="tooltip" data-placement="left" title="Source repository"><i
-                    class="fab fa-github"></i>repository</button></a>
-        <a class="issues-button"
-            href="https://github.com/koehlma/momba/issues/new?title=Issue%20on%20page%20%2Freference/model/automata.html&body=Your%20issue%20content%20here."><button
-                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
-                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        
-    </div>
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/reference/model/automata.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
 
-        </div>
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
 
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Automata</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#locations">
-   Locations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#edges">
-   Edges
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#instances">
-   Instances
-  </a>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton"><code class="docutils literal notranslate"><span class="pre">Automaton</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.ctx"><code class="docutils literal notranslate"><span class="pre">Automaton.ctx</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.scope"><code class="docutils literal notranslate"><span class="pre">Automaton.scope</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.name"><code class="docutils literal notranslate"><span class="pre">Automaton.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.locations"><code class="docutils literal notranslate"><span class="pre">Automaton.locations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.initial_locations"><code class="docutils literal notranslate"><span class="pre">Automaton.initial_locations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.edges"><code class="docutils literal notranslate"><span class="pre">Automaton.edges</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.initial_restriction"><code class="docutils literal notranslate"><span class="pre">Automaton.initial_restriction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.parameters"><code class="docutils literal notranslate"><span class="pre">Automaton.parameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.add_location"><code class="docutils literal notranslate"><span class="pre">Automaton.add_location()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_location"><code class="docutils literal notranslate"><span class="pre">Automaton.create_location()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.add_edge"><code class="docutils literal notranslate"><span class="pre">Automaton.add_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_edge"><code class="docutils literal notranslate"><span class="pre">Automaton.create_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.get_incoming_edges"><code class="docutils literal notranslate"><span class="pre">Automaton.get_incoming_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.get_outgoing_edges"><code class="docutils literal notranslate"><span class="pre">Automaton.get_outgoing_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.declare_variable"><code class="docutils literal notranslate"><span class="pre">Automaton.declare_variable()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.declare_parameter"><code class="docutils literal notranslate"><span class="pre">Automaton.declare_parameter()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_instance"><code class="docutils literal notranslate"><span class="pre">Automaton.create_instance()</span></code></a></li>
 </ul>
-
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#locations">Locations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.name"><code class="docutils literal notranslate"><span class="pre">Location.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.progress_invariant"><code class="docutils literal notranslate"><span class="pre">Location.progress_invariant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.transient_values"><code class="docutils literal notranslate"><span class="pre">Location.transient_values</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.validate"><code class="docutils literal notranslate"><span class="pre">Location.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edges">Edges</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.location"><code class="docutils literal notranslate"><span class="pre">Edge.location</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.destinations"><code class="docutils literal notranslate"><span class="pre">Edge.destinations</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.action_pattern"><code class="docutils literal notranslate"><span class="pre">Edge.action_pattern</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.guard"><code class="docutils literal notranslate"><span class="pre">Edge.guard</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.rate"><code class="docutils literal notranslate"><span class="pre">Edge.rate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.annotation"><code class="docutils literal notranslate"><span class="pre">Edge.annotation</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.create_edge_scope"><code class="docutils literal notranslate"><span class="pre">Edge.create_edge_scope()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.validate"><code class="docutils literal notranslate"><span class="pre">Edge.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination"><code class="docutils literal notranslate"><span class="pre">Destination</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.location"><code class="docutils literal notranslate"><span class="pre">Destination.location</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.probability"><code class="docutils literal notranslate"><span class="pre">Destination.probability</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.assignments"><code class="docutils literal notranslate"><span class="pre">Destination.assignments</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.create_destination"><code class="docutils literal notranslate"><span class="pre">create_destination()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment"><code class="docutils literal notranslate"><span class="pre">Assignment</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.target"><code class="docutils literal notranslate"><span class="pre">Assignment.target</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.value"><code class="docutils literal notranslate"><span class="pre">Assignment.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.index"><code class="docutils literal notranslate"><span class="pre">Assignment.index</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.validate"><code class="docutils literal notranslate"><span class="pre">Assignment.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.automata.are_compatible"><code class="docutils literal notranslate"><span class="pre">are_compatible()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instances">Instances</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance"><code class="docutils literal notranslate"><span class="pre">Instance</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.automaton"><code class="docutils literal notranslate"><span class="pre">Instance.automaton</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.arguments"><code class="docutils literal notranslate"><span class="pre">Instance.arguments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.input_enabled"><code class="docutils literal notranslate"><span class="pre">Instance.input_enabled</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.comment"><code class="docutils literal notranslate"><span class="pre">Instance.comment</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Automata</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#locations">
-   Locations
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#edges">
-   Edges
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#instances">
-   Instances
-  </a>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  <div class="tex2jax_ignore mathjax_ignore section" id="automata">
-<h1>Automata<a class="headerlink" href="#automata" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="automata">
+<h1>Automata<a class="headerlink" href="#automata" title="Link to this heading">#</a></h1>
 <p>Automata are a core concept of the <a class="reference external" href="https://jani-spec.org">JANI modeling formalism</a>.
 An automaton is defined by a set of <em>locations</em> connected via <em>edges</em>.
 Creating an automaton requires a <a class="reference internal" href="../context/#momba.model.Context" title="momba.model.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">Context</span></code></a>.
 We recommend constructing automata via the method <a class="reference internal" href="../context/#momba.model.Context.create_automaton" title="momba.model.Context.create_automaton"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_automaton()</span></code></a> of the respective modeling context:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba</span> <span class="kn">import</span> <span class="n">model</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">momba</span> <span class="kn">import</span> <span class="n">model</span>
 
 <span class="c1"># creates a *Probabilistic Timed Automata* (PTA) modeling context</span>
 <span class="n">ctx</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">ModelType</span><span class="o">.</span><span class="n">PTA</span><span class="p">)</span>
@@ -512,7 +519,7 @@ We recommend constructing automata via the method <a class="reference internal" 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Automaton name=&#39;environment&#39; at 0x7f9208397310&gt;
+<div class="output text_plain highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Automaton name=&#39;environment&#39; at 0x7fb0b8eee3a0&gt;
 </pre></div>
 </div>
 </div>
@@ -525,47 +532,47 @@ In case you want your model to work with a broad variety of tools do not add any
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Automaton">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Automaton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Automaton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton" title="Link to this definition">#</a></dt>
 <dd><p>Represents an automaton.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Automaton.ctx">
-<span class="sig-name descname"><span class="pre">ctx</span></span><a class="headerlink" href="#momba.model.Automaton.ctx" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">ctx</span></span><a class="headerlink" href="#momba.model.Automaton.ctx" title="Link to this definition">#</a></dt>
 <dd><p>The <a class="reference internal" href="../context/#momba.model.Context" title="momba.model.Context"><code class="xref py py-class docutils literal notranslate"><span class="pre">Context</span></code></a> associated with the automaton.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Automaton.scope">
-<span class="sig-name descname"><span class="pre">scope</span></span><a class="headerlink" href="#momba.model.Automaton.scope" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">scope</span></span><a class="headerlink" href="#momba.model.Automaton.scope" title="Link to this definition">#</a></dt>
 <dd><p>The local <a class="reference internal" href="../context/#momba.model.Scope" title="momba.model.Scope"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scope</span></code></a> of the automaton.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Automaton.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#momba.model.Automaton.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#momba.model.Automaton.name" title="Link to this definition">#</a></dt>
 <dd><p>The optional name of the automaton.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="momba.model.Automaton.locations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locations</span></span><a class="headerlink" href="#momba.model.Automaton.locations" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locations</span></span><a class="headerlink" href="#momba.model.Automaton.locations" title="Link to this definition">#</a></dt>
 <dd><p>The set of locations of the automaton.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="momba.model.Automaton.initial_locations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_locations</span></span><a class="headerlink" href="#momba.model.Automaton.initial_locations" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_locations</span></span><a class="headerlink" href="#momba.model.Automaton.initial_locations" title="Link to this definition">#</a></dt>
 <dd><p>The set of initial locations of the automaton.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="momba.model.Automaton.edges">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edges</span></span><a class="headerlink" href="#momba.model.Automaton.edges" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">edges</span></span><a class="headerlink" href="#momba.model.Automaton.edges" title="Link to this definition">#</a></dt>
 <dd><p>The set of edges of the automaton.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="momba.model.Automaton.initial_restriction">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_restriction</span></span><a class="headerlink" href="#momba.model.Automaton.initial_restriction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initial_restriction</span></span><a class="headerlink" href="#momba.model.Automaton.initial_restriction" title="Link to this definition">#</a></dt>
 <dd><p>An optional restriction to be satisfied by initial states.</p>
 <p>This property can be set <em>only once</em> per automaton. The expression
 has to be boolean.</p>
@@ -575,13 +582,13 @@ non-boolean expression.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="momba.model.Automaton.parameters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><a class="headerlink" href="#momba.model.Automaton.parameters" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><a class="headerlink" href="#momba.model.Automaton.parameters" title="Link to this definition">#</a></dt>
 <dd><p>The sequence of parameters of the automaton.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.add_location">
-<span class="sig-name descname"><span class="pre">add_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.add_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.add_location" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.add_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.add_location" title="Link to this definition">#</a></dt>
 <dd><p>Adds a location to the automaton.</p>
 <p>The flag <cite>initial</cite> specifies whether the location
 is an initial location.</p>
@@ -591,7 +598,7 @@ to the automaton. See the method <a class="reference internal" href="#momba.mode
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.create_location">
-<span class="sig-name descname"><span class="pre">create_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_invariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transient_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_location" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_invariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transient_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_location" title="Link to this definition">#</a></dt>
 <dd><p>Creates a location with the given name and adds it to the automaton.</p>
 <p>The optional expression <cite>progress_invariant</cite> specifies the invariant
 subject to which the time may progress in the location. As per the
@@ -607,7 +614,7 @@ is an initial location.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.add_edge">
-<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.add_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.add_edge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.add_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.add_edge" title="Link to this definition">#</a></dt>
 <dd><p>Adds an edge to the automaton.</p>
 <p>Raises <a class="reference internal" href="../exceptions/#momba.model.errors.ModelingError" title="momba.model.errors.ModelingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelingError</span></code></a> when the edge cannot be added
 to the automaton. See the method <a class="reference internal" href="#momba.model.Edge.validate" title="momba.model.Edge.validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Edge.validate()</span></code></a> for details.</p>
@@ -615,7 +622,7 @@ to the automaton. See the method <a class="reference internal" href="#momba.mode
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.create_edge">
-<span class="sig-name descname"><span class="pre">create_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destinations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guard</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_edge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destinations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guard</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_edge" title="Link to this definition">#</a></dt>
 <dd><p>Creates an edge and adds it to the automaton.</p>
 <p>The parameters are passed to <a class="reference internal" href="#momba.model.Edge" title="momba.model.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>.</p>
 <p>Raises the same exceptions as <a class="reference internal" href="#momba.model.Automaton.add_edge" title="momba.model.Automaton.add_edge"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_edge()</span></code></a>.</p>
@@ -623,26 +630,26 @@ to the automaton. See the method <a class="reference internal" href="#momba.mode
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.get_incoming_edges">
-<span class="sig-name descname"><span class="pre">get_incoming_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.get_incoming_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.get_incoming_edges" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_incoming_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.get_incoming_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.get_incoming_edges" title="Link to this definition">#</a></dt>
 <dd><p>Returns the set of outgoing edges from the given location.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.get_outgoing_edges">
-<span class="sig-name descname"><span class="pre">get_outgoing_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.get_outgoing_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.get_outgoing_edges" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_outgoing_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.get_outgoing_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.get_outgoing_edges" title="Link to this definition">#</a></dt>
 <dd><p>Returns the set of incoming edges to the given location.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.declare_variable">
-<span class="sig-name descname"><span class="pre">declare_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_transient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.declare_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.declare_variable" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">declare_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_transient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.declare_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.declare_variable" title="Link to this definition">#</a></dt>
 <dd><p>Declares a variable in the local scope of the automaton.</p>
 <p>Passes the parameters to <a class="reference internal" href="../context/#momba.model.Scope.declare_variable" title="momba.model.Scope.declare_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Scope.declare_variable()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.declare_parameter">
-<span class="sig-name descname"><span class="pre">declare_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.declare_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.declare_parameter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">declare_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.declare_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.declare_parameter" title="Link to this definition">#</a></dt>
 <dd><p>Declarse a parameter of the automaton.</p>
 <p>Passes the parameters to <a class="reference internal" href="../context/#momba.model.Scope.declare_constant" title="momba.model.Scope.declare_constant"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Scope.declare_constant()</span></code></a> where
 <cite>value</cite> is <cite>default_value</cite>.</p>
@@ -650,28 +657,28 @@ to the automaton. See the method <a class="reference internal" href="#momba.mode
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Automaton.create_instance">
-<span class="sig-name descname"><span class="pre">create_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_enable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_instance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_enable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Automaton.create_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Automaton.create_instance" title="Link to this definition">#</a></dt>
 <dd><p>Creates an instance of the automaton for composition.</p>
 <p>Passes the parameters to <a class="reference internal" href="#momba.model.Instance" title="momba.model.Instance"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instance</span></code></a>.</p>
 </dd></dl>
 
 </dd></dl>
 
-<div class="section" id="locations">
-<h2>Locations<a class="headerlink" href="#locations" title="Permalink to this headline">¶</a></h2>
+<section id="locations">
+<h2>Locations<a class="headerlink" href="#locations" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Location">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_invariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transient_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Location" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_invariant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transient_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Location" title="Link to this definition">#</a></dt>
 <dd><p>Represents a location of an automaton.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Location.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#momba.model.Location.name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#momba.model.Location.name" title="Link to this definition">#</a></dt>
 <dd><p>The optional name of the location.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Location.progress_invariant">
-<span class="sig-name descname"><span class="pre">progress_invariant</span></span><a class="headerlink" href="#momba.model.Location.progress_invariant" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">progress_invariant</span></span><a class="headerlink" href="#momba.model.Location.progress_invariant" title="Link to this definition">#</a></dt>
 <dd><p>An optional expression <cite>progress_invariant</cite> specifies the invariant
 subject to which the time may progress in the location. As per the
 JANI specification, the invariant is only allowed for models using
@@ -680,14 +687,14 @@ real-valued clocks (see <a class="reference internal" href="../context/#momba.mo
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Location.transient_values">
-<span class="sig-name descname"><span class="pre">transient_values</span></span><a class="headerlink" href="#momba.model.Location.transient_values" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">transient_values</span></span><a class="headerlink" href="#momba.model.Location.transient_values" title="Link to this definition">#</a></dt>
 <dd><p>A set of assignments for transient variables. These assignments
 define the values of the transient variables when in the location.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Location.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Location.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Location.validate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Location.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Location.validate" title="Link to this definition">#</a></dt>
 <dd><p>Validates the location for the given automaton.</p>
 <p>Raises <a class="reference internal" href="../exceptions/#momba.model.errors.ModelingError" title="momba.model.errors.ModelingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelingError</span></code></a> if the location is invalid
 to add to the automaton according to the JANI specification. For
@@ -697,52 +704,52 @@ type does not support clocks.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="edges">
-<h2>Edges<a class="headerlink" href="#edges" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="edges">
+<h2>Edges<a class="headerlink" href="#edges" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Edge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destinations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guard</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destinations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guard</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge" title="Link to this definition">#</a></dt>
 <dd><p>Represents an edge of an automaton.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.location">
-<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#momba.model.Edge.location" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#momba.model.Edge.location" title="Link to this definition">#</a></dt>
 <dd><p>The source location of the edge.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.destinations">
-<span class="sig-name descname"><span class="pre">destinations</span></span><a class="headerlink" href="#momba.model.Edge.destinations" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">destinations</span></span><a class="headerlink" href="#momba.model.Edge.destinations" title="Link to this definition">#</a></dt>
 <dd><p>The destinations of the edge.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.action_pattern">
-<span class="sig-name descname"><span class="pre">action_pattern</span></span><a class="headerlink" href="#momba.model.Edge.action_pattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">action_pattern</span></span><a class="headerlink" href="#momba.model.Edge.action_pattern" title="Link to this definition">#</a></dt>
 <dd><p>The optional action pattern of the edge.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.guard">
-<span class="sig-name descname"><span class="pre">guard</span></span><a class="headerlink" href="#momba.model.Edge.guard" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">guard</span></span><a class="headerlink" href="#momba.model.Edge.guard" title="Link to this definition">#</a></dt>
 <dd><p>The optional guard of the edge.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.rate">
-<span class="sig-name descname"><span class="pre">rate</span></span><a class="headerlink" href="#momba.model.Edge.rate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">rate</span></span><a class="headerlink" href="#momba.model.Edge.rate" title="Link to this definition">#</a></dt>
 <dd><p>The optional rate of the edge.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Edge.annotation">
-<span class="sig-name descname"><span class="pre">annotation</span></span><a class="headerlink" href="#momba.model.Edge.annotation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">annotation</span></span><a class="headerlink" href="#momba.model.Edge.annotation" title="Link to this definition">#</a></dt>
 <dd><p>An optional annotation of the edge.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Edge.create_edge_scope">
-<span class="sig-name descname"><span class="pre">create_edge_scope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge.create_edge_scope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge.create_edge_scope" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_edge_scope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge.create_edge_scope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge.create_edge_scope" title="Link to this definition">#</a></dt>
 <dd><p>Creates an <em>edge scope</em> with the given parent scope.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -753,7 +760,7 @@ passing is not part of the official JANI specification.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Edge.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge.validate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Edge.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Edge.validate" title="Link to this definition">#</a></dt>
 <dd><p>Validates the edge for the given automaton.</p>
 <p>Raises <a class="reference internal" href="../exceptions/#momba.model.errors.ModelingError" title="momba.model.errors.ModelingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelingError</span></code></a> if the edge is invalid to add
 to the automaton according to the JANI specification. For instance, if
@@ -764,23 +771,23 @@ source location is not a location of the automaton.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Destination">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Destination" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Destination" title="Link to this definition">#</a></dt>
 <dd><p>Represents a destination of an edge.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Destination.location">
-<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#momba.model.Destination.location" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#momba.model.Destination.location" title="Link to this definition">#</a></dt>
 <dd><p>The target location of the destination.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Destination.probability">
-<span class="sig-name descname"><span class="pre">probability</span></span><a class="headerlink" href="#momba.model.Destination.probability" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">probability</span></span><a class="headerlink" href="#momba.model.Destination.probability" title="Link to this definition">#</a></dt>
 <dd><p>An optional expression for the probability of the destination.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Destination.assignments">
-<span class="sig-name descname"><span class="pre">assignments</span></span><a class="headerlink" href="#momba.model.Destination.assignments" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">assignments</span></span><a class="headerlink" href="#momba.model.Destination.assignments" title="Link to this definition">#</a></dt>
 <dd><p>A set of assignments to be executed when going to the destination.</p>
 </dd></dl>
 
@@ -788,7 +795,7 @@ source location is not a location of the automaton.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="momba.model.create_destination">
-<span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">create_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#create_destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.create_destination" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">create_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#create_destination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.create_destination" title="Link to this definition">#</a></dt>
 <dd><p>Creates a destination with the given target location.</p>
 <p>This is a convenience function for creating destinations where
 assignments can be provied as a mapping. We recommend using it
@@ -797,29 +804,29 @@ instead of creating <a class="reference internal" href="#momba.model.Destination
 
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Assignment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Assignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Assignment" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Assignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Assignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Assignment" title="Link to this definition">#</a></dt>
 <dd><p>Represents an assignment.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Assignment.target">
-<span class="sig-name descname"><span class="pre">target</span></span><a class="headerlink" href="#momba.model.Assignment.target" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">target</span></span><a class="headerlink" href="#momba.model.Assignment.target" title="Link to this definition">#</a></dt>
 <dd><p>The target of the assignment.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Assignment.value">
-<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#momba.model.Assignment.value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#momba.model.Assignment.value" title="Link to this definition">#</a></dt>
 <dd><p>The value to assign.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Assignment.index">
-<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#momba.model.Assignment.index" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#momba.model.Assignment.index" title="Link to this definition">#</a></dt>
 <dd><p>The index of the assignment.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="momba.model.Assignment.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scope</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Assignment.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Assignment.validate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scope</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Assignment.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Assignment.validate" title="Link to this definition">#</a></dt>
 <dd><p>Validates the assignment in the given scope.</p>
 <p>Raises <a class="reference internal" href="../exceptions/#momba.model.errors.ModelingError" title="momba.model.errors.ModelingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelingError</span></code></a> if the target is not
 assignable from the value type.</p>
@@ -829,91 +836,220 @@ assignable from the value type.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="momba.model.automata.are_compatible">
-<span class="sig-prename descclassname"><span class="pre">momba.model.automata.</span></span><span class="sig-name descname"><span class="pre">are_compatible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assignments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#are_compatible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.automata.are_compatible" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">momba.model.automata.</span></span><span class="sig-name descname"><span class="pre">are_compatible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assignments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#are_compatible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.automata.are_compatible" title="Link to this definition">#</a></dt>
 <dd><p>Checks whether the given assignments are compatible according
 to the JANI specification.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="instances">
-<h2>Instances<a class="headerlink" href="#instances" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="instances">
+<h2>Instances<a class="headerlink" href="#instances" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="momba.model.Instance">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_enable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Instance" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">momba.model.</span></span><span class="sig-name descname"><span class="pre">Instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">automaton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_enable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/momba/model/automata/#Instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#momba.model.Instance" title="Link to this definition">#</a></dt>
 <dd><p>Represents an automaton instance.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Instance.automaton">
-<span class="sig-name descname"><span class="pre">automaton</span></span><a class="headerlink" href="#momba.model.Instance.automaton" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">automaton</span></span><a class="headerlink" href="#momba.model.Instance.automaton" title="Link to this definition">#</a></dt>
 <dd><p>The instaniated automaton.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Instance.arguments">
-<span class="sig-name descname"><span class="pre">arguments</span></span><a class="headerlink" href="#momba.model.Instance.arguments" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">arguments</span></span><a class="headerlink" href="#momba.model.Instance.arguments" title="Link to this definition">#</a></dt>
 <dd><p>The arguments passed to the parameters of the automaton.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Instance.input_enabled">
-<span class="sig-name descname"><span class="pre">input_enabled</span></span><a class="headerlink" href="#momba.model.Instance.input_enabled" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">input_enabled</span></span><a class="headerlink" href="#momba.model.Instance.input_enabled" title="Link to this definition">#</a></dt>
 <dd><p>The set of action types for which the instance is input enabled.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="momba.model.Instance.comment">
-<span class="sig-name descname"><span class="pre">comment</span></span><a class="headerlink" href="#momba.model.Instance.comment" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">comment</span></span><a class="headerlink" href="#momba.model.Instance.comment" title="Link to this definition">#</a></dt>
 <dd><p>An optional comment describing the instance.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="../context/" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Context</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../context/"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Context</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="../networks/" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="../networks/"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Networks</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
+                </footer>
+              
+            </div>
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton"><code class="docutils literal notranslate"><span class="pre">Automaton</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.ctx"><code class="docutils literal notranslate"><span class="pre">Automaton.ctx</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.scope"><code class="docutils literal notranslate"><span class="pre">Automaton.scope</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.name"><code class="docutils literal notranslate"><span class="pre">Automaton.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.locations"><code class="docutils literal notranslate"><span class="pre">Automaton.locations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.initial_locations"><code class="docutils literal notranslate"><span class="pre">Automaton.initial_locations</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.edges"><code class="docutils literal notranslate"><span class="pre">Automaton.edges</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.initial_restriction"><code class="docutils literal notranslate"><span class="pre">Automaton.initial_restriction</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.parameters"><code class="docutils literal notranslate"><span class="pre">Automaton.parameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.add_location"><code class="docutils literal notranslate"><span class="pre">Automaton.add_location()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_location"><code class="docutils literal notranslate"><span class="pre">Automaton.create_location()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.add_edge"><code class="docutils literal notranslate"><span class="pre">Automaton.add_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_edge"><code class="docutils literal notranslate"><span class="pre">Automaton.create_edge()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.get_incoming_edges"><code class="docutils literal notranslate"><span class="pre">Automaton.get_incoming_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.get_outgoing_edges"><code class="docutils literal notranslate"><span class="pre">Automaton.get_outgoing_edges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.declare_variable"><code class="docutils literal notranslate"><span class="pre">Automaton.declare_variable()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.declare_parameter"><code class="docutils literal notranslate"><span class="pre">Automaton.declare_parameter()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Automaton.create_instance"><code class="docutils literal notranslate"><span class="pre">Automaton.create_instance()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#locations">Locations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.name"><code class="docutils literal notranslate"><span class="pre">Location.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.progress_invariant"><code class="docutils literal notranslate"><span class="pre">Location.progress_invariant</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.transient_values"><code class="docutils literal notranslate"><span class="pre">Location.transient_values</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Location.validate"><code class="docutils literal notranslate"><span class="pre">Location.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edges">Edges</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.location"><code class="docutils literal notranslate"><span class="pre">Edge.location</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.destinations"><code class="docutils literal notranslate"><span class="pre">Edge.destinations</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.action_pattern"><code class="docutils literal notranslate"><span class="pre">Edge.action_pattern</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.guard"><code class="docutils literal notranslate"><span class="pre">Edge.guard</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.rate"><code class="docutils literal notranslate"><span class="pre">Edge.rate</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.annotation"><code class="docutils literal notranslate"><span class="pre">Edge.annotation</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.create_edge_scope"><code class="docutils literal notranslate"><span class="pre">Edge.create_edge_scope()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Edge.validate"><code class="docutils literal notranslate"><span class="pre">Edge.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination"><code class="docutils literal notranslate"><span class="pre">Destination</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.location"><code class="docutils literal notranslate"><span class="pre">Destination.location</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.probability"><code class="docutils literal notranslate"><span class="pre">Destination.probability</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Destination.assignments"><code class="docutils literal notranslate"><span class="pre">Destination.assignments</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.create_destination"><code class="docutils literal notranslate"><span class="pre">create_destination()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment"><code class="docutils literal notranslate"><span class="pre">Assignment</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.target"><code class="docutils literal notranslate"><span class="pre">Assignment.target</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.value"><code class="docutils literal notranslate"><span class="pre">Assignment.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.index"><code class="docutils literal notranslate"><span class="pre">Assignment.index</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Assignment.validate"><code class="docutils literal notranslate"><span class="pre">Assignment.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.automata.are_compatible"><code class="docutils literal notranslate"><span class="pre">are_compatible()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#instances">Instances</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance"><code class="docutils literal notranslate"><span class="pre">Instance</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.automaton"><code class="docutils literal notranslate"><span class="pre">Instance.automaton</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.arguments"><code class="docutils literal notranslate"><span class="pre">Instance.arguments</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.input_enabled"><code class="docutils literal notranslate"><span class="pre">Instance.input_enabled</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#momba.model.Instance.comment"><code class="docutils literal notranslate"><span class="pre">Instance.comment</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
     
-        &copy; Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.<br/>
-      <div class="extra_footer">
-        
+<p class="component-author">
+By Author name not set
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2020-2022, Dependable Systems and Software Group, Saarland University.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  
 <a href="https://www.uni-saarland.de/impressum.html">Imprint</a>
 | Hosted by <a href="https://github.com">GitHub</a>
 – <a href="https://docs.github.com/en/github/site-policy/github-privacy-statement#github-pages">Privacy Policy</a>.
 
-      </div>
-  </p>
-</footer>
-</main>
-
-
-      </div>
-    </div>
+</div>
+  </div>
   
-  <script src="../../../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+</div>
+          </footer>
+        
 
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
