@@ -2,7 +2,7 @@ from momba import model
 from momba.moml import expr
 
 
-def test_expr_array_idx():
+def test_expr_array_idx() -> None:
     assert expr("x[3][4]") == model.expressions.ArrayAccess(
         model.expressions.ArrayAccess(
             model.expressions.Name("x"), model.expressions.IntegerConstant(3)
