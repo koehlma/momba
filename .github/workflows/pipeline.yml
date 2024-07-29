@@ -3,80 +3,60 @@ name: Pipeline
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  lint:
-    name: Lint
+  check:
+    name: Check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Install Rye
       uses: eifinger/setup-rye@v4
-    - run: |
+    - name: Install Momba
+      run: |
+        rye sync
+    - name: Check Format
+      run: |
         rye fmt --all --check
+    - name: Run Linter 
+      run: |
         rye lint --all
+    - name: Check Types
+      run: |
         rye run check-types
   
-  # test:
-  #   name: Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Install Rye
-  #     run: |
-  #       curl -sSf https://rye.astral.sh/get | bash
-  #   - run: |
-  #       rye run run-tests
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rye
+        uses: eifinger/setup-rye@v4
+      - name: Install Momba
+        run: |
+          rye sync --all-features
+      - name: Run Tests
+        run: |
+          rye run run-tests
 
-  # type_check:
-  #   name: Type Check
-  #   needs: [build]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Set up Python 3.10
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: "3.10"
-  #   - name: Download artifacts
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: artifacts
-  #       path: artifacts
-  #   - name: Install packages
-  #     run: |
-  #       pip install -r artifacts/dev-requirements.txt
-  #       pip install --ignore-installed artifacts/*.whl
-  #   - name: Run MypPy
-  #     run: |
-  #       mypy momba
-
-  # documentation:
-  #   name: Documentation
-  #   needs: [build]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Set up Python 3.10
-  #     uses: actions/setup-python@v2
-  #     with:
-  #       python-version: "3.10"
-  #   - name: Download artifacts
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: artifacts
-  #       path: artifacts
-  #   - name: Install packages
-  #     run: |
-  #       pip install -r artifacts/dev-requirements.txt
-  #       pip install --ignore-installed artifacts/*.whl
-  #   - name: Build documentation
-  #     run: |
-  #       sphinx-build -b dirhtml docs build/docs
-  #   - name: Create CNAME file
-  #     run: |
-  #       echo "momba.dev" > build/docs/CNAME
-  #   - name: Deploy documentation
-  #     if: github.ref == 'refs/heads/main'
-  #     uses: peaceiris/actions-gh-pages@v3
-  #     with:
-  #       github_token: ${{ secrets.GITHUB_TOKEN }}
-  #       publish_dir: ./build/docs
+  docs:
+    name: Docs
+    needs: [check, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rye
+        uses: eifinger/setup-rye@v4
+      - name: Install Momba
+        run: |
+          rye sync --all-features
+      - name: Run Tests
+        run: |
+          rye run build-docs
+      - name: Create CNAME file
+        run: |
+          echo "momba.dev" > build/docs/CNAME
+      - name: Deploy documentation
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/docs
