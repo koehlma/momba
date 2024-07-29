@@ -216,7 +216,7 @@ def analyze(output_dir: pathlib.Path, exclude_fault_runs: bool) -> None:
 
     for fault_sporadic in results.keys():
         print(fault_sporadic)
-        for (length, value) in sorted(results[fault_sporadic].items()):
+        for length, value in sorted(results[fault_sporadic].items()):
             print(f"({length},{value})")
 
 

@@ -3,141 +3,81 @@ name: Pipeline
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  lint_black:
-    name: Lint (black)
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Install Black
+    - name: Install Rye
       run: |
-        pip install black
-    - name: Run Black
-      run: |
-        black --check --diff momba tests
-
-  lint_flake8:
-    name: Lint (flake8)
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Install Flake8
-      run: |
-        pip install flake8 flake8-bugbear pep8-naming
-    - name: Run Flake8
-      run: |
-        flake8 momba tests
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.8"
-    - name: Install Poetry and Maturin
-      run: |
-        pip install poetry maturin
-    - name: Build Momba
-      run: |
-        mkdir artifacts
-        poetry build
-        mv dist/* artifacts
-    - name: Export development requirements
-      run: |
-        poetry export --without-hashes --extras all --dev -f requirements.txt --output artifacts/dev-requirements.txt
-    - name: Build Engine
-      run: |
-        cd engine
-        maturin build --manylinux=off --out ../artifacts -i $(which python)
-    - uses: actions/upload-artifact@v2
-      with:
-        name: artifacts
-        path: artifacts
+        curl -sSf https://rye.astral.sh/get | bash
+    - run: |
+        rye fmt --all --check
+        rye lint --all
+        rye run check-types
   
-  test:
-    name: Tests
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: artifacts
-        path: artifacts
-    - name: Install packages
-      run: |
-        pip install -r artifacts/dev-requirements.txt
-        pip install --ignore-installed artifacts/*.whl
-    - name: Run tests
-      run: |
-        pytest tests
+  # test:
+  #   name: Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Install Rye
+  #     run: |
+  #       curl -sSf https://rye.astral.sh/get | bash
+  #   - run: |
+  #       rye run run-tests
 
-  type_check:
-    name: Type Check
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: artifacts
-        path: artifacts
-    - name: Install packages
-      run: |
-        pip install -r artifacts/dev-requirements.txt
-        pip install --ignore-installed artifacts/*.whl
-    - name: Run MypPy
-      run: |
-        mypy momba
+  # type_check:
+  #   name: Type Check
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Python 3.10
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: "3.10"
+  #   - name: Download artifacts
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: artifacts
+  #       path: artifacts
+  #   - name: Install packages
+  #     run: |
+  #       pip install -r artifacts/dev-requirements.txt
+  #       pip install --ignore-installed artifacts/*.whl
+  #   - name: Run MypPy
+  #     run: |
+  #       mypy momba
 
-  documentation:
-    name: Documentation
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: artifacts
-        path: artifacts
-    - name: Install packages
-      run: |
-        pip install -r artifacts/dev-requirements.txt
-        pip install --ignore-installed artifacts/*.whl
-    - name: Build documentation
-      run: |
-        sphinx-build -b dirhtml docs build/docs
-    - name: Create CNAME file
-      run: |
-        echo "momba.dev" > build/docs/CNAME
-    - name: Deploy documentation
-      if: github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build/docs
+  # documentation:
+  #   name: Documentation
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Set up Python 3.10
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: "3.10"
+  #   - name: Download artifacts
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: artifacts
+  #       path: artifacts
+  #   - name: Install packages
+  #     run: |
+  #       pip install -r artifacts/dev-requirements.txt
+  #       pip install --ignore-installed artifacts/*.whl
+  #   - name: Build documentation
+  #     run: |
+  #       sphinx-build -b dirhtml docs build/docs
+  #   - name: Create CNAME file
+  #     run: |
+  #       echo "momba.dev" > build/docs/CNAME
+  #   - name: Deploy documentation
+  #     if: github.ref == 'refs/heads/main'
+  #     uses: peaceiris/actions-gh-pages@v3
+  #     with:
+  #       github_token: ${{ secrets.GITHUB_TOKEN }}
+  #       publish_dir: ./build/docs

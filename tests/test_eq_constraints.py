@@ -15,5 +15,5 @@ EQ_CONSTRAINTS_MODEL = (
 
 def test_eq_constraints_exploration() -> None:
     network = jani.load_model(EQ_CONSTRAINTS_MODEL.read_text(encoding="utf-8"))
-    e = engine.Explorer(network, time.GlobalTime)
+    engine.Explorer(network, time.GlobalTime)
     print("Done!")

@@ -1,3 +1,6 @@
+import random
+
+
 import racetrack
 
 from momba import engine
@@ -18,7 +21,6 @@ transition = next(iter(state.transitions))
 
 print(transition.instances)
 
-import random
 
 random.seed(0)
 

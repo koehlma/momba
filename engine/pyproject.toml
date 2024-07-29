@@ -1,3 +1,22 @@
+[project]
+name = "momba_engine"
+version = "0.6.10"
+description = "Momba's state space exploration engine."
+authors = [
+    { name = "Maximilian Köhl", email = "koehl@cs.uni-saarland.de" }
+]
+dependencies = []
+requires-python = ">= 3.8"
+
 [build-system]
-requires = ["maturin>=0.14,<0.15"]
+requires = ["maturin>=1.2,<2.0"]
 build-backend = "maturin"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.maturin]
+python-source = "python"
+module-name = "momba_engine"
+features = ["pyo3/extension-module"]

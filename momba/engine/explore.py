@@ -241,9 +241,7 @@ class State(t.Generic[TimeTypeT]):
         return {
             instance: self.explorer._compiled.translation.reversed_instance_to_location_names[
                 instance
-            ][
-                self._state.get_location_of(name)
-            ]
+            ][self._state.get_location_of(name)]
             for instance, name in self.explorer._compiled.translation.instance_names.items()
         }
 

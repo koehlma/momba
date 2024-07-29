@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from . import model, tracks
 
-from . import _ipython  # noqa:
+from . import _ipython  # noqa: F401
 
 
 __all__ = ["model", "tracks"]

@@ -24,7 +24,7 @@ class InvalidBoundError(errors.TypeConstructionError):
     pass
 
 
-Bound = t.Optional[t.Union["expressions.ValueOrExpression", "ellipsis"]]  # noqa:
+Bound = t.Optional[t.Union["expressions.ValueOrExpression", "ellipsis"]]  # noqa: F821
 
 
 class Type(abc.ABC):

@@ -4,7 +4,6 @@ import os
 import sys
 import subprocess
 import re
-import subprocess
 
 from pygments.lexer import RegexLexer
 from pygments import token
@@ -130,7 +129,7 @@ html_theme_options: t.Dict[str, t.Any] = {
     "path_to_docs": "docs/",
     "logo_only": True,
     "extra_footer": EXTRA_FOOTER,
-    "extra_navbar" : "",
+    "extra_navbar": "",
     "use_repository_button": True,
     "use_issues_button": True,
 }

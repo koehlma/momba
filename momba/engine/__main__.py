@@ -44,15 +44,8 @@ def parse_constants(cmd_input: str) -> t.Any:
         elif is_float(l.split("=")[1]):
             data[idx] = float(l.split("=")[1])
         elif (l.split("=")[1]).lower() in ("false", "true"):
-            match l.split("=")[1]:
-                case "False":
-                    data[idx] = False
-                case "false":
-                    data[idx] = False
-                case "True":
-                    data[idx] = True
-                case "true":
-                    data[idx] = True
+            value = l.split("=")[1]
+            data[idx] = value == "True" or value == "true"
     return data
 
 
