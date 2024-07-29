@@ -9,8 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Rye
-      run: |
-        curl -sSf https://rye.astral.sh/get | bash
+      uses: eifinger/setup-rye@v4
     - run: |
         rye fmt --all --check
         rye lint --all
