@@ -406,6 +406,16 @@ def _parse_primary(stream: TokenStream, environment: Environment) -> model.Expre
         raise stream.make_error("expected primary expression or property")
 
 
+def _parse_postfix(stream: TokenStream, environment: Environment) -> model.Expression:
+    expr = _parse_primary(stream, environment=environment)
+    while stream.accept(lexer.TokenType.LEFT_BRACKET):
+        idx = parse_expression(stream, environment=environment)
+        expr = model.expressions.ArrayAccess(expr, idx)
+        if not stream.accept(lexer.TokenType.RIGHT_BRACKET):
+            stream.make_error("expected closing bracket")
+    return expr
+
+
 def _parse_unary(stream: TokenStream, environment: Environment) -> model.Expression:
     if stream.accept(lexer.TokenType.LOGIC_NOT):
         operand = _parse_unary(stream, environment=environment)
@@ -417,7 +427,7 @@ def _parse_unary(stream: TokenStream, environment: Environment) -> model.Express
         # FIXME: proper error reporting
         assert isinstance(operand, model.Expression)
         return expressions.sub(expressions.ensure_expr(0), operand)
-    return _parse_primary(stream, environment=environment)
+    return _parse_postfix(stream, environment)
 
 
 DEFAULT_ENVIRONMENT = Environment()
@@ -616,7 +626,7 @@ def parse_automaton(stream: TokenStream, ctx: model.Context) -> model.Automaton:
                     )
                 else:
                     raise stream.make_error("unexpected token")
-            assert destinations, "missign destinations"
+            assert destinations, "missing destinations"
             automaton.create_edge(
                 location_map[location_name],
                 tuple(destinations),
