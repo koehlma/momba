@@ -65,6 +65,7 @@ dev-dependencies = [
 
 [tool.rye.scripts]
 build-docs = { cmd = ["sphinx-build", "-b", "dirhtml", "docs", "build/docs"] }
+serve-docs = { cmd = ["sphinx-autobuild", "docs", "build/docs"] }
 check-types = { cmd = ["mypy", "momba", "tests"] }
 run-tests = { cmd = ["pytest", "tests"] }
 
