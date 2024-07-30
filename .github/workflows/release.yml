@@ -49,7 +49,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages-linux
+          name: packages-linux-${{ matrix.target }}
           path: ./dist/*.whl
   
   build_engine_wheels_windows:
@@ -67,7 +67,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages-windows
+          name: packages-windows-${{ matrix.target }}
           path: ./dist/*.whl
   
   build_engine_wheels_macos:
@@ -85,7 +85,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages-macos
+          name: packages-macos-${{ matrix.target }}
           path: ./dist/*.whl
 
   publish:
