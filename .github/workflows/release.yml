@@ -49,7 +49,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages
+          name: packages-linux
           path: ./dist/*.whl
   
   build_engine_wheels_windows:
@@ -67,7 +67,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages
+          name: packages-windows
           path: ./dist/*.whl
   
   build_engine_wheels_macos:
@@ -85,7 +85,7 @@ jobs:
           args: --release --out dist -m engine/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
-          name: packages
+          name: packages-macos
           path: ./dist/*.whl
 
   publish:
@@ -98,10 +98,10 @@ jobs:
     - build_engine_wheels_windows
     - build_engine_wheels_macos
     steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          name: packages
+          pattern: packages*
+          merge-multiple: true
           path: dist
       - name: Display Files
         run: ls -l dist
