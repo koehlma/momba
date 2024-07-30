@@ -1,49 +1,37 @@
 name: Release
 
-on:
-  create:
-    tags:
-      - v*
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
+
+# on:
+#   create:
+#     tags:
+#       - v*
+#   workflow_dispatch:
 
 jobs:
-  build_momba:
-    name: Build Momba
-    runs-on: ubuntu-20.04
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.8"
-    - name: Install Poetry
-      run: python -m pip install poetry tomlkit
-    - name: Build momba
-      run: python release.py
-    - uses: actions/upload-artifact@v2
-      with:
-        name: packages
-        path: ./dist/*
-
-  build_engine_sdist:
-    name: Build Engine Source Distribution
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
-      - name: Install Maturin
-        run: python -m pip install maturin
-      - name: Build engine sdist
+      - uses: actions/checkout@v4
+      - name: Install Rye
+        uses: eifinger/setup-rye@v4
+      - name: Install Momba
         run: |
-          cd engine
-          maturin sdist -o dist
-      - uses: actions/upload-artifact@v2
+          rye sync
+      - name: Check
+        run: |
+          rye fmt --all --check
+          rye lint --all
+          rye run check-types
+      - name: Build
+        run: |
+          rye build -p momba
+          rye build -p momba_engine --sdist
+      - uses: actions/upload-artifact@v4
         with:
           name: packages
-          path: ./engine/dist/*.tar.gz
+          path: ./dist/*{.tar.gz,.whl}
 
   build_engine_wheels_linux:
     name: Build Linux Engine Wheel (${{ matrix.target }})
@@ -52,14 +40,14 @@ jobs:
       matrix:
         target: ["x86_64", "aarch64", "armv7"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Wheel
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
           manylinux: auto
           args: --release --out dist -m engine/Cargo.toml
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: packages
           path: ./dist/*.whl
@@ -71,13 +59,13 @@ jobs:
       matrix:
         target: ["x86_64"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Wheel
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
           args: --release --out dist -m engine/Cargo.toml
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: packages
           path: ./dist/*.whl
@@ -89,13 +77,13 @@ jobs:
       matrix:
         target: ["x86_64", "aarch64"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Wheel
         uses: messense/maturin-action@v1
         with:
           target: ${{ matrix.target }}
           args: --release --out dist -m engine/Cargo.toml
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: packages
           path: ./dist/*.whl
@@ -103,25 +91,23 @@ jobs:
   publish:
     name: Publish to PyPI
     runs-on: ubuntu-latest
-    environment: pypi
-    if: github.event_name == 'create' && startsWith(github.ref, 'refs/tags/v')
+    # environment: pypi
     needs:
-    - build_momba
-    - build_engine_sdist
+    - build
     - build_engine_wheels_linux
     - build_engine_wheels_windows
     - build_engine_wheels_macos
     steps:
-    - name: Download Artifacts
-      uses: actions/download-artifact@v2
-      with:
-        name: packages
-        path: dist
-    - name: Display Files
-      run: ls -l dist
-    - name: Publish Package to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        verify_metadata: false
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Display Files
+        run: ls -l dist
+      # - name: Publish Package to PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     user: __token__
+      #     verify_metadata: false
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
