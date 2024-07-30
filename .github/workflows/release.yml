@@ -31,7 +31,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: packages
-          path: ./dist/*{.tar.gz,.whl}
+          path: |
+            ./dist/*.tar.gz
+            ./dist/*.whl
 
   build_engine_wheels_linux:
     name: Build Linux Engine Wheel (${{ matrix.target }})
