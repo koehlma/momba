@@ -53,12 +53,6 @@ We welcome all kinds of contributions!
 
 For minor changes and bug fixes feel free to simply open a pull request. For major changes impacting the overall design of Momba, please first [start a discussion](https://github.com/koehlma/momba/discussions/new?category=ideas) outlining your idea.
 
-To get you started, we provide a [development container for VS Code](https://code.visualstudio.com/docs/remote/containers) containing everything you need for development. The easiest way to get up and running is by clicking on the following badge:
-
-[![VS Code: Open in Container](https://img.shields.io/static/v1?label=VS%20Code&message=Open%20in%20Container&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/koehlma/momba.git)
-
-Opening the link in VS Code will clone this repository into its own Docker volume and then start the provided development container inside VS Code so you are ready to start coding.
-
 ## ⚖️ Licensing
 
 Momba is licensed under either [MIT](https://github.com/koehlma/momba/blob/main/LICENSE-MIT) or [Apache 2.0](https://github.com/koehlma/momba/blob/main/LICENSE-APACHE) at your opinion.
