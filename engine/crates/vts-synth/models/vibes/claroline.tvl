@@ -1,0 +1,190 @@
+
+root Claroline {
+	group allof{
+		User,
+		Course,
+		Subscription		
+	}
+}
+
+/*
+ * The type of user loged in
+ */
+User{
+	group oneof{
+		UnregisteredUser,
+		RegisteredUser group oneof{
+			Admin,
+			Teacher,
+			Student
+		}
+	}
+}
+
+
+Course{
+	group allof {
+		Access group oneof{
+			FreeAccess,
+			IdentifiedAccess,
+			MembersAccess
+		},
+		Registration group oneof{
+			AllowedRegistration group allof{
+				opt WithValidationRegistration,
+				opt WithKeyRegistration
+			},			
+			RegistrationDenied
+		},
+		Visibility group oneof{
+			PublicVisibility,
+			MembersVisibility
+		},
+		Tools group allof{
+			CourseIndex, 			// /claroline/claroline/course/index.php
+			opt CourseDescription,	// /claroline/claroline/course_description/index.php
+			opt CourseAgenda,		// /claroline/claroline/calendar/agenda.php
+			opt CourseAnnoucements,	// /claroline/claroline/announcements/announcements.php
+			opt CourseDocument,		// /claroline/claroline/document/document.php
+			opt CourseExercise,		// /claroline/claroline/exercise/exercise.php
+			opt CourseLearnPath,	// /claroline/claroline/learnPath/learningPathList.php
+			opt CourseWork,			// /claroline/claroline/work/work.php
+			opt CourseForum,		// /claroline/claroline/phpbb/index.php
+			opt CourseGroup, 		// /claroline/claroline/group/group.php
+			opt CourseUser,			// /claroline/claroline/user/user.php
+			opt CourseWiki,			// /claroline/claroline/wiki/wiki.php
+			opt CourseDiscussion	// /claroline/module/CLCHAT/index.php
+		},
+		Status group oneof{
+			Available,
+			AvailableFromTo,
+			Unavailable group oneOf{
+				ReactivableByOwner,
+				ReactivableByAdmin,
+				Deleted
+			}
+		}
+	}
+}
+
+CourseIndex{
+	ifin: ((Available || AvailableFromTo) && PublicVisibility)
+			|| ((Available || AvailableFromTo) && MembersVisibility && RegisteredUser)
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseDescription{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseAgenda{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseAnnoucements{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseDocument{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseExercise{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseLearnPath{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseWork{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseForum{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseGroup{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseUser{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseWiki{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+CourseDiscussion{
+	ifin: ((Available || AvailableFromTo) 
+				&& ((FreeAccess && PublicVisibility) 
+						|| (IdentifiedAccess && PublicVisibility && RegisteredUser)
+						|| (MembersAccess && RegisteredUser) )) 
+			|| Admin 
+			|| (ReactivableByOwner && Teacher);
+}
+
+Subscription{	
+	group allof{
+		opt OpenSubscription, 	// /claroline/claroline/auth/inscription.php
+		opt LostPassword
+	}
+}

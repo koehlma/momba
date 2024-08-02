@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fts:fts xmlns:fts="http://www.unamur.be/xml/fts/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <fts:start>s1</fts:start>
+    <fts:states>
+        <fts:state id="s1">
+            <fts:transition fexpression="Fa" target="s2" />
+            <fts:transition fexpression="Fb" target="s3" />
+        </fts:state>
+        <fts:state id="s2">
+            <fts:transition action="a" target="s4" />
+            <fts:transition action="a" target="s5" />
+        </fts:state>
+        <fts:state id="s3">
+            <fts:transition action="b" target="s5" />
+        </fts:state>
+        <fts:state id="s4">
+            <fts:transition target="s6" />
+        </fts:state>
+        <fts:state id="s5">
+            <fts:transition action="c" fexpression="Fc" target="s5" />
+        </fts:state>
+        <fts:state id="s6">
+            <fts:transition target="s7" />
+        </fts:state>
+        <fts:state id="s7">
+            <fts:transition action="c" fexpression="Fc" target="s4" />
+        </fts:state>
+    </fts:states>
+</fts:fts>

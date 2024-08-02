@@ -1,0 +1,57 @@
+Features: {"Display_visual_3D_cues", "Display_real_reference_objects", "Check_for_no_ground", "Check_for_obstacles", "OWS", "Mark_landing_position", "HMS_D", "HOCAS", "SI_sensor_based", "SI_from_DB", "Database", "Provide_slope_indication_for_LP", "AeroUc5", "Display_reference_objects_in_landing_zone", "HOCAS_GE_Aviation_Systems", "x29", "HOCAS_Honeywell", "x30", "Mark_LP", "ArtificialParentCheck_for_obstacles", "Mark_LP_by_handling_pilot_only", "x31", "Mark_LP_by_both_pilots", "x32", "DB_provided_by_customer", "x33", "DB_provided_by_Cassidian", "x34", "HMS_D_Elbit", "x35", "HMS_D_Thales", "x36", "HELLAS", "x37", "ELOP", "x38", "ArtificialParentDisplay_real_reference_objects", "x39", "x40"}
+Observables: {"activate", "Landing_and_touchdown_for_more_than_5_sec", "Depart_from_landing_position", "deactivate", "Virtual_3D_cues_displayed", "Real_objects_displayed", "Approach_to_landing_position", "Trigger_mark_landing_position", "Provide_landing_position_not_on_ground", "Provide_landing_position_with_obstacle", "Provide_valid_landing_position"}
+
+States: 25 (initial: 1)
+Transitions: 46
+SCCs: 1
+
+== Initial VTS ==
+States: 108 (initial: 1)
+Transitions: 208
+SCCs: 14
+Deterministic: false
+Monotonic: true
+
+== Refined VTS ==
+States: 106 (initial: 1)
+Transitions: 204
+SCCs: 12
+Deterministic: false
+Monotonic: true
+
+== Observability Projection ==
+States: 75 (initial: 1)
+Transitions: 280
+SCCs: 9
+Deterministic: false
+Monotonic: true
+
+== Determinize ==
+States: 85 (initial: 1)
+Transitions: 241
+SCCs: 12
+
+== Flatten Beliefs ==
+States: 85 (initial: 1)
+Transitions: 241
+SCCs: 12
+Deterministic: true
+Monotonic: true
+
+== Compress SCCs ==
+States: 48 (initial: 1)
+Transitions: 152
+SCCs: 12
+Deterministic: true
+Monotonic: true
+
+== Compress Transitions ==
+States: 45 (initial: 1)
+Transitions: 152
+SCCs: 11
+Deterministic: true
+Monotonic: true
+
+real    0m0.126s
+user    0m0.090s
+sys     0m0.041s

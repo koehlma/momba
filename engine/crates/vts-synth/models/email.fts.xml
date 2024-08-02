@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fts:fts xmlns:fts="http://www.unamur.be/xml/fts/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <fts:start>idle</fts:start>
+    <fts:states>
+        <fts:state id="idle">
+            <fts:transition action="sign" target="signed" fexpression="s" />
+            <fts:transition action="enc" target="encrypted" fexpression="e &amp;&amp; !s" />
+        </fts:state>
+        <fts:state id="signed">
+            <fts:transition action="send" target="idle" fexpression="s &amp;&amp; !e" />
+            <fts:transition action="enc" target="encrypted" fexpression="e" />
+        </fts:state>
+        <fts:state id="encrypted">
+            <fts:transition action="send" target="idle" />
+        </fts:state>
+    </fts:states>
+</fts:fts>

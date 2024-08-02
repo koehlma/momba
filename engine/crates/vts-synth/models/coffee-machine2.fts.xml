@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fts:fts xmlns:fts="http://www.unamur.be/xml/fts/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <fts:start>idle</fts:start>
+    <fts:states>
+        <fts:state id="idle">
+            <fts:transition action="espresso" target="dispense" />
+            <fts:transition action="cappuccino" target="dispense" />
+        </fts:state>
+        <fts:state id="dispense">
+            <fts:transition action="dispense" target="idle" />
+            <fts:transition action="pump_fault" fexpression="PumpFault" target="pump_fault" />
+            <fts:transition action="short_circuit" fexpression="ShortCircuit" target="short_circuit" />
+        </fts:state>
+        <fts:state id="pump_fault">
+            <fts:transition action="espresso" target="pump_fault" />
+            <fts:transition action="cappuccino" target="pump_fault" />
+            <fts:transition action="short_circuit" fexpression="ShortCircuit" target="short_circuit" />
+        </fts:state>
+        <fts:state id="short_circuit">
+            <fts:transition action="burn" target="short_circuit" />
+        </fts:state>
+    </fts:states>
+</fts:fts>

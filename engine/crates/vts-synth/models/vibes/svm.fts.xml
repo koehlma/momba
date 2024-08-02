@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fts:fts xmlns:fts="http://www.unamur.be/xml/fts/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <fts:start>state1</fts:start>
+    <fts:states>
+        <fts:state id="state1">
+            <fts:transition action="pay" fexpression="!FreeDrinks" target="state2" />
+            <fts:transition action="free" fexpression="FreeDrinks" target="state3" />
+        </fts:state>
+        <fts:state id="state2">
+            <fts:transition action="change" fexpression="!FreeDrinks" target="state3" />
+        </fts:state>
+        <fts:state id="state3">
+            <fts:transition action="cancel" fexpression="CancelPurchase" target="state4" />
+            <fts:transition action="tea" fexpression="Tea" target="state6" />
+            <fts:transition action="soda" fexpression="Soda" target="state5" />
+        </fts:state>
+        <fts:state id="state4">
+            <fts:transition action="return" fexpression="CancelPurchase" target="state1" />
+        </fts:state>
+        <fts:state id="state5">
+            <fts:transition action="serveSoda" fexpression="Soda" target="state7" />
+        </fts:state>
+        <fts:state id="state6">
+            <fts:transition action="serveTea" fexpression="Tea" target="state7" />
+        </fts:state>
+        <fts:state id="state7">
+            <fts:transition action="open" fexpression="!FreeDrinks" target="state8" />
+            <fts:transition action="take" fexpression="FreeDrinks" target="state1" />
+        </fts:state>
+        <fts:state id="state8">
+            <fts:transition action="take" fexpression="!FreeDrinks" target="state9" />
+        </fts:state>
+        <fts:state id="state9">
+            <fts:transition action="close" fexpression="!FreeDrinks" target="state1" />
+        </fts:state>
+    </fts:states>
+</fts:fts>

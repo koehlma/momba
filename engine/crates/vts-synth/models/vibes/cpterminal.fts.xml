@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fts:fts xmlns:fts="http://www.unamur.be/xml/fts/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<fts:start>Init</fts:start>
+	<fts:states>
+		<fts:state id="Init">
+			<fts:transition action="insert_card" target="Card_in" />
+		</fts:state>
+		<fts:state id="Card_in">
+			<fts:transition action="initSchema" fexpression="DirectDebit||CreditCard" target="state3" />
+		</fts:state>
+		<fts:state id="state3">
+			<fts:transition action="init_schema" fexpression="DirectDebit||CreditCard" target="App_init" />
+			<fts:transition action="abort" target="Aborted" />
+		</fts:state>
+		<fts:state id="App_init">
+			<fts:transition action="check_signature" fexpression="!DirectDebit &amp;&amp; Signature" target="CH_verified" />
+			<fts:transition action="check_PIN_online" fexpression="Online &amp;&amp; PIN" target="CH_verified" />
+			<fts:transition action="check_PIN_offline" fexpression="Offline &amp;&amp; PIN" target="CH_verified" />
+		</fts:state>
+		<fts:state id="Aborted">
+			<fts:transition action="remove_card" target="Init" />
+		</fts:state>
+		<fts:state id="CH_verified">
+			<fts:transition action="no_go" target="NO_GO" />
+			<fts:transition action="go_online" fexpression="Online" target="Go_online" />
+			<fts:transition action="go_offline" fexpression="Offline" target="Go_offline" />
+		</fts:state>
+		<fts:state id="NO_GO">
+			<fts:transition action="abort" target="Aborted" />
+		</fts:state>
+		<fts:state id="Go_online">
+			<fts:transition action="ask_issuer" target="Issuer_responded" />
+		</fts:state>
+		<fts:state id="Issuer_responded">
+			<fts:transition action="issuer_accepts" target="Completed" />
+			<fts:transition action="issuer_rejects" target="Aborted" />
+		</fts:state>
+		<fts:state id="Completed">
+			<fts:transition action="remove_card" target="Init" />
+		</fts:state>
+		<fts:state id="Go_offline">
+			<fts:transition action="accepts" target="Completed" />
+		</fts:state>
+	</fts:states>
+</fts:fts>

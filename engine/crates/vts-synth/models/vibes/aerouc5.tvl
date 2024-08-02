@@ -1,0 +1,98 @@
+// Feature model corresponding to the SferiAssist.vedit model
+
+root AeroUc5 {
+
+//	Check_for_obstacles && Check_for_no_ground && Display_visual_3D_cues && Display_real_reference_objects;
+
+//	Display_visual_3D_cues && Display_real_reference_objects;
+
+	group allof {
+		Display_reference_objects_in_landing_zone,
+		Mark_landing_position,
+		HOCAS,
+		HMS_D,
+		Database,
+		OWS,
+		Provide_slope_indication_for_LP
+	}
+} 
+
+root Display_reference_objects_in_landing_zone{
+	group allof{
+		Display_visual_3D_cues,
+		opt Display_real_reference_objects
+	}
+}
+
+root Display_real_reference_objects{
+	Display_real_reference_objects -> OWS;
+}
+
+root Mark_landing_position{
+	group allof{
+		Check_for_no_ground,
+		opt Check_for_obstacles,
+		Mark_LP
+	}
+	Mark_landing_position -> HOCAS;
+	Mark_landing_position -> HMS_D;
+}
+
+
+root Check_for_obstacles{
+	Check_for_obstacles -> OWS;
+}
+
+
+root Mark_LP{
+	group oneof{
+		Mark_LP_by_handling_pilot_only,
+		Mark_LP_by_both_pilots
+	}
+}
+
+
+
+root HOCAS{
+	group oneof{
+		HOCAS_GE_Aviation_Systems,
+		HOCAS_Honeywell
+	}
+}
+
+root HMS_D{
+	group oneof{
+		HMS_D_Thales,
+		HMS_D_Elbit
+	}
+}
+
+root Database{
+	group oneof{
+		DB_provided_by_customer,
+		DB_provided_by_Cassidian
+	}
+}
+
+root OWS{
+	group oneof{
+		ELOP,
+		HELLAS
+	}
+}
+
+root Provide_slope_indication_for_LP{
+	group oneof{
+		SI_sensor_based,
+		SI_from_DB
+	}
+	Provide_slope_indication_for_LP -> Mark_landing_position;
+}
+
+root SI_from_DB{
+	SI_from_DB -> Database;
+}
+
+root SI_sensor_based{
+	SI_sensor_based -> OWS;
+}

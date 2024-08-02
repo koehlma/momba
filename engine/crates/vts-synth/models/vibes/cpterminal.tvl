@@ -1,0 +1,74 @@
+
+/*
+Card Payment Terminal root feature.
+*/
+root CPTerminal {
+	group allof {
+		PaymentSchema,
+		Connectivity,
+		CardReader,
+		opt Identification
+	}
+} 
+
+/*
+Payment schema is either direct debit card or credit card (Visa, Mastercard, AMEX).
+*/
+PaymentSchema {
+	group someof {
+		DirectDebit,
+		CreditCard
+	}
+	/* CreditCard requires an identification */
+	CreditCard -> Identification;
+} 
+
+/*
+Direct debit card is either a debit card (BCMC, Maestro, V-Pay, Visa Electron), an electronic purse (Proton) or a prepaid card (usually made by Visa or Mastercard) 
+*/
+DirectDebit{
+	group someof {
+		DebitCard,
+		EPurse,
+		PrepaidCard
+	}
+	/* EPurse or prepaid needs to store information on the card */
+	(EPurse || PrepaidCard) -> (Chip || NFC);
+	/* DebitCard requires a PIN identification */
+	DebitCard -> PIN;
+}
+
+Connectivity{
+	group someof {
+		Online,
+		Offline
+	}
+}
+
+Online{
+	group someof {
+		/* Dial-up connection */
+		PSTN,
+		/* Connection using mobile network */
+		Mobile3G,
+		/* VPN connection over an internet access */
+		VPN,
+		/* Dedicated WAN */
+		PrivateWAN
+	}
+}
+
+CardReader{
+	group someof {
+		Chip,
+		MagStrip,
+		NFC
+	}
+}
+
+Identification{
+	group allof {
+		opt PIN,
+		Signature
+	}
+}
